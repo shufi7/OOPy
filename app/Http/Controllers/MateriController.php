@@ -11,46 +11,59 @@ class MateriController extends Controller
     {
         $materiList = [
             [
-                'nomor' => 1,
-                'judul' => 'Dasar Pemrograman Python dan OOP',
-                'deskripsi' => 'Mengenal dasar Python dan konsep awal Object-Oriented Programming.',
-                'icon' => 'bi-code-slash',
-                'badge' => 'Dasar',
+                'bab' => 'BAB 1',
+                'judul' => 'Dasar Pemrograman & OOP',
+                'poin' => [
+                    'Pengenalan Python',
+                    'Variabel',
+                    'Tipe data',
+                    'Struktur kontrol',
+                    'Konsep dasar paradigma OOP.',
+                ],
             ],
             [
-                'nomor' => 2,
+                'bab' => 'BAB 2',
                 'judul' => 'Kelas dan Objek',
-                'deskripsi' => 'Memahami cara membuat class, object, atribut, dan method dalam Python.',
-                'icon' => 'bi-box-seam',
-                'badge' => 'Konsep Inti',
+                'poin' => [
+                    'Definisi Kelas',
+                    'Instansiasi objek',
+                    'Atribut',
+                    'Metode',
+                    'Konstruktor dalam python',
+                ],
             ],
             [
-                'nomor' => 3,
+                'bab' => 'BAB 3',
                 'judul' => 'Enkapsulasi',
-                'deskripsi' => 'Memahami cara melindungi dan mengatur akses data di dalam sebuah class.',
-                'icon' => 'bi-shield-lock',
-                'badge' => 'Pilar OOP',
+                'poin' => [
+                    'Konsep pembungkusan data',
+                    'Akses modifier (public, protected private)',
+                    'Getter/Setter',
+                ],
             ],
             [
-                'nomor' => 4,
-                'judul' => 'Pewarisan (Inheritance)',
-                'deskripsi' => 'Memahami bagaimana sebuah class dapat mewarisi atribut dan method dari class lain.',
-                'icon' => 'bi-diagram-3',
-                'badge' => 'Pilar OOP',
+                'bab' => 'BAB 4',
+                'judul' => 'Pewarisan',
+                'poin' => [
+                    'Hierarki Kelas',
+                    'Override Metode',
+                ],
             ],
             [
-                'nomor' => 5,
+                'bab' => 'BAB 5',
                 'judul' => 'Polimorfisme',
-                'deskripsi' => 'Memahami penggunaan method yang sama dengan perilaku berbeda pada beberapa object.',
-                'icon' => 'bi-intersect',
-                'badge' => 'Pilar OOP',
+                'poin' => [
+                    'penggunaan polimorfisme untuk fleksibilitas kode',
+                ],
             ],
             [
-                'nomor' => 6,
-                'judul' => 'Kelas Abstrak (Abstract Class)',
-                'deskripsi' => 'Memahami abstract class sebagai dasar untuk membentuk struktur class yang lebih terorganisir.',
-                'icon' => 'bi-bounding-box-circles',
-                'badge' => 'Tingkat Lanjut',
+                'bab' => 'BAB 6',
+                'judul' => 'Kelas Abstrak',
+                'poin' => [
+                    'Implementasi abstract base class (ABC)',
+                    'metode abstrak',
+                    'antarmuka dalam OOP Python',
+                ],
             ],
         ];
 
