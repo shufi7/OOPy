@@ -7,6 +7,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name', 'OOPy')) - Platform Belajar OOP Python</title>
+    <meta name="theme-color" content="#6096B4">
+    <link rel="icon" type="image/png" href="{{ asset('images/oopy-logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/oopy-logo.png') }}">
 
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -19,15 +22,11 @@
     <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/oopy.css') }}">
 
     @stack('styles')
 </head>
-<body class="bg-white d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100">
 
     {{-- Komponen Navbar --}}
     @include('components.navbar')
@@ -38,8 +37,8 @@
     </main>
 
     {{-- Footer --}}
-    <footer class="bg-white py-3 mt-auto">
-        <div class="container text-center text-secondary" style="font-size: 0.95rem;">
+    <footer class="site-footer py-3 mt-auto">
+        <div class="container text-center">
             &copy; 2026 OOPy. All rights reserved.
         </div>
     </footer>
@@ -50,4 +49,3 @@
     @stack('scripts')
 </body>
 </html>
-

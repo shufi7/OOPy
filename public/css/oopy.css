@@ -1,0 +1,220 @@
+:root {
+    --oopy-blue: #6096b4;
+    --oopy-sky: #93bfcf;
+    --oopy-mist: #bdcdd6;
+    --oopy-cream: #eee9da;
+    --oopy-ink: #102936;
+    --oopy-ink-soft: #375f73;
+    --oopy-shadow: 0 12px 32px rgb(16 41 54 / 12%);
+    --bs-body-color: var(--oopy-ink);
+    --bs-body-bg: var(--oopy-cream);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.site-navbar,
+.site-footer {
+    background-color: var(--oopy-cream);
+}
+
+.site-navbar {
+    border-bottom: 1px solid var(--oopy-mist);
+    --bs-navbar-color: var(--oopy-ink);
+    --bs-navbar-hover-color: var(--oopy-ink-soft);
+    --bs-navbar-active-color: var(--oopy-ink);
+}
+
+.navbar-logo {
+    display: block;
+    object-fit: contain;
+}
+
+.brand-name {
+    color: var(--oopy-ink-soft);
+    letter-spacing: -0.5px;
+}
+
+.site-navbar .navbar-nav,
+.btn-brand,
+.site-footer {
+    font-size: 0.95rem;
+}
+
+.site-navbar .nav-link {
+    border-radius: 8px;
+}
+
+.site-navbar .nav-link.active {
+    background-color: var(--oopy-mist);
+}
+
+.btn-brand {
+    --bs-btn-color: var(--oopy-ink);
+    --bs-btn-bg: var(--oopy-blue);
+    --bs-btn-border-color: var(--oopy-blue);
+    --bs-btn-hover-color: var(--oopy-ink);
+    --bs-btn-hover-bg: var(--oopy-sky);
+    --bs-btn-hover-border-color: var(--oopy-blue);
+    --bs-btn-active-color: var(--oopy-ink);
+    --bs-btn-active-bg: var(--oopy-mist);
+    --bs-btn-active-border-color: var(--oopy-blue);
+    --bs-btn-focus-shadow-rgb: 96, 150, 180;
+    border-radius: 8px;
+}
+
+.site-footer {
+    color: var(--oopy-ink-soft);
+    border-top: 1px solid var(--oopy-mist);
+}
+
+.hero-section,
+.materi-section {
+    background: linear-gradient(112deg, var(--oopy-blue) 0%, var(--oopy-sky) 38%, var(--oopy-mist) 68%, var(--oopy-cream) 100%);
+    min-height: calc(100svh - 165px);
+}
+
+.hero-title {
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+    letter-spacing: -0.5px;
+}
+
+.hero-description {
+    max-width: 550px;
+    font-size: clamp(1.05rem, 1.3vw, 1.18rem);
+    line-height: 1.75;
+}
+
+.btn-hero-start {
+    --bs-btn-color: var(--oopy-ink);
+    --bs-btn-bg: var(--oopy-cream);
+    --bs-btn-border-color: var(--oopy-cream);
+    --bs-btn-hover-color: var(--oopy-ink);
+    --bs-btn-hover-bg: var(--oopy-mist);
+    --bs-btn-hover-border-color: var(--oopy-mist);
+    --bs-btn-active-color: var(--oopy-ink);
+    --bs-btn-active-bg: var(--oopy-sky);
+    --bs-btn-active-border-color: var(--oopy-sky);
+    --bs-btn-focus-shadow-rgb: 16, 41, 54;
+    border-radius: 50px;
+    padding: 12px 38px;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 18px rgb(16 41 54 / 15%);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-hero-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgb(16 41 54 / 20%);
+}
+
+.stacked-card-wrapper {
+    width: calc(100% - 16px);
+    max-width: 390px;
+    margin-right: 16px;
+}
+
+.stacked-card-back {
+    top: -16px;
+    right: -16px;
+    width: 100%;
+    height: 100%;
+    background-color: var(--oopy-sky);
+    border: 1px solid var(--oopy-blue);
+    border-radius: 24px;
+    box-shadow: var(--oopy-shadow);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.stacked-card-front {
+    background-color: var(--oopy-cream);
+    border: 1px solid var(--oopy-mist);
+    border-radius: 24px;
+    padding: 24px 24px 30px;
+    box-shadow: 0 20px 45px rgb(16 41 54 / 16%);
+    z-index: 2;
+}
+
+.hero-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.card-tagline {
+    color: var(--oopy-ink-soft);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.materi-card {
+    --bs-card-bg: var(--oopy-cream);
+    --bs-card-color: var(--oopy-ink);
+    border-radius: 22px;
+    box-shadow: var(--oopy-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.materi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgb(16 41 54 / 18%);
+}
+
+.materi-bab {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: var(--oopy-mist);
+    border-radius: 8px;
+    color: var(--oopy-ink-soft);
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+}
+
+.materi-title {
+    font-size: 1.25rem;
+}
+
+.materi-list {
+    list-style-type: disc;
+}
+
+.materi-item {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.materi-item::marker {
+    color: var(--oopy-ink-soft);
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--oopy-ink);
+    outline-offset: 4px;
+}
+
+@media (max-width: 575.98px) {
+    .navbar-logo {
+        width: 52px;
+        height: 52px;
+    }
+
+    .stacked-card-front {
+        padding: 18px 18px 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-hero-start,
+    .materi-card {
+        transition: none;
+    }
+
+    .btn-hero-start:hover,
+    .materi-card:hover {
+        transform: none;
+    }
+}
