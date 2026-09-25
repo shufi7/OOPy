@@ -28,7 +28,7 @@
                         <img src="{{ asset('images/oopy-logo.png') }}"
                              alt="Logo OOPy: bekantan dengan laptop untuk belajar pemrograman"
                              class="hero-logo mb-3" width="1254" height="1254" fetchpriority="high">
-                        <p class="card-tagline mb-0">Learn OOP Python, Step by Step</p>
+                        <p class="card-tagline mb-0">Learn OOP Python</p>
                     </div>
                 </div>
             </div>
