@@ -26,7 +26,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2" href="#">Editor</a>
+                    <a class="nav-link px-2 {{ request()->routeIs('editor.*') ? 'active' : '' }}"
+                       @if (request()->routeIs('editor.*')) aria-current="page" @endif
+                       href="{{ route('editor.index') }}">Editor</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link px-2" href="#">Dokumentasi</a>

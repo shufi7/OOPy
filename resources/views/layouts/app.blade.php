@@ -26,10 +26,14 @@
 
     @stack('styles')
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 @yield('body-class')">
 
     {{-- Komponen Navbar --}}
-    @include('components.navbar')
+    @hasSection('learning-sidebar')
+        @yield('learning-sidebar')
+    @else
+        @include('components.navbar')
+    @endif
 
     {{-- Konten Utama --}}
     <main class="flex-grow-1 d-flex flex-column">
@@ -37,11 +41,13 @@
     </main>
 
     {{-- Footer --}}
+    @unless (View::hasSection('learning-sidebar'))
     <footer class="site-footer py-3 mt-auto">
         <div class="container text-center">
             &copy; 2026 OOPy. All rights reserved.
         </div>
     </footer>
+    @endunless
 
     <!-- Bootstrap 5 JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

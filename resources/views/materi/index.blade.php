@@ -8,7 +8,7 @@
         <div class="row g-4 justify-content-center">
             @foreach ($materiList as $materi)
                 <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card materi-card h-100 border-0">
+                    <div class="card materi-card h-100 border-0" id="bab-{{ $loop->iteration }}">
                         <div class="card-body p-4">
                             {{-- Label BAB --}}
                             <div class="materi-bab fw-bold mb-1">
