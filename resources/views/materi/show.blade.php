@@ -8,6 +8,7 @@
 
 @push('scripts')
     <script src="{{ asset('js/oopy-material.js') }}" defer></script>
+    <script src="{{ asset('js/oopy-quiz.js') }}" defer></script>
 @endpush
 
 @section('content')
@@ -56,32 +57,7 @@
                     </ul>
                 </section>
 
-                <section class="material-section" id="latihan" aria-labelledby="latihan-title" tabindex="-1" data-material-section>
-                    <span class="material-eyebrow">TERAPKAN PEMAHAMANMU</span>
-                    <h2 id="latihan-title">Latihan {{ $chapter['bab'] }}</h2>
-                    <p>{{ $content['exercise']['description'] }}</p>
-                    <ol class="material-list">
-                        @foreach ($content['exercise']['steps'] as $step)
-                            <li>{{ $step }}</li>
-                        @endforeach
-                    </ol>
-                    {{-- Optional chapter exercise editors use the same reusable component. --}}
-                    @foreach ($content['exercise']['live_codes'] ?? [] as $exercise)
-                        <x-live-code :config="$exercise" />
-                    @endforeach
-                    <aside class="material-tip" aria-label="Petunjuk latihan mandiri">
-                        <strong>Latihan mandiri</strong>
-                        <p>Kerjakan di editor Python pilihanmu. Bandingkan output dengan data yang kamu masukkan. Pengumpulan jawaban latihan BAB belum tersedia.</p>
-                    </aside>
-                </section>
-
-                <section class="material-section material-quiz" id="kuis" aria-labelledby="kuis-title" tabindex="-1" data-material-section>
-                    <span class="material-eyebrow">CEK PEMAHAMAN</span>
-                    <h2 id="kuis-title">Kuis {{ $chapter['bab'] }}</h2>
-                    <p>Uji pemahamanmu setelah menyelesaikan materi dan latihan.</p>
-                    <p id="quiz-availability">Kuis BAB ini sedang disiapkan. Kamu dapat meninjau rangkuman sambil menunggu kuis tersedia.</p>
-                    <button class="btn btn-brand" type="button" disabled aria-describedby="quiz-availability">Segera tersedia</button>
-                </section>
+                @include('materi.partials.quiz')
 
                 <nav class="material-bottom-nav" aria-label="Navigasi antar BAB">
                     <a class="btn btn-brand" href="{{ route('materi.index') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> Kembali ke Daftar Materi</a>

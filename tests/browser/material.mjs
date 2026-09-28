@@ -19,9 +19,9 @@ try {
     await page.getByRole('link', { name: /Pelajari BAB 1/ }).click();
     await page.waitForURL(`${base}${chapterPath}`);
     await waitReady();
-    assert.equal(await page.locator('[data-material-section]').count(), 13);
+    assert.equal(await page.locator('[data-material-section]').count(), 12);
     assert.equal(await page.locator('[data-live-code]').count(), 1);
-    assert.equal(await page.locator('.material-toc nav a').count(), 13);
+    assert.equal(await page.locator('.material-toc nav a').count(), 12);
 
     for (const width of [390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
@@ -42,7 +42,7 @@ try {
             assert.equal(overlap, false);
         }
     }
-    console.log('PASS: home -> list -> chapter; 13 sections; responsive TOC, focus and anchors at 390/768/1024/1440px');
+    console.log('PASS: home -> list -> chapter; 12 sections; responsive TOC, focus and anchors at 390/768/1024/1440px');
 
     // A keyboard user can reach the horizontally scrollable code example.
     await page.locator('#fungsi .material-code pre').focus();
@@ -62,9 +62,9 @@ try {
     await waitReady();
     assert.equal(await role('practice-percentage').textContent(), '100%');
     assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
-    assert.equal(await page.locator('#kuis button').isDisabled(), true);
+    assert.equal(await page.locator('#kuis [data-quiz="form"]').isVisible(), true);
     await role('reset-code').click();
-    console.log('PASS: existing Live Coding Run/Submit/Reset; exercise score independent from chapter display; quiz disabled');
+    console.log('PASS: existing Live Coding Run/Submit/Reset; exercise score independent from chapter display; interactive quiz rendered');
 
     // Direct anchors and no-JS reading work independently of Monaco/Pyodide.
     const mobile = await browser.newPage({ viewport: { width: 390, height: 900 } });
@@ -78,8 +78,8 @@ try {
     await noJs.locator('.material-toc summary').click();
     assert.equal(await noJs.locator('.material-toc').evaluate((el) => el.open), false);
     await noJs.locator('.material-toc summary').click();
-    await noJs.locator('.material-toc a[href="#latihan"]').click();
-    assert.match(noJs.url(), /#latihan$/);
+    await noJs.locator('.material-toc a[href="#kuis"]').click();
+    assert.match(noJs.url(), /#kuis$/);
     await noJs.close();
     assert.deepEqual(errors, []);
     console.log('PASS: direct mobile anchors, native no-JS navigation; no page errors');

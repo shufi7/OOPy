@@ -11,7 +11,6 @@
                         <li><a href="#{{ $section['id'] }}">{{ $section['title'] }}</a></li>
                     @endforeach
                     <li><a href="#rangkuman">Rangkuman</a></li>
-                    <li><a href="#latihan">Latihan BAB</a></li>
                     <li><a href="#kuis">Kuis BAB</a></li>
                 </ol>
             </nav>

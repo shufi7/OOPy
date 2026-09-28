@@ -188,13 +188,58 @@ PYTHON,
         'Fungsi membuat instruksi dapat digunakan kembali dengan parameter yang berbeda.',
         'OOP menggabungkan data dan perilaku dalam objek yang dibuat dari class.',
     ],
-    'exercise' => [
-        'description' => 'Buat program pencatatan sederhana untuk satu ekosistem lahan basah. Gunakan konsep yang telah dipelajari tanpa perlu membuat class terlebih dahulu.',
-        'steps' => [
-            'Simpan nama ekosistem, lokasi, luas area, dan kondisi air dalam variabel dengan tipe data yang sesuai.',
-            'Gunakan if, elif, dan else untuk menampilkan catatan sesuai kondisi air: jernih, keruh, atau belum dicatat.',
-            'Buat fungsi yang menerima data ekosistem dan mengembalikan teks informasi.',
-            'Panggil fungsi tersebut, tampilkan hasilnya dengan print(), lalu coba data ekosistem lain.',
+    'quiz' => [
+        [
+            'question' => 'Apa fungsi variabel nama_ekosistem pada kode berikut?',
+            'code' => 'nama_ekosistem = "Rawa Bangkau"',
+            'options' => ['Menyimpan nama ekosistem', 'Menyimpan luas rawa', 'Menjalankan perulangan', 'Membuat fungsi'],
+            'correct' => 0,
+            'explanation' => 'nama_ekosistem merujuk pada nilai string "Rawa Bangkau". Variabel memberi nama pada nilai agar dapat digunakan kembali dalam program.',
+        ],
+        [
+            'question' => 'Apa tipe data nilai yang disimpan dalam luas_hektar?',
+            'code' => 'luas_hektar = 120',
+            'options' => ['str (teks)', 'int (bilangan bulat)', 'float (bilangan desimal)', 'bool (nilai benar atau salah)'],
+            'correct' => 1,
+            'explanation' => '120 adalah bilangan bulat tanpa tanda kutip, sehingga bertipe int. Nilai "120" dengan tanda kutip akan bertipe str.',
+        ],
+        [
+            'question' => 'Pesan apa yang ditampilkan oleh program pencatatan kondisi air ini?',
+            'code' => <<<'PYTHON'
+kondisi_air = "jernih"
+
+if kondisi_air == "keruh":
+    print("Catat air keruh")
+else:
+    print("Catat kondisi lainnya")
+PYTHON,
+            'options' => ['Catat air keruh', 'Kedua pesan ditampilkan', 'Catat kondisi lainnya', 'Tidak ada pesan yang ditampilkan'],
+            'correct' => 2,
+            'explanation' => 'Nilai kondisi_air adalah "jernih", sehingga perbandingan dengan "keruh" bernilai False. Program menjalankan blok else dan menampilkan "Catat kondisi lainnya".',
+        ],
+        [
+            'question' => 'Berapa kali print(nama) dijalankan pada perulangan berikut?',
+            'code' => <<<'PYTHON'
+ekosistem = ["Sungai Barito", "Rawa Bangkau"]
+
+for nama in ekosistem:
+    print(nama)
+PYTHON,
+            'options' => ['Satu kali', 'Dua kali', 'Tiga kali', 'Terus-menerus tanpa berhenti'],
+            'correct' => 1,
+            'explanation' => 'Perulangan for mengunjungi setiap elemen list satu kali. List ekosistem memiliki dua elemen, sehingga print(nama) dijalankan dua kali.',
+        ],
+        [
+            'question' => 'Apa kegunaan fungsi informasi_habitat pada contoh ini?',
+            'code' => <<<'PYTHON'
+def informasi_habitat(nama, lokasi):
+    return f"{nama} berada di {lokasi}"
+
+print(informasi_habitat("Rawa Bangkau", "Hulu Sungai Selatan"))
+PYTHON,
+            'options' => ['Mengulang program tanpa kondisi berhenti', 'Mengubah semua data menjadi bilangan bulat', 'Membuat class baru untuk setiap habitat', 'Menghasilkan teks informasi yang dapat digunakan kembali untuk habitat berbeda'],
+            'correct' => 3,
+            'explanation' => 'Fungsi menerima parameter nama dan lokasi, lalu mengembalikan teks melalui return. Fungsi yang sama dapat dipanggil lagi dengan data habitat lain.',
         ],
     ],
 ];
