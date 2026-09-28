@@ -2,71 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
 
 class MateriController extends Controller
 {
-    //
-    public function index()
+    public function index(): View
     {
-        $materiList = [
-            [
-                'bab' => 'BAB 1',
-                'judul' => 'Dasar Pemrograman & OOP',
-                'poin' => [
-                    'Pengenalan Python',
-                    'Variabel',
-                    'Tipe data',
-                    'Struktur kontrol',
-                    'Konsep dasar paradigma OOP.',
-                ],
-            ],
-            [
-                'bab' => 'BAB 2',
-                'judul' => 'Kelas dan Objek',
-                'poin' => [
-                    'Definisi Kelas',
-                    'Instansiasi objek',
-                    'Atribut',
-                    'Metode',
-                    'Konstruktor dalam python',
-                ],
-            ],
-            [
-                'bab' => 'BAB 3',
-                'judul' => 'Enkapsulasi',
-                'poin' => [
-                    'Konsep pembungkusan data',
-                    'Akses modifier (public, protected private)',
-                    'Getter/Setter',
-                ],
-            ],
-            [
-                'bab' => 'BAB 4',
-                'judul' => 'Pewarisan',
-                'poin' => [
-                    'Hierarki Kelas',
-                    'Override Metode',
-                ],
-            ],
-            [
-                'bab' => 'BAB 5',
-                'judul' => 'Polimorfisme',
-                'poin' => [
-                    'penggunaan polimorfisme untuk fleksibilitas kode',
-                ],
-            ],
-            [
-                'bab' => 'BAB 6',
-                'judul' => 'Kelas Abstrak',
-                'poin' => [
-                    'Implementasi abstract base class (ABC)',
-                    'metode abstrak',
-                    'antarmuka dalam OOP Python',
-                ],
-            ],
-        ];
+        return view('materi.index', [
+            'materiList' => require resource_path('materi/chapters.php'),
+        ]);
+    }
 
-        return view('materi.index', compact('materiList'));
+    public function show(string $slug): View
+    {
+        $chapters = require resource_path('materi/chapters.php');
+        $chapter = $chapters[$slug] ?? null;
+
+        abort_unless(isset($chapter['content']), 404);
+
+        // Resolve only filenames in our chapter registry, never a user-supplied path.
+        $content = require resource_path('materi/'.$chapter['content']);
+
+        return view('materi.show', compact('chapter', 'content'));
     }
 }

@@ -6,7 +6,7 @@
 <div class="materi-section flex-grow-1 d-flex align-items-center py-5">
     <div class="container-fluid px-lg-5 px-3 py-lg-3">
         <div class="row g-4 justify-content-center">
-            @foreach ($materiList as $materi)
+            @foreach ($materiList as $slug => $materi)
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card materi-card h-100 border-0" id="bab-{{ $loop->iteration }}">
                         <div class="card-body p-4">
@@ -28,6 +28,13 @@
                                     </li>
                                 @endforeach
                             </ul>
+                            @if (isset($materi['content']))
+                                <a class="btn btn-brand stretched-link mt-4" href="{{ route('materi.show', $slug) }}" aria-label="Pelajari {{ $materi['bab'] }}: {{ $materi['judul'] }}">
+                                    Pelajari {{ $materi['bab'] }} <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            @else
+                                <span class="badge text-bg-light mt-4">Segera hadir</span>
+                            @endif
                         </div>
                     </div>
                 </div>
