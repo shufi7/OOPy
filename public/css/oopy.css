@@ -190,6 +190,99 @@ body {
     color: var(--oopy-ink-soft);
 }
 
+/* =========================================
+   NAVIGASI ANTAR BAB
+   ========================================= */
+
+.material-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+
+    margin-top: 40px;
+    padding-top: 24px;
+
+    border-top: 1px solid var(--oopy-mist);
+}
+
+/* Tombol navigasi */
+.material-nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+    padding: 11px 20px;
+
+    border: 1px solid var(--oopy-blue);
+    border-radius: 8px;
+
+    background-color: var(--oopy-blue);
+    color: var(--oopy-ink);
+
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    box-shadow: 0 6px 18px rgb(16 41 54 / 10%);
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Tombol BAB sebelumnya */
+.material-nav-button.previous {
+    margin-right: auto;
+
+    background-color: var(--oopy-cream);
+    border-color: var(--oopy-mist);
+    color: var(--oopy-ink-soft);
+}
+
+/* Tombol BAB berikutnya */
+.material-nav-button.next {
+    margin-left: auto;
+}
+
+/* Hover tombol */
+.material-nav-button:hover {
+    background-color: var(--oopy-sky);
+    border-color: var(--oopy-blue);
+    color: var(--oopy-ink);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgb(16 41 54 / 15%);
+}
+
+/* Hover tombol sebelumnya */
+.material-nav-button.previous:hover {
+    background-color: var(--oopy-mist);
+    border-color: var(--oopy-blue);
+    color: var(--oopy-ink);
+}
+
+/* Saat tombol ditekan */
+.material-nav-button:active {
+    background-color: var(--oopy-mist);
+    border-color: var(--oopy-blue);
+
+    transform: translateY(0);
+
+    box-shadow: 0 3px 8px rgb(16 41 54 / 12%);
+}
+
+/* Fokus keyboard */
+.material-nav-button:focus-visible {
+    outline: 3px solid var(--oopy-sky);
+    outline-offset: 3px;
+}
+
+
 a:focus-visible,
 button:focus-visible {
     outline: 3px solid var(--oopy-ink);
@@ -216,5 +309,18 @@ button:focus-visible {
     .btn-hero-start:hover,
     .materi-card:hover {
         transform: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .material-navigation {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .material-nav-button {
+        width: 100%;
+        margin: 0 !important;
     }
 }

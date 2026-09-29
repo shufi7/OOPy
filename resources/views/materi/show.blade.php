@@ -81,6 +81,30 @@
                     <a class="btn btn-brand" href="{{ route('materi.index') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> Kembali ke Daftar Materi</a>
                     <span>Materi BAB berikutnya segera hadir.</span>
                 </nav>
+
+                {{-- Navigasi antar BAB --}}
+                <div class="material-navigation">
+
+                    {{-- BAB sebelumnya --}}
+                    @if (!empty($previousChapter))
+                    <a href="{{ route('materi.show', $previousChapter['slug']) }}"
+                        class="material-nav-button previous">
+                        ← BAB Sebelumnya
+                    </a>
+                    @else
+                    <span></span>
+                    @endif
+
+                    {{-- BAB berikutnya --}}
+                    @if (!empty($nextChapter))
+                    <a href="{{ route('materi.show', $nextChapter['slug']) }}"
+                        class="material-nav-button next">
+                        Lanjut ke {{ $nextChapter['bab'] }} →
+                    </a>
+                    @endif
+
+                </div>
+
             </article>
         </div>
     </div>
