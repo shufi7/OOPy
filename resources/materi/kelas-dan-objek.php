@@ -191,12 +191,11 @@ PYTHON,
                         'main.py' => <<<'PYTHON'
 class Spesies:
     def __init__(self, nama, habitat):
-        # TODO
-        pass
+        self.nama = nama
+        self.habitat = habitat
 
     def deskripsi(self):
-        # TODO
-        pass
+        return f"{self.nama} hidup di {self.habitat}"
 
 
 spesies1 = Spesies("Bekantan", "Hutan riparian")
@@ -278,12 +277,11 @@ PYTHON,
                         'main.py' => <<<'PYTHON'
 class SensorAir:
     def __init__(self, lokasi, tinggi_air):
-        # TODO
-        pass
+        self.lokasi = lokasi
+        self.tinggi_air = tinggi_air
 
     def tampilkan(self):
-        # TODO
-        pass
+        return f"Lokasi: {self.lokasi}, Tinggi air: {self.tinggi_air} cm"
 
 
 sensor1 = SensorAir("Sungai Barito", 120)
