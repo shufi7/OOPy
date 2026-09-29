@@ -16,12 +16,12 @@ return [
     'kelas-dan-objek' => [
         'bab' => 'BAB 2',
         'judul' => 'Kelas dan Objek',
+        'content' => 'kelas-dan-objek.php',
         'poin' => [
-            'Definisi Kelas',
-            'Instansiasi objek',
-            'Atribut',
-            'Metode',
-            'Konstruktor dalam python',
+            'Hubungan class dan object',
+            'Constructor __init__ dan atribut instance',
+            'Instance method dan self',
+            'Membuat beberapa object dari satu class',
         ],
     ],
     'enkapsulasi' => [

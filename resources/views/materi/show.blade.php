@@ -3,12 +3,12 @@
 @section('title', $chapter['bab'].' — '.$chapter['judul'])
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/oopy-material.css') }}">
+<link rel="stylesheet" href="{{ asset('css/oopy-material.css') }}">
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('js/oopy-material.js') }}" defer></script>
-    <script src="{{ asset('js/oopy-quiz.js') }}" defer></script>
+<script src="{{ asset('js/oopy-material.js') }}" defer></script>
+<script src="{{ asset('js/oopy-quiz.js') }}" defer></script>
 @endpush
 
 @section('content')
@@ -38,13 +38,13 @@
                     <p>Setelah menyelesaikan BAB ini, mahasiswa diharapkan mampu:</p>
                     <ul class="material-objectives">
                         @foreach ($content['objectives'] as $objective)
-                            <li>{{ $objective }}</li>
+                        <li>{{ $objective }}</li>
                         @endforeach
                     </ul>
                 </section>
 
                 @foreach ($content['sections'] as $section)
-                    @include('materi.partials.section', ['number' => $loop->iteration])
+                @include('materi.partials.section', ['number' => $loop->iteration])
                 @endforeach
 
                 <section class="material-section" id="rangkuman" aria-labelledby="rangkuman-title" tabindex="-1" data-material-section>
@@ -52,10 +52,28 @@
                     <h2 id="rangkuman-title">Rangkuman</h2>
                     <ul class="material-list">
                         @foreach ($content['summary'] as $point)
-                            <li>{{ $point }}</li>
+                        <li>{{ $point }}</li>
                         @endforeach
                     </ul>
                 </section>
+
+                @if (!empty($content['reflection']))
+                <section class="material-section" id="refleksi" aria-labelledby="refleksi-title" tabindex="-1" data-material-section>
+                    <span class="material-eyebrow">REFLEKSI</span>
+                    <h2 id="refleksi-title">Refleksi</h2>
+
+                    <p>
+                        Setelah mempelajari BAB ini, coba jawab pertanyaan berikut
+                        untuk mengingat kembali konsep yang sudah dipelajari.
+                    </p>
+
+                    <ol class="material-list">
+                        @foreach ($content['reflection'] as $question)
+                        <li>{{ $question }}</li>
+                        @endforeach
+                    </ol>
+                </section>
+                @endif
 
                 @include('materi.partials.quiz')
 
