@@ -43,6 +43,7 @@
 .oopy-material .material-objectives li, .oopy-material .material-list li { margin-bottom: 10px; padding-left: 5px; }
 .oopy-material .material-objectives li::marker { color: var(--oopy-blue); }
 .oopy-material .material-code { margin: 24px 0; border: 1px solid var(--oopy-dark); border-radius: 12px; overflow: hidden; background: var(--oopy-code-bg); }
+.oopy-material .material-section > .material-code { background: #1E1E2E; }
 .oopy-material .material-code figcaption { padding: 10px 18px; border-bottom: 1px solid var(--oopy-dark); color: var(--oopy-mint); font-size: .75rem; font-weight: 600; }
 .oopy-material .material-code pre { margin: 0; padding: 20px; overflow-x: auto; color: var(--oopy-mint); font: .875rem/1.9 Consolas, 'Courier New', monospace; tab-size: 4; white-space: pre; }
 .oopy-material .material-code code { font: inherit; color: inherit; }
