@@ -31,7 +31,9 @@
                 <header class="material-header">
                     <span class="material-eyebrow">{{ $chapter['bab'] }} · MATERI PEMBELAJARAN</span>
                     <h1 id="chapter-title">{{ $chapter['judul'] }}</h1>
+                    @if (!empty($content['description']))
                     <p>{{ $content['description'] }}</p>
+                    @endif
                     <a class="material-start" href="#tujuan">Mulai dari tujuan pembelajaran <i class="bi bi-arrow-down" aria-hidden="true"></i></a>
                 </header>
 
@@ -39,16 +41,17 @@
                     <h2 id="tujuan-title">Tujuan Pembelajaran</h2>
                     <p>Setelah menyelesaikan BAB ini, mahasiswa diharapkan mampu:</p>
                     <ul class="material-objectives">
-                        @foreach ($content['objectives'] as $objective)
+                        @foreach ($content['objectives'] ?? [] as $objective)
                         <li>{{ $objective }}</li>
                         @endforeach
                     </ul>
                 </section>
 
-                @foreach ($content['sections'] as $section)
+                @foreach ($content['sections'] ?? [] as $section)
                 @include('materi.partials.section', ['number' => $loop->iteration])
                 @endforeach
 
+                @if (!empty($content['summary']))
                 <section class="material-section" id="rangkuman" aria-labelledby="rangkuman-title" tabindex="-1" data-material-section>
                     <span class="material-eyebrow">TINJAU KEMBALI</span>
                     <h2 id="rangkuman-title">Rangkuman</h2>
@@ -58,6 +61,7 @@
                         @endforeach
                     </ul>
                 </section>
+                @endif
 
                 @if (!empty($content['reflection']))
                 <section class="material-section" id="refleksi" aria-labelledby="refleksi-title" tabindex="-1" data-material-section>
@@ -77,35 +81,25 @@
                 </section>
                 @endif
 
+                @if (!empty($content['quiz']))
                 @include('materi.partials.quiz')
+                @endif
 
-                <nav class="material-bottom-nav" aria-label="Navigasi antar BAB">
-                    <a class="btn btn-brand" href="{{ route('materi.index') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> Kembali ke Daftar Materi</a>
-                    <span>Materi BAB berikutnya segera hadir.</span>
-                </nav>
-
-                {{-- Navigasi antar BAB --}}
-                <div class="material-navigation">
-
-                    {{-- BAB sebelumnya --}}
+                <nav class="material-navigation" aria-label="Navigasi antar BAB">
                     @if (!empty($previousChapter))
                     <a href="{{ route('materi.show', $previousChapter['slug']) }}"
-                        class="material-nav-button previous">
-                        ← BAB Sebelumnya
+                        class="material-nav-button previous" rel="prev">
+                        <i class="bi bi-arrow-left" aria-hidden="true"></i> BAB Sebelumnya: {{ $previousChapter['bab'] }}
                     </a>
-                    @else
-                    <span></span>
                     @endif
-
-                    {{-- BAB berikutnya --}}
+                    <a class="material-nav-list" href="{{ route('materi.index') }}">Kembali ke Daftar Materi</a>
                     @if (!empty($nextChapter))
                     <a href="{{ route('materi.show', $nextChapter['slug']) }}"
-                        class="material-nav-button next">
-                        Lanjut ke {{ $nextChapter['bab'] }} →
+                        class="material-nav-button next" rel="next">
+                        Lanjut ke {{ $nextChapter['bab'] }} <i class="bi bi-arrow-right" aria-hidden="true"></i>
                     </a>
                     @endif
-
-                </div>
+                </nav>
 
             </article>
         </div>

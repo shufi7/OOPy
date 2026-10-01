@@ -58,4 +58,30 @@ class LiveCodeTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         new LiveCode(['id' => 'invalid-path', 'files' => ['../main.py' => '']]);
     }
+
+    public function test_chapter_two_renders_incomplete_exercises_with_assets_loaded_once(): void
+    {
+        $html = $this->get('/materi/kelas-dan-objek')->assertOk()->getContent();
+        $this->assertSame(2, substr_count($html, 'data-live-code'));
+        $this->assertSame(1, substr_count($html, 'css/oopy-live-code.css'));
+        $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));
+        preg_match_all('/data-role="config">(.*?)<\/script>/s', $html, $matches);
+        $configs = array_map(fn ($json) => json_decode($json, true, flags: JSON_THROW_ON_ERROR), $matches[1]);
+        $this->assertSame(['bab2-spesies', 'bab2-sensor-air'], array_column($configs, 'id'));
+        foreach ($configs as $config) {
+            $this->assertSame('main.py', $config['entry_file']);
+            $this->assertStringContainsString('pass', $config['files']['main.py']);
+            $this->assertStringNotContainsString('return f"', $config['files']['main.py']);
+            $this->assertNotEmpty($config['checker']);
+            $this->assertStringContainsString('<h3 id="'.$config['id'].'-workspace-title"', $html);
+            $this->assertStringContainsString('<h3 id="'.$config['id'].'-output-title"', $html);
+        }
+    }
+
+    public function test_default_heading_level_is_preserved_for_the_editor_demo(): void
+    {
+        $html = $this->get('/editor')->assertOk()->getContent();
+        $this->assertStringContainsString('<h2 id="demo-dasar-workspace-title"', $html);
+        $this->assertStringContainsString('<h3 class="oopy-explorer-title"', $html);
+    }
 }

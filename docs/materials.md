@@ -1,8 +1,9 @@
 # Halaman materi OOPy
 
-Daftar BAB tetap berada di `/materi`. Detail BAB 1 tersedia pada
-`/materi/dasar-pemrograman-oop` melalui route `materi.show` (`GET /materi/{slug}`).
-BAB 2–6 ditampilkan sebagai **Segera hadir**, tanpa tautan detail. Slug yang belum
+Daftar BAB tetap berada di `/materi`. Detail BAB 1 dan BAB 2 tersedia pada
+`/materi/dasar-pemrograman-oop` dan `/materi/kelas-dan-objek` melalui route
+`materi.show` (`GET /materi/{slug}`). BAB 3–6 ditampilkan sebagai **Segera hadir**,
+tanpa tautan detail. Slug yang belum
 memiliki konten atau tidak dikenal menghasilkan 404; controller hanya membaca
 filename yang tercantum dalam registry, bukan path dari URL pengguna.
 
@@ -11,10 +12,12 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 - `resources/materi/chapters.php`: registry judul, poin card, dan file konten BAB.
 - `resources/materi/dasar-pemrograman-oop.php`: deskripsi, tujuan, sembilan bagian
   materi, contoh kode, catatan, konfigurasi Live Coding, rangkuman dan data kuis BAB 1.
+- `resources/materi/kelas-dan-objek.php`: tujuh bagian BAB 2, termasuk apersepsi,
+  bedah kode, latihan Spesies/SensorAir, rangkuman, refleksi, dan delapan soal kuis.
 - `app/Http/Controllers/MateriController.php`: `index()` untuk daftar dan `show()`
   untuk detail yang terdaftar, tanpa query database.
 - `resources/views/materi/show.blade.php`: breadcrumb, header, konten BAB,
-  kuis dan navigasi kembali.
+  kuis dan satu navigasi dinamis antar-BAB beserta tautan kembali ke daftar materi.
 - `resources/views/materi/partials/quiz.blade.php`: struktur aktivitas kuis dan hasil.
 - `public/js/oopy-quiz.js`: pilihan jawaban, navigasi, skor, pembahasan dan Coba Lagi.
 - `resources/views/materi/partials/navigation.blade.php`: daftar isi dan progres.
@@ -25,22 +28,32 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 
 BAB 1 memiliki anchor `tujuan`, `python`, `variabel`, `tipe-data`, `input-output`,
 `operator`, `percabangan`, `perulangan`, `fungsi`, `oop`, `rangkuman`, `kuis`.
-Section Latihan BAB telah dihapus; Rangkuman langsung diikuti Kuis BAB.
+BAB 2 menambahkan Refleksi sesudah Rangkuman dan sebelum Kuis BAB. Sidebar memakai
+urutan data section yang sama dengan artikel; link Refleksi hanya muncul jika
+`reflection` berisi pertanyaan. Tidak ada jumlah section yang diwajibkan antar-BAB.
 Sidebar sticky pada lebar minimal 992px. Di bawahnya, daftar isi menggunakan
 `details`/`summary` dalam alur halaman sehingga tidak menutupi materi. Tanpa
 JavaScript, konten dan navigasi anchor tetap tersedia, termasuk menu native.
 
-## Menambahkan BAB 2
+## Menggunakan template untuk BAB berikutnya
 
-1. Buat `resources/materi/kelas-dan-objek.php` mengikuti struktur data BAB 1:
-   `description`, `objectives`, `sections`, `summary`, dan `quiz`.
-2. Pada entri `kelas-dan-objek` di `chapters.php`, tambahkan
-   `'content' => 'kelas-dan-objek.php'`. Card otomatis menampilkan tautan detail.
-3. Isi setiap section dengan `id` unik, `title`, dan array `paragraphs`.
-   `code`, `tip`, dan `live_codes` bersifat opsional. ID harus valid untuk anchor
-   dan tidak sama dengan `tujuan`, `rangkuman`, atau `kuis`.
+1. Siapkan file data BAB mengikuti struktur BAB 1/BAB 2: `description`,
+   `objectives`, `sections`, `summary`, `reflection`, dan `quiz`. Deskripsi dan
+   array opsional dapat dihilangkan; rangkuman/refleksi/kuis kosong tidak dirender
+   dan tidak mendapatkan tautan sidebar.
+2. Pada entri BAB di `chapters.php`, tambahkan `content` berisi nama file data.
+   Card otomatis menampilkan tautan detail; navigasi sebelumnya/berikutnya
+   memakai registry melalui `$previousChapter` dan `$nextChapter`.
+3. Isi setiap section dengan `id` unik dan `title`. `paragraphs`, `code`, `tip`,
+   dan `live_codes` bersifat opsional. ID harus valid untuk anchor dan tidak sama
+   dengan `tujuan`, `rangkuman`, `refleksi`, `kuis`, atau ID komponen lainnya.
 4. Tambahkan tes judul, section dan URL BAB baru. Route dan template dapat dipakai
-   tanpa menambahkan controller atau route khusus BAB 2.
+   tanpa menambahkan controller, route, atau view khusus BAB tersebut.
+
+Urutan pembelajaran: Tujuan → Apersepsi (section opsional) → konsep/contoh/bedah
+kode → aktivitas Live Coding → Rangkuman → Refleksi (opsional) → Kuis → navigasi.
+Section tetap mengikuti urutan data. Template ini menjadi acuan BAB 3–6; konten
+BAB tersebut belum ditambahkan.
 
 Semua konten adalah data yang ditulis developer. Blade melakukan escaping pada
 teks dan kode; tidak perlu memasukkan HTML ke dalam file data.
@@ -66,6 +79,16 @@ API komponen yang sudah tersedia:
 Partial section merender `<x-live-code :config="$exercise" />` untuk setiap config.
 Gunakan ID unik pada satu halaman. Engine `public/js/live-code/*` tidak perlu diubah.
 Lihat [panduan Live Coding](live-coding.md) untuk multi-file dan checker terperinci.
+
+Dalam section materi, komponen memakai `:heading-level="3"` agar berada di bawah
+heading section `h2`. Default komponen tetap `2` untuk halaman demo editor.
+CSS memilih role/class heading sehingga tampilannya sama pada kedua konteks.
+Aset komponen tetap dimuat sekali oleh `@pushOnce`, termasuk saat ada dua latihan.
+
+Starter Spesies dan SensorAir BAB 2 menyediakan signature method dan komentar
+petunjuk; mahasiswa melengkapi constructor, return, pembuatan object dan output.
+Contoh program lengkap di materi dan checker perilaku sebelumnya dipertahankan.
+Starter belum lulus Submit; contoh solusi benar dapat lulus checker yang sama.
 
 ## Kuis interaktif
 
@@ -97,16 +120,18 @@ dan kembali ke soal pertama. Refresh juga mengulang kuis dari awal.
 
 ## Batasan tahap ini
 
-- Progres BAB menampilkan 0% dengan keterangan pencatatan belum tersedia. Tidak
+- Progres BAB ditandai sebagai contoh tampilan, dengan keterangan bahwa progres
+  belum dicatat atau disimpan. Bar tetap kosong. Tidak
   mengikuti skor Submit, tidak disimpan ke browser maupun server.
-- Satu latihan Variabel memakai Monaco/Pyodide dari CDN. Materi teks dan contoh
+- Latihan Variabel BAB 1 serta Spesies dan SensorAir BAB 2 memakai komponen
+  Monaco/Pyodide yang sama dari CDN. Materi teks dan contoh
   `<pre><code>` tetap dapat dibaca ketika editor belum siap.
 - `input()` dijelaskan dengan contoh untuk terminal lokal; editor browser belum
   mendukung input interaktif.
 - Kuis adalah prototype frontend, tanpa backend kuis, storage browser, atau
   penyimpanan nilai. Kunci soal tersedia di browser, bukan penilaian ujian tepercaya.
   Skor kuis tidak mengubah progres BAB maupun hasil Live Coding.
-- Hanya BAB 1 yang memiliki detail. Tidak ada autentikasi, database materi,
+- Hanya BAB 1 dan BAB 2 yang memiliki detail. Tidak ada autentikasi, database materi,
   dashboard, atau perubahan pada engine Live Coding, navbar, footer, dan Beranda.
 
 ## Pengujian
@@ -119,15 +144,20 @@ php vendor/bin/pint --test --dirty
 git diff --check
 ```
 
-Tes `MateriTest` mencakup daftar BAB, tautan valid, 404 untuk BAB yang belum tersedia,
-breadcrumb, seluruh section, ID unik, render Live Coding serta regresi Beranda dan
-`/editor`. Tes Live Coding sebelumnya tetap dijalankan.
+Tes `MateriTest` mencakup kedua BAB, tautan valid, 404 BAB 3–6, satu navigasi akhir,
+urutan section/sidebar, refleksi kosong/hilang/terisi, array opsional, ID unik,
+kedua kuis, render Live Coding, serta regresi Beranda dan `/editor`.
+`LiveCodeTest` memeriksa kedua starter BAB 2, heading kontekstual, aset sekali,
+dan seluruh kontrak komponen sebelumnya.
 
 Untuk tes browser, gunakan Playwright dan browser Edge/Chrome yang terpasang
 seperti pada [panduan tes Live Coding](live-coding.md#verifikasi):
 
 ```powershell
-php artisan serve --host=127.0.0.1 --port=8017
+# Khusus server pengujian, tanpa membutuhkan MySQL atau mengubah .env:
+$env:SESSION_DRIVER = 'array'
+$env:CACHE_STORE = 'array'
+php artisan serve --host=127.0.0.1 --port=8017 --no-reload
 # Terminal terpisah:
 node tests/browser/material.mjs
 node tests/browser/quiz.mjs
@@ -136,15 +166,23 @@ node tests/browser/quiz.mjs
 Atur `OOPY_BROWSER=chrome` jika menggunakan Chrome dan `OOPY_BASE_URL` jika alamat
 server berbeda. Tes memeriksa alur Beranda → Materi → BAB 1, navigasi/fokus pada
 390/768/1024/1440px, Run/Submit/Reset, progres BAB terpisah dari skor latihan,
-deep link mobile, dan navigasi tanpa JavaScript. `OOPY_SCREENSHOT_DIR` opsional
+deep link mobile, dan navigasi tanpa JavaScript. Untuk BAB 2, tes juga memeriksa
+320px, Refleksi/fokus, Prism, navigasi dua arah, reduced motion, satu worker/loader,
+dan Submit starter/salah/benar serta Reset pada kedua latihan.
+`OOPY_SCREENSHOT_DIR` opsional
 menyimpan screenshot desktop dan mobile ke direktori yang sudah ada.
 
 Tes kuis memeriksa instruksi, navigasi maju/mundur, radio keyboard, jawaban tersimpan,
 pengubahan jawaban, penolakan penyelesaian dengan jawaban kosong, skor 0/80/100%,
 pembahasan, Coba Lagi, refresh, sidebar aktif dan layout responsif. Tidak ada request
-penyimpanan nilai ke server selama interaksi kuis.
+penyimpanan nilai ke server selama interaksi kuis. BAB 2 turut diperiksa untuk
+delapan soal, skor 100%, pembahasan dengan Prism, Coba Lagi, dan layout hasil.
 
-Verifikasi implementasi BAB 1: 13 tes Laravel (99 assertions) lulus, termasuk seluruh
-tes Live Coding yang sudah ada. Tes browser di Edge headless lulus untuk keempat
-ukuran layar, integrasi Monaco/Pyodide asli, anchor, fokus, dan mode tanpa JavaScript.
-Pemeriksaan sintaks JavaScript, Pint pada file terkait, dan `git diff --check` lulus.
+Jalankan perintah di atas pada environment yang menyediakan dependensi tes;
+integrasi browser memerlukan akses ke CDN Monaco dan Pyodide.
+
+Verifikasi finalisasi BAB 1/BAB 2: `php artisan test` lulus (18 tes, 207 assertions),
+6 tes Node runtime manager lulus, dan ketiga skrip browser `material.mjs`,
+`quiz.mjs`, serta `live-code.mjs` lulus di Edge headless dengan CDN asli.
+Pint pada PHP terkait dan `git diff --check` juga lulus. Server browser memakai
+session/cache `array` karena MySQL lokal tidak aktif; konfigurasi `.env` tetap.

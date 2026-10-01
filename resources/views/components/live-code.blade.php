@@ -9,12 +9,12 @@
     <script type="application/json" data-role="config">{!! \Illuminate\Support\Js::encode($config) !!}</script>
     <section class="oopy-workspace" aria-labelledby="{{ $config['id'] }}-workspace-title">
         <div class="oopy-workspace-heading">
-            <h2 id="{{ $config['id'] }}-workspace-title" data-role="workspace-title"><i class="bi bi-code-slash" aria-hidden="true"></i> {{ $config['title'] }}</h2>
+            <h{{ $headingLevel }} id="{{ $config['id'] }}-workspace-title" data-role="workspace-title"><i class="bi bi-code-slash" aria-hidden="true"></i> {{ $config['title'] }}</h{{ $headingLevel }}>
             <span>{{ $config['description'] }}</span>
         </div>
         <div class="oopy-workspace-body">
             <nav class="oopy-file-explorer" aria-label="File project">
-                <h3><i class="bi bi-folder2" aria-hidden="true"></i> File Project</h3>
+                <h{{ $headingLevel + 1 }} class="oopy-explorer-title"><i class="bi bi-folder2" aria-hidden="true"></i> File Project</h{{ $headingLevel + 1 }}>
                 @foreach (array_keys($config['files']) as $file)
                     <button type="button" class="oopy-file-button {{ $file === $config['entry_file'] ? 'is-active' : '' }}" data-file="{{ $file }}" aria-pressed="{{ $file === $config['entry_file'] ? 'true' : 'false' }}"><i class="bi bi-file-earmark-code" aria-hidden="true"></i>{{ $file }}<span class="oopy-file-dirty" aria-label="Diubah" hidden></span></button>
                 @endforeach
@@ -46,7 +46,7 @@
 
     <section class="oopy-terminal" aria-labelledby="{{ $config['id'] }}-output-title">
         <div class="oopy-terminal-heading">
-            <h2 id="{{ $config['id'] }}-output-title" data-role="output-title"><i class="bi bi-terminal" aria-hidden="true"></i> Output</h2>
+            <h{{ $headingLevel }} id="{{ $config['id'] }}-output-title" data-role="output-title"><i class="bi bi-terminal" aria-hidden="true"></i> Output</h{{ $headingLevel }}>
             <div class="oopy-terminal-tools">
                 <span class="oopy-runtime-status" id="{{ $config['id'] }}-python-status" data-role="python-status" data-state="loading" role="status"><span></span><span id="{{ $config['id'] }}-python-status-text" data-role="python-status-text">Menyiapkan Python...</span></span>
                 <button type="button" class="oopy-terminal-retry" id="{{ $config['id'] }}-retry-runtime" data-role="retry-runtime" hidden>Coba lagi</button>
@@ -58,7 +58,7 @@ Hasil program dan pesan error akan muncul di sini.</span></pre>
     </section>
 
     <section class="oopy-check-results" id="{{ $config['id'] }}-check-results" data-role="check-results" aria-labelledby="{{ $config['id'] }}-results-title" tabindex="-1" hidden>
-        <div class="oopy-results-heading"><h2 id="{{ $config['id'] }}-results-title" data-role="results-title">Hasil Pemeriksaan</h2><strong id="{{ $config['id'] }}-check-score" data-role="check-score"></strong></div>
+        <div class="oopy-results-heading"><h{{ $headingLevel }} id="{{ $config['id'] }}-results-title" data-role="results-title">Hasil Pemeriksaan</h{{ $headingLevel }}><strong id="{{ $config['id'] }}-check-score" data-role="check-score"></strong></div>
         <p id="{{ $config['id'] }}-check-summary" data-role="check-summary" role="status"></p>
         <ul id="{{ $config['id'] }}-check-list" data-role="check-list"></ul>
     </section>

@@ -10,8 +10,12 @@ class LiveCode extends Component
 {
     public array $config;
 
-    public function __construct(array $config)
+    public function __construct(array $config, public int $headingLevel = 2)
     {
+        if ($headingLevel < 2 || $headingLevel > 5) {
+            throw new InvalidArgumentException('Level heading Live Coding harus antara 2 dan 5.');
+        }
+
         $config += ['entry_file' => 'main.py', 'title' => 'Live Coding', 'description' => '', 'checker' => ''];
 
         if (! is_string($config['id'] ?? null) || ! preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/D', $config['id'])) {

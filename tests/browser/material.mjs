@@ -8,9 +8,19 @@ const errors = [];
 page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
 const chapterPath = '/materi/dasar-pemrograman-oop';
-const waitReady = () => page.waitForFunction(() => !document.querySelector('[data-role="run-code"]').disabled, null, { timeout: 110000 });
+const waitReady = () => page.waitForFunction(() => [...document.querySelectorAll('[data-role="run-code"]')].every((button) => !button.disabled), null, { timeout: 110000 });
 
 try {
+    await page.addInitScript(() => {
+        const NativeWorker = window.Worker;
+        window.pythonWorkerCount = 0;
+        window.Worker = class extends NativeWorker {
+            constructor(url, options) {
+                super(url, options);
+                if (String(url).includes('/python-worker.js')) window.pythonWorkerCount++;
+            }
+        };
+    });
     await page.goto(base, { waitUntil: 'domcontentloaded' });
     await page.getByRole('link', { name: /Mulai Belajar/i }).click();
     await page.waitForURL(`${base}/materi`);
@@ -83,6 +93,89 @@ try {
     await noJs.close();
     assert.deepEqual(errors, []);
     console.log('PASS: direct mobile anchors, native no-JS navigation; no page errors');
+
+    assert.equal(await page.locator('.material-bottom-nav').count(), 0);
+    assert.equal(await page.locator('.material-navigation').count(), 1);
+    assert.equal(await page.locator('.material-toc a[href="#refleksi"]').count(), 0);
+    await page.locator('.material-navigation a[rel="next"]').click();
+    await page.waitForURL(`${base}/materi/kelas-dan-objek`);
+    await waitReady();
+    assert.equal(await page.locator('.material-navigation').count(), 1);
+    assert.equal(await page.locator('.material-navigation a[rel="next"]').count(), 0);
+    assert.equal(await page.locator('[data-live-code]').count(), 2);
+    assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
+    assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
+    assert.equal(await page.locator('script[src$="js/live-code/live-code.js"]').count(), 1);
+    assert.equal(await page.locator('link[href$="css/oopy-live-code.css"]').count(), 1);
+    const ids = await page.locator('[id]').evaluateAll((elements) => elements.map((el) => el.id));
+    assert.equal(new Set(ids).size, ids.length);
+    assert.ok(await page.locator('.material-code .token.keyword').count() > 0);
+    for (const width of [320, 390, 768, 1024, 1440]) {
+        await page.setViewportSize({ width, height: 1000 });
+        await page.waitForFunction((width) => document.querySelector('.material-toc').open === (width >= 992), width);
+        if (width < 992) await page.locator('.material-toc summary').click();
+        await page.locator('.material-toc a[href="#refleksi"]').click();
+        await page.waitForFunction(() => document.querySelector('.material-toc a[href="#refleksi"]').getAttribute('aria-current') === 'location');
+        assert.equal(await page.evaluate(() => document.activeElement.id), 'refleksi');
+        assert.equal(await page.locator('.material-toc [aria-current="location"]').count(), 1);
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `BAB 2 overflow at ${width}px`);
+        const editorsFit = await page.locator('.oopy-monaco-editor').evaluateAll((elements) => elements.every((el) => el.getBoundingClientRect().right <= innerWidth + 1));
+        assert.equal(editorsFit, true);
+    }
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    assert.equal(await page.locator('.material-nav-button').evaluate((el) => getComputedStyle(el).transitionDuration), '0s');
+    await page.keyboard.press('Tab');
+    await page.locator('.material-navigation a[rel="prev"]').focus();
+    assert.notEqual(await page.locator('.material-navigation a[rel="prev"]').evaluate((el) => getComputedStyle(el).outlineStyle), 'none');
+
+    for (const id of ['bab2-spesies', 'bab2-sensor-air']) {
+        const exercise = page.locator(`#${id}`);
+        const part = (name) => exercise.locator(`[data-role="${name}"]`);
+        await part('check-code').click();
+        await waitReady();
+        assert.equal(await part('practice-percentage').textContent(), '0%');
+        assert.match(await part('code-output').textContent(), /Error/);
+        const solution = id === 'bab2-spesies' ? `class Spesies:
+    def __init__(self, nama, habitat):
+        self.nama = nama
+        self.habitat = habitat
+    def deskripsi(self):
+        return f"{self.nama} hidup di {self.habitat}"
+spesies1 = Spesies("Bekantan", "Hutan riparian")
+spesies2 = Spesies("Ikan lokal", "Perairan rawa")
+print(spesies1.deskripsi())
+print(spesies2.deskripsi())` : `class SensorAir:
+    def __init__(self, lokasi, tinggi_air):
+        self.lokasi = lokasi
+        self.tinggi_air = tinggi_air
+    def tampilkan(self):
+        return f"{self.lokasi}: {self.tinggi_air} cm"
+sensor = [SensorAir("Sungai Barito", 120), SensorAir("Rawa Bangkau", 85), SensorAir("Pesisir", 60)]
+for objek in sensor:
+    print(objek.tampilkan())`;
+        const edit = (source) => page.evaluate(({ id, source }) => {
+            window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${id}/main.py`)).setValue(source);
+        }, { id, source });
+        await edit(solution.replace(id === 'bab2-spesies' ? 'self.habitat = habitat' : 'self.tinggi_air = tinggi_air', id === 'bab2-spesies' ? 'self.habitat = "Salah"' : 'self.tinggi_air = 0'));
+        await part('check-code').click();
+        await waitReady();
+        assert.equal(await part('practice-percentage').textContent(), '0%');
+        assert.equal(await part('check-list').locator('.is-failed').count(), 1);
+        await edit(solution);
+        await part('run-code').click();
+        await waitReady();
+        assert.match(await part('code-output').textContent(), id === 'bab2-spesies' ? /Bekantan.*Hutan riparian/s : /Sungai Barito.*120/s);
+        await part('check-code').click();
+        await waitReady();
+        assert.equal(await part('practice-percentage').textContent(), '100%');
+        await part('reset-code').click();
+        assert.equal(await part('practice-percentage').textContent(), '0%');
+    }
+    assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
+    assert.deepEqual(errors, []);
+    await page.locator('.material-navigation a[rel="prev"]').click();
+    await page.waitForURL(`${base}${chapterPath}`);
+    console.log('PASS: BAB 1/2 navigation; conditional reflection; BAB 2 layout at 320/390/768/1024/1440px; unique IDs, Prism, focus/reduced motion, one worker/loader; incomplete/wrong/correct/reset exercises');
 
     if (process.env.OOPY_SCREENSHOT_DIR) {
         await page.evaluate(() => scrollTo(0, 0));

@@ -191,18 +191,17 @@ PYTHON,
                         'main.py' => <<<'PYTHON'
 class Spesies:
     def __init__(self, nama, habitat):
-        self.nama = nama
-        self.habitat = habitat
+        # Ganti pass: simpan nama dan habitat sebagai atribut instance.
+        pass
 
     def deskripsi(self):
-        return f"{self.nama} hidup di {self.habitat}"
+        # Ganti pass: kembalikan string yang memuat nama dan habitat object.
+        pass
 
 
-spesies1 = Spesies("Bekantan", "Hutan riparian")
-spesies2 = Spesies("Ikan lokal", "Perairan rawa")
-
-print(spesies1.deskripsi())
-print(spesies2.deskripsi())
+# Buat spesies1: Bekantan dengan habitat Hutan riparian.
+# Buat spesies2: Ikan lokal dengan habitat Perairan rawa.
+# Tampilkan deskripsi kedua object menggunakan print().
 PYTHON,
                     ],
                     'checker' => <<<'PYTHON'
@@ -277,21 +276,17 @@ PYTHON,
                         'main.py' => <<<'PYTHON'
 class SensorAir:
     def __init__(self, lokasi, tinggi_air):
-        self.lokasi = lokasi
-        self.tinggi_air = tinggi_air
+        # Ganti pass: simpan lokasi dan tinggi_air sebagai atribut instance.
+        pass
 
     def tampilkan(self):
-        return f"Lokasi: {self.lokasi}, Tinggi air: {self.tinggi_air} cm"
+        # Ganti pass: kembalikan string yang memuat lokasi dan tinggi air.
+        pass
 
 
-sensor1 = SensorAir("Sungai Barito", 120)
-sensor2 = SensorAir("Rawa Bangkau", 85)
-sensor3 = SensorAir("Pesisir", 60)
-
-sensor = [sensor1, sensor2, sensor3]
-
-for objek in sensor:
-    print(objek.tampilkan())
+# Buat tiga object: Sungai Barito (120 cm), Rawa Bangkau (85 cm),
+# dan Pesisir (60 cm). Simpan ketiganya dalam list bernama sensor.
+# Gunakan for untuk menampilkan hasil tampilkan() dari setiap object.
 PYTHON,
                     ],
                     'checker' => <<<'PYTHON'
