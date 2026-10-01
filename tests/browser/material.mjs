@@ -15,7 +15,7 @@ try {
     await page.getByRole('link', { name: /Mulai Belajar/i }).click();
     await page.waitForURL(`${base}/materi`);
     assert.equal(await page.locator('.materi-card').count(), 6);
-    assert.equal(await page.locator('.materi-card a').count(), 1);
+    assert.equal(await page.locator('.materi-card a').count(), 2);
     await page.getByRole('link', { name: /Pelajari BAB 1/ }).click();
     await page.waitForURL(`${base}${chapterPath}`);
     await waitReady();

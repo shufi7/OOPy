@@ -23,6 +23,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         find('question').textContent = question.question;
         find('code-card').hidden = !question.code;
         find('code').textContent = question.code || '';
+        window.OopySyntax?.highlight(find('code'));
         find('options').replaceChildren();
         question.options.forEach((option, index) => {
             const label = document.createElement('label');
@@ -73,8 +74,10 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
                 const pre = element('pre', '');
                 pre.tabIndex = 0;
                 pre.setAttribute('aria-label', `Kode soal ${index + 1}`);
-                pre.append(element('code', question.code));
+                const code = element('code', question.code, 'language-python');
+                pre.append(code);
                 item.append(pre);
+                window.OopySyntax?.highlight(code);
             }
             item.append(
                 element('p', `Jawaban kamu: ${letter(answers[index])}. ${question.options[answers[index]]}`),

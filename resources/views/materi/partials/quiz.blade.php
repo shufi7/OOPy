@@ -31,7 +31,7 @@
             <p id="quiz-question" data-quiz="question"></p>
             <figure class="material-code" data-quiz="code-card" hidden>
                 <figcaption>Contoh Python</figcaption>
-                <pre tabindex="0" aria-label="Kode Python pada soal"><code data-quiz="code"></code></pre>
+                <pre tabindex="0" aria-label="Kode Python pada soal"><code class="language-python" data-quiz="code"></code></pre>
             </figure>
         </div>
         <fieldset class="oopy-quiz-options" aria-describedby="quiz-question">

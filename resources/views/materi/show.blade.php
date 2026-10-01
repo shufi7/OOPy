@@ -7,6 +7,8 @@
 @endpush
 
 @push('scripts')
+<script src="{{ asset('js/vendor/prism/prism.min.js') }}" data-manual defer></script>
+<script src="{{ asset('js/oopy-syntax.js') }}" defer></script>
 <script src="{{ asset('js/oopy-material.js') }}" defer></script>
 <script src="{{ asset('js/oopy-quiz.js') }}" defer></script>
 @endpush

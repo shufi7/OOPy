@@ -7,7 +7,7 @@
     @isset($section['code'])
         <figure class="material-code">
             <figcaption>Contoh Python · {{ $section['title'] }}</figcaption>
-            <pre tabindex="0" aria-label="Contoh kode {{ $section['title'] }}"><code>{{ $section['code'] }}</code></pre>
+            <pre tabindex="0" aria-label="Contoh kode {{ $section['title'] }}"><code class="language-python">{{ $section['code'] }}</code></pre>
         </figure>
     @endisset
     @isset($section['tip'])

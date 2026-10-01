@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name', 'OOPy')) - Platform Belajar OOP Python</title>
-    <meta name="theme-color" content="#6096B4">
+    <meta name="theme-color" content="#11999E">
     <link rel="icon" type="image/png" href="{{ asset('images/oopy-logo.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/oopy-logo.png') }}">
 

@@ -6,13 +6,15 @@ use Tests\TestCase;
 
 class MateriTest extends TestCase
 {
-    public function test_material_list_links_only_to_the_available_chapter(): void
+    public function test_material_list_links_only_to_the_available_chapters(): void
     {
         $response = $this->get('/materi')->assertOk();
         $response->assertSee(route('materi.show', 'dasar-pemrograman-oop'));
-        $this->assertSame(5, substr_count($response->getContent(), 'Segera hadir'));
+        $response->assertSee(route('materi.show', 'kelas-dan-objek'));
+        $this->get('/materi/kelas-dan-objek')->assertOk();
+        $this->assertSame(4, substr_count($response->getContent(), 'Segera hadir'));
 
-        foreach (['kelas-dan-objek', 'enkapsulasi', 'pewarisan', 'polimorfisme', 'kelas-abstrak'] as $slug) {
+        foreach (['enkapsulasi', 'pewarisan', 'polimorfisme', 'kelas-abstrak'] as $slug) {
             $response->assertDontSee(route('materi.show', $slug));
             $this->get('/materi/'.$slug)->assertNotFound();
         }
@@ -32,7 +34,7 @@ class MateriTest extends TestCase
         $response->assertDontSee('Latihan BAB')->assertSee('Kuis BAB 1');
         $response->assertDontSee('id="latihan"', false)->assertDontSee('href="#latihan"', false);
         $response->assertSee('Instruksi Pengerjaan')->assertSee('Coba Lagi');
-        $response->assertDontSee(route('materi.show', 'kelas-dan-objek'));
+        $response->assertSee(route('materi.show', 'kelas-dan-objek'));
         preg_match_all('/\sid="([^"]+)"/', $response->getContent(), $matches);
         $this->assertSame($matches[1], array_values(array_unique($matches[1])));
     }
