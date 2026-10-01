@@ -28,13 +28,16 @@
                                     </li>
                                 @endforeach
                             </ul>
-                            @if (isset($materi['content']))
-                                <a class="btn btn-brand stretched-link mt-4" href="{{ route('materi.show', $slug) }}" aria-label="Pelajari {{ $materi['bab'] }}: {{ $materi['judul'] }}">
-                                    Pelajari {{ $materi['bab'] }} <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                                </a>
-                            @else
-                                <span class="badge text-bg-light mt-4">Segera hadir</span>
-                            @endif
+                            <div class="materi-card-footer">
+                                @if (isset($materi['content']))
+                                    <a class="btn btn-brand materi-card-link stretched-link" href="{{ route('materi.show', $slug) }}" aria-label="Pelajari {{ $materi['bab'] }}: {{ $materi['judul'] }}">
+                                        <span>Pelajari {{ $materi['bab'] }}</span>
+                                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                @else
+                                    <span class="badge text-bg-light">Segera hadir</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
