@@ -185,7 +185,7 @@ PYTHON,
                 [
                     'id' => 'bab2-spesies',
                     'title' => 'Coba sendiri: Class Spesies',
-                    'description' => 'Lengkapi class Spesies dengan atribut nama dan habitat serta method deskripsi(). Setelah itu buat dua object dan tampilkan deskripsinya.',
+                    'description' => 'Lengkapi class `Spesies` dengan atribut `nama` dan `habitat` serta method `deskripsi()`. Setelah itu buat dua object dan tampilkan deskripsinya.',
                     'entry_file' => 'main.py',
                     'files' => [
                         'main.py' => <<<'PYTHON'
@@ -270,7 +270,7 @@ PYTHON,
                 [
                     'id' => 'bab2-sensor-air',
                     'title' => 'Latihan coding: Sensor Air',
-                    'description' => 'Buat class SensorAir, buat tiga object dengan lokasi dan tinggi air yang berbeda, lalu tampilkan seluruh object menggunakan perulangan.',
+                    'description' => 'Lengkapi class `SensorAir` dengan atribut `lokasi` dan `tinggi_air` serta method `tampilkan()`. Buat tiga object dengan data berbeda, lalu tampilkan semuanya menggunakan perulangan.',
                     'entry_file' => 'main.py',
                     'files' => [
                         'main.py' => <<<'PYTHON'

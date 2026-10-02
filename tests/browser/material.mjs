@@ -9,6 +9,34 @@ page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
 const chapterPath = '/materi/dasar-pemrograman-oop';
 const waitReady = () => page.waitForFunction(() => [...document.querySelectorAll('[data-role="run-code"]')].every((button) => !button.disabled), null, { timeout: 110000 });
+const inspectInstructions = async () => {
+    for (const exercise of await page.locator('[data-live-code]').all()) {
+        const config = JSON.parse(await exercise.locator('[data-role="config"]').textContent());
+        const header = exercise.locator('.oopy-activity-header');
+        assert.equal(await header.count(), 1);
+        assert.equal(await header.locator('.oopy-activity-title').textContent(), config.title);
+        assert.equal(await header.locator('.oopy-live-task-description').textContent(), config.description.replace(/`([^`\r\n]+)`/g, '$1'));
+        assert.equal(await header.locator('.oopy-live-task').count(), 1);
+        assert.ok(await header.locator('.oopy-live-task code').count() >= 2);
+        assert.equal(await header.locator('ol').count(), 0);
+        assert.equal(await header.locator('[tabindex]').count(), 0);
+        assert.equal(await exercise.evaluate((el) => el.querySelector('.oopy-activity-header').nextElementSibling.className), 'oopy-workspace-body');
+    }
+};
+const inspectInstructionLayout = async (width) => {
+    for (const header of await page.locator('.oopy-activity-header').all()) {
+        assert.equal(await header.evaluate((el) => {
+            const title = el.querySelector('.oopy-activity-title').getBoundingClientRect();
+            const task = el.querySelector('.oopy-live-task').getBoundingClientRect();
+            const bounds = el.getBoundingClientRect();
+            return title.bottom <= task.top && task.bottom <= bounds.bottom;
+        }), true, `Instruction groups overlap at ${width}px`);
+        if (process.env.OOPY_SCREENSHOT_DIR && [390, 1440].includes(width)) {
+            const id = await header.evaluate((el) => el.closest('[data-live-code]').id);
+            await header.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/instructions-${id}-${width}.png` });
+        }
+    }
+};
 
 try {
     await page.addInitScript(() => {
@@ -32,11 +60,16 @@ try {
     assert.equal(await page.locator('[data-material-section]').count(), 12);
     assert.equal(await page.locator('[data-live-code]').count(), 1);
     assert.equal(await page.locator('.material-toc nav a').count(), 12);
+    await inspectInstructions();
+    assert.deepEqual(await page.locator('#bab1-variabel .oopy-live-task code').allTextContents(), ['nama_ekosistem', '"Rawa Bangkau"']);
+    assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
+    assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), 1);
 
     for (const width of [390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
         await page.waitForFunction((width) => document.querySelector('.material-toc').open === (width >= 992), width);
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Page overflow at ${width}`);
+        await inspectInstructionLayout(width);
         if (width < 992) await page.locator('.material-toc summary').click();
         await page.locator('.material-toc a[href="#fungsi"]').click();
         await page.waitForFunction(() => document.querySelector('.material-toc a[href="#fungsi"]').getAttribute('aria-current') === 'location');
@@ -103,6 +136,7 @@ try {
     assert.equal(await page.locator('.material-navigation').count(), 1);
     assert.equal(await page.locator('.material-navigation a[rel="next"]').count(), 0);
     assert.equal(await page.locator('[data-live-code]').count(), 2);
+    await inspectInstructions();
     assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
     assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
     assert.equal(await page.locator('script[src$="js/live-code/live-code.js"]').count(), 1);
@@ -119,6 +153,7 @@ try {
         assert.equal(await page.evaluate(() => document.activeElement.id), 'refleksi');
         assert.equal(await page.locator('.material-toc [aria-current="location"]').count(), 1);
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `BAB 2 overflow at ${width}px`);
+        await inspectInstructionLayout(width);
         const editorsFit = await page.locator('.oopy-monaco-editor').evaluateAll((elements) => elements.every((el) => el.getBoundingClientRect().right <= innerWidth + 1));
         assert.equal(editorsFit, true);
     }
@@ -175,7 +210,7 @@ for objek in sensor:
     assert.deepEqual(errors, []);
     await page.locator('.material-navigation a[rel="prev"]').click();
     await page.waitForURL(`${base}${chapterPath}`);
-    console.log('PASS: BAB 1/2 navigation; conditional reflection; BAB 2 layout at 320/390/768/1024/1440px; unique IDs, Prism, focus/reduced motion, one worker/loader; incomplete/wrong/correct/reset exercises');
+    console.log('PASS: BAB 1/2 navigation; conditional reflection; instruction titles/tasks/tokens and responsive hierarchy; BAB 2 layout at 320/390/768/1024/1440px; unique IDs, Prism, focus/reduced motion, one worker/loader; incomplete/wrong/correct/reset exercises');
 
     if (process.env.OOPY_SCREENSHOT_DIR) {
         await page.evaluate(() => scrollTo(0, 0));

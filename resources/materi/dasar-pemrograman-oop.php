@@ -43,8 +43,8 @@ PYTHON,
             'live_codes' => [
                 [
                     'id' => 'bab1-variabel',
-                    'title' => 'Coba sendiri: nama ekosistem',
-                    'description' => 'Ubah nama_ekosistem menjadi "Rawa Bangkau". Klik Run Code untuk melihat output, lalu Submit untuk memeriksa nilainya.',
+                    'title' => 'Coba sendiri: Nama Ekosistem',
+                    'description' => 'Ubah nilai variabel `nama_ekosistem` menjadi `"Rawa Bangkau"`.',
                     'entry_file' => 'main.py',
                     'files' => [
                         'main.py' => <<<'PYTHON'

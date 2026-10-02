@@ -116,7 +116,10 @@ Aturan config:
   `.py` memakai huruf ASCII, angka, `_`, `-`, dan `/` untuk direktori. Import Python
   tetap mengikuti aturan nama modul Python. Path absolut dan `..` ditolak.
 - `entry_file` default `main.py`, wajib tersedia dalam `files`.
-- `title` default `Live Coding`; `description` default kosong. Keduanya plain text.
+- `title` default `Live Coding`; `description` default kosong. Judul dan tugas
+  ditampilkan terpisah pada header aktivitas sebelum editor.
+  `description` tetap teks yang di-escape Blade; apit nama variabel/nilai/metode
+  dengan backtick agar dirender sebagai inline `<code>`. HTML tidak dirender.
 - `checker` berupa source Python, default kosong. Submit dinonaktifkan jika kosong.
 - Config diserialisasi sebagai JSON yang aman untuk elemen script, bukan `eval`.
 

@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\View\Components\LiveCode;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Support\Facades\Blade;
 use InvalidArgumentException;
 use Tests\TestCase;
@@ -83,5 +85,59 @@ class LiveCodeTest extends TestCase
         $html = $this->get('/editor')->assertOk()->getContent();
         $this->assertStringContainsString('<h2 id="demo-dasar-workspace-title"', $html);
         $this->assertStringContainsString('<h3 class="oopy-explorer-title"', $html);
+    }
+
+    public function test_material_activity_headers_render_one_task_before_the_editor(): void
+    {
+        foreach (['dasar-pemrograman-oop' => 1, 'kelas-dan-objek' => 2] as $slug => $count) {
+            $html = $this->get('/materi/'.$slug)->assertOk()->getContent();
+            $dom = new DOMDocument;
+            @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+            $xpath = new DOMXPath($dom);
+            $headers = $xpath->query('//header[@class="oopy-activity-header"]');
+            $this->assertSame($count, $headers->length);
+            foreach ($headers as $header) {
+                $this->assertSame(1, $xpath->query('.//*[@class="oopy-activity-title"]', $header)->length);
+                $this->assertSame(1, $xpath->query('.//*[@class="oopy-live-task"]', $header)->length);
+                $this->assertSame(1, $xpath->query('.//*[@class="oopy-live-task-description"]', $header)->length);
+                $this->assertGreaterThanOrEqual(2, $xpath->query('.//*[@class="oopy-live-task"]//code', $header)->length);
+                $this->assertSame(0, $xpath->query('.//ol', $header)->length);
+                $this->assertSame(1, $xpath->query('following-sibling::div[@class="oopy-workspace-body"]', $header)->length);
+                $this->assertSame(0, $xpath->query('.//*[@tabindex]', $header)->length);
+            }
+            foreach (['run-code', 'reset-code', 'check-code'] as $role) {
+                $this->assertSame($count, $xpath->query('//button[@data-role="'.$role.'"]')->length);
+            }
+            $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));
+        }
+    }
+
+    public function test_instruction_tokens_are_escaped_without_rendering_html(): void
+    {
+        $config = [
+            'id' => 'safe-instructions',
+            'title' => '<b>Judul latihan</b>',
+            'description' => 'Ubah `<img src=x onerror=alert(1)>` menjadi `"<script>alert(2)</script>"`. <strong>Catatan</strong> dan `sisa.',
+            'files' => ['main.py' => ''],
+        ];
+        $html = Blade::render('<x-live-code :config="$config" />', compact('config'));
+        $dom = new DOMDocument;
+        @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+        $xpath = new DOMXPath($dom);
+        $header = $xpath->query('//header')->item(0);
+        $this->assertSame(0, $xpath->query('.//img | .//script | .//b', $header)->length);
+        $this->assertSame(['<img src=x onerror=alert(1)>', '"<script>alert(2)</script>"'], array_map(fn ($node) => $node->textContent, iterator_to_array($xpath->query('.//code', $header))));
+        $this->assertSame('Ubah <img src=x onerror=alert(1)> menjadi "<script>alert(2)</script>". <strong>Catatan</strong> dan `sisa.', $xpath->query('.//*[@class="oopy-live-task-description"]', $header)->item(0)->textContent);
+        $this->assertSame('<b>Judul latihan</b>', $xpath->query('.//*[@data-role="workspace-title"]', $header)->item(0)->textContent);
+    }
+
+    public function test_legacy_config_without_description_still_renders(): void
+    {
+        $config = ['id' => 'legacy-exercise', 'files' => ['main.py' => '']];
+        $html = Blade::render('<x-live-code :config="$config" />', compact('config'));
+        $this->assertStringContainsString('AKTIVITAS LIVE CODING', $html);
+        $this->assertStringContainsString('class="oopy-activity-title">Live Coding', $html);
+        $this->assertStringNotContainsString('class="oopy-live-task"', $html);
+        $this->assertStringNotContainsString('Langkah pengerjaan', $html);
     }
 }

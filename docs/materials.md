@@ -120,7 +120,7 @@ dan kembali ke soal pertama. Refresh juga mengulang kuis dari awal.
 
 ## Batasan tahap ini
 
-- Progres BAB ditandai sebagai contoh tampilan, dengan keterangan bahwa progres
+- Progres BAB ditampilkan dalam kartu ringkas, dengan keterangan bahwa progres
   belum dicatat atau disimpan. Bar tetap kosong. Tidak
   mengikuti skor Submit, tidak disimpan ke browser maupun server.
 - Latihan Variabel BAB 1 serta Spesies dan SensorAir BAB 2 memakai komponen

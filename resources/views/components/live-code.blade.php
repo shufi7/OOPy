@@ -8,10 +8,18 @@
 <section {{ $attributes->class(['oopy-live-code'])->merge(['id' => $config['id']]) }} data-live-code aria-label="{{ $config['title'] }}">
     <script type="application/json" data-role="config">{!! \Illuminate\Support\Js::encode($config) !!}</script>
     <section class="oopy-workspace" aria-labelledby="{{ $config['id'] }}-workspace-title">
-        <div class="oopy-workspace-heading">
-            <h{{ $headingLevel }} id="{{ $config['id'] }}-workspace-title" data-role="workspace-title"><i class="bi bi-code-slash" aria-hidden="true"></i> {{ $config['title'] }}</h{{ $headingLevel }}>
-            <span>{{ $config['description'] }}</span>
-        </div>
+        <header class="oopy-activity-header">
+            <div class="oopy-activity-intro">
+                <span class="oopy-activity-label"><i class="bi bi-code-slash" aria-hidden="true"></i> AKTIVITAS LIVE CODING</span>
+                <h{{ $headingLevel }} id="{{ $config['id'] }}-workspace-title" data-role="workspace-title" class="oopy-activity-title">{{ $config['title'] }}</h{{ $headingLevel }}>
+            </div>
+            @if ($config['description'] !== '')
+                <div class="oopy-live-task" role="group" aria-labelledby="{{ $config['id'] }}-task-label">
+                    <strong class="oopy-live-task-label" id="{{ $config['id'] }}-task-label"><i class="bi bi-bullseye" aria-hidden="true"></i> Tugasmu</strong>
+                    <p class="oopy-live-task-description">@foreach ($descriptionParts as $part)<{{ $part['tag'] }}>{{ $part['text'] }}</{{ $part['tag'] }}>@endforeach</p>
+                </div>
+            @endif
+        </header>
         <div class="oopy-workspace-body">
             <nav class="oopy-file-explorer" aria-label="File project">
                 <h{{ $headingLevel + 1 }} class="oopy-explorer-title"><i class="bi bi-folder2" aria-hidden="true"></i> File Project</h{{ $headingLevel + 1 }}>

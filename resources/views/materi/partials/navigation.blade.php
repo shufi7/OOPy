@@ -22,7 +22,10 @@
                 </ol>
             </nav>
             <div class="material-progress">
-                <div><span id="chapter-progress-label">Progres {{ $chapter['bab'] }} (contoh tampilan)</span></div>
+                <div class="material-progress-heading">
+                    <i class="bi bi-bar-chart" aria-hidden="true"></i>
+                    <strong id="chapter-progress-label">Progres {{ $chapter['bab'] }}</strong>
+                </div>
                 <progress value="0" max="100" aria-labelledby="chapter-progress-label" aria-describedby="chapter-progress-note">0%</progress>
                 <p id="chapter-progress-note">Progres belajar belum dicatat atau disimpan.</p>
             </div>
