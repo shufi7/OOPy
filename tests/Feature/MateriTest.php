@@ -69,7 +69,7 @@ class MateriTest extends TestCase
             $response = $this->get('/materi/'.$slug)->assertOk()->assertViewIs('materi.show');
             $response->assertDontSee('Materi BAB berikutnya segera hadir.')
                 ->assertDontSee('material-bottom-nav')
-                ->assertSee('Progres belajar belum dicatat atau disimpan.')
+                ->assertDontSee('Progres belajar belum dicatat atau disimpan.')
                 ->assertSee('Kuis '.$chapters[$slug]['bab']);
             $html = $response->getContent();
             $dom = new DOMDocument;

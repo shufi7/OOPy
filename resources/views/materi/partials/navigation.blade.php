@@ -26,8 +26,7 @@
                     <i class="bi bi-bar-chart" aria-hidden="true"></i>
                     <strong id="chapter-progress-label">Progres {{ $chapter['bab'] }}</strong>
                 </div>
-                <progress value="0" max="100" aria-labelledby="chapter-progress-label" aria-describedby="chapter-progress-note">0%</progress>
-                <p id="chapter-progress-note">Progres belajar belum dicatat atau disimpan.</p>
+                <progress value="0" max="100" aria-labelledby="chapter-progress-label">0%</progress>
             </div>
         </div>
     </details>
