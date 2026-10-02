@@ -10,7 +10,7 @@
                 <h1 class="hero-title fw-bolder mb-3">Selamat Datang</h1>
 
                 <p class="hero-description mb-4">
-                    Sebuah website pembelajaran interaktif yang dirancang khusus untuk menjembatani kebutuhan mahasiswa dalam memahami OOP Python secara komprehensif dari konsep dasar hingga tingkat lanjut.
+                    Sebuah website pembelajaran interaktif yang dirancang khusus untuk membantu pengguna dalam memahami OOP Python secara komprehensif dari konsep dasar hingga tingkat lanjut.
                 </p>
 
                 <div class="pt-2">
