@@ -31,7 +31,7 @@
                        href="{{ route('editor.index') }}">Editor</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2" href="#">Dokumentasi</a>
+                    <a class="nav-link px-2" href="#">Dashboard</a>
                 </li>
                 <li class="nav-item ms-lg-2">
                     <a href="#" class="btn btn-brand fw-bold px-4 py-2">Masuk</a>
