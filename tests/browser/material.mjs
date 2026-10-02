@@ -53,7 +53,8 @@ try {
     await page.getByRole('link', { name: /Mulai Belajar/i }).click();
     await page.waitForURL(`${base}/materi`);
     assert.equal(await page.locator('.materi-card').count(), 6);
-    assert.equal(await page.locator('.materi-card a').count(), 2);
+    assert.equal(await page.locator('.materi-card a').count(), 3);
+    assert.equal(await page.getByText('Segera hadir', { exact: true }).count(), 3);
     await page.getByRole('link', { name: /Pelajari BAB 1/ }).click();
     await page.waitForURL(`${base}${chapterPath}`);
     await waitReady();
@@ -134,7 +135,7 @@ try {
     await page.waitForURL(`${base}/materi/kelas-dan-objek`);
     await waitReady();
     assert.equal(await page.locator('.material-navigation').count(), 1);
-    assert.equal(await page.locator('.material-navigation a[rel="next"]').count(), 0);
+    assert.equal(await page.locator('.material-navigation a[rel="next"]').getAttribute('href'), `${base}/materi/enkapsulasi`);
     assert.equal(await page.locator('[data-live-code]').count(), 2);
     await inspectInstructions();
     assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
@@ -158,7 +159,7 @@ try {
         assert.equal(editorsFit, true);
     }
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    assert.equal(await page.locator('.material-nav-button').evaluate((el) => getComputedStyle(el).transitionDuration), '0s');
+    assert.equal(await page.locator('.material-nav-button').evaluateAll((buttons) => buttons.every((el) => getComputedStyle(el).transitionDuration === '0s')), true);
     await page.keyboard.press('Tab');
     await page.locator('.material-navigation a[rel="prev"]').focus();
     assert.notEqual(await page.locator('.material-navigation a[rel="prev"]').evaluate((el) => getComputedStyle(el).outlineStyle), 'none');
@@ -208,6 +209,103 @@ for objek in sensor:
     }
     assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
     assert.deepEqual(errors, []);
+    await page.locator('.material-navigation a[rel="next"]').click();
+    await page.waitForURL(`${base}/materi/enkapsulasi`);
+    await waitReady();
+    assert.equal(await page.locator('.material-navigation a[rel="next"]').count(), 0);
+    assert.equal(await page.locator('.material-navigation a[rel="prev"]').getAttribute('href'), `${base}/materi/kelas-dan-objek`);
+    assert.equal(await page.locator('[data-material-section]').count(), 13);
+    assert.deepEqual(await page.locator('.material-toc nav a').evaluateAll((links) => links.map((link) => link.hash.slice(1))),
+        await page.locator('[data-material-section]').evaluateAll((sections) => sections.map((section) => section.id)));
+    await inspectInstructions();
+    assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
+    assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), 1);
+    assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
+    assert.equal(await page.locator('script[src$="js/live-code/live-code.js"]').count(), 1);
+    assert.equal(await page.locator('link[href$="css/oopy-live-code.css"]').count(), 1);
+    const chapterThreeIds = await page.locator('[id]').evaluateAll((elements) => elements.map((el) => el.id));
+    assert.equal(new Set(chapterThreeIds).size, chapterThreeIds.length);
+    assert.equal(await page.locator('#refleksi li').count(), 3);
+    assert.equal(await page.locator('#bab3-enkapsulasi-sensor [data-role="workspace-title"]').evaluate((el) => el.tagName), 'H3');
+    for (const width of [320, 390, 768, 1024, 1440]) {
+        await page.setViewportSize({ width, height: 1000 });
+        await page.waitForFunction((width) => document.querySelector('.material-toc').open === (width >= 992), width);
+        if (width < 992) await page.locator('.material-toc summary').click();
+        await page.locator('.material-toc a[href="#aktivitas-enkapsulasi"]').click();
+        await page.waitForFunction(() => document.querySelector('.material-toc a[href="#aktivitas-enkapsulasi"]').getAttribute('aria-current') === 'location');
+        assert.equal(await page.evaluate(() => document.activeElement.id), 'aktivitas-enkapsulasi');
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `BAB 3 overflow at ${width}px`);
+        await inspectInstructionLayout(width);
+        assert.equal(await page.locator('.oopy-monaco-editor').evaluate((el) => {
+            const rect = el.getBoundingClientRect();
+            return rect.left >= 0 && rect.right <= innerWidth + 1;
+        }), true, `BAB 3 editor outside viewport at ${width}px`);
+        assert.equal(await page.locator('.material-sidebar').evaluate((el) => el.getBoundingClientRect().right <= innerWidth + 1), true);
+        assert.equal(await page.locator('.material-navigation').evaluate((el) => el.scrollWidth <= el.clientWidth + 1), true);
+    }
+    const exercise = page.locator('#bab3-enkapsulasi-sensor');
+    const part = (name) => exercise.locator(`[data-role="${name}"]`);
+    const starter = JSON.parse(await part('config').textContent()).files['main.py'];
+    const editSensor = (source) => page.evaluate((source) => {
+        window.monaco.editor.getModel(window.monaco.Uri.parse('file:///workspaces/bab3-enkapsulasi-sensor/main.py')).setValue(source);
+    }, source);
+    const submitSensor = async () => { await part('check-code').click(); await waitReady(); };
+    await submitSensor();
+    assert.notEqual(await part('practice-percentage').textContent(), '100%');
+    assert.ok(await part('check-list').locator('.is-failed').count() > 0);
+    const solution = `class SensorAir:
+    def __init__(self, lokasi, tinggi_air):
+        self.lokasi = lokasi
+        self.tinggi_air = tinggi_air
+    @property
+    def tinggi_air(self):
+        return self.__tinggi_air
+    @tinggi_air.setter
+    def tinggi_air(self, nilai):
+        if nilai < 0:
+            raise ValueError("Tinggi air tidak boleh negatif.")
+        self.__tinggi_air = nilai
+
+alat = SensorAir("Rawa Bangkau", 85)
+print(alat.tinggi_air)
+alat.tinggi_air = 90
+print(alat.tinggi_air)`;
+    await editSensor(solution.replace('if nilai < 0:', 'if False:'));
+    await submitSensor();
+    assert.notEqual(await part('practice-percentage').textContent(), '100%');
+    assert.match((await part('check-list').locator('.is-failed').allTextContents()).join('\n'), /Validasi nilai negatif.*Data setelah penolakan/s);
+    // Raising after storing must also fail: the last valid value must survive.
+    await editSensor(solution.replace('if nilai < 0:', 'self.__tinggi_air = nilai\n        if nilai < 0:'));
+    await submitSensor();
+    assert.notEqual(await part('practice-percentage').textContent(), '100%');
+    assert.match(await part('check-list').locator('.is-failed').textContent(), /Data setelah penolakan/);
+    await editSensor(solution);
+    await part('run-code').click();
+    await waitReady();
+    assert.match(await part('code-output').textContent(), /85\s+90/);
+    await submitSensor();
+    assert.equal(await part('practice-percentage').textContent(), '100%');
+    assert.equal(await part('check-list').locator('li').count(), 9);
+    assert.equal(await part('check-list').locator('.is-failed').count(), 0);
+    assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
+    await part('reset-code').click();
+    assert.equal(await part('practice-percentage').textContent(), '0%');
+    assert.equal(await part('check-results').isVisible(), false);
+    assert.equal(await page.evaluate(() => window.monaco.editor.getModels()[0].getValue()), starter);
+    await page.keyboard.press('Tab');
+    await page.locator('.material-navigation a[rel="prev"]').focus();
+    assert.notEqual(await page.locator('.material-navigation a[rel="prev"]').evaluate((el) => getComputedStyle(el).outlineStyle), 'none');
+    assert.equal(await page.locator('.material-nav-button').evaluate((el) => getComputedStyle(el).transitionDuration), '0s');
+    const noJsThree = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 320, height: 900 } });
+    await noJsThree.goto(`${base}/materi/enkapsulasi`, { waitUntil: 'domcontentloaded' });
+    assert.equal(await noJsThree.locator('[data-material-section]').count(), 13);
+    await noJsThree.locator('.material-toc a[href="#property"]').click();
+    assert.match(noJsThree.url(), /#property$/);
+    await noJsThree.close();
+    assert.deepEqual(errors, []);
+    console.log('PASS: BAB 3 navigation, sidebar/sections, responsive layout at 320/390/768/1024/1440px, headings/focus/reduced motion, no-JS reading; nine behavior checks reject starter/negative setter/corrupted state, correct solution 100%, Reset restores starter and 0%; one worker/loader and no JS errors');
+    await page.locator('.material-navigation a[rel="prev"]').click();
+    await page.waitForURL(`${base}/materi/kelas-dan-objek`);
     await page.locator('.material-navigation a[rel="prev"]').click();
     await page.waitForURL(`${base}${chapterPath}`);
     console.log('PASS: BAB 1/2 navigation; conditional reflection; instruction titles/tasks/tokens and responsive hierarchy; BAB 2 layout at 320/390/768/1024/1440px; unique IDs, Prism, focus/reduced motion, one worker/loader; incomplete/wrong/correct/reset exercises');

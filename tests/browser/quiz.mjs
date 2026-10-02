@@ -96,26 +96,58 @@ try {
     assert.deepEqual(errors, []);
     console.log('PASS: 390/768/1024/1440px layout, full-width choices, refresh reset, no page errors');
 
-    await page.goto(`${base}/materi/kelas-dan-objek`, { waitUntil: 'domcontentloaded' });
-    await part('form').waitFor({ state: 'visible' });
-    assert.equal(await quiz.evaluate((el) => el.previousElementSibling.id), 'refleksi');
-    assert.equal(await part('counter').textContent(), 'Soal 1 dari 8 soal');
-    const questions = JSON.parse(await part('questions').textContent());
-    for (const question of questions) { await choose(question.correct); await next(); }
-    assert.equal(await part('score').textContent(), '8 / 8');
-    assert.equal(await part('percentage').textContent(), '100%');
-    assert.equal(await part('review').locator('li').count(), 8);
-    assert.ok(await part('review').locator('.token.keyword').count() > 0);
-    for (const width of [320, 390, 768, 1024, 1440]) {
-        await page.setViewportSize({ width, height: 1000 });
-        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `BAB 2 quiz overflow at ${width}px`);
+    for (const [slug, label] of [['kelas-dan-objek', 'BAB 2'], ['enkapsulasi', 'BAB 3']]) {
+        await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
+        await part('form').waitFor({ state: 'visible' });
+        assert.equal(await quiz.evaluate((el) => el.previousElementSibling.id), 'refleksi');
+        assert.equal(await part('counter').textContent(), 'Soal 1 dari 8 soal');
+        const questions = JSON.parse(await part('questions').textContent());
+        assert.equal(questions.length, 8);
+        for (const width of [320, 390, 768, 1024, 1440]) {
+            await page.setViewportSize({ width, height: 1000 });
+            assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${label} quiz form overflow at ${width}px`);
+        }
+        if (slug === 'enkapsulasi') {
+            // Missing answers cannot complete BAB 3 either.
+            for (let i = 0; i < questions.length; i++) await next();
+            assert.match(await part('validation').textContent(), /belum lengkap/);
+            assert.equal(await part('results').isVisible(), false);
+            // Verify partial and zero scores, explanations, and retry before 100%.
+            for (const allWrong of [false, true]) {
+                for (let i = 0; i < questions.length; i++) {
+                    await choose(allWrong || i === questions.length - 1 ? (questions[i].correct + 1) % 4 : questions[i].correct);
+                    await next();
+                }
+                assert.equal(await part('percentage').textContent(), allWrong ? '0%' : '88%');
+                assert.equal(await part('review').locator('li').count(), 8);
+                assert.match(await part('review').locator('li').last().textContent(), /Jawaban kamu:.*Jawaban benar:.*Penjelasan:/s);
+                await part('retry').click();
+                assert.equal(await part('answered').textContent(), '0 dari 8 soal dijawab');
+            }
+        }
+        for (const question of questions) { await choose(question.correct); await next(); }
+        assert.equal(await part('score').textContent(), '8 / 8');
+        assert.equal(await part('percentage').textContent(), '100%');
+        assert.equal(await part('review').locator('li').count(), 8);
+        assert.ok(await part('review').locator('.token.keyword').count() > 0);
+        for (const width of [320, 390, 768, 1024, 1440]) {
+            await page.setViewportSize({ width, height: 1000 });
+            assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${label} quiz results overflow at ${width}px`);
+        }
+        await part('retry').click();
+        assert.equal(await part('answered').textContent(), '0 dari 8 soal dijawab');
+        assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
+        assert.deepEqual(writes, []);
+        assert.deepEqual(errors, []);
+        if (slug === 'enkapsulasi') {
+            await choose(1);
+            await page.reload({ waitUntil: 'domcontentloaded' });
+            await part('form').waitFor({ state: 'visible' });
+            assert.equal(await part('answered').textContent(), '0 dari 8 soal dijawab');
+            assert.equal(await part('results').isVisible(), false);
+        }
+        console.log(`PASS: ${label} eight-question quiz, scoring, highlighted reviews, retry, responsive form/results, no persistence`);
     }
-    await part('retry').click();
-    assert.equal(await part('answered').textContent(), '0 dari 8 soal dijawab');
-    assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
-    assert.deepEqual(writes, []);
-    assert.deepEqual(errors, []);
-    console.log('PASS: BAB 2 eight-question quiz, scoring, highlighted reviews, retry, responsive results, no persistence');
 } finally {
     await browser.close();
 }

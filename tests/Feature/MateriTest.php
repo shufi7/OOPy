@@ -13,10 +13,12 @@ class MateriTest extends TestCase
         $response = $this->get('/materi')->assertOk();
         $response->assertSee(route('materi.show', 'dasar-pemrograman-oop'));
         $response->assertSee(route('materi.show', 'kelas-dan-objek'));
+        $response->assertSee(route('materi.show', 'enkapsulasi'))->assertSee('Pelajari BAB 3');
         $this->get('/materi/kelas-dan-objek')->assertOk();
-        $this->assertSame(4, substr_count($response->getContent(), 'Segera hadir'));
+        $this->get('/materi/enkapsulasi')->assertOk();
+        $this->assertSame(3, substr_count($response->getContent(), 'Segera hadir'));
 
-        foreach (['enkapsulasi', 'pewarisan', 'polimorfisme', 'kelas-abstrak'] as $slug) {
+        foreach (['pewarisan', 'polimorfisme', 'kelas-abstrak'] as $slug) {
             $response->assertDontSee(route('materi.show', $slug));
             $this->get('/materi/'.$slug)->assertNotFound();
         }
@@ -61,10 +63,15 @@ class MateriTest extends TestCase
         $this->get('/materi/dasar-pemrograman-oop.php')->assertNotFound();
     }
 
-    public function test_both_chapters_share_the_template_and_have_one_dynamic_footer_navigation(): void
+    public function test_available_chapters_share_the_template_and_have_one_dynamic_footer_navigation(): void
     {
         $chapters = require resource_path('materi/chapters.php');
-        foreach (['dasar-pemrograman-oop', 'kelas-dan-objek'] as $slug) {
+        $neighbors = [
+            'dasar-pemrograman-oop' => [null, 'kelas-dan-objek'],
+            'kelas-dan-objek' => ['dasar-pemrograman-oop', 'enkapsulasi'],
+            'enkapsulasi' => ['kelas-dan-objek', null],
+        ];
+        foreach ($neighbors as $slug => [$previous, $next]) {
             $content = require resource_path('materi/'.$chapters[$slug]['content']);
             $response = $this->get('/materi/'.$slug)->assertOk()->assertViewIs('materi.show');
             $response->assertDontSee('Materi BAB berikutnya segera hadir.')
@@ -79,11 +86,14 @@ class MateriTest extends TestCase
             $this->assertSame(1, $xpath->query($navigation)->length);
             $this->assertSame('Navigasi antar BAB', $xpath->query($navigation)->item(0)->getAttribute('aria-label'));
             $this->assertSame(1, $xpath->query($navigation.'/a[@href="'.route('materi.index').'"]')->length);
-            $isFirst = $slug === 'dasar-pemrograman-oop';
-            $this->assertSame($isFirst ? 0 : 1, $xpath->query($navigation.'/a[@rel="prev"]')->length);
-            $this->assertSame($isFirst ? 1 : 0, $xpath->query($navigation.'/a[@rel="next"]')->length);
-            $target = $isFirst ? 'kelas-dan-objek' : 'dasar-pemrograman-oop';
-            $this->assertSame(1, $xpath->query($navigation.'/a[@href="'.route('materi.show', $target).'"]')->length);
+            $this->assertSame($previous ? 1 : 0, $xpath->query($navigation.'/a[@rel="prev"]')->length);
+            $this->assertSame($next ? 1 : 0, $xpath->query($navigation.'/a[@rel="next"]')->length);
+            foreach (['prev' => $previous, 'next' => $next] as $relation => $target) {
+                if ($target) {
+                    $this->assertSame(route('materi.show', $target), $xpath->query($navigation.'/a[@rel="'.$relation.'"]')->item(0)->getAttribute('href'));
+                }
+            }
+            $response->assertDontSee(route('materi.show', 'pewarisan'));
 
             $expectedIds = ['tujuan', ...array_column($content['sections'], 'id'), 'rangkuman'];
             if (! empty($content['reflection'])) {
@@ -133,9 +143,9 @@ class MateriTest extends TestCase
         $this->assertSame(1, substr_count($html, 'class="material-navigation"'));
     }
 
-    public function test_both_quizzes_embed_questions_with_valid_answers(): void
+    public function test_all_available_quizzes_embed_questions_with_valid_answers(): void
     {
-        foreach (['dasar-pemrograman-oop' => 5, 'kelas-dan-objek' => 8] as $slug => $count) {
+        foreach (['dasar-pemrograman-oop' => 5, 'kelas-dan-objek' => 8, 'enkapsulasi' => 8] as $slug => $count) {
             $html = $this->get('/materi/'.$slug)->assertOk()->getContent();
             preg_match('/data-quiz="questions">(.*?)<\/script>/s', $html, $matches);
             $questions = json_decode($matches[1], true, flags: JSON_THROW_ON_ERROR);
@@ -143,11 +153,31 @@ class MateriTest extends TestCase
             $this->assertCount($count, $questions);
             foreach ($questions as $question) {
                 $this->assertCount(4, $question['options']);
+                $this->assertIsInt($question['correct']);
                 $this->assertArrayHasKey($question['correct'], $question['options']);
                 $this->assertNotEmpty($question['explanation']);
             }
             $this->assertStringContainsString('js/oopy-quiz.js', $html);
         }
+    }
+
+    public function test_encapsulation_chapter_has_objectives_reflection_and_code_questions(): void
+    {
+        $response = $this->get('/materi/enkapsulasi')->assertOk()->assertViewIs('materi.show');
+        $content = $response->viewData('content');
+        $this->assertCount(5, $content['objectives']);
+        $this->assertCount(9, $content['sections']);
+        $this->assertCount(7, $content['summary']);
+        $this->assertCount(3, $content['reflection']);
+        foreach ($content['reflection'] as $question) {
+            $response->assertSee($question);
+        }
+        $this->assertGreaterThanOrEqual(3, count(array_filter($content['quiz'], fn ($question) => ! empty($question['code']))));
+        $response->assertSee('Bedah Kode SensorAir')->assertSee('name mangling')
+            ->assertSee('non-public by convention')->assertSee('@property')
+            ->assertSee('bukan data hasil pengukuran lapangan');
+        $this->assertNull($response->viewData('nextChapter'));
+        $this->assertSame('kelas-dan-objek', $response->viewData('previousChapter')['slug']);
     }
 
     public function test_home_and_editor_remain_available(): void

@@ -27,10 +27,12 @@ return [
     'enkapsulasi' => [
         'bab' => 'BAB 3',
         'judul' => 'Enkapsulasi',
+        'content' => 'enkapsulasi.php',
         'poin' => [
-            'Konsep pembungkusan data',
-            'Akses modifier (public, protected private)',
-            'Getter/Setter',
+            'Data, perilaku, dan interface object',
+            'Public attribute dan konvensi non-public',
+            'Name mangling dengan double underscore',
+            'Getter, setter, dan @property',
         ],
     ],
     'pewarisan' => [

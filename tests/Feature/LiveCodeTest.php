@@ -87,9 +87,34 @@ class LiveCodeTest extends TestCase
         $this->assertStringContainsString('<h3 class="oopy-explorer-title"', $html);
     }
 
+    public function test_chapter_three_reuses_live_code_with_an_incomplete_starter_and_checker(): void
+    {
+        $html = $this->get('/materi/enkapsulasi')->assertOk()->getContent();
+        $this->assertSame(1, substr_count($html, 'data-live-code'));
+        $this->assertSame(1, substr_count($html, 'css/oopy-live-code.css'));
+        $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));
+        preg_match('/data-role="config">(.*?)<\/script>/s', $html, $matches);
+        $config = json_decode($matches[1], true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame('bab3-enkapsulasi-sensor', $config['id']);
+        $this->assertSame('main.py', $config['entry_file']);
+        $this->assertSame(['main.py'], array_keys($config['files']));
+        $starter = $config['files']['main.py'];
+        $this->assertSame(3, substr_count($starter, 'pass'));
+        $this->assertStringContainsString('@property', $starter);
+        $this->assertStringContainsString('@tinggi_air.setter', $starter);
+        $this->assertStringNotContainsString('return self.', $starter);
+        $this->assertStringNotContainsString('raise ValueError(', $starter);
+        $this->assertNotEmpty($config['checker']);
+        $this->assertStringContainsString('results = []', $config['checker']);
+        $this->assertStringContainsString('<h3 id="'.$config['id'].'-workspace-title"', $html);
+        $this->assertStringContainsString('<h3 id="'.$config['id'].'-output-title"', $html);
+        preg_match_all('/\sid="([^"]+)"/', $html, $ids);
+        $this->assertSame($ids[1], array_values(array_unique($ids[1])));
+    }
+
     public function test_material_activity_headers_render_one_task_before_the_editor(): void
     {
-        foreach (['dasar-pemrograman-oop' => 1, 'kelas-dan-objek' => 2] as $slug => $count) {
+        foreach (['dasar-pemrograman-oop' => 1, 'kelas-dan-objek' => 2, 'enkapsulasi' => 1] as $slug => $count) {
             $html = $this->get('/materi/'.$slug)->assertOk()->getContent();
             $dom = new DOMDocument;
             @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
