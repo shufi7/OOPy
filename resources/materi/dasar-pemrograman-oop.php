@@ -13,6 +13,8 @@ return [
         [
             'id' => 'apersepsi',
             'title' => 'Apersepsi — Data Pemantauan Lahan Basah',
+            'nav_title' => 'Apersepsi',
+            'nav_group' => 'pendahuluan',
             'paragraphs' => [
                 'Bayangkan program yang menyimpan nama lokasi, tinggi air, suhu, dan pH. Untuk satu lokasi, beberapa variabel dan fungsi masih mudah dikelola. Apa yang terjadi jika ada puluhan lokasi dan setiap jenis sensor memiliki aturan serta perilaku yang berbeda?',
             ],
@@ -20,6 +22,7 @@ return [
         [
             'id' => 'nilai-tipe-data-variabel',
             'title' => '1.1 Nilai, Tipe Data, Variabel, dan Penugasan',
+            'nav_title' => '1.1 Nilai, Tipe Data & Variabel',
             'paragraphs' => [
                 'Nilai di Python memiliki tipe. int digunakan untuk bilangan bulat, float untuk desimal, str untuk teks, dan bool untuk nilai True atau False. Tipe membantu menentukan bagaimana suatu nilai dapat digunakan dalam program.',
                 'Variabel memberi nama pada nilai. Tanda = adalah operator penugasan: nilai di sisi kanan disimpan melalui nama di sisi kiri. Misalnya, tinggi_air = 135 memberi nama tinggi_air pada nilai bilangan bulat 135.',
@@ -59,6 +62,7 @@ OUTPUT,
         [
             'id' => 'operator-ekspresi',
             'title' => '1.2 Operator dan Ekspresi',
+            'nav_title' => '1.2 Operator & Ekspresi',
             'paragraphs' => [
                 'Operator aritmatika memproses nilai numerik. Operator perbandingan menghasilkan bool, sedangkan operator logika menggabungkan atau membalik kondisi. Ekspresi menggabungkan nilai dan operator untuk menghasilkan sebuah nilai.',
                 'Konsep ini nanti digunakan untuk validasi attribute, percabangan method, dan perhitungan sederhana. Tanda = digunakan untuk penugasan, sedangkan == membandingkan apakah dua nilai sama.',
@@ -78,6 +82,7 @@ OUTPUT,
         [
             'id' => 'input-output',
             'title' => '1.3 Input dan Output',
+            'nav_title' => '1.3 Input & Output',
             'paragraphs' => [
                 'print() digunakan untuk menampilkan output. input() menerima teks dari pengguna. Jika input akan digunakan sebagai angka, lakukan konversi menggunakan float() untuk desimal atau int() untuk bilangan bulat.',
                 'Pada contoh ini, nama menyimpan teks lokasi dan tinggi menyimpan hasil konversi ke float. F-string menyisipkan nilai variabel ke dalam teks output.',
@@ -115,6 +120,7 @@ PYTHON,
         [
             'id' => 'perulangan-list',
             'title' => '1.5 Perulangan dan List',
+            'nav_title' => '1.5 Perulangan & List',
             'paragraphs' => [
                 'Loop mengeksekusi blok kode berulang. while cocok jika pengulangan bergantung pada kondisi; kondisi harus dapat berubah agar pengulangan berhenti. for nyaman untuk memproses koleksi, seperti list yang menyimpan beberapa nilai dalam satu urutan.',
                 'Contoh berikut memakai satu loop untuk menampilkan setiap nama dalam list lokasi.',
@@ -135,6 +141,7 @@ OUTPUT,
         [
             'id' => 'fungsi',
             'title' => '1.6 Fungsi, Parameter, Argument, dan return',
+            'nav_title' => '1.6 Fungsi & Parameter',
             'paragraphs' => [
                 'Fungsi adalah blok kode bernama yang dapat digunakan kembali. Definisikan dengan def, lalu panggil ketika diperlukan. return mengembalikan hasil kepada pemanggil; print() menampilkan hasil tersebut sebagai output.',
                 'Parameter berada pada definisi fungsi, sedangkan argument adalah nilai nyata saat fungsi dipanggil. Pada def status_ph(nilai), nilai adalah parameter. Pada status_ph(7.2), 7.2 adalah argument.',
@@ -154,6 +161,7 @@ PYTHON,
         [
             'id' => 'prosedural-ke-oop',
             'title' => '1.7 Dari Prosedural ke OOP',
+            'nav_title' => '1.7 Prosedural → OOP',
             'paragraphs' => [
                 'Object menggabungkan data dan perilaku yang terkait. Class mendeskripsikan kelompok object sejenis. Saat program bertambah besar, pengelompokan state dan behavior membantu membagi tanggung jawab program menjadi bagian yang lebih jelas.',
                 'Dari Pendekatan Prosedural ke Object-Oriented Programming: pada pendekatan prosedural, data dan fungsi dikelola terpisah. Pendekatan ini cocok untuk program kecil, tetapi dapat sulit dirawat saat jumlah entitas dan perilaku bertambah. Ketika kompleksitas meningkat, OOP mengelompokkan data (state) dan perilaku (method) ke dalam object yang dibuat dari class.',

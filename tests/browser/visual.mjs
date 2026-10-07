@@ -7,7 +7,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const errors = [];
 page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
-const chapters = ['/materi/dasar-pemrograman-oop', '/materi/kelas-dan-objek'];
+const chapters = ['/materi/dasar-pemrograman-oop', '/materi/kelas-dan-objek', '/materi/enkapsulasi'];
 const samples = new Map();
 const luminance = (color) => {
     const [r, g, b] = color.match(/[\d.]+/g).slice(0, 3).map(Number).map((value) => {
@@ -32,13 +32,13 @@ try {
         } else {
             assert.equal(await page.locator('script[src*="vendor/prism"]').count(), 0);
         }
-        for (const width of [390, 768, 1024, 1440]) {
+        for (const width of [320, 390, 768, 1024, 1440]) {
             await page.setViewportSize({ width, height: 1000 });
             await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${path}: overflow at ${width}px`);
         }
     }
-    console.log('PASS: five pages, highlighted BAB 1/BAB 2 examples, no overflow at 390/768/1024/1440px');
+    console.log('PASS: six pages, highlighted BAB 1/2/3 examples, no overflow at 320/390/768/1024/1440px');
 
     await page.goto(`${base}${chapters[1]}`, { waitUntil: 'networkidle' });
     const source = '# Catatan habitat\nclass Ekosistem:\n    def info(self, nama):\n        return f"{nama} memiliki {120} hektar"\n\nprint(len(range(85)))\nhtml = "<img src=x onerror=alert(1)> & rawa"';
@@ -82,6 +82,8 @@ try {
     for (const path of chapters) {
         await page.goto(`${base}${path}`, { waitUntil: 'networkidle' });
         const quizQuestions = await page.locator('[data-quiz="questions"]').evaluate((node) => JSON.parse(node.textContent));
+        assert.equal(quizQuestions.length, 5);
+        assert.deepEqual(quizQuestions.map((question) => question.type), ['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill']);
         for (const question of quizQuestions) {
             if (question.code) {
                 assert.equal(await page.locator('[data-quiz="code"]').textContent(), question.code);
@@ -91,9 +93,9 @@ try {
             else await page.locator('[data-quiz="options"] input').nth(question.correct).check();
             await page.locator('[data-quiz="next"]').click();
         }
-        assert.equal(await page.locator('[data-quiz="percentage"]').textContent(), '100%');
-        assert.deepEqual(await page.locator('[data-quiz="review"] code').allTextContents(), quizQuestions.filter((question) => question.code).map((question) => question.code));
-        assert.equal(await page.locator('[data-quiz="review"] code').evaluateAll((nodes) => nodes.every((code) => code.querySelector('.token'))), true);
+        assert.equal(await page.locator('[data-quiz="score"]').textContent(), '100');
+        assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
+        assert.equal(await page.locator('.oopy-quiz-review, [data-quiz="review"]').count(), 0);
 
         const noJs = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 900 } });
         await noJs.goto(`${base}${path}`, { waitUntil: 'networkidle' });
@@ -116,12 +118,13 @@ try {
             else await fallback.locator('[data-quiz="options"] input').nth(question.correct).check();
             await fallback.locator('[data-quiz="next"]').click();
         }
-        assert.equal(await fallback.locator('[data-quiz="percentage"]').textContent(), '100%');
+        assert.equal(await fallback.locator('[data-quiz="score"]').textContent(), '100');
+        assert.equal(await fallback.locator('[data-quiz="status"]').textContent(), 'Lulus');
         assert.deepEqual(fallbackErrors, []);
         await fallback.close();
     }
     assert.deepEqual(errors, []);
-    console.log('PASS: no-JS reading, blocked Prism fallback, working quizzes in both chapters, no page errors');
+    console.log('PASS: no-JS reading, blocked Prism fallback, five-question mixed quizzes in BAB 1/2/3, no page errors');
 
     if (process.env.OOPY_SCREENSHOT_DIR) {
         await page.goto(`${base}${chapters[1]}`, { waitUntil: 'networkidle' });

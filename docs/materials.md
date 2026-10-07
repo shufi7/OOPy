@@ -15,15 +15,16 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
   apersepsi dan bagian 1.1–1.7, tabel konsep, contoh/output, latihan status air,
   Ayo Berlatih, empat rangkuman, tiga refleksi dan kuis 3 PG + 2 code-fill.
 - `resources/materi/kelas-dan-objek.php`: tujuh bagian BAB 2, termasuk apersepsi,
-  bedah kode, latihan Spesies/SensorAir, rangkuman, refleksi, dan delapan soal kuis.
+  bedah kode, latihan Spesies/SensorAir, rangkuman, refleksi, dan kuis 3 PG + 2 code-fill.
 - `resources/materi/enkapsulasi.php`: lima tujuan, sembilan bagian BAB 3,
-  latihan property SensorAir, tujuh poin rangkuman, tiga refleksi, dan delapan soal.
+  latihan property SensorAir, tujuh poin rangkuman, tiga refleksi, dan kuis 3 PG + 2 code-fill.
 - `app/Http/Controllers/MateriController.php`: `index()` untuk daftar dan `show()`
   untuk detail yang terdaftar, tanpa query database.
 - `resources/views/materi/show.blade.php`: breadcrumb, header, konten BAB,
   kuis dan satu navigasi dinamis antar-BAB beserta tautan kembali ke daftar materi.
 - `resources/views/materi/partials/quiz.blade.php`: struktur aktivitas kuis dan hasil.
-- `public/js/oopy-quiz.js`: pilihan jawaban, navigasi, skor, pembahasan dan Coba Lagi.
+- `public/js/oopy-quiz.js`: pilihan jawaban, navigasi, hasil agregat, kelulusan,
+  progres browser dan Coba Lagi.
 - `resources/views/materi/partials/navigation.blade.php`: daftar isi dan progres.
 - `resources/views/materi/partials/section.blade.php`: paragraf, contoh kode, catatan
   serta lokasi opsional komponen Live Coding pada setiap bagian materi.
@@ -31,8 +32,9 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 - `public/css/oopy/material/material.css`: struktur artikel, bagian materi dan navigasi antar-BAB.
 - `public/css/oopy/material/navigation.css`: sidebar, daftar isi dan progres BAB.
 - `public/css/oopy/material/code.css`: contoh kode Python dan tema token Prism.
-- `public/css/oopy/material/quiz.css`: form, hasil dan pembahasan kuis.
-- `public/js/oopy-material.js`: menu mobile, penanda bagian aktif dan fokus anchor.
+- `public/css/oopy/material/quiz.css`: form dan kartu hasil agregat kuis.
+- `public/js/oopy-material.js`: menu mobile, penanda bagian aktif, auto-open grup
+  aktif dan fokus anchor.
 
 Layout aplikasi memuat `public/css/oopy/base.css`, `layout.css` dan `navbar.css`,
 diikuti `@stack('styles')`. Beranda menambahkan `home.css` melalui `@push`.
@@ -76,12 +78,56 @@ serta [property dan setter](https://docs.python.org/3/library/functions.html#pro
 Navigasi otomatis: BAB 1 → BAB 2; BAB 2 → BAB 1 / BAB 3; BAB 3 → BAB 2.
 BAB 3 tidak memiliki Next ke BAB 4. Semua BAB memiliki tautan ke daftar materi.
 
+## Sidebar navigasi BAB
+
+Sidebar memakai hierarki **BAB → kelompok → submateri**, dengan label BAB kecil,
+judul 18px, label kelompok 15px, dan submateri 14px. Urutannya adalah Tujuan
+Pembelajaran, Pendahuluan (Apersepsi), Materi BAB, Penutup (Rangkuman/Refleksi),
+lalu Kuis BAB. Semua anchor tetap tersedia tepat sekali; judul dan urutan artikel
+tidak berubah. Progres tetap memakai bar existing dengan jarak yang lebih compact.
+
+Materi dan Penutup memakai native `<details>/<summary>` dan tertutup pada awal
+halaman agar sidebar ringkas. Kelompok kosong tidak ditampilkan. Summary mendukung
+Enter/Space, chevron berotasi, dan focus-visible tersedia untuk summary/link.
+Animasi chevron dinonaktifkan saat `prefers-reduced-motion: reduce`.
+Semua grup tetap dapat dibuka dan seluruh link dipakai tanpa JavaScript.
+
+Metadata section bersifat opsional:
+
+```php
+'nav_title' => '1.6 Fungsi & Parameter', // Sidebar saja; title artikel tetap lengkap.
+'nav_group' => 'materi', // Default; pilihan lainnya: pendahuluan atau penutup.
+```
+
+BAB 1 memakai label singkat Apersepsi, 1.1 Nilai/Tipe Data/Variabel, 1.2 Operator,
+1.3 Input/Output, 1.5 Perulangan/List, 1.6 Fungsi/Parameter, dan 1.7 Prosedural → OOP.
+BAB 2/3 juga memendekkan beberapa label panjang. Tanpa `nav_title`, sidebar
+menggunakan `title`. Metadata intro menempatkan Apersepsi di Pendahuluan; sections
+lainnya masuk Materi secara default. Rangkuman/Refleksi ditambahkan ke Penutup
+jika tersedia. Tidak ada mapping slug BAB dalam view; gunakan kelompok mengikuti
+alur Pendahuluan → Materi → Penutup saat menambah BAB.
+
+Link aktif tetap memakai `aria-current="location"`, latar `--oopy-selected`, dan
+garis kiri primary. Bullet pada semua item telah dihapus; garis submenu menunjukkan
+indentasi. JavaScript membuka parent grup ketika section aktif berubah lewat
+scroll, klik anchor, atau direct link seperti `#percabangan`/`#rangkuman`. Grup
+yang memuat link aktif tetap terbuka agar posisi baca tidak tersembunyi.
+
+Desktop mempertahankan sidebar sticky pada 24px dan lebar layout existing.
+Panel hanya bergulir vertikal bila melebihi viewport, dengan scrollbar tipis.
+Di bawah 992px, menu luar tertutup pada awal halaman dan menampilkan **Daftar Isi
+BAB**; ketika dibuka, struktur kelompoknya sama. Membuka grup aktif tidak membuka
+menu mobile secara otomatis. Indentasi mobile dikurangi dan link minimal 44px
+agar nyaman disentuh. Quiz, Live Coding, progres dan navigasi bawah tidak berubah.
+
 ## Menggunakan template untuk BAB berikutnya
 
 1. Siapkan file data BAB mengikuti struktur BAB 1/BAB 2: `description`,
    `objectives`, `sections`, `summary`, `reflection`, dan `quiz`. Deskripsi dan
    array opsional dapat dihilangkan; rangkuman/refleksi/kuis kosong tidak dirender
    dan tidak mendapatkan tautan sidebar.
+   Jika memiliki kuis, siapkan tepat 5 soal; engine tidak memulai kuis dengan
+   jumlah soal yang berbeda. Ikuti pola 3 pilihan ganda dan 2 code-fill.
 2. Pada entri BAB di `chapters.php`, tambahkan `content` berisi nama file data.
    Card otomatis menampilkan tautan detail; navigasi sebelumnya/berikutnya
    memakai registry melalui `$previousChapter` dan `$nextChapter`.
@@ -91,6 +137,8 @@ BAB 3 tidak memiliki Next ke BAB 4. Semua BAB memiliki tautan ke daftar materi.
    `['code' => '...']`. Tabel dapat digulir secara horizontal dengan keyboard.
    `output` menggunakan blok kode yang sama tanpa highlighting Python;
    `practice` adalah daftar latihan mandiri yang tampil setelah Live Coding.
+   Gunakan `nav_title` untuk label sidebar singkat dan `nav_group` untuk kelompok
+   pendahuluan/materi/penutup; keduanya tidak mengubah konten atau anchor artikel.
    ID harus valid untuk anchor dan tidak sama
    dengan `tujuan`, `rangkuman`, `refleksi`, `kuis`, atau ID komponen lainnya.
 4. Tambahkan tes judul, section dan URL BAB baru. Route dan template dapat dipakai
@@ -166,15 +214,22 @@ atau di-reset dan tidak disimpan. Tidak ada konfigurasi atau engine baru.
 
 BAB 1 memiliki lima soal sesuai modul: tipe float, argument, gagasan OOP,
 serta melengkapi kode dengan `return` dan `elif`.
-BAB 2 dan BAB 3 masing-masing memiliki delapan soal. Kuis BAB 3 mencakup
-enkapsulasi, public attribute, konvensi `_`, name mangling, getter, validasi setter,
-property, serta analisis kode. Empat soal BAB 3 menggunakan potongan kode Python.
-Data berasal dari array `quiz` di `resources/materi/dasar-pemrograman-oop.php` dan
-diserialisasi sebagai JSON oleh Blade. Untuk menambah soal, tambahkan satu elemen:
+Semua BAB memiliki tepat **5 soal: 3 pilihan ganda + 2 code-fill**.
+BAB 2 mempertahankan soal class/object, `__init__`, dan `self`, lalu menguji
+instance attribute melalui assignment `self.nama = nama` serta pembuatan object
+dengan pemanggilan class `Ekosistem`. Signature `nama, lokasi` mengikuti materi.
+BAB 3 mempertahankan soal tujuan enkapsulasi, konvensi `_`, dan name mangling `__`,
+lalu menguji decorator `@property` dan `@tinggi_air.setter` yang telah diajarkan.
+Pemilihan ini mewakili lima konsep utama tiap BAB, bukan mengambil lima soal
+pertama. Hanya bagian `quiz` BAB 2/3 yang berubah; materi utama dan Live Coding tetap.
+Data berasal dari array `quiz` di file materi masing-masing BAB dan
+diserialisasi sebagai JSON oleh Blade. Schema data tetap mempertahankan `correct`,
+`answer`, dan `explanation`; `explanation` disaring sebelum dikirim ke halaman.
+Untuk mengganti soal, pertahankan total lima elemen. Contoh pilihan ganda:
 
 ```php
 [
-    'type' => 'multiple_choice', // Opsional; default untuk data BAB 2/3.
+    'type' => 'multiple_choice', // Engine tetap menerima data lama tanpa type.
     'question' => 'Apa tipe data nilai ini?',
     'code' => 'jumlah_habitat = 2', // Opsional jika soal tidak memerlukan kode.
     'options' => ['str', 'int', 'float', 'bool'],
@@ -184,7 +239,7 @@ diserialisasi sebagai JSON oleh Blade. Untuk menambah soal, tambahkan satu eleme
 ```
 
 Gunakan empat pilihan dan satu indeks jawaban benar yang valid. Counter dan total
-skor mengikuti jumlah soal. JavaScript membuat pilihan radio dari data, menyimpan
+skor mengikuti lima soal. JavaScript membuat pilihan radio dari data, menyimpan
 jawaban selama halaman terbuka, serta mengembalikan pilihan saat berpindah soal.
 
 Untuk soal melengkapi kode, gunakan data berikut tanpa `options`/`correct`:
@@ -204,17 +259,64 @@ berlabel menggantikan radio pada soal code-fill. Jawaban dinormalisasi dengan
 `trim()` dan dibandingkan secara case sensitive; `Return` tidak sama dengan
 `return`. Input kosong atau hanya spasi belum dihitung sebagai jawaban.
 Jawaban teks tetap tersimpan saat berpindah soal dan dihapus saat Coba Lagi atau
-refresh. Pembahasan menampilkan jawaban pengguna dan kunci sebagai teks yang aman.
-BAB 2/3 tetap memakai data pilihan ganda lama tanpa modifikasi konten.
+refresh. Hasil tidak menampilkan jawaban pengguna, kunci, atau pembahasan soal.
+BAB 2/3 memakai engine campuran yang sama. Code-fill juga dapat berupa assignment
+atau decorator, bukan hanya satu kata. Isi setelah trim harus sama dengan `answer`;
+soal assignment BAB 2 meminta satu spasi di kedua sisi tanda `=` agar format jelas.
 
 Pengguna boleh melewati soal dan mengubah jawaban sebelum menyelesaikan kuis.
 Jika ada jawaban kosong saat Selesai Kuis ditekan, pengguna diarahkan ke soal kosong
-pertama; hasil belum ditampilkan.
+pertama dengan pesan **Masih ada soal yang belum dijawab.** Hasil belum dihitung,
+ditampilkan, atau disimpan sebagai kelulusan.
 
-Skor dihitung dengan `Math.round(jawabanBenar / jumlahSoal * 100)`. Hasil menampilkan
-jumlah benar/salah dan pembahasan tiap soal, termasuk pilihan pengguna dan kunci.
-Pembahasan tidak muncul ketika baru memilih jawaban. Coba Lagi menghapus jawaban
-dan kembali ke soal pertama. Refresh juga mengulang kuis dari awal.
+Nilai integer dihitung dengan `Math.round(jawabanBenar / jumlahSoal * 100)`.
+Kartu **Kuis Selesai** hanya menampilkan **Nilai**, **Benar**, **Salah**, dan
+**Status** beserta pesan dan tombol latihan/navigasi. Tidak ada verdict per soal,
+warna berdasarkan benar/salah, jawaban pengguna, kunci, atau pembahasan, baik saat
+memilih jawaban maupun setelah submit. DOM `.oopy-quiz-review` dan seluruh renderer
+review lama telah dihapus. Hasil memakai `role="status"`, `aria-live="polite"`,
+dan heading yang menerima fokus sesudah submit.
+
+Aturan kelulusan diatur melalui `TOTAL_QUESTIONS = 5` dan
+`MIN_CORRECT_TO_PASS = 4` pada `public/js/oopy-quiz.js`.
+**0–3 benar = Belum Lulus; 4–5 benar = Lulus**, berdasarkan jumlah benar,
+tanpa passing grade persentase. Nilai berturut-turut adalah 0, 20, 40, 60, 80, 100.
+Sebelum lulus, BAB berkuis yang memiliki
+`$nextChapter` menampilkan teks terkunci beserta alasan; link Next disembunyikan
+sejak HTML awal. Sesudah lulus, link Next di navigasi bawah langsung terbuka tanpa
+reload dan CTA dengan URL yang sama muncul di kartu hasil. Previous dan kembali
+ke daftar materi tetap tersedia. BAB tanpa kuis tetap memiliki link Next biasa.
+BAB terakhir tidak membuat CTA/URL kosong dan menampilkan **Evaluasi selesai.**
+ketika lulus, tanpa menyebut BAB berikutnya.
+
+Controller mengirim `$chapter['slug']`; Blade meneruskannya melalui
+`data-chapter-slug`, sehingga engine tidak menebak URL atau hardcode identitas BAB.
+Progres menggunakan satu key localStorage **`oopy.quiz.progress`** dengan object
+yang memetakan slug BAB ke hasil terbaik:
+
+```json
+{
+  "dasar-pemrograman-oop": {"passed": true, "bestCorrect": 4, "bestScore": 80},
+  "kelas-dan-objek": {"passed": false, "bestCorrect": 3, "bestScore": 60}
+}
+```
+
+Hanya `passed`, `bestCorrect`, dan `bestScore` disimpan; tidak ada response,
+kunci, atau explanation. Setiap percobaan lengkap, termasuk yang belum lulus,
+memperbarui hasil terbaik menggunakan maksimum jumlah benar. Contoh 3 → 4 → 2
+menyimpan hasil terbaik 4/80 dan `passed: true`; nilai terbaik tidak turun.
+`passed` hanya menjadi true ketika hasil terbaik minimal 4 dari 5.
+Saat refresh, hasil terbaik dibaca untuk mempertahankan Next yang sudah
+terbuka, sementara jawaban dan hasil percobaan kembali kosong. **Coba Lagi**
+menghapus semua jawaban, validasi dan angka/status hasil serta kembali ke soal
+pertama, tetapi tidak menghapus kelulusan sebelumnya. Percobaan berikutnya yang
+gagal juga tidak mencabut progres. Browser baru/storage kosong kembali terkunci.
+Data storage yang rusak diabaikan; jika storage tidak tersedia, kelulusan tetap
+membuka Next pada halaman saat ini, tetapi tidak bertahan setelah refresh.
+Entry lama `oopy.quiz.passed.<slug>` dari aturan minimal 1 benar tidak dibaca
+atau dihapus. Entry tersebut tidak membuktikan kelulusan aturan baru 4/5.
+Record baru dengan `passed: true` tetapi `bestCorrect` di bawah 4 juga tidak
+membuka Next. Jumlah benar dari storage harus integer dalam rentang 0–5.
 
 ## Batasan tahap ini
 
@@ -226,9 +328,13 @@ dan kembali ke soal pertama. Refresh juga mengulang kuis dari awal.
   `<pre><code>` tetap dapat dibaca ketika editor belum siap.
 - `input()` dijelaskan dengan contoh untuk terminal lokal; editor browser belum
   mendukung input interaktif.
-- Kuis adalah prototype frontend, tanpa backend kuis, storage browser, atau
-  penyimpanan nilai. Kunci soal tersedia di browser, bukan penilaian ujian tepercaya.
-  Skor kuis tidak mengubah progres BAB maupun hasil Live Coding.
+- Gating kuis merupakan **client-side learning flow**, bukan security/access-control.
+  Pengguna masih dapat membuka URL BAB langsung atau mengubah localStorage.
+  Kunci untuk perhitungan frontend tetap tersedia di JSON browser, meski tidak
+  ditampilkan pada UI; explanation tetap di data PHP dan tidak dikirim.
+  Tidak ada backend progres atau penyimpanan nilai. Setelah login/dashboard dan
+  progres backend tersedia, gating dapat dipindahkan ke server. Status kuis tidak
+  mengubah bar progres materi maupun hasil Live Coding.
 - Hanya BAB 1–3 yang memiliki detail. Tidak ada autentikasi, database materi,
   dashboard, atau perubahan pada engine Live Coding, navbar, footer, dan Beranda.
 
@@ -247,6 +353,13 @@ git diff --check
 Tes `MateriTest` mencakup BAB 1–3, tautan valid, 404 BAB 4–6, satu navigasi akhir,
 urutan section/sidebar, refleksi kosong/hilang/terisi, array opsional, ID unik,
 ketiga kuis, render Live Coding, serta regresi Beranda dan `/editor`.
+Sidebar juga diperiksa untuk kelompok Materi/Penutup, state awal tertutup,
+metadata `nav_title` dan fallback, judul artikel yang tetap lengkap, serta semua
+anchor yang tetap unik dan berurutan. Tes browser memeriksa collapse/expand dengan
+Enter/Space, focus-visible, auto-open parent aktif, `aria-current`, direct link
+`#percabangan`/`#rangkuman`, serta native navigasi tanpa JavaScript. Sidebar mobile
+yang dibuka dan seluruh submenu turut diperiksa tanpa horizontal overflow pada
+320/390/768/1024/1440px.
 `LiveCodeTest` memeriksa starter BAB 1/2/3, heading kontekstual, aset sekali,
 dan seluruh kontrak komponen sebelumnya.
 
@@ -262,6 +375,7 @@ php artisan serve --host=127.0.0.1 --port=8017 --no-reload
 node tests/browser/material.mjs
 node tests/browser/quiz.mjs
 node tests/browser/live-code.mjs
+node tests/browser/visual.mjs
 ```
 
 Atur `OOPY_BROWSER=chrome` jika menggunakan Chrome dan `OOPY_BASE_URL` jika alamat
@@ -282,26 +396,31 @@ dan 0%.
 `OOPY_SCREENSHOT_DIR` opsional
 menyimpan screenshot desktop dan mobile ke direktori yang sudah ada.
 
-Tes kuis memeriksa instruksi, navigasi maju/mundur, radio keyboard, jawaban tersimpan,
-pengubahan jawaban, penolakan penyelesaian dengan jawaban kosong, skor 0/80/100%,
-pembahasan, Coba Lagi, refresh, sidebar aktif dan layout responsif. Tidak ada request
-penyimpanan nilai ke server selama interaksi kuis. BAB 2 turut diperiksa untuk
-delapan soal, skor 100%, pembahasan dengan Prism, Coba Lagi, dan layout hasil.
-BAB 3 juga memeriksa jawaban kosong, skor 0/88/100%, pembahasan, Coba Lagi,
-refresh, dan layout form/hasil pada kelima lebar tersebut.
-BAB 1 memeriksa 3 PG + 2 code-fill, input kosong/spasi, trim, case sensitivity,
-retensi jawaban teks, Enter, skor 0/80/100%, pembahasan, Coba Lagi, refresh,
-serta layout radio/input pada 320/390/768/1024/1440px.
+Tes kuis memeriksa BAB 1–3: hasil awal tersembunyi, Next terkunci, semua soal wajib
+dijawab, 0–3 benar tetap terkunci, tepat 4 benar membuka Next tanpa reload, semua
+benar bernilai 100, CTA memakai URL yang sama, hasil agregat tanpa review/kunci,
+refresh setelah lulus, Coba Lagi serta kegagalan berikutnya tetap mempertahankan
+progres, dan BAB terakhir tanpa Next. Browser baru, storage rusak dan kegagalan
+penyimpanan turut diperiksa. Layout form/hasil diuji pada 320/390/768/1024/1440px.
+Semua BAB memeriksa 3 PG + 2 code-fill, input kosong/spasi, trim, case sensitivity,
+radio keyboard, retensi/pengubahan jawaban, Enter, nilai 0/20/40/60/80/100, dan sidebar
+aktif. Tidak ada request penyimpanan ke server atau perubahan hasil Live Coding.
+Hasil terbaik dan progres tiap BAB tetap tersedia setelah gagal, Coba Lagi,
+refresh, atau berpindah BAB; storage hanya menyimpan tiga field yang diperlukan.
+Progres lama dari aturan minimal 1 benar tidak membuka Next.
+Tes materi menyelesaikan kuis dengan tepat 4 benar sebelum berpindah melalui Next,
+serta memeriksa navigasi yang tetap terkunci tanpa JavaScript. Tes visual memeriksa
+Prism pada soal dan hasil agregat yang sama ketika Prism tidak tersedia.
 
 Jalankan perintah di atas pada environment yang menyediakan dependensi tes;
 integrasi browser memerlukan akses ke CDN Monaco dan Pyodide.
 
-Verifikasi BAB 1–3: `php artisan test` lulus (26 tes, 416 assertions),
-6 tes Node runtime manager lulus, dan ketiga skrip browser `material.mjs`,
-`quiz.mjs`, serta `live-code.mjs` lulus di Edge headless dengan CDN asli.
-`visual.mjs` juga lulus: Prism, output teks, kuis campuran, pembacaan tanpa
-JavaScript dan fallback saat Prism tidak tersedia. Pemeriksaan sintaks JavaScript
-materi/kuis dan skrip browser, lint PHP data BAB 1/registry,
-Pint `--test --dirty`, dan `git diff --check` juga lulus.
-Konten BAB 2/3, layout halaman, CSS global, route, controller dan engine
-Live Coding tetap; konfigurasi `.env` tidak diubah.
+Materi utama BAB 1–3, CSS global, route dan engine Live Coding tetap; controller hanya
+menambahkan slug BAB untuk identitas progres. Konfigurasi `.env` tidak diubah.
+
+Verifikasi alur kuis dan sidebar baru: `php artisan test` lulus (26 tes, 542 assertions),
+6 tes Node runtime manager lulus, pemeriksaan sintaks JavaScript dan
+`git diff --check` lulus, serta Pint `--test --dirty` lulus. Keempat skrip browser
+`quiz.mjs`, `material.mjs`, `live-code.mjs`, dan `visual.mjs` lulus di Edge headless
+dengan akses CDN Bootstrap, font, Monaco dan Pyodide. Akses CDN diperlukan untuk
+memverifikasi gaya lengkap dan menjalankan tes integrasi editor.

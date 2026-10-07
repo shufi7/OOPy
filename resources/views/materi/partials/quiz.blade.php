@@ -1,8 +1,8 @@
-<section class="material-section material-quiz oopy-quiz" id="kuis" aria-labelledby="kuis-title" tabindex="-1" data-material-section data-oopy-quiz>
+<section class="material-section material-quiz oopy-quiz" id="kuis" aria-labelledby="kuis-title" tabindex="-1" data-material-section data-oopy-quiz data-chapter-slug="{{ $chapter['slug'] }}">
     <span class="material-eyebrow">CEK PEMAHAMAN</span>
     <h2 id="kuis-title">Kuis {{ $chapter['bab'] }}</h2>
-    <p>Pilih jawabanmu, lalu tinjau hasil dan pembahasan setelah menyelesaikan semua soal.</p>
-    <script type="application/json" data-quiz="questions">{!! \Illuminate\Support\Js::encode($content['quiz']) !!}</script>
+    <p>Jawab semua soal, lalu lihat nilai, jumlah benar dan salah, serta status kelulusanmu.</p>
+    <script type="application/json" data-quiz="questions">{!! \Illuminate\Support\Js::encode(collect($content['quiz'])->map(fn ($question) => \Illuminate\Support\Arr::except($question, ['explanation']))->all()) !!}</script>
 
     <button type="button" class="oopy-quiz-instructions-button" data-quiz="instructions-toggle" aria-expanded="false" aria-controls="quiz-instructions" hidden>
         <i class="bi bi-info-circle" aria-hidden="true"></i> Instruksi Pengerjaan
@@ -12,7 +12,7 @@
         <ol>
             <li>Bacalah setiap pertanyaan dengan teliti.</li>
             @if (collect($content['quiz'])->contains(fn ($question) => ($question['type'] ?? 'multiple_choice') === 'code_fill'))
-            <li>Pilih satu jawaban untuk soal pilihan ganda; lengkapi bagian kosong dengan satu kata untuk soal kode. Huruf besar/kecil mengikuti sintaks Python.</li>
+            <li>Pilih satu jawaban untuk soal pilihan ganda; lengkapi bagian kosong dengan kode yang diminta untuk soal kode. Huruf besar/kecil mengikuti sintaks Python.</li>
             @else
             <li>Pilih satu jawaban yang menurutmu paling tepat.</li>
             @endif
@@ -20,7 +20,7 @@
             <li>Kamu dapat mengganti jawaban sebelum menyelesaikan kuis.</li>
             <li>Setelah semua soal dijawab, tekan tombol Selesai Kuis.</li>
         </ol>
-        <p>Jawaban dan hasil akan kembali dari awal jika halaman dimuat ulang.</p>
+        <p>Jawaban dan hasil akan kembali dari awal jika halaman dimuat ulang. Status kelulusan dan hasil terbaik tersimpan di browser ini.</p>
     </div>
 
     <p data-quiz="loading">Kuis sedang disiapkan. Jika kuis tidak muncul, muat ulang halaman.</p>
@@ -55,14 +55,20 @@
 
     <div data-quiz="results" hidden>
         <h3 data-quiz="result-title" tabindex="-1">Kuis Selesai</h3>
-        <div class="oopy-quiz-score">
-            <p>Skor kamu</p>
-            <strong data-quiz="score"></strong>
-            <span data-quiz="percentage"></span>
-            <p data-quiz="totals"></p>
+        <div class="oopy-quiz-score" role="status" aria-live="polite" aria-atomic="true">
+            <dl class="oopy-quiz-summary">
+                <div class="oopy-quiz-value"><dt>Nilai</dt><dd data-quiz="score"></dd></div>
+                <div><dt>Benar</dt><dd data-quiz="correct"></dd></div>
+                <div><dt>Salah</dt><dd data-quiz="incorrect"></dd></div>
+                <div class="oopy-quiz-status"><dt>Status</dt><dd data-quiz="status"></dd></div>
+            </dl>
+            <p data-quiz="message"></p>
         </div>
-        <h3>Pembahasan</h3>
-        <ol class="oopy-quiz-review" data-quiz="review"></ol>
-        <button class="btn btn-brand" type="button" data-quiz="retry">Coba Lagi</button>
+        <div class="oopy-quiz-result-actions">
+            <button class="btn oopy-quiz-previous" type="button" data-quiz="retry">Coba Lagi</button>
+            @if (!empty($nextChapter))
+            <a class="btn btn-brand" href="{{ route('materi.show', $nextChapter['slug']) }}" data-quiz="continue" hidden>Lanjut ke {{ $nextChapter['bab'] }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            @endif
+        </div>
     </div>
 </section>

@@ -21,6 +21,7 @@ return [
         [
             'id' => 'apersepsi',
             'title' => 'Apersepsi',
+            'nav_group' => 'pendahuluan',
             'paragraphs' => [
                 'Dalam lingkungan lahan basah terdapat berbagai entitas seperti sungai, rawa, mangrove, tumbuhan, hewan, dan sensor. Setiap entitas memiliki data yang berbeda, tetapi kita dapat menemukan pola yang sama untuk memodelkannya dalam program.',
                 'Sebagai contoh, sebuah ekosistem dapat memiliki nama dan lokasi. Ekosistem tersebut juga dapat memiliki perilaku tertentu, misalnya menampilkan informasi mengenai dirinya sendiri. Konsep class dan object membantu kita membuat model seperti ini dalam Python.',
@@ -98,6 +99,7 @@ PYTHON,
         [
             'id' => 'banyak-object',
             'title' => 'Membuat Beberapa Object dari Satu Class',
+            'nav_title' => 'Membuat Beberapa Object',
             'paragraphs' => [
                 'Satu class dapat digunakan untuk membuat banyak object. Setiap object dapat memiliki nilai atribut yang berbeda meskipun dibuat dari class yang sama.',
                 'Contohnya, class Ekosistem dapat digunakan untuk membuat object sungai, rawa, dan mangrove. Ketiga object tersebut memiliki atribut nama dan lokasi, tetapi masing-masing menyimpan nilai yang berbeda.',
@@ -160,6 +162,7 @@ PYTHON,
         [
             'id' => 'live-coding-spesies',
             'title' => 'Live Coding: Class Spesies',
+            'nav_title' => 'Live Coding: Spesies',
             'paragraphs' => [
                 'Sekarang kita akan membuat class Spesies untuk memodelkan spesies yang hidup di lingkungan lahan basah. Class ini memiliki atribut nama dan habitat.',
                 'Buat constructor __init__ untuk menyimpan kedua nilai tersebut. Kemudian buat method deskripsi() yang mengembalikan informasi mengenai spesies dan habitatnya.',
@@ -380,6 +383,7 @@ PYTHON,
 
     'quiz' => [
         [
+            'type' => 'multiple_choice',
             'question' => 'Apa yang dimaksud dengan class dalam Python?',
             'options' => [
                 'Nilai yang disimpan dalam sebuah variabel',
@@ -390,8 +394,8 @@ PYTHON,
             'correct' => 1,
             'explanation' => 'Class merupakan cetak biru atau rancangan yang digunakan untuk membuat object.',
         ],
-
         [
+            'type' => 'multiple_choice',
             'question' => 'Apa fungsi __init__ pada sebuah class?',
             'options' => [
                 'Menghapus object',
@@ -402,8 +406,8 @@ PYTHON,
             'correct' => 2,
             'explanation' => 'Constructor __init__ dipanggil ketika object dibuat dan digunakan untuk memberikan nilai awal pada object.',
         ],
-
         [
+            'type' => 'multiple_choice',
             'question' => 'Apa yang dimaksud dengan self dalam method sebuah class?',
             'options' => [
                 'Nama class',
@@ -414,82 +418,24 @@ PYTHON,
             'correct' => 1,
             'explanation' => 'self merujuk pada object yang sedang menggunakan method sehingga atribut dan method milik object dapat diakses.',
         ],
-
         [
-            'question' => 'Perhatikan kode berikut. Apa yang dimaksud dengan rawa?',
+            'type' => 'code_fill',
+            'question' => 'Lengkapi assignment untuk menyimpan parameter nama sebagai instance attribute bernama nama. Gunakan satu spasi di kedua sisi tanda =.',
             'code' => <<<'PYTHON'
 class Ekosistem:
     def __init__(self, nama, lokasi):
-        self.nama = nama
+        __________
         self.lokasi = lokasi
-
-rawa = Ekosistem("Rawa", "Kalimantan Selatan")
 PYTHON,
-            'options' => [
-                'Class Ekosistem',
-                'Method __init__',
-                'Object atau instance dari class Ekosistem',
-                'Atribut lokasi',
-            ],
-            'correct' => 2,
-            'explanation' => 'rawa adalah object atau instance yang dibuat dari class Ekosistem.',
+            'answer' => 'self.nama = nama',
+            'explanation' => 'self.nama = nama menyimpan nilai parameter nama pada atribut milik masing-masing object.',
         ],
-
         [
-            'question' => 'Apa fungsi atribut pada sebuah object?',
-            'options' => [
-                'Menyimpan data atau keadaan object',
-                'Membuat program berhenti',
-                'Mengubah class menjadi function',
-                'Menghapus seluruh object',
-            ],
-            'correct' => 0,
-            'explanation' => 'Atribut digunakan untuk menyimpan data atau keadaan yang dimiliki oleh sebuah object.',
-        ],
-
-        [
-            'question' => 'Perhatikan kode berikut. Berapa object yang dibuat dari class Ekosistem?',
-            'code' => <<<'PYTHON'
-sungai = Ekosistem("Sungai", "Banjarmasin")
-rawa = Ekosistem("Rawa", "Hulu Sungai")
-mangrove = Ekosistem("Mangrove", "Pesisir")
-PYTHON,
-            'options' => [
-                'Satu object',
-                'Dua object',
-                'Tiga object',
-                'Tidak ada object',
-            ],
-            'correct' => 2,
-            'explanation' => 'Kode tersebut membuat tiga object, yaitu sungai, rawa, dan mangrove dari class Ekosistem.',
-        ],
-
-        [
-            'question' => 'Apa yang dilakukan oleh method info() pada kode berikut?',
-            'code' => <<<'PYTHON'
-def info(self):
-    return f"{self.nama} berada di {self.lokasi}"
-PYTHON,
-            'options' => [
-                'Membuat class baru',
-                'Menghapus atribut object',
-                'Mengembalikan informasi nama dan lokasi object',
-                'Membuat object secara otomatis',
-            ],
-            'correct' => 2,
-            'explanation' => 'Method info() membaca atribut nama dan lokasi dari object kemudian mengembalikan informasi dalam bentuk string.',
-        ],
-
-        [
-            'question' => 'Jika satu class digunakan untuk membuat beberapa object, apakah nilai atribut setiap object harus sama?',
-            'options' => [
-                'Ya, semua object harus memiliki nilai yang sama',
-                'Tidak, setiap object dapat memiliki nilai atribut yang berbeda',
-                'Ya, tetapi hanya atribut pertama',
-                'Tidak, object tidak dapat memiliki atribut',
-            ],
-            'correct' => 1,
-            'explanation' => 'Satu class dapat digunakan untuk membuat banyak object dan setiap object dapat memiliki nilai atribut yang berbeda.',
+            'type' => 'code_fill',
+            'question' => 'Lengkapi nama class yang dipanggil untuk membuat object rawa dengan nama dan lokasi sesuai materi.',
+            'code' => 'rawa = __________("Rawa", "Kalimantan Selatan")',
+            'answer' => 'Ekosistem',
+            'explanation' => 'Memanggil Ekosistem dengan parameter nama dan lokasi membuat object atau instance dari class tersebut.',
         ],
     ],
 ];

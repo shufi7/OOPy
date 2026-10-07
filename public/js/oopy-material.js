@@ -5,6 +5,10 @@ if (material) {
     const links = [...menu.querySelectorAll('nav a')];
     const sections = [...material.querySelectorAll('[data-material-section]')];
     const desktop = window.matchMedia('(min-width: 992px)');
+    const openGroup = (link) => {
+        const group = link?.closest('.material-toc-group');
+        if (group) group.open = true;
+    };
     const syncMenu = () => { menu.open = desktop.matches; };
     syncMenu();
     desktop.addEventListener('change', syncMenu);
@@ -17,8 +21,10 @@ if (material) {
             if (section.getBoundingClientRect().top <= 160) active = section;
         }
         links.forEach((link) => {
-            if (link.hash === `#${active.id}`) link.setAttribute('aria-current', 'location');
-            else link.removeAttribute('aria-current');
+            if (link.hash === `#${active.id}`) {
+                link.setAttribute('aria-current', 'location');
+                openGroup(link);
+            } else link.removeAttribute('aria-current');
         });
     }
     function scheduleUpdate() {
@@ -27,6 +33,12 @@ if (material) {
         requestAnimationFrame(markActiveSection);
     }
 
+    menu.querySelectorAll('.material-toc-group').forEach((group) => {
+        group.addEventListener('toggle', () => {
+            if (!group.open && group.querySelector('[aria-current="location"]')) group.open = true;
+        });
+    });
+
     material.addEventListener('click', (event) => {
         const link = event.target.closest('a[href^="#"]');
         if (!link || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -34,6 +46,7 @@ if (material) {
         if (!section) return;
         event.preventDefault();
         if (!desktop.matches) menu.open = false;
+        openGroup(links.find((candidate) => candidate.hash === link.hash));
         if (location.hash !== link.hash) history.pushState(null, '', link.hash);
         section.focus({ preventScroll: true });
         // The global Bootstrap stylesheet enables smooth scrolling. Jump after
@@ -47,6 +60,9 @@ if (material) {
     window.addEventListener('hashchange', scheduleUpdate);
     // Collapsing the mobile TOC changes layout; restore an initial deep link.
     const initial = sections.find((section) => `#${section.id}` === location.hash);
-    if (initial) requestAnimationFrame(() => initial.scrollIntoView({ block: 'start', behavior: 'instant' }));
+    if (initial) {
+        openGroup(links.find((link) => link.hash === location.hash));
+        requestAnimationFrame(() => initial.scrollIntoView({ block: 'start', behavior: 'instant' }));
+    }
     scheduleUpdate();
 }

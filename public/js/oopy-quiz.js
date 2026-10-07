@@ -1,10 +1,36 @@
-// Quiz state exists only while this page is open; no storage or server submission.
+// Browser learning-flow progress only; this does not restrict direct chapter URLs.
+const TOTAL_QUESTIONS = 5;
+const MIN_CORRECT_TO_PASS = 4;
+const PROGRESS_KEY = 'oopy.quiz.progress';
+
 document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     const find = (name) => root.querySelector(`[data-quiz="${name}"]`);
     const questions = JSON.parse(find('questions').textContent);
+    if (questions.length !== TOTAL_QUESTIONS) {
+        find('loading').textContent = 'Kuis belum tersedia. Silakan coba lagi nanti.';
+        return;
+    }
     let answers = Array(questions.length).fill(null);
     let current = 0;
     let completed = false;
+    const chapterSlug = root.dataset.chapterSlug;
+    const navigation = root.closest('.material-article')?.querySelector('.material-navigation');
+    const nextLink = navigation?.querySelector('[data-quiz-next-link]');
+    const nextLocked = navigation?.querySelector('[data-quiz-next-locked]');
+    const continueLink = find('continue');
+    function readProgress() {
+        try {
+            const stored = JSON.parse(localStorage.getItem(PROGRESS_KEY));
+            if (stored && typeof stored === 'object' && !Array.isArray(stored)) return stored;
+        } catch {
+            // Missing, malformed, or unavailable storage starts with no progress.
+        }
+        return {};
+    }
+    let progress = readProgress();
+    const storedCorrect = progress[chapterSlug]?.bestCorrect;
+    let bestCorrect = Number.isInteger(storedCorrect) && storedCorrect >= 0 && storedCorrect <= TOTAL_QUESTIONS ? storedCorrect : 0;
+    let previouslyPassed = bestCorrect >= MIN_CORRECT_TO_PASS;
     const letter = (index) => String.fromCharCode(65 + index);
     const isCodeFill = (question) => question.type === 'code_fill';
     const hasAnswer = (question, answer) => isCodeFill(question)
@@ -13,15 +39,47 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     const isCorrect = (question, answer) => isCodeFill(question)
         ? typeof answer === 'string' && answer.trim() === question.answer
         : answer === question.correct;
-    const answerText = (question, answer) => isCodeFill(question)
-        ? answer.trim()
-        : `${letter(answer)}. ${question.options[answer]}`;
     const element = (tag, text, className) => {
         const node = document.createElement(tag);
         node.textContent = text;
         if (className) node.className = className;
         return node;
     };
+
+    function updateNavigation() {
+        if (nextLink) nextLink.hidden = !previouslyPassed;
+        if (nextLocked) nextLocked.hidden = previouslyPassed;
+    }
+
+    function saveResult(correct) {
+        // Merge the latest records so attempts in another chapter/tab are retained.
+        progress = { ...progress, ...readProgress() };
+        const latestCorrect = progress[chapterSlug]?.bestCorrect;
+        if (Number.isInteger(latestCorrect) && latestCorrect >= 0 && latestCorrect <= TOTAL_QUESTIONS) {
+            bestCorrect = Math.max(bestCorrect, latestCorrect);
+        }
+        bestCorrect = Math.max(bestCorrect, correct);
+        previouslyPassed = bestCorrect >= MIN_CORRECT_TO_PASS;
+        progress[chapterSlug] = {
+            passed: previouslyPassed,
+            bestCorrect,
+            bestScore: Math.round(bestCorrect / TOTAL_QUESTIONS * 100),
+        };
+        try {
+            localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+        } catch {
+            // Passing still unlocks this page when browser storage is unavailable.
+        }
+        updateNavigation();
+    }
+
+    function clearResults() {
+        ['score', 'correct', 'incorrect', 'status', 'message'].forEach((name) => {
+            find(name).textContent = '';
+        });
+        if (continueLink) continueLink.hidden = true;
+        find('results').hidden = true;
+    }
 
     function updateAnswered() {
         find('answered').textContent = `${answers.filter((answer, index) => hasAnswer(questions[index], answer)).length} dari ${questions.length} soal dijawab`;
@@ -67,41 +125,21 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         if (missing !== -1) {
             current = missing;
             renderQuestion();
-            const action = isCodeFill(questions[missing]) ? 'Lengkapi kode' : 'Pilih jawaban';
-            find('validation').textContent = `Jawaban belum lengkap. ${action} untuk soal ${missing + 1} sebelum menyelesaikan kuis.`;
+            find('validation').textContent = 'Masih ada soal yang belum dijawab.';
             return;
         }
         completed = true;
         const correct = questions.filter((question, index) => isCorrect(question, answers[index])).length;
-        find('score').textContent = `${correct} / ${questions.length}`;
-        find('percentage').textContent = `${Math.round(correct / questions.length * 100)}%`;
-        find('totals').textContent = `Jawaban benar: ${correct} · Jawaban salah: ${questions.length - correct}`;
-        find('review').replaceChildren();
-        questions.forEach((question, index) => {
-            const passed = isCorrect(question, answers[index]);
-            const item = document.createElement('li');
-            item.className = passed ? 'is-correct' : 'is-incorrect';
-            item.append(
-                element('h4', `Soal ${index + 1}`),
-                element('strong', passed ? 'Benar' : 'Salah', 'oopy-quiz-verdict'),
-                element('p', question.question),
-            );
-            if (question.code) {
-                const pre = element('pre', '');
-                pre.tabIndex = 0;
-                pre.setAttribute('aria-label', `Kode soal ${index + 1}`);
-                const code = element('code', question.code, 'language-python');
-                pre.append(code);
-                item.append(pre);
-                window.OopySyntax?.highlight(code);
-            }
-            item.append(
-                element('p', `Jawaban kamu: ${answerText(question, answers[index])}`),
-                element('p', `Jawaban benar: ${answerText(question, isCodeFill(question) ? question.answer : question.correct)}`),
-                element('p', `Penjelasan: ${question.explanation}`),
-            );
-            find('review').append(item);
-        });
+        const passed = correct >= MIN_CORRECT_TO_PASS;
+        find('score').textContent = String(Math.round(correct / questions.length * 100));
+        find('correct').textContent = String(correct);
+        find('incorrect').textContent = String(questions.length - correct);
+        find('status').textContent = passed ? 'Lulus' : 'Belum Lulus';
+        find('message').textContent = passed
+            ? (continueLink ? 'Selamat, kamu dapat melanjutkan ke BAB berikutnya.' : 'Evaluasi selesai.')
+            : `Kamu harus menjawab minimal ${MIN_CORRECT_TO_PASS} dari ${TOTAL_QUESTIONS} soal dengan benar ${continueLink ? 'untuk melanjutkan ke BAB berikutnya.' : 'untuk lulus kuis ini.'}`;
+        saveResult(correct);
+        if (continueLink) continueLink.hidden = !passed;
         find('form').hidden = true;
         find('results').hidden = false;
         find('result-title').focus();
@@ -131,8 +169,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         answers = Array(questions.length).fill(null);
         current = 0;
         completed = false;
-        find('review').replaceChildren();
-        find('results').hidden = true;
+        clearResults();
         find('form').hidden = false;
         find('validation').textContent = '';
         renderQuestion();
@@ -142,6 +179,10 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         instructions.hidden = !instructions.hidden;
         find('instructions-toggle').setAttribute('aria-expanded', String(!instructions.hidden));
     });
+    const lockedReason = navigation?.querySelector('[data-quiz-next-reason]');
+    if (lockedReason) lockedReason.textContent = `Kamu harus menjawab minimal ${MIN_CORRECT_TO_PASS} dari ${TOTAL_QUESTIONS} soal dengan benar untuk melanjutkan.`;
+    updateNavigation();
+    clearResults();
     renderQuestion(false);
     find('loading').hidden = true;
     find('instructions-toggle').hidden = false;

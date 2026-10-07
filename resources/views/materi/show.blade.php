@@ -97,8 +97,14 @@
                     @endif
                     <a class="material-nav-list" href="{{ route('materi.index') }}">Kembali ke Daftar Materi</a>
                     @if (!empty($nextChapter))
+                    @if (!empty($content['quiz']))
+                    <span class="material-nav-locked next" data-quiz-next-locked role="status">
+                        <span><i class="bi bi-lock" aria-hidden="true"></i> {{ $nextChapter['bab'] }} terkunci</span>
+                        <span data-quiz-next-reason>Selesaikan kuis untuk melanjutkan.</span>
+                    </span>
+                    @endif
                     <a href="{{ route('materi.show', $nextChapter['slug']) }}"
-                        class="material-nav-button next" rel="next">
+                        class="material-nav-button next" rel="next" @if (!empty($content['quiz'])) data-quiz-next-link hidden @endif>
                         Lanjut ke {{ $nextChapter['bab'] }} <i class="bi bi-arrow-right" aria-hidden="true"></i>
                     </a>
                     @endif

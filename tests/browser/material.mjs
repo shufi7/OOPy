@@ -9,6 +9,35 @@ page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
 const chapterPath = '/materi/dasar-pemrograman-oop';
 const waitReady = () => page.waitForFunction(() => [...document.querySelectorAll('[data-role="run-code"]')].every((button) => !button.disabled), null, { timeout: 110000 });
+const showGroup = async (name) => {
+    const group = page.locator(`[data-toc-group="${name}"]`);
+    if (!await group.evaluate((el) => el.open)) await group.locator(':scope > summary').click();
+};
+const inspectSidebar = async (width) => {
+    assert.equal(await page.locator('[data-toc-group="materi"]').count(), 1);
+    assert.equal(await page.locator('[data-toc-group="penutup"]').count(), 1);
+    assert.equal(await page.locator('#chapter-navigation').evaluate((el) => el.scrollWidth <= el.clientWidth + 1), true, `Sidebar overflow at ${width}px`);
+    const hashes = await page.locator('.material-toc nav a').evaluateAll((links) => links.map((link) => link.hash));
+    assert.equal(new Set(hashes).size, hashes.length);
+    const active = page.locator('.material-toc a[aria-current="location"]');
+    assert.equal(await active.count(), 1);
+    assert.equal(await active.evaluate((el) => el.closest('.material-toc-group')?.open ?? true), true);
+};
+const unlockNextChapter = async () => {
+    assert.equal(await page.locator('[data-quiz-next-locked]').isVisible(), true);
+    assert.equal(await page.locator('.material-navigation a[rel="next"]').isVisible(), false);
+    const questions = JSON.parse(await page.locator('[data-quiz="questions"]').textContent());
+    for (const [index, question] of questions.entries()) {
+        if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(index < 4 ? ` ${question.answer} ` : question.answer.toUpperCase());
+        else await page.locator('[data-quiz="options"] input').nth(question.correct).check();
+        await page.locator('[data-quiz="next"]').click();
+    }
+    assert.equal(questions.length, 5);
+    assert.equal(await page.locator('[data-quiz="correct"]').textContent(), '4');
+    assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
+    assert.equal(await page.locator('[data-quiz-next-locked]').isVisible(), false);
+    assert.equal(await page.locator('.material-navigation a[rel="next"]').isVisible(), true);
+};
 const inspectInstructions = async () => {
     for (const exercise of await page.locator('[data-live-code]').all()) {
         const config = JSON.parse(await exercise.locator('[data-role="config"]').textContent());
@@ -72,6 +101,17 @@ try {
     assert.match(await page.locator('#nilai-tipe-data-variabel .material-output').textContent(), /<class 'str'>/);
     assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
     assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), 1);
+    const mainSummary = page.locator('[data-toc-group="materi"] > summary');
+    assert.equal(await page.locator('[data-toc-group="penutup"]').evaluate((el) => el.open), false);
+    await mainSummary.focus();
+    assert.notEqual(await mainSummary.evaluate((el) => getComputedStyle(el).outlineStyle), 'none');
+    await page.keyboard.press('Enter');
+    assert.equal(await page.locator('[data-toc-group="materi"]').evaluate((el) => el.open), true);
+    await page.keyboard.press('Space');
+    assert.equal(await page.locator('[data-toc-group="materi"]').evaluate((el) => el.open), false);
+    await page.locator('#percabangan').evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
+    await page.waitForFunction(() => document.querySelector('.material-toc a[href="#percabangan"]').getAttribute('aria-current') === 'location');
+    assert.equal(await page.locator('[data-toc-group="materi"]').evaluate((el) => el.open), true);
 
     for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
@@ -84,11 +124,17 @@ try {
             range.selectNodeContents(node);
             return range.getClientRects().length === 1;
         })), `Data type names split across lines at ${width}px`);
-        if (width < 992) await page.locator('.material-toc summary').click();
+        if (width < 992) {
+            await page.locator('.material-toc > summary').click();
+            await showGroup('materi');
+            await showGroup('penutup');
+            await inspectSidebar(width);
+        }
         await page.locator('.material-toc a[href="#fungsi"]').click();
         await page.waitForFunction(() => document.querySelector('.material-toc a[href="#fungsi"]').getAttribute('aria-current') === 'location');
         assert.equal(await page.evaluate(() => document.activeElement.id), 'fungsi');
         assert.equal(await page.locator('.material-toc').evaluate((el) => el.open), width >= 992);
+        await inspectSidebar(width);
         assert.ok(await page.locator('#fungsi').evaluate((el) => el.getBoundingClientRect().top >= 0), `Anchor hidden at ${width}px`);
         if (width >= 992) {
             const overlap = await page.evaluate(() => {
@@ -142,19 +188,35 @@ try {
     console.log('PASS: BAB 1 starter incomplete; eight behavior/boundary checks reject reordered/strict comparisons; both correct implementations 100%; Reset restores starter and 0%');
 
     // Direct anchors and no-JS reading work independently of Monaco/Pyodide.
-    const mobile = await browser.newPage({ viewport: { width: 390, height: 900 } });
-    await mobile.goto(`${base}${chapterPath}#nilai-tipe-data-variabel`, { waitUntil: 'domcontentloaded' });
-    await mobile.waitForFunction(() => !document.querySelector('.material-toc').open);
-    await mobile.waitForFunction(() => Math.abs(document.querySelector('#nilai-tipe-data-variabel').getBoundingClientRect().top - 24) < 5);
-    await mobile.close();
-    const noJs = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 900 } });
+    for (const [anchor, group] of [['percabangan', 'materi'], ['rangkuman', 'penutup']]) {
+        const mobile = await browser.newPage({ viewport: { width: 390, height: 900 } });
+        await mobile.goto(`${base}${chapterPath}#${anchor}`, { waitUntil: 'domcontentloaded' });
+        await mobile.waitForFunction(() => !document.querySelector('.material-toc').open);
+        await mobile.waitForFunction((anchor) => Math.abs(document.getElementById(anchor).getBoundingClientRect().top - 24) < 5, anchor);
+        await mobile.waitForFunction((anchor) => document.querySelector(`.material-toc a[href="#${anchor}"]`).getAttribute('aria-current') === 'location', anchor);
+        assert.equal(await mobile.locator(`[data-toc-group="${group}"]`).evaluate((el) => el.open), true);
+        await mobile.locator('.material-toc > summary').click();
+        assert.equal(await mobile.locator(`.material-toc a[href="#${anchor}"]`).isVisible(), true);
+        await mobile.close();
+    }
+    const noJs = await browser.newPage({ javaScriptEnabled: false, reducedMotion: 'reduce', viewport: { width: 390, height: 900 } });
     await noJs.goto(`${base}${chapterPath}`, { waitUntil: 'domcontentloaded' });
     assert.equal(await noJs.locator('#kuis').count(), 1);
-    await noJs.locator('.material-toc summary').click();
+    await noJs.locator('.material-toc > summary').click();
     assert.equal(await noJs.locator('.material-toc').evaluate((el) => el.open), false);
-    await noJs.locator('.material-toc summary').click();
+    await noJs.locator('.material-toc > summary').click();
+    for (const anchor of ['#percabangan', '#rangkuman', '#refleksi']) {
+        const link = noJs.locator(`.material-toc a[href="${anchor}"]`);
+        const group = link.locator('xpath=ancestor::details[contains(@class, "material-toc-group")]');
+        if (!await group.evaluate((el) => el.open)) await group.locator(':scope > summary').click();
+        assert.equal(await link.isVisible(), true);
+        await link.click();
+        assert.ok(noJs.url().endsWith(anchor));
+    }
     await noJs.locator('.material-toc a[href="#kuis"]').click();
     assert.match(noJs.url(), /#kuis$/);
+    assert.equal(await noJs.locator('[data-quiz-next-locked]').isVisible(), true);
+    assert.equal(await noJs.locator('.material-navigation a[rel="next"]').isVisible(), false);
     await noJs.close();
     assert.deepEqual(errors, []);
     console.log('PASS: direct mobile anchors, native no-JS navigation; no page errors');
@@ -162,6 +224,7 @@ try {
     assert.equal(await page.locator('.material-bottom-nav').count(), 0);
     assert.equal(await page.locator('.material-navigation').count(), 1);
     assert.equal(await page.locator('.material-toc a[href="#refleksi"]').count(), 1);
+    await unlockNextChapter();
     await page.locator('.material-navigation a[rel="next"]').click();
     await page.waitForURL(`${base}/materi/kelas-dan-objek`);
     await waitReady();
@@ -179,11 +242,15 @@ try {
     for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
         await page.waitForFunction((width) => document.querySelector('.material-toc').open === (width >= 992), width);
-        if (width < 992) await page.locator('.material-toc summary').click();
+        if (width < 992) await page.locator('.material-toc > summary').click();
+        await showGroup('penutup');
+        await showGroup('materi');
+        await inspectSidebar(width);
         await page.locator('.material-toc a[href="#refleksi"]').click();
         await page.waitForFunction(() => document.querySelector('.material-toc a[href="#refleksi"]').getAttribute('aria-current') === 'location');
         assert.equal(await page.evaluate(() => document.activeElement.id), 'refleksi');
         assert.equal(await page.locator('.material-toc [aria-current="location"]').count(), 1);
+        await inspectSidebar(width);
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `BAB 2 overflow at ${width}px`);
         await inspectInstructionLayout(width);
         const editorsFit = await page.locator('.oopy-monaco-editor').evaluateAll((elements) => elements.every((el) => el.getBoundingClientRect().right <= innerWidth + 1));
@@ -240,6 +307,7 @@ for objek in sensor:
     }
     assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
     assert.deepEqual(errors, []);
+    await unlockNextChapter();
     await page.locator('.material-navigation a[rel="next"]').click();
     await page.waitForURL(`${base}/materi/enkapsulasi`);
     await waitReady();
@@ -261,7 +329,10 @@ for objek in sensor:
     for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
         await page.waitForFunction((width) => document.querySelector('.material-toc').open === (width >= 992), width);
-        if (width < 992) await page.locator('.material-toc summary').click();
+        if (width < 992) await page.locator('.material-toc > summary').click();
+        await showGroup('materi');
+        await showGroup('penutup');
+        await inspectSidebar(width);
         await page.locator('.material-toc a[href="#aktivitas-enkapsulasi"]').click();
         await page.waitForFunction(() => document.querySelector('.material-toc a[href="#aktivitas-enkapsulasi"]').getAttribute('aria-current') === 'location');
         assert.equal(await page.evaluate(() => document.activeElement.id), 'aktivitas-enkapsulasi');
@@ -272,6 +343,7 @@ for objek in sensor:
             return rect.left >= 0 && rect.right <= innerWidth + 1;
         }), true, `BAB 3 editor outside viewport at ${width}px`);
         assert.equal(await page.locator('.material-sidebar').evaluate((el) => el.getBoundingClientRect().right <= innerWidth + 1), true);
+        await inspectSidebar(width);
         assert.equal(await page.locator('.material-navigation').evaluate((el) => el.scrollWidth <= el.clientWidth + 1), true);
     }
     const exercise = page.locator('#bab3-enkapsulasi-sensor');
@@ -330,6 +402,7 @@ print(alat.tinggi_air)`;
     const noJsThree = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 320, height: 900 } });
     await noJsThree.goto(`${base}/materi/enkapsulasi`, { waitUntil: 'domcontentloaded' });
     assert.equal(await noJsThree.locator('[data-material-section]').count(), 13);
+    await noJsThree.locator('[data-toc-group="materi"] > summary').click();
     await noJsThree.locator('.material-toc a[href="#property"]').click();
     assert.match(noJsThree.url(), /#property$/);
     await noJsThree.close();

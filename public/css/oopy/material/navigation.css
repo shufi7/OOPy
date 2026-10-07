@@ -1,31 +1,41 @@
 .oopy-material .material-sidebar { position: sticky; top: 24px; min-width: 0; }
 .oopy-material .material-toc { background: var(--oopy-surface); border: 1px solid var(--oopy-mist); border-radius: 18px; overflow: hidden; }
-.oopy-material .material-toc > summary { display: none; padding: 18px 20px; cursor: pointer; font-weight: 700; font-size: 1rem; line-height: 1.45; }
-.oopy-material .material-toc > summary > i { float: right; }
-.oopy-material #chapter-navigation { padding: 24px 16px 18px; max-height: calc(100dvh - 48px); overflow-y: auto; }
-.oopy-material .material-sidebar-title { padding: 0 8px; margin-bottom: 20px; font-size: 1rem; line-height: 1.45; font-weight: 700; }
-.oopy-material .material-sidebar .material-eyebrow { padding: 0 8px; }
-.oopy-material .material-toc ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 3px; }
-.oopy-material .material-toc nav a { display: block; position: relative; padding: 9px 12px 9px 26px; border-radius: 8px; color: var(--oopy-ink-soft); font-size: 1rem; line-height: 1.45; text-decoration: none; }
-.oopy-material .material-toc nav a::before { content: ''; position: absolute; left: 10px; top: calc(9px + .725em - 3px); width: 6px; height: 6px; border: 1px solid currentColor; border-radius: 50%; }
+.oopy-material .material-toc summary { list-style: none; cursor: pointer; }
+.oopy-material .material-toc summary::-webkit-details-marker { display: none; }
+.oopy-material .material-toc > summary { display: none; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 16px 20px; font-weight: 700; font-size: .9375rem; line-height: 1.4; }
+.oopy-material .material-toc summary > i { flex-shrink: 0; font-size: .8125rem; transition: transform .15s ease; }
+.oopy-material .material-toc[open] > summary > i, .oopy-material .material-toc-group[open] > summary > i { transform: rotate(180deg); }
+.oopy-material #chapter-navigation { padding: 22px 14px 18px; max-height: calc(100dvh - 48px); overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--oopy-border) transparent; }
+.oopy-material .material-sidebar .material-eyebrow { padding: 0 10px; margin-bottom: 6px; font-size: .8125rem; font-weight: 800; letter-spacing: .07em; }
+.oopy-material .material-sidebar-title { padding: 0 10px; margin: 0 0 18px; font-size: 1.125rem; line-height: 1.4; font-weight: 800; overflow-wrap: anywhere; }
+.oopy-material .material-toc ol { display: grid; gap: 2px; list-style: none; padding: 0; margin: 0; }
+.oopy-material .material-toc nav a { display: block; min-height: 40px; padding: 9px 10px; border-left: 3px solid transparent; border-radius: 6px; color: var(--oopy-ink-soft); font-size: .9375rem; font-weight: 600; line-height: 1.45; text-decoration: none; overflow-wrap: anywhere; }
 .oopy-material .material-toc nav a:hover { background: var(--oopy-bg); }
-.oopy-material .material-toc nav a[aria-current='location'] { background: var(--oopy-selected); color: var(--oopy-ink); font-weight: 700; }
-.oopy-material .material-toc nav a[aria-current='location']::before { background: var(--oopy-primary); }
-.oopy-material .material-progress { margin: 24px 8px 0; }
-.oopy-material .material-progress-heading { display: flex; align-items: center; gap: 8px; color: var(--oopy-dark); font-size: .9375rem; line-height: 1.45; }
-.oopy-material .material-progress-heading > i { flex-shrink: 0; color: var(--oopy-link); font-size: 1rem; }
-.oopy-material .material-progress-heading > strong { font-weight: 700; }
-.oopy-material .material-progress progress { display: block; width: 100%; height: 6px; margin: 12px 0 0; border: 1px solid var(--oopy-border); border-radius: 10px; background: var(--oopy-surface); overflow: hidden; }
+.oopy-material .material-toc nav a[aria-current='location'] { border-left-color: var(--oopy-primary); background: var(--oopy-selected); color: var(--oopy-ink); }
+.oopy-material .material-toc-group, .oopy-material .material-toc-introduction { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--oopy-border); }
+.oopy-material .material-toc-group > summary, .oopy-material .material-toc-group-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 10px; margin: 0; border-radius: 6px; font-size: .9375rem; line-height: 1.45; font-weight: 700; color: var(--oopy-ink); }
+.oopy-material .material-toc-group > summary:hover { background: var(--oopy-bg); }
+.oopy-material .material-toc .material-toc-submenu { margin: 0 0 6px 12px; padding-left: 7px; border-left: 1px solid var(--oopy-border); }
+.oopy-material .material-toc .material-toc-submenu a { min-height: 36px; padding: 8px 9px; font-size: .875rem; line-height: 1.5; font-weight: 400; }
+.oopy-material .material-toc .material-toc-submenu a[aria-current='location'] { font-weight: 600; }
+.oopy-material .material-toc-quiz { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--oopy-border); }
+.oopy-material .material-progress { margin: 16px 10px 0; padding-top: 14px; border-top: 1px solid var(--oopy-border); }
+.oopy-material .material-progress-heading { display: flex; align-items: center; gap: 8px; color: var(--oopy-dark); font-size: .8125rem; line-height: 1.45; }
+.oopy-material .material-progress-heading > i { flex-shrink: 0; color: var(--oopy-link); font-size: .875rem; }
+.oopy-material .material-progress-heading > strong { font-weight: 600; }
+.oopy-material .material-progress progress { display: block; width: 100%; height: 6px; margin: 10px 0 0; border: 1px solid var(--oopy-border); border-radius: 10px; background: var(--oopy-surface); overflow: hidden; }
 .oopy-material .material-progress progress::-webkit-progress-bar { background: var(--oopy-surface); }
 .oopy-material .material-progress progress::-webkit-progress-value { background: var(--oopy-accent); }
 .oopy-material .material-progress progress::-moz-progress-bar { background: var(--oopy-accent); }
-.oopy-material .material-toc summary:focus-visible { outline: 3px solid var(--oopy-dark); outline-offset: 3px; }
+.oopy-material .material-toc summary:focus-visible, .oopy-material .material-toc nav a:focus-visible { outline: 3px solid var(--oopy-dark); outline-offset: -3px; }
 @media (max-width: 991.98px) {
     .oopy-material .material-sidebar { position: static; }
-    .oopy-material .material-toc > summary { display: block; }
+    .oopy-material .material-toc > summary { display: flex; }
     .oopy-material .material-toc[open] > summary { border-bottom: 1px solid var(--oopy-mist); }
-    .oopy-material .material-toc[open] > summary > i { transform: rotate(180deg); }
-    .oopy-material #chapter-navigation { max-height: none; }
-    .oopy-material .material-toc nav a { padding-top: 12px; padding-bottom: 12px; }
-    .oopy-material .material-toc nav a::before { top: calc(12px + .725em - 3px); }
+    .oopy-material #chapter-navigation { max-height: none; padding: 18px 12px; }
+    .oopy-material .material-toc nav a, .oopy-material .material-toc .material-toc-submenu a { min-height: 44px; padding-top: 11px; padding-bottom: 11px; }
+    .oopy-material .material-toc .material-toc-submenu { margin-left: 8px; padding-left: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .oopy-material .material-toc summary > i { transition: none; }
 }

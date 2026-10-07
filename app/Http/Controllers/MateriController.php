@@ -17,18 +17,19 @@ class MateriController extends Controller
     {
         $chapters = require resource_path('materi/chapters.php');
 
-        if (!isset($chapters[$slug])) {
+        if (! isset($chapters[$slug])) {
             abort(404);
         }
 
         $chapter = $chapters[$slug];
+        $chapter['slug'] = $slug;
 
         if (empty($chapter['content'])) {
             abort(404);
         }
 
         $content = require resource_path(
-            'materi/' . $chapter['content']
+            'materi/'.$chapter['content']
         );
 
         $slugs = array_keys($chapters);
@@ -44,7 +45,7 @@ class MateriController extends Controller
             if ($currentIndex > 0) {
                 $previousSlug = $slugs[$currentIndex - 1];
 
-                if (!empty($chapters[$previousSlug]['content'])) {
+                if (! empty($chapters[$previousSlug]['content'])) {
                     $previousChapter = $chapters[$previousSlug];
 
                     $previousChapter['slug'] = $previousSlug;
@@ -55,7 +56,7 @@ class MateriController extends Controller
             if ($currentIndex < count($slugs) - 1) {
                 $nextSlug = $slugs[$currentIndex + 1];
 
-                if (!empty($chapters[$nextSlug]['content'])) {
+                if (! empty($chapters[$nextSlug]['content'])) {
                     $nextChapter = $chapters[$nextSlug];
 
                     $nextChapter['slug'] = $nextSlug;

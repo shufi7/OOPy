@@ -13,6 +13,7 @@ return [
         [
             'id' => 'apersepsi',
             'title' => 'Apersepsi',
+            'nav_group' => 'pendahuluan',
             'paragraphs' => [
                 'Pada BAB 2, kita membuat object SensorAir yang menyimpan lokasi dan tinggi air. Bayangkan beberapa bagian program memperbarui data sensor di sungai atau rawa. Tanpa pemeriksaan, nilai tinggi_air seperti -10 bisa saja tersimpan, padahal aturan latihan kita mengharuskan nilai tidak negatif.',
                 'Bagaimana cara menjaga agar data object tetap digunakan melalui aturan yang sudah kita tentukan? Kita dapat menempatkan aturan pembacaan dan perubahan data di dalam class, lalu menyediakan cara berinteraksi yang jelas bagi pengguna object.',
@@ -32,6 +33,7 @@ return [
         [
             'id' => 'public-attribute',
             'title' => 'Public Attribute dan Interface Object',
+            'nav_title' => 'Public Attribute & Interface',
             'paragraphs' => [
                 'Atribut biasa seperti self.lokasi atau self.nama disebut public attribute. Pengguna object dapat membaca dan mengubahnya langsung. Python tidak menggunakan keyword public untuk mendeklarasikan atribut tersebut.',
                 'Pada contoh berikut, lokasi boleh diubah langsung karena class belum menetapkan aturan khusus untuk atribut tersebut. Pilih interface sesuai kebutuhan; tidak semua atribut harus memiliki getter dan setter.',
@@ -52,6 +54,7 @@ PYTHON,
         [
             'id' => 'non-public',
             'title' => 'Konvensi Non-Public dengan _',
+            'nav_title' => 'Konvensi Non-Public (_)',
             'paragraphs' => [
                 'Satu underscore di awal nama, seperti self._lokasi, menandai non-public by convention: secara konvensi atribut dianggap untuk penggunaan internal implementasi. Istilah protected by convention juga kadang digunakan, tetapi ini bukan access modifier yang ketat seperti pada Java atau C++.',
                 'Python tetap memungkinkan akses sensor._lokasi dari luar class. Awalan ini merupakan pesan bagi programmer agar menggunakan interface yang disediakan, bukan larangan akses yang ditegakkan oleh Python.',
@@ -69,6 +72,7 @@ PYTHON,
         [
             'id' => 'name-mangling',
             'title' => 'Name Mangling dengan __',
+            'nav_title' => 'Name Mangling (__)',
             'paragraphs' => [
                 'Dua underscore di awal nama seperti self.__tinggi_air memicu name mangling. Di dalam class SensorAir, Python mengubah nama atribut tersebut menjadi _SensorAir__tinggi_air. Aturan ini berlaku untuk nama dengan setidaknya dua underscore di depan dan paling banyak satu underscore di belakang; __init__ bukan contoh atribut yang mengalami name mangling.',
                 'Tujuan utamanya menghindari konflik nama, terutama ketika class dikembangkan melalui pewarisan, serta mengurangi penggunaan langsung secara tidak sengaja. Pewarisan akan dibahas pada BAB berikutnya.',
@@ -173,6 +177,7 @@ PYTHON,
         [
             'id' => 'aktivitas-enkapsulasi',
             'title' => 'Live Coding / Aktivitas Enkapsulasi',
+            'nav_title' => 'Latihan Enkapsulasi',
             'paragraphs' => [
                 'Sekarang lengkapi bagian pass pada class SensorAir. Simpan data tinggi air pada atribut internal dan sediakan property untuk membaca serta memperbaruinya. Nilai angka yang tidak negatif, termasuk 0, harus diterima; nilai negatif harus ditolak dengan ValueError sebelum data internal diubah.',
                 'Buat object dengan tinggi awal 85, tampilkan nilainya, ubah menjadi 90, lalu tampilkan kembali. Gunakan Run Code untuk melihat output dan Submit untuk memeriksa perilaku class. Checker membuat object uji sendiri sehingga nama variabel object yang kamu pilih tidak memengaruhi hasil.',
@@ -296,6 +301,7 @@ PYTHON,
     ],
     'quiz' => [
         [
+            'type' => 'multiple_choice',
             'question' => 'Beberapa bagian program perlu memperbarui tinggi air dengan aturan yang sama. Rancangan mana yang paling mencerminkan enkapsulasi?',
             'options' => [
                 'Menggabungkan data dan aturan perubahan dalam class dengan interface yang jelas',
@@ -307,21 +313,7 @@ PYTHON,
             'explanation' => 'Enkapsulasi menyatukan data dan perilaku dalam class serta menyediakan interface. Aturan perubahan dapat dipusatkan agar pemanggil tidak harus bergantung pada detail internal.',
         ],
         [
-            'question' => 'Apa output kode berikut ketika lokasi merupakan public attribute biasa?',
-            'code' => <<<'PYTHON'
-class SensorAir:
-    def __init__(self, lokasi):
-        self.lokasi = lokasi
-
-sensor = SensorAir("Sungai Barito")
-sensor.lokasi = "Rawa Bangkau"
-print(sensor.lokasi)
-PYTHON,
-            'options' => ['Sungai Barito', 'Rawa Bangkau', 'AttributeError karena lokasi tidak boleh diubah', 'Tidak ada output karena diperlukan keyword public'],
-            'correct' => 1,
-            'explanation' => 'self.lokasi adalah atribut biasa yang dapat diubah langsung. Assignment mengganti nilainya menjadi Rawa Bangkau; Python tidak memerlukan keyword public.',
-        ],
-        [
+            'type' => 'multiple_choice',
             'question' => 'Programmer melihat self._lokasi dalam class SensorAir. Bagaimana sebaiknya atribut ini dipahami?',
             'options' => [
                 'Python melarang semua akses dari luar class',
@@ -333,6 +325,7 @@ PYTHON,
             'explanation' => 'Satu underscore menandai konvensi non-public. Ini bukan access modifier yang membatasi akses secara ketat dan tidak memicu name mangling seperti dua underscore.',
         ],
         [
+            'type' => 'multiple_choice',
             'question' => 'Apa yang terjadi pada self.__tinggi_air di dalam class SensorAir?',
             'options' => [
                 'Nilainya selalu tersembunyi dan mustahil diakses',
@@ -344,61 +337,37 @@ PYTHON,
             'explanation' => 'Dua underscore memicu name mangling. Nama hasil mangling tetap bisa diakses; mekanisme ini bukan keamanan absolut atau keyword private.',
         ],
         [
-            'question' => 'Mengapa method berikut disebut getter?',
-            'code' => <<<'PYTHON'
-def get_tinggi_air(self):
-    return self.__tinggi_air
-PYTHON,
-            'options' => ['Membaca dan mengembalikan nilai internal tanpa mengubahnya', 'Mengubah tinggi air menjadi nol', 'Membuat object baru', 'Menolak semua perubahan lokasi'],
-            'correct' => 0,
-            'explanation' => 'Getter menyediakan cara membaca nilai. return self.__tinggi_air mengembalikan data internal kepada pemanggil, tanpa assignment yang mengubah nilai.',
-        ],
-        [
-            'question' => 'Dalam setter tinggi_air, di mana pemeriksaan nilai negatif sebaiknya diletakkan agar nilai valid sebelumnya tetap utuh?',
-            'options' => [
-                'Setelah menyimpan nilai negatif, tanpa mengembalikan nilai sebelumnya',
-                'Sebelum assignment internal, dengan raise ValueError jika nilai negatif',
-                'Hanya pada print() di luar class',
-                'Di getter, setelah setter menerima semua nilai',
-            ],
-            'correct' => 1,
-            'explanation' => 'Setter harus memvalidasi sebelum menyimpan. raise ValueError menghentikan perubahan yang tidak valid sehingga assignment internal tidak dijalankan dan data sebelumnya tetap utuh.',
-        ],
-        [
-            'question' => 'Jika tinggi_air didefinisikan dengan @property dan @tinggi_air.setter, apa yang dilakukan baris berikut?',
-            'code' => 'sensor.tinggi_air = 90',
-            'options' => ['Melewati setter dan menulis langsung ke __tinggi_air', 'Memanggil getter dengan parameter 90', 'Memanggil setter property tinggi_air dengan nilai 90', 'Mengubah method menjadi public keyword'],
-            'correct' => 2,
-            'explanation' => 'Assignment pada property memanggil setter. Syntax terlihat seperti atribut biasa, tetapi class tetap menjalankan logika validasi sebelum menyimpan nilai.',
-        ],
-        [
-            'question' => 'Apa output terakhir program berikut?',
+            'type' => 'code_fill',
+            'question' => 'Lengkapi decorator agar method tinggi_air menjadi getter property yang dapat dibaca seperti atribut.',
             'code' => <<<'PYTHON'
 class SensorAir:
     def __init__(self, tinggi_air):
-        self.tinggi_air = tinggi_air
+        self.__tinggi_air = tinggi_air
 
+    __________
+    def tinggi_air(self):
+        return self.__tinggi_air
+PYTHON,
+            'answer' => '@property',
+            'explanation' => '@property menghubungkan method tinggi_air dengan pembacaan property melalui syntax atribut.',
+        ],
+        [
+            'type' => 'code_fill',
+            'question' => 'Lengkapi decorator yang menghubungkan method kedua dengan setter property tinggi_air. Setter memvalidasi nilai sebelum menyimpannya.',
+            'code' => <<<'PYTHON'
+class SensorAir:
     @property
     def tinggi_air(self):
         return self.__tinggi_air
 
-    @tinggi_air.setter
+    __________
     def tinggi_air(self, nilai):
         if nilai < 0:
             raise ValueError("Tinggi air tidak boleh negatif.")
         self.__tinggi_air = nilai
-
-sensor = SensorAir(85)
-sensor.tinggi_air = 90
-try:
-    sensor.tinggi_air = -10
-except ValueError:
-    pass
-print(sensor.tinggi_air)
 PYTHON,
-            'options' => ['-10', '85', 'None', '90'],
-            'correct' => 3,
-            'explanation' => 'Perubahan ke 90 berhasil. Perubahan ke -10 ditolak sebelum penyimpanan, lalu ValueError ditangani oleh except. Nilai internal tetap 90 dan itulah output terakhir.',
+            'answer' => '@tinggi_air.setter',
+            'explanation' => '@tinggi_air.setter menghubungkan method dengan perubahan property tinggi_air sehingga assignment menjalankan validasi setter.',
         ],
     ],
 ];
