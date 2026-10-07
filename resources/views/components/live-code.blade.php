@@ -1,5 +1,5 @@
 @pushOnce('styles', 'oopy-live-code-styles')
-    <link rel="stylesheet" href="{{ asset('css/oopy-live-code.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/oopy/live-code/live-code.css') }}">
 @endPushOnce
 @pushOnce('scripts', 'oopy-live-code-scripts')
     <script type="module" src="{{ asset('js/live-code/live-code.js') }}"></script>

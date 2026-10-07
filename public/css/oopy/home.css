@@ -1,0 +1,91 @@
+.hero-title {
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+    letter-spacing: -0.5px;
+}
+
+.hero-description {
+    max-width: 550px;
+    font-size: clamp(1.05rem, 1.3vw, 1.18rem);
+    line-height: 1.75;
+}
+
+.btn-hero-start {
+    --bs-btn-color: var(--oopy-on-primary);
+    --bs-btn-bg: var(--oopy-primary);
+    --bs-btn-border-color: var(--oopy-primary);
+    --bs-btn-hover-color: var(--oopy-ink);
+    --bs-btn-hover-bg: var(--oopy-accent);
+    --bs-btn-hover-border-color: var(--oopy-primary);
+    --bs-btn-active-color: var(--oopy-ink);
+    --bs-btn-active-bg: var(--oopy-sky);
+    --bs-btn-active-border-color: var(--oopy-sky);
+    --bs-btn-focus-shadow-rgb: 17, 153, 158;
+    border-radius: 50px;
+    padding: 12px 38px;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 18px rgb(64 81 78 / 15%);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-hero-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgb(64 81 78 / 20%);
+}
+
+.stacked-card-wrapper {
+    width: calc(100% - 16px);
+    max-width: 390px;
+    margin-right: 16px;
+}
+
+.stacked-card-back {
+    top: -16px;
+    right: -16px;
+    width: 100%;
+    height: 100%;
+    background-color: var(--oopy-sky);
+    border: 1px solid var(--oopy-blue);
+    border-radius: 24px;
+    box-shadow: var(--oopy-shadow);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.stacked-card-front {
+    background-color: var(--oopy-surface);
+    border: 1px solid var(--oopy-mist);
+    border-radius: 24px;
+    padding: 24px 24px 30px;
+    box-shadow: 0 20px 45px rgb(64 81 78 / 16%);
+    z-index: 2;
+}
+
+.hero-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.card-tagline {
+    color: var(--oopy-ink-soft);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+@media (max-width: 575.98px) {
+
+    .stacked-card-front {
+        padding: 18px 18px 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-hero-start {
+        transition: none;
+    }
+
+    .btn-hero-start:hover {
+        transform: none;
+    }
+}

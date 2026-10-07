@@ -19,7 +19,7 @@ Browser: LiveCode instance A/B/C -> RuntimeManager (antrean FIFO)
 | `app/View/Components/LiveCode.php` | Validasi konfigurasi developer. |
 | `resources/views/components/live-code.blade.php` | Explorer, tab, editor, aksi, output, feedback, progres latihan; aset dimuat sekali lewat stack Blade. |
 | `resources/live-code/demos.php` | Starter code dan checker tiga demo, terpisah dari engine. |
-| `public/css/oopy-live-code.css` | Gaya prototype yang dibatasi ke `.oopy-live-code`, termasuk tampilan mobile. |
+| `public/css/oopy/live-code/live-code.css` | Gaya prototype yang dibatasi ke `.oopy-live-code`, termasuk tampilan mobile. |
 | `public/js/live-code/live-code.js` | Inisialisasi komponen, pemeriksaan ID duplikat, peringatan saat meninggalkan kode yang berubah. |
 | `public/js/live-code/live-code-instance.js` | Model, tab, dirty indicator, shortcut, Reset, output dan skor satu latihan. |
 | `public/js/live-code/monaco-loader.js` | Promise loader bersama dan tema Monaco 0.52.2 dari jsDelivr. |

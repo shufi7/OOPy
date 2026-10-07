@@ -1,0 +1,41 @@
+.site-navbar {
+    background-color: var(--oopy-cream);
+    border-bottom: 1px solid var(--oopy-mist);
+    --bs-navbar-color: var(--oopy-ink);
+    --bs-navbar-hover-color: var(--oopy-link);
+    --bs-navbar-active-color: var(--oopy-link);
+}
+
+.navbar-logo {
+    display: block;
+    object-fit: contain;
+}
+
+.brand-name {
+    color: var(--oopy-primary);
+    letter-spacing: -0.5px;
+}
+
+.site-navbar .navbar-nav {
+    font-size: 0.95rem;
+}
+
+.site-navbar .nav-link {
+    border-radius: 8px;
+}
+
+.site-navbar .nav-link.active {
+    background-color: var(--oopy-selected);
+    box-shadow: inset 0 -3px var(--oopy-accent);
+}
+
+.site-navbar .nav-link:hover {
+    background-color: var(--oopy-selected);
+}
+
+@media (max-width: 575.98px) {
+    .navbar-logo {
+        width: 52px;
+        height: 52px;
+    }
+}

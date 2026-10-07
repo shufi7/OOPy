@@ -2,6 +2,10 @@
 
 @section('title', 'Materi')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/oopy/material/index.css') }}">
+@endpush
+
 @section('content')
 <div class="materi-section flex-grow-1 d-flex align-items-center py-5">
     <div class="container-fluid px-lg-5 px-3 py-lg-3">

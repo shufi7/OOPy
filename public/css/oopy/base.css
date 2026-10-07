@@ -1,0 +1,63 @@
+:root {
+    --oopy-mint: #E4F9F5;
+    --oopy-aqua: #30E3CA;
+    --oopy-teal: #11999E;
+    --oopy-dark: #40514E;
+
+    --oopy-bg: var(--oopy-mint);
+    --oopy-primary: var(--oopy-teal);
+    --oopy-accent: var(--oopy-aqua);
+    --oopy-text: var(--oopy-dark);
+    --oopy-surface: #fff;
+    --oopy-border: rgb(17 153 158 / 24%);
+    --oopy-selected: color-mix(in srgb, var(--oopy-mint) 80%, var(--oopy-aqua));
+    /* Darker teal for small text; deep green gives 4.67:1 on primary buttons. */
+    --oopy-link: #08777b;
+    --oopy-on-primary: #0b2522;
+    --oopy-code-bg: #2f3e3b;
+
+    /* Compatibility aliases for existing OOPy components. */
+    --oopy-blue: var(--oopy-primary);
+    --oopy-sky: var(--oopy-accent);
+    --oopy-mist: var(--oopy-border);
+    --oopy-cream: var(--oopy-bg);
+    --oopy-ink: var(--oopy-text);
+    --oopy-ink-soft: var(--oopy-text);
+    --oopy-shadow: 0 12px 32px rgb(64 81 78 / 12%);
+    --bs-primary: var(--oopy-primary);
+    --bs-primary-rgb: 17, 153, 158;
+    --bs-link-color: var(--oopy-link);
+    --bs-link-color-rgb: 8, 119, 123;
+    --bs-link-hover-color: var(--oopy-dark);
+    --bs-link-hover-color-rgb: 64, 81, 78;
+    --bs-secondary-color: var(--oopy-text);
+    --bs-border-color: var(--oopy-border);
+    --bs-body-color: var(--oopy-ink);
+    --bs-body-bg: var(--oopy-cream);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.btn-brand {
+    font-size: 0.95rem;
+    --bs-btn-color: var(--oopy-on-primary);
+    --bs-btn-bg: var(--oopy-blue);
+    --bs-btn-border-color: var(--oopy-blue);
+    --bs-btn-hover-color: var(--oopy-ink);
+    --bs-btn-hover-bg: var(--oopy-sky);
+    --bs-btn-hover-border-color: var(--oopy-blue);
+    --bs-btn-active-color: var(--oopy-ink);
+    --bs-btn-active-bg: var(--oopy-accent);
+    --bs-btn-active-border-color: var(--oopy-blue);
+    --bs-btn-focus-shadow-rgb: 17, 153, 158;
+    border-radius: 8px;
+}
+
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible {
+    outline: 3px solid var(--oopy-ink);
+    outline-offset: 4px;
+}

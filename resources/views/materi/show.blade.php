@@ -3,7 +3,10 @@
 @section('title', $chapter['bab'].' — '.$chapter['judul'])
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/oopy-material.css') }}">
+<link rel="stylesheet" href="{{ asset('css/oopy/material/material.css') }}">
+<link rel="stylesheet" href="{{ asset('css/oopy/material/navigation.css') }}">
+<link rel="stylesheet" href="{{ asset('css/oopy/material/code.css') }}">
+<link rel="stylesheet" href="{{ asset('css/oopy/material/quiz.css') }}">
 @endpush
 
 @push('scripts')

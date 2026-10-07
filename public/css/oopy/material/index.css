@@ -1,0 +1,100 @@
+.materi-card {
+    --bs-card-bg: var(--oopy-surface);
+    --bs-card-color: var(--oopy-ink);
+    border-radius: 22px;
+    box-shadow: var(--oopy-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.materi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgb(64 81 78 / 18%);
+}
+
+.materi-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.materi-card-footer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 72px;
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.materi-card .materi-card-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-height: 48px;
+    padding: 9px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 6px 14px rgb(17 153 158 / 16%);
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.materi-card-link > .bi {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgb(228 249 245 / 28%);
+    transition: transform .2s ease;
+}
+
+.materi-card-link:hover {
+    box-shadow: 0 8px 18px rgb(17 153 158 / 22%);
+}
+
+.materi-card-link:hover > .bi {
+    transform: translateX(3px);
+}
+
+.materi-bab {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: var(--oopy-bg);
+    border-radius: 8px;
+    color: var(--oopy-link);
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+}
+
+.materi-title {
+    font-size: 1.25rem;
+}
+
+.materi-list {
+    list-style-type: disc;
+}
+
+.materi-item {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.materi-item::marker {
+    color: var(--oopy-ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .materi-card,
+    .materi-card .materi-card-link,
+    .materi-card-link > .bi {
+        transition: none;
+    }
+
+    .materi-card:hover,
+    .materi-card-link:hover > .bi {
+        transform: none;
+    }
+}

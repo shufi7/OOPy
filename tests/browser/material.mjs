@@ -141,7 +141,7 @@ try {
     assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
     assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
     assert.equal(await page.locator('script[src$="js/live-code/live-code.js"]').count(), 1);
-    assert.equal(await page.locator('link[href$="css/oopy-live-code.css"]').count(), 1);
+    assert.equal(await page.locator('link[href$="css/oopy/live-code/live-code.css"]').count(), 1);
     const ids = await page.locator('[id]').evaluateAll((elements) => elements.map((el) => el.id));
     assert.equal(new Set(ids).size, ids.length);
     assert.ok(await page.locator('.material-code .token.keyword').count() > 0);
@@ -222,7 +222,7 @@ for objek in sensor:
     assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), 1);
     assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
     assert.equal(await page.locator('script[src$="js/live-code/live-code.js"]').count(), 1);
-    assert.equal(await page.locator('link[href$="css/oopy-live-code.css"]').count(), 1);
+    assert.equal(await page.locator('link[href$="css/oopy/live-code/live-code.css"]').count(), 1);
     const chapterThreeIds = await page.locator('[id]').evaluateAll((elements) => elements.map((el) => el.id));
     assert.equal(new Set(chapterThreeIds).size, chapterThreeIds.length);
     assert.equal(await page.locator('#refleksi li').count(), 3);

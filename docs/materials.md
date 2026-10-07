@@ -26,8 +26,22 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 - `resources/views/materi/partials/navigation.blade.php`: daftar isi dan progres.
 - `resources/views/materi/partials/section.blade.php`: paragraf, contoh kode, catatan
   serta lokasi opsional komponen Live Coding pada setiap bagian materi.
-- `public/css/oopy-material.css`: gaya yang dibatasi ke `.oopy-material`.
+- `public/css/oopy/material/index.css`: card pada halaman daftar materi.
+- `public/css/oopy/material/material.css`: struktur artikel, bagian materi dan navigasi antar-BAB.
+- `public/css/oopy/material/navigation.css`: sidebar, daftar isi dan progres BAB.
+- `public/css/oopy/material/code.css`: contoh kode Python dan tema token Prism.
+- `public/css/oopy/material/quiz.css`: form, hasil dan pembahasan kuis.
 - `public/js/oopy-material.js`: menu mobile, penanda bagian aktif dan fokus anchor.
+
+Layout aplikasi memuat `public/css/oopy/base.css`, `layout.css` dan `navbar.css`,
+diikuti `@stack('styles')`. Beranda menambahkan `home.css` melalui `@push`.
+Daftar materi hanya menambahkan `material/index.css`; detail BAB menambahkan
+`material.css`, `navigation.css`, `code.css` dan `quiz.css` melalui `@push`.
+Gaya artikel dan contoh kode tetap dibatasi ke `.oopy-material`, sedangkan kuis
+dibatasi ke `.oopy-quiz`. Komponen Live Coding memuat
+`public/css/oopy/live-code/live-code.css` melalui `@pushOnce`, termasuk ketika
+beberapa latihan tampil dalam satu halaman. File CSS dipanggil langsung melalui
+link Blade tanpa `@import`; nilai variabel tema tetap berada di `base.css`.
 
 BAB 1 memiliki anchor `tujuan`, `python`, `variabel`, `tipe-data`, `input-output`,
 `operator`, `percabangan`, `perulangan`, `fungsi`, `oop`, `rangkuman`, `kuis`.

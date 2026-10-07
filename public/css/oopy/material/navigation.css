@@ -1,0 +1,31 @@
+.oopy-material .material-sidebar { position: sticky; top: 24px; min-width: 0; }
+.oopy-material .material-toc { background: var(--oopy-surface); border: 1px solid var(--oopy-mist); border-radius: 18px; overflow: hidden; }
+.oopy-material .material-toc > summary { display: none; padding: 18px 20px; cursor: pointer; font-weight: 700; }
+.oopy-material .material-toc > summary > i { float: right; }
+.oopy-material #chapter-navigation { padding: 24px 16px 18px; max-height: calc(100dvh - 48px); overflow-y: auto; }
+.oopy-material .material-sidebar-title { padding: 0 8px; margin-bottom: 20px; font-size: .95rem; line-height: 1.6; font-weight: 700; }
+.oopy-material .material-sidebar .material-eyebrow { padding: 0 8px; }
+.oopy-material .material-toc ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 3px; }
+.oopy-material .material-toc nav a { display: block; position: relative; padding: 9px 12px 9px 26px; border-radius: 8px; color: var(--oopy-ink-soft); font-size: .825rem; line-height: 1.5; text-decoration: none; }
+.oopy-material .material-toc nav a::before { content: ''; position: absolute; left: 10px; top: 16px; width: 6px; height: 6px; border: 1px solid currentColor; border-radius: 50%; }
+.oopy-material .material-toc nav a:hover { background: var(--oopy-bg); }
+.oopy-material .material-toc nav a[aria-current='location'] { background: var(--oopy-selected); color: var(--oopy-ink); font-weight: 700; }
+.oopy-material .material-toc nav a[aria-current='location']::before { background: var(--oopy-primary); }
+.oopy-material .material-progress { margin: 24px 8px 0; }
+.oopy-material .material-progress-heading { display: flex; align-items: center; gap: 8px; color: var(--oopy-dark); font-size: .825rem; line-height: 1.5; }
+.oopy-material .material-progress-heading > i { flex-shrink: 0; color: var(--oopy-link); font-size: 1rem; }
+.oopy-material .material-progress-heading > strong { font-weight: 700; }
+.oopy-material .material-progress progress { display: block; width: 100%; height: 6px; margin: 12px 0 0; border: 1px solid var(--oopy-border); border-radius: 10px; background: var(--oopy-surface); overflow: hidden; }
+.oopy-material .material-progress progress::-webkit-progress-bar { background: var(--oopy-surface); }
+.oopy-material .material-progress progress::-webkit-progress-value { background: var(--oopy-accent); }
+.oopy-material .material-progress progress::-moz-progress-bar { background: var(--oopy-accent); }
+.oopy-material .material-toc summary:focus-visible { outline: 3px solid var(--oopy-dark); outline-offset: 3px; }
+@media (max-width: 991.98px) {
+    .oopy-material .material-sidebar { position: static; }
+    .oopy-material .material-toc > summary { display: block; }
+    .oopy-material .material-toc[open] > summary { border-bottom: 1px solid var(--oopy-mist); }
+    .oopy-material .material-toc[open] > summary > i { transform: rotate(180deg); }
+    .oopy-material #chapter-navigation { max-height: none; }
+    .oopy-material .material-toc nav a { font-size: .95rem; padding-top: 12px; padding-bottom: 12px; }
+    .oopy-material .material-toc nav a::before { top: 21px; }
+}

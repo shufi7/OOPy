@@ -17,7 +17,7 @@ class LiveCodeTest extends TestCase
         $html = $response->getContent();
 
         $this->assertSame(3, substr_count($html, 'data-live-code'));
-        $this->assertSame(1, substr_count($html, 'css/oopy-live-code.css'));
+        $this->assertSame(1, substr_count($html, 'css/oopy/live-code/live-code.css'));
         $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));
         preg_match_all('/\sid="([^"]+)"/', $html, $matches);
         $this->assertSame($matches[1], array_values(array_unique($matches[1])));
@@ -65,7 +65,7 @@ class LiveCodeTest extends TestCase
     {
         $html = $this->get('/materi/kelas-dan-objek')->assertOk()->getContent();
         $this->assertSame(2, substr_count($html, 'data-live-code'));
-        $this->assertSame(1, substr_count($html, 'css/oopy-live-code.css'));
+        $this->assertSame(1, substr_count($html, 'css/oopy/live-code/live-code.css'));
         $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));
         preg_match_all('/data-role="config">(.*?)<\/script>/s', $html, $matches);
         $configs = array_map(fn ($json) => json_decode($json, true, flags: JSON_THROW_ON_ERROR), $matches[1]);
@@ -91,7 +91,7 @@ class LiveCodeTest extends TestCase
     {
         $html = $this->get('/materi/enkapsulasi')->assertOk()->getContent();
         $this->assertSame(1, substr_count($html, 'data-live-code'));
-        $this->assertSame(1, substr_count($html, 'css/oopy-live-code.css'));
+        $this->assertSame(1, substr_count($html, 'css/oopy/live-code/live-code.css'));
         $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));
         preg_match('/data-role="config">(.*?)<\/script>/s', $html, $matches);
         $config = json_decode($matches[1], true, flags: JSON_THROW_ON_ERROR);

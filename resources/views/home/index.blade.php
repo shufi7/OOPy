@@ -2,6 +2,10 @@
 
 @section('title', 'Beranda')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/oopy/home.css') }}">
+@endpush
+
 @section('content')
 <div class="hero-section flex-grow-1 d-flex align-items-center py-5">
     <div class="container-fluid px-lg-5 px-4 py-lg-4">

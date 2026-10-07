@@ -8,4 +8,4 @@ Sources:
 - https://github.com/PrismJS/prism/tree/v1.30.0
 
 The file is served locally; no bundler or CDN request is needed at runtime.
-The OOPy token theme is in `public/css/oopy-material.css`.
+The OOPy token theme is in `public/css/oopy/material/code.css`.
