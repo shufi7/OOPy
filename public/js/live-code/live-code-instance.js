@@ -149,7 +149,7 @@ export function createLiveCode(root, config) {
             });
             editor = monaco.editor.create(byId('monaco-editor'), {
                 model: models.get(activeFile), theme: 'oopy-night', automaticLayout: true,
-                minimap: { enabled: false }, fontSize: 12, lineHeight: 22,
+                minimap: { enabled: false }, fontSize: 15, lineHeight: 24,
                 fontFamily: "Consolas, 'Courier New', monospace", padding: { top: 16, bottom: 16 },
                 lineNumbers: 'on', lineNumbersMinChars: 3, glyphMargin: false, folding: false,
                 scrollBeyondLastLine: false, wordWrap: 'on', tabSize: 4, insertSpaces: true,

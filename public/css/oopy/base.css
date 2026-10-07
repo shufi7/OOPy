@@ -34,14 +34,20 @@
     --bs-border-color: var(--oopy-border);
     --bs-body-color: var(--oopy-ink);
     --bs-body-bg: var(--oopy-cream);
+    --oopy-font-body: clamp(1rem, .96rem + .2vw, 1.125rem);
+    --oopy-font-ui: clamp(1rem, .98rem + .1vw, 1.0625rem);
+    --oopy-font-small: clamp(.8125rem, .78rem + .15vw, .875rem);
+    --oopy-font-code: clamp(.875rem, .84rem + .175vw, 1rem);
 }
 
 body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: var(--oopy-font-body);
+    line-height: 1.7;
 }
 
 .btn-brand {
-    font-size: 0.95rem;
+    font-size: 1rem;
     --bs-btn-color: var(--oopy-on-primary);
     --bs-btn-bg: var(--oopy-blue);
     --bs-btn-border-color: var(--oopy-blue);
@@ -53,6 +59,7 @@ body {
     --bs-btn-active-border-color: var(--oopy-blue);
     --bs-btn-focus-shadow-rgb: 17, 153, 158;
     border-radius: 8px;
+    line-height: 1.4;
 }
 
 a:focus-visible,
