@@ -62,15 +62,28 @@ try {
     assert.equal(await page.locator('[data-live-code]').count(), 1);
     assert.equal(await page.locator('.material-toc nav a').count(), 12);
     await inspectInstructions();
-    assert.deepEqual(await page.locator('#bab1-variabel .oopy-live-task code').allTextContents(), ['nama_ekosistem', '"Rawa Bangkau"']);
+    assert.ok((await page.locator('#bab1-status-air .oopy-live-task code').allTextContents()).includes('status_air(tinggi)'));
+    const sectionIds = ['tujuan', 'apersepsi', 'nilai-tipe-data-variabel', 'operator-ekspresi', 'input-output', 'percabangan', 'perulangan-list', 'fungsi', 'prosedural-ke-oop', 'rangkuman', 'refleksi', 'kuis'];
+    assert.deepEqual(await page.locator('[data-material-section]').evaluateAll((nodes) => nodes.map((node) => node.id)), sectionIds);
+    assert.deepEqual(await page.locator('.material-toc nav a').evaluateAll((nodes) => nodes.map((node) => node.hash.slice(1))), sectionIds);
+    assert.equal(await page.locator('.material-table').count(), 3);
+    assert.equal(await page.locator('.material-practice li').count(), 3);
+    assert.equal(await page.locator('#apersepsi .material-code').count(), 0);
+    assert.match(await page.locator('#nilai-tipe-data-variabel .material-output').textContent(), /<class 'str'>/);
     assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
     assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), 1);
 
-    for (const width of [390, 768, 1024, 1440]) {
+    for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
         await page.waitForFunction((width) => document.querySelector('.material-toc').open === (width >= 992), width);
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Page overflow at ${width}`);
         await inspectInstructionLayout(width);
+        assert.ok(await page.locator('.material-table-wrapper').evaluateAll((nodes) => nodes.every((node) => node.getBoundingClientRect().right <= innerWidth + 1)));
+        assert.ok(await page.locator('#nilai-tipe-data-variabel tbody td:first-child').evaluateAll((nodes) => nodes.every((node) => {
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            return range.getClientRects().length === 1;
+        })), `Data type names split across lines at ${width}px`);
         if (width < 992) await page.locator('.material-toc summary').click();
         await page.locator('.material-toc a[href="#fungsi"]').click();
         await page.waitForFunction(() => document.querySelector('.material-toc a[href="#fungsi"]').getAttribute('aria-current') === 'location');
@@ -86,35 +99,53 @@ try {
             assert.equal(overlap, false);
         }
     }
-    console.log('PASS: home -> list -> chapter; 12 sections; responsive TOC, focus and anchors at 390/768/1024/1440px');
+    console.log('PASS: new BAB 1 module, tables/output/practice/reflection, matching sidebar; 320/390/768/1024/1440px layout, focus and anchors');
 
     // A keyboard user can reach the horizontally scrollable code example.
-    await page.locator('#fungsi .material-code pre').focus();
-    assert.equal(await page.locator('#fungsi .material-code pre').evaluate((el) => el === document.activeElement), true);
-    const role = (name) => page.locator(`#bab1-variabel [data-role="${name}"]`);
+    await page.locator('#fungsi .material-code:not(.material-output) pre').focus();
+    assert.equal(await page.locator('#fungsi .material-code:not(.material-output) pre').evaluate((el) => el === document.activeElement), true);
+    const role = (name) => page.locator(`#bab1-status-air [data-role="${name}"]`);
+    const chapterOneStarter = await page.evaluate(() => window.monaco.editor.getModel(window.monaco.Uri.parse('file:///workspaces/bab1-status-air/main.py')).getValue());
+    const editChapterOne = (source) => page.evaluate((source) => window.monaco.editor.getModel(window.monaco.Uri.parse('file:///workspaces/bab1-status-air/main.py')).setValue(source), source);
+    const submitChapterOne = async () => { await role('check-code').click(); await waitReady(); };
     await role('run-code').click();
     await waitReady();
-    assert.match(await role('code-output').textContent(), /Sungai Barito/);
-    await role('check-code').click();
+    assert.match(await role('code-output').textContent(), /None/);
+    await submitChapterOne();
+    assert.equal(await role('practice-percentage').textContent(), '13%');
+    assert.equal(await role('check-list').locator('li').count(), 8);
+    assert.equal(await role('check-list').locator('.is-failed').count(), 7);
+    for (const incorrect of [
+        'def status_air(tinggi):\n    if tinggi >= 100:\n        return "Dipantau"\n    elif tinggi >= 150:\n        return "Waspada"\n    return "Normal"',
+        'def status_air(tinggi):\n    if tinggi > 150:\n        return "Waspada"\n    elif tinggi > 100:\n        return "Dipantau"\n    return "Normal"',
+    ]) {
+        await editChapterOne(incorrect);
+        await submitChapterOne();
+        assert.equal(await role('practice-percentage').textContent(), '75%');
+        assert.equal(await role('check-list').locator('.is-failed').count(), 2);
+    }
+    await editChapterOne('def status_air(tinggi):\n    if tinggi >= 150:\n        return "Waspada"\n    elif tinggi >= 100:\n        return "Dipantau"\n    return "Normal"\n\nfor tinggi in [80, 120, 170]:\n    print(status_air(tinggi))');
+    await role('run-code').click();
     await waitReady();
-    assert.equal(await role('practice-percentage').textContent(), '0%');
-    await page.evaluate(() => {
-        const model = window.monaco.editor.getModel(window.monaco.Uri.parse('file:///workspaces/bab1-variabel/main.py'));
-        model.setValue('nama_ekosistem = "Rawa Bangkau"\nprint(nama_ekosistem)');
-    });
-    await role('check-code').click();
-    await waitReady();
+    assert.match(await role('code-output').textContent(), /Normal\s+Dipantau\s+Waspada/);
+    await submitChapterOne();
+    assert.equal(await role('practice-percentage').textContent(), '100%');
+    // A different implementation with the same behavior must also be accepted.
+    await editChapterOne('def status_air(tinggi):\n    if tinggi < 100:\n        return "Normal"\n    if tinggi < 150:\n        return "Dipantau"\n    return "Waspada"');
+    await submitChapterOne();
     assert.equal(await role('practice-percentage').textContent(), '100%');
     assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
     assert.equal(await page.locator('#kuis [data-quiz="form"]').isVisible(), true);
     await role('reset-code').click();
-    console.log('PASS: existing Live Coding Run/Submit/Reset; exercise score independent from chapter display; interactive quiz rendered');
+    assert.equal(await page.evaluate(() => window.monaco.editor.getModel(window.monaco.Uri.parse('file:///workspaces/bab1-status-air/main.py')).getValue()), chapterOneStarter);
+    assert.equal(await role('practice-percentage').textContent(), '0%');
+    console.log('PASS: BAB 1 starter incomplete; eight behavior/boundary checks reject reordered/strict comparisons; both correct implementations 100%; Reset restores starter and 0%');
 
     // Direct anchors and no-JS reading work independently of Monaco/Pyodide.
     const mobile = await browser.newPage({ viewport: { width: 390, height: 900 } });
-    await mobile.goto(`${base}${chapterPath}#tipe-data`, { waitUntil: 'domcontentloaded' });
+    await mobile.goto(`${base}${chapterPath}#nilai-tipe-data-variabel`, { waitUntil: 'domcontentloaded' });
     await mobile.waitForFunction(() => !document.querySelector('.material-toc').open);
-    await mobile.waitForFunction(() => Math.abs(document.querySelector('#tipe-data').getBoundingClientRect().top - 24) < 5);
+    await mobile.waitForFunction(() => Math.abs(document.querySelector('#nilai-tipe-data-variabel').getBoundingClientRect().top - 24) < 5);
     await mobile.close();
     const noJs = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 900 } });
     await noJs.goto(`${base}${chapterPath}`, { waitUntil: 'domcontentloaded' });
@@ -130,7 +161,7 @@ try {
 
     assert.equal(await page.locator('.material-bottom-nav').count(), 0);
     assert.equal(await page.locator('.material-navigation').count(), 1);
-    assert.equal(await page.locator('.material-toc a[href="#refleksi"]').count(), 0);
+    assert.equal(await page.locator('.material-toc a[href="#refleksi"]').count(), 1);
     await page.locator('.material-navigation a[rel="next"]').click();
     await page.waitForURL(`${base}/materi/kelas-dan-objek`);
     await waitReady();

@@ -22,7 +22,7 @@ try {
     for (const path of ['/', '/materi', ...chapters, '/editor']) {
         assert.equal((await page.goto(`${base}${path}`, { waitUntil: 'networkidle' })).status(), 200);
         if (chapters.includes(path)) {
-            const codes = page.locator('.material-section > .material-code code');
+            const codes = page.locator('.material-section > .material-code:not(.material-output) code');
             assert.ok(await codes.count());
             samples.set(path, await codes.allTextContents());
             assert.equal(await codes.evaluateAll((nodes) => nodes.every((code) => code.querySelector('.token'))), true);
@@ -43,7 +43,7 @@ try {
     await page.goto(`${base}${chapters[1]}`, { waitUntil: 'networkidle' });
     const source = '# Catatan habitat\nclass Ekosistem:\n    def info(self, nama):\n        return f"{nama} memiliki {120} hektar"\n\nprint(len(range(85)))\nhtml = "<img src=x onerror=alert(1)> & rawa"';
     const tokens = await page.evaluate((source) => {
-        const code = document.querySelector('.material-section > .material-code code');
+        const code = document.querySelector('.material-section > .material-code:not(.material-output) code');
         code.textContent = source;
         window.OopySyntax.highlight(code);
         return {
@@ -87,7 +87,8 @@ try {
                 assert.equal(await page.locator('[data-quiz="code"]').textContent(), question.code);
                 assert.ok(await page.locator('[data-quiz="code"] .token').count());
             }
-            await page.locator('[data-quiz="options"] input').nth(question.correct).check();
+            if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(question.answer);
+            else await page.locator('[data-quiz="options"] input').nth(question.correct).check();
             await page.locator('[data-quiz="next"]').click();
         }
         assert.equal(await page.locator('[data-quiz="percentage"]').textContent(), '100%');
@@ -96,7 +97,7 @@ try {
 
         const noJs = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 900 } });
         await noJs.goto(`${base}${path}`, { waitUntil: 'networkidle' });
-        assert.deepEqual(await noJs.locator('.material-section > .material-code code').allTextContents(), samples.get(path));
+        assert.deepEqual(await noJs.locator('.material-section > .material-code:not(.material-output) code').allTextContents(), samples.get(path));
         assert.equal(await noJs.locator('.material-code .token').count(), 0);
         assert.ok(await noJs.locator('.material-code pre').first().isVisible());
         assert.ok(await noJs.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
@@ -107,11 +108,12 @@ try {
         fallback.on('pageerror', (error) => fallbackErrors.push(error.message));
         await fallback.route('**/js/vendor/prism/**', (route) => route.abort());
         await fallback.goto(`${base}${path}`, { waitUntil: 'networkidle' });
-        assert.deepEqual(await fallback.locator('.material-section > .material-code code').allTextContents(), samples.get(path));
+        assert.deepEqual(await fallback.locator('.material-section > .material-code:not(.material-output) code').allTextContents(), samples.get(path));
         assert.equal(await fallback.locator('.material-code .token').count(), 0);
         const questions = await fallback.locator('[data-quiz="questions"]').evaluate((node) => JSON.parse(node.textContent));
         for (const question of questions) {
-            await fallback.locator('[data-quiz="options"] input').nth(question.correct).check();
+            if (question.type === 'code_fill') await fallback.locator('[data-quiz="code-fill"]').fill(question.answer);
+            else await fallback.locator('[data-quiz="options"] input').nth(question.correct).check();
             await fallback.locator('[data-quiz="next"]').click();
         }
         assert.equal(await fallback.locator('[data-quiz="percentage"]').textContent(), '100%');

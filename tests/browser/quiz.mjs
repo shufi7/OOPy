@@ -11,14 +11,19 @@ page.on('request', (request) => { if (request.method() !== 'GET') writes.push(re
 const quiz = page.locator('#kuis');
 const part = (role) => quiz.locator(`[data-quiz="${role}"]`);
 const options = () => part('options').locator('input[type="radio"]');
-const choose = (index) => options().nth(index).check();
+const choose = async (answer) => {
+    if (await part('code-fill').isVisible()) await part('code-fill').fill(String(answer));
+    else await options().nth(answer).check();
+};
 const next = () => part('next').click();
 
 try {
     await page.goto(`${base}/materi/dasar-pemrograman-oop`, { waitUntil: 'domcontentloaded' });
     await part('form').waitFor({ state: 'visible' });
     assert.equal(await page.locator('#latihan, a[href="#latihan"]').count(), 0);
-    assert.equal(await quiz.evaluate((el) => el.previousElementSibling.id), 'rangkuman');
+    assert.equal(await quiz.evaluate((el) => el.previousElementSibling.id), 'refleksi');
+    const chapterOneQuestions = JSON.parse(await part('questions').textContent());
+    assert.deepEqual(chapterOneQuestions.map((question) => question.type), ['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill']);
     await page.locator('.material-toc a[href="#kuis"]').click();
     await page.waitForFunction(() => document.querySelector('.material-toc a[href="#kuis"]').getAttribute('aria-current') === 'location');
     const originalOutput = await page.locator('[data-role="code-output"]').textContent();
@@ -51,19 +56,40 @@ try {
     assert.equal(await part('review').locator('li').count(), 0);
     assert.equal(await part('results').isVisible(), false);
     await next();
-    for (const answer of [1, 2, 1, 0]) { await choose(answer); await next(); }
+    for (const answer of [3, 1]) { await choose(answer); await next(); }
+    assert.equal(await part('options-group').isVisible(), false);
+    assert.equal(await part('code-fill').isEnabled(), true);
+    await choose('   ');
+    assert.equal(await part('answered').textContent(), '3 dari 5 soal dijawab');
+    await next();
+    await choose('elif');
+    await next();
+    assert.equal(await part('results').isVisible(), false);
+    assert.equal(await part('counter').textContent(), 'Soal 4 dari 5 soal');
+    assert.match(await part('validation').textContent(), /belum lengkap/);
+    await choose(' return ');
+    await part('previous').click();
+    assert.equal(await options().nth(1).isChecked(), true);
+    assert.equal(await part('code-fill').isDisabled(), true);
+    await next();
+    assert.equal(await part('code-fill').inputValue(), ' return ');
+    await next();
+    assert.equal(await part('code-fill').inputValue(), 'elif');
+    await next();
     assert.equal(await part('score').textContent(), '4 / 5');
     assert.equal(await part('percentage').textContent(), '80%');
     assert.match(await part('totals').textContent(), /Jawaban benar: 4.*Jawaban salah: 1/);
     assert.equal(await part('review').locator('li').count(), 5);
     assert.equal(await part('review').locator('.is-correct').count(), 4);
     assert.equal(await part('review').locator('.is-incorrect').count(), 1);
-    assert.match(await part('review').locator('li').last().textContent(), /Jawaban kamu: A.*Jawaban benar: D.*Penjelasan:/s);
+    assert.match(await part('review').locator('li').first().textContent(), /Jawaban kamu: A\. int.*Jawaban benar: B\. float.*Penjelasan:/s);
+    assert.match(await part('review').locator('li').nth(3).textContent(), /Jawaban kamu: return.*Jawaban benar: return.*Penjelasan:/s);
+    assert.match(await part('review').locator('li').last().textContent(), /Jawaban kamu: elif.*Jawaban benar: elif.*Penjelasan:/s);
     assert.equal(await part('result-title').evaluate((el) => el === document.activeElement), true);
     assert.equal(await part('form').isVisible(), false);
-    console.log('PASS: instructions, counter, incomplete submission, keyboard, retained/changed answers, 80% score and five reviews');
+    console.log('PASS: BAB 1 three MC/two code-fill; blank/whitespace rejected, keyboard, retained/changed answers, trimmed input, 80% score and five reviews');
 
-    for (const [answers, expected] of [[[1, 0, 0, 0, 0], '0%'], [[0, 1, 2, 1, 3], '100%']]) {
+    for (const [answers, expected] of [[[0, 0, 0, 'Return', 'Elif'], '0%'], [[1, 3, 1, ' return ', ' elif '], '100%']]) {
         await part('retry').click();
         assert.equal(await options().evaluateAll((inputs) => inputs.filter((input) => input.checked).length), 0);
         assert.equal(await part('answered').textContent(), '0 dari 5 soal dijawab');
@@ -77,7 +103,7 @@ try {
     console.log('PASS: retry resets answers; 0% and 100% scoring; no server writes or changes to Live Coding/chapter progress');
 
     await part('retry').click();
-    for (const width of [390, 768, 1024, 1440]) {
+    for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
         await quiz.evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Overflow at ${width}px`);
@@ -88,13 +114,22 @@ try {
             await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/quiz-${width}.png` });
         }
     }
-    await choose(2);
+    for (let i = 0; i < 3; i++) await next();
+    for (const width of [320, 390, 768, 1024, 1440]) {
+        await page.setViewportSize({ width, height: 1000 });
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Code-fill overflow at ${width}px`);
+        assert.ok(await part('code-fill').evaluate((input) => Math.abs(input.getBoundingClientRect().width - input.parentElement.getBoundingClientRect().width) < 1));
+    }
+    await choose(' return ');
+    await part('code-fill').focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await part('counter').textContent(), 'Soal 5 dari 5 soal');
     await page.reload({ waitUntil: 'domcontentloaded' });
     await part('form').waitFor({ state: 'visible' });
     assert.equal(await part('answered').textContent(), '0 dari 5 soal dijawab');
     assert.equal(await part('results').isVisible(), false);
     assert.deepEqual(errors, []);
-    console.log('PASS: 390/768/1024/1440px layout, full-width choices, refresh reset, no page errors');
+    console.log('PASS: MC/code-fill layout at 320/390/768/1024/1440px, Enter advances input, refresh resets answers, no page errors');
 
     for (const [slug, label] of [['kelas-dan-objek', 'BAB 2'], ['enkapsulasi', 'BAB 3']]) {
         await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });

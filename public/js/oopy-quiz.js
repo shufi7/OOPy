@@ -6,6 +6,16 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     let current = 0;
     let completed = false;
     const letter = (index) => String.fromCharCode(65 + index);
+    const isCodeFill = (question) => question.type === 'code_fill';
+    const hasAnswer = (question, answer) => isCodeFill(question)
+        ? typeof answer === 'string' && answer.trim() !== ''
+        : answer !== null;
+    const isCorrect = (question, answer) => isCodeFill(question)
+        ? typeof answer === 'string' && answer.trim() === question.answer
+        : answer === question.correct;
+    const answerText = (question, answer) => isCodeFill(question)
+        ? answer.trim()
+        : `${letter(answer)}. ${question.options[answer]}`;
     const element = (tag, text, className) => {
         const node = document.createElement(tag);
         node.textContent = text;
@@ -14,7 +24,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     };
 
     function updateAnswered() {
-        find('answered').textContent = `${answers.filter((answer) => answer !== null).length} dari ${questions.length} soal dijawab`;
+        find('answered').textContent = `${answers.filter((answer, index) => hasAnswer(questions[index], answer)).length} dari ${questions.length} soal dijawab`;
     }
 
     function renderQuestion(focus = true) {
@@ -25,7 +35,12 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         find('code').textContent = question.code || '';
         window.OopySyntax?.highlight(find('code'));
         find('options').replaceChildren();
-        question.options.forEach((option, index) => {
+        const codeFill = isCodeFill(question);
+        find('options-group').hidden = codeFill;
+        find('code-fill-group').hidden = !codeFill;
+        find('code-fill').disabled = !codeFill;
+        find('code-fill').value = codeFill ? answers[current] ?? '' : '';
+        if (!codeFill) question.options.forEach((option, index) => {
             const label = document.createElement('label');
             label.className = 'oopy-quiz-option';
             const input = document.createElement('input');
@@ -48,21 +63,22 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     }
 
     function finish() {
-        const missing = answers.indexOf(null);
+        const missing = answers.findIndex((answer, index) => !hasAnswer(questions[index], answer));
         if (missing !== -1) {
             current = missing;
             renderQuestion();
-            find('validation').textContent = `Jawaban belum lengkap. Pilih jawaban untuk soal ${missing + 1} sebelum menyelesaikan kuis.`;
+            const action = isCodeFill(questions[missing]) ? 'Lengkapi kode' : 'Pilih jawaban';
+            find('validation').textContent = `Jawaban belum lengkap. ${action} untuk soal ${missing + 1} sebelum menyelesaikan kuis.`;
             return;
         }
         completed = true;
-        const correct = questions.filter((question, index) => answers[index] === question.correct).length;
+        const correct = questions.filter((question, index) => isCorrect(question, answers[index])).length;
         find('score').textContent = `${correct} / ${questions.length}`;
         find('percentage').textContent = `${Math.round(correct / questions.length * 100)}%`;
         find('totals').textContent = `Jawaban benar: ${correct} · Jawaban salah: ${questions.length - correct}`;
         find('review').replaceChildren();
         questions.forEach((question, index) => {
-            const passed = answers[index] === question.correct;
+            const passed = isCorrect(question, answers[index]);
             const item = document.createElement('li');
             item.className = passed ? 'is-correct' : 'is-incorrect';
             item.append(
@@ -80,8 +96,8 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
                 window.OopySyntax?.highlight(code);
             }
             item.append(
-                element('p', `Jawaban kamu: ${letter(answers[index])}. ${question.options[answers[index]]}`),
-                element('p', `Jawaban benar: ${letter(question.correct)}. ${question.options[question.correct]}`),
+                element('p', `Jawaban kamu: ${answerText(question, answers[index])}`),
+                element('p', `Jawaban benar: ${answerText(question, isCodeFill(question) ? question.answer : question.correct)}`),
                 element('p', `Penjelasan: ${question.explanation}`),
             );
             find('review').append(item);
@@ -90,6 +106,13 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         find('results').hidden = false;
         find('result-title').focus();
     }
+
+    find('code-fill').addEventListener('input', (event) => {
+        if (completed || !isCodeFill(questions[current])) return;
+        answers[current] = event.target.value;
+        find('validation').textContent = '';
+        updateAnswered();
+    });
 
     find('form').addEventListener('submit', (event) => {
         event.preventDefault();

@@ -1,245 +1,283 @@
 <?php
 
 return [
-    'description' => 'Mulai dari menyimpan data ekosistem, mengatur alur program, hingga mengenal cara berpikir berorientasi objek. Pelajari contoh secara berurutan, lalu coba ubah kodenya sendiri.',
+    'description' => 'Fondasi singkat yang dibutuhkan sebelum memasuki pemodelan object.',
     'objectives' => [
-        'Menjelaskan pengertian dan kegunaan Python.',
-        'Membuat variabel dengan nama yang bermakna.',
-        'Menggunakan tipe data dasar Python.',
-        'Menjelaskan cara menerima input dan menampilkan output.',
-        'Menggunakan operator untuk mengolah dan membandingkan nilai.',
-        'Membuat percabangan berdasarkan kondisi.',
-        'Membuat perulangan untuk memproses beberapa data.',
-        'Membuat dan memanggil fungsi sederhana.',
-        'Menjelaskan konsep dasar paradigma OOP.',
+        'Menggunakan variabel dan tipe data dasar pada program sederhana.',
+        'Menggunakan operator, input/output, percabangan, perulangan, list, dan fungsi.',
+        'Membedakan parameter dan argument secara sederhana.',
+        'Menjelaskan mengapa pengelompokan data dan perilaku menjadi penting saat program bertambah kompleks.',
+        'Menjelaskan gagasan dasar object-oriented programming.',
     ],
     'sections' => [
         [
-            'id' => 'python',
-            'title' => 'Pengenalan Python',
+            'id' => 'apersepsi',
+            'title' => 'Apersepsi — Data Pemantauan Lahan Basah',
             'paragraphs' => [
-                'Python adalah bahasa pemrograman dengan sintaks yang mudah dibaca. Python digunakan dalam pendidikan, pengembangan aplikasi, analisis data, dan kecerdasan buatan. Di OOPy, kita menggunakannya untuk memodelkan informasi ekosistem lahan basah.',
-                'Program tersusun dari instruksi. Contoh berikut meminta Python menampilkan sebuah pesan. Teks di antara tanda kutip merupakan nilai string, sedangkan print() menampilkannya sebagai output.',
+                'Bayangkan program yang menyimpan nama lokasi, tinggi air, suhu, dan pH. Untuk satu lokasi, beberapa variabel dan fungsi masih mudah dikelola. Apa yang terjadi jika ada puluhan lokasi dan setiap jenis sensor memiliki aturan serta perilaku yang berbeda?',
             ],
-            'code' => 'print("Mengenal ekosistem Sungai Barito")',
-            'tip' => 'Contoh data di BAB ini digunakan untuk latihan pemrograman, bukan sebagai hasil pengukuran kondisi lingkungan.',
         ],
         [
-            'id' => 'variabel',
-            'title' => 'Variabel',
+            'id' => 'nilai-tipe-data-variabel',
+            'title' => '1.1 Nilai, Tipe Data, Variabel, dan Penugasan',
             'paragraphs' => [
-                'Variabel adalah nama yang merujuk pada suatu nilai. Gunakan tanda = untuk memberikan nilai pada variabel. Nama yang jelas membantu kita memahami informasi yang disimpan tanpa membaca seluruh program.',
-                'Pada contoh ini, nama_ekosistem menyimpan nama habitat, lokasi menyimpan wilayahnya, dan luas_hektar menyimpan luas area latihan. Python membedakan huruf besar dan kecil; nama_ekosistem berbeda dari Nama_Ekosistem.',
+                'Nilai di Python memiliki tipe. int digunakan untuk bilangan bulat, float untuk desimal, str untuk teks, dan bool untuk nilai True atau False. Tipe membantu menentukan bagaimana suatu nilai dapat digunakan dalam program.',
+                'Variabel memberi nama pada nilai. Tanda = adalah operator penugasan: nilai di sisi kanan disimpan melalui nama di sisi kiri. Misalnya, tinggi_air = 135 memberi nama tinggi_air pada nilai bilangan bulat 135.',
+                'Gunakan type() untuk melihat tipe nilai yang sedang disimpan. Contoh berikut menggunakan data lokasi dan pemantauan lahan basah sebagai data latihan.',
+            ],
+            'tables' => [
+                [
+                    'caption' => 'Tipe data dasar Python',
+                    'headers' => ['Tipe', 'Contoh penugasan', 'Kegunaan'],
+                    'rows' => [
+                        ['int', ['code' => 'tinggi_air = 135'], 'Data bilangan bulat.'],
+                        ['float', ['code' => 'ph = 7.2'], 'Data desimal.'],
+                        ['str', ['code' => 'lokasi = "Rawa Gambut"'], 'Teks/nama.'],
+                        ['bool', ['code' => 'aktif = True'], 'Status benar/salah.'],
+                    ],
+                ],
             ],
             'code' => <<<'PYTHON'
-nama_ekosistem = "Rawa Bangkau"
-lokasi = "Hulu Sungai Selatan"
-luas_hektar = 120
+lokasi = "Rawa Gambut"
+tinggi_air = 135
+ph = 7.2
+aktif = True
 
-print(nama_ekosistem)
-print(lokasi)
-print(luas_hektar)
+print(type(lokasi))
+print(type(tinggi_air))
+print(type(ph))
+print(type(aktif))
 PYTHON,
-            'live_codes' => [
+            'output' => <<<'OUTPUT'
+<class 'str'>
+<class 'int'>
+<class 'float'>
+<class 'bool'>
+OUTPUT,
+            'tip' => 'Nilai pada contoh adalah data latihan pemrograman, bukan data ilmiah hasil pengukuran lahan basah.',
+        ],
+        [
+            'id' => 'operator-ekspresi',
+            'title' => '1.2 Operator dan Ekspresi',
+            'paragraphs' => [
+                'Operator aritmatika memproses nilai numerik. Operator perbandingan menghasilkan bool, sedangkan operator logika menggabungkan atau membalik kondisi. Ekspresi menggabungkan nilai dan operator untuk menghasilkan sebuah nilai.',
+                'Konsep ini nanti digunakan untuk validasi attribute, percabangan method, dan perhitungan sederhana. Tanda = digunakan untuk penugasan, sedangkan == membandingkan apakah dua nilai sama.',
+            ],
+            'tables' => [
                 [
-                    'id' => 'bab1-variabel',
-                    'title' => 'Coba sendiri: Nama Ekosistem',
-                    'description' => 'Ubah nilai variabel `nama_ekosistem` menjadi `"Rawa Bangkau"`.',
-                    'entry_file' => 'main.py',
-                    'files' => [
-                        'main.py' => <<<'PYTHON'
-nama_ekosistem = "Sungai Barito"
-print(nama_ekosistem)
-PYTHON,
+                    'caption' => 'Operator dan contoh ekspresi',
+                    'headers' => ['Kelompok', 'Operator', 'Contoh ekspresi'],
+                    'rows' => [
+                        ['Aritmatika', ['code' => '+ - * / // % **'], ['code' => 'tinggi_air + 10']],
+                        ['Perbandingan', ['code' => '== != > < >= <='], ['code' => 'ph >= 6.5']],
+                        ['Logika', ['code' => 'and or not'], ['code' => 'aktif and tinggi_air > 100']],
                     ],
-                    'checker' => 'assert nama_ekosistem == "Rawa Bangkau", "Ubah nilai nama_ekosistem menjadi Rawa Bangkau."',
                 ],
             ],
         ],
         [
-            'id' => 'tipe-data',
-            'title' => 'Tipe Data',
-            'paragraphs' => [
-                'Tipe data menentukan jenis nilai dan operasi yang dapat dilakukan. str digunakan untuk teks, int untuk bilangan bulat, float untuk bilangan desimal, dan bool untuk nilai True atau False. List menyimpan beberapa nilai dalam satu urutan.',
-                'Gunakan type() untuk melihat tipe suatu nilai. Angka tanpa tanda kutip berbeda dari teks yang berisi angka: 120 dapat dijumlahkan dengan bilangan, sedangkan "120" adalah string.',
-            ],
-            'code' => <<<'PYTHON'
-nama_habitat = "Rawa Bangkau"       # str
-jumlah_titik = 4                    # int
-kedalaman_meter = 1.5               # float
-sedang_dipantau = True              # bool
-habitat = ["Sungai Barito", "Rawa Bangkau"]  # list
-
-print(type(kedalaman_meter))
-print(habitat[0])
-PYTHON,
-            'tip' => 'Indeks list dimulai dari 0. habitat[0] mengambil nilai pertama, yaitu Sungai Barito.',
-        ],
-        [
             'id' => 'input-output',
-            'title' => 'Input dan Output',
+            'title' => '1.3 Input dan Output',
             'paragraphs' => [
-                'Output adalah informasi yang ditampilkan program. print() dapat menampilkan beberapa nilai sekaligus. F-string, yaitu string dengan awalan f, menyisipkan nilai variabel pada bagian yang ditulis di dalam kurung kurawal.',
-                'Dalam Python yang dijalankan di komputer, input() menerima masukan pengguna sebagai string. Untuk mengolah masukan sebagai bilangan, gunakan konversi seperti int() atau float(). Contoh input berikut dapat dicoba di terminal Python lokal.',
+                'print() digunakan untuk menampilkan output. input() menerima teks dari pengguna. Jika input akan digunakan sebagai angka, lakukan konversi menggunakan float() untuk desimal atau int() untuk bilangan bulat.',
+                'Pada contoh ini, nama menyimpan teks lokasi dan tinggi menyimpan hasil konversi ke float. F-string menyisipkan nilai variabel ke dalam teks output.',
             ],
             'code' => <<<'PYTHON'
-nama_ekosistem = "Rawa Bangkau"
-print(f"Ekosistem yang dipantau: {nama_ekosistem}")
+nama = input("Nama lokasi: ")
+tinggi = float(input("Tinggi air (cm): "))
 
-# Contoh untuk terminal Python lokal:
-# nama_ekosistem = input("Nama ekosistem: ")
-# luas_hektar = float(input("Luas dalam hektar: "))
+print(f"{nama}: {tinggi} cm")
 PYTHON,
-            'tip' => 'Live Coding OOPy belum mendukung input() interaktif. Saat mencoba di halaman ini, isi nilai langsung melalui variabel.',
-        ],
-        [
-            'id' => 'operator',
-            'title' => 'Operator',
-            'paragraphs' => [
-                'Operator aritmetika seperti +, -, *, dan / mengolah bilangan. Operator perbandingan seperti ==, !=, >, dan <= menghasilkan nilai boolean. Gunakan and, or, dan not untuk menyusun kondisi logika.',
-                'Tanda = memberikan nilai pada variabel, sedangkan == membandingkan dua nilai. Pada contoh berikut, sisa_titik menghitung pekerjaan yang tersisa dan perlu_dilanjutkan menyimpan hasil sebuah kondisi.',
-            ],
-            'code' => <<<'PYTHON'
-total_titik = 8
-titik_diperiksa = 3
-sisa_titik = total_titik - titik_diperiksa
-perlu_dilanjutkan = sisa_titik > 0 and titik_diperiksa < total_titik
-
-print("Titik tersisa:", sisa_titik)
-print("Lanjutkan pengamatan:", perlu_dilanjutkan)
-PYTHON,
+            'tip' => 'Untuk latihan yang memerlukan input(), Pyodide dapat menjalankan sintaks Python di browser, tetapi perilaku dialog input dapat bergantung pada implementasi editor. Bila latihan di website belum menyediakan input interaktif, gunakan nilai variabel langsung pada starter code.',
         ],
         [
             'id' => 'percabangan',
-            'title' => 'Percabangan',
+            'title' => '1.4 Percabangan',
             'paragraphs' => [
-                'Percabangan membuat program memilih instruksi berdasarkan kondisi. Gunakan if untuk kondisi pertama, elif untuk kondisi lain, dan else untuk keadaan yang belum terpenuhi. Python memeriksa kondisi dari atas ke bawah.',
-                'Perhatikan titik dua dan indentasi. Baris yang menjorok ke dalam merupakan bagian dari blok kondisi tersebut. Gunakan empat spasi secara konsisten.',
+                'if, elif, dan else memilih aksi berdasarkan kondisi. Python memeriksa kondisi dari atas ke bawah dan menjalankan blok pertama yang kondisinya benar. else menangani keadaan ketika semua kondisi sebelumnya salah.',
+                'Gunakan titik dua dan indentasi empat spasi untuk menandai blok. Dengan tinggi_air = 135, kondisi pertama tidak terpenuhi, tetapi kondisi kedua terpenuhi sehingga status menjadi "Perlu dipantau".',
             ],
             'code' => <<<'PYTHON'
-kondisi_air = "keruh"
+tinggi_air = 135
 
-if kondisi_air == "keruh":
-    print("Catat kekeruhan untuk pengamatan lanjutan.")
-elif kondisi_air == "jernih":
-    print("Catat hasil pengamatan air jernih.")
+if tinggi_air >= 150:
+    status = "Waspada"
+elif tinggi_air >= 100:
+    status = "Perlu dipantau"
 else:
-    print("Lengkapi catatan kondisi air.")
+    status = "Normal"
+
+print(status)
 PYTHON,
-            'tip' => 'Contoh ini hanya mengelompokkan catatan pengamatan. Tampilan air saja tidak menentukan kualitas atau keamanan air.',
+            'output' => 'Perlu dipantau',
+            'tip' => 'Nilai batas pada contoh digunakan untuk latihan logika, bukan standar ilmiah kualitas lingkungan.',
         ],
         [
-            'id' => 'perulangan',
-            'title' => 'Perulangan',
+            'id' => 'perulangan-list',
+            'title' => '1.5 Perulangan dan List',
             'paragraphs' => [
-                'Perulangan menjalankan instruksi yang sama untuk beberapa nilai. for cocok untuk menelusuri list atau urutan angka dari range(). Batas akhir range() tidak ikut diproses.',
-                'while mengulang selama suatu kondisi bernilai True. Pastikan ada perubahan yang membuat kondisi akhirnya False agar program tidak berjalan tanpa henti.',
+                'Loop mengeksekusi blok kode berulang. while cocok jika pengulangan bergantung pada kondisi; kondisi harus dapat berubah agar pengulangan berhenti. for nyaman untuk memproses koleksi, seperti list yang menyimpan beberapa nilai dalam satu urutan.',
+                'Contoh berikut memakai satu loop untuk menampilkan setiap nama dalam list lokasi.',
+                'Pada materi OOP, list sering dipakai untuk menyimpan beberapa object lalu memprosesnya dengan satu loop.',
             ],
             'code' => <<<'PYTHON'
-habitat = ["Sungai Barito", "Rawa Bangkau"]
-for nama in habitat:
-    print("Mengamati:", nama)
+lokasi = ["Sungai", "Rawa", "Mangrove"]
 
-titik = 1
-while titik <= 3:
-    print("Titik pengamatan", titik)
-    titik = titik + 1
+for nama in lokasi:
+    print("Memeriksa:", nama)
 PYTHON,
+            'output' => <<<'OUTPUT'
+Memeriksa: Sungai
+Memeriksa: Rawa
+Memeriksa: Mangrove
+OUTPUT,
         ],
         [
             'id' => 'fungsi',
-            'title' => 'Fungsi',
+            'title' => '1.6 Fungsi, Parameter, Argument, dan return',
             'paragraphs' => [
-                'Fungsi mengelompokkan instruksi yang dapat digunakan kembali. Definisikan fungsi dengan def, beri nama, lalu tulis parameter yang dibutuhkan. Fungsi baru menjalankan isinya ketika dipanggil.',
-                'return mengembalikan nilai ke pemanggil. Pada contoh ini, fungsi menerima nama dan lokasi, lalu menghasilkan teks informasi habitat. print() menampilkan teks yang dikembalikan fungsi tersebut.',
+                'Fungsi adalah blok kode bernama yang dapat digunakan kembali. Definisikan dengan def, lalu panggil ketika diperlukan. return mengembalikan hasil kepada pemanggil; print() menampilkan hasil tersebut sebagai output.',
+                'Parameter berada pada definisi fungsi, sedangkan argument adalah nilai nyata saat fungsi dipanggil. Pada def status_ph(nilai), nilai adalah parameter. Pada status_ph(7.2), 7.2 adalah argument.',
             ],
             'code' => <<<'PYTHON'
-def informasi_habitat(nama, lokasi):
-    return f"{nama} berada di {lokasi}"
+def status_ph(nilai):
+    if 6.5 <= nilai <= 8.5:
+        return "Rentang latihan: stabil"
 
-informasi = informasi_habitat("Rawa Bangkau", "Hulu Sungai Selatan")
-print(informasi)
+    return "Perlu diperiksa"
+
+print(status_ph(7.2))
 PYTHON,
+            'output' => 'Rentang latihan: stabil',
+            'tip' => 'Rentang pH pada contoh dipakai untuk latihan sintaks dan logika, bukan acuan universal kualitas air.',
         ],
         [
-            'id' => 'oop',
-            'title' => 'Pengantar Object-Oriented Programming',
+            'id' => 'prosedural-ke-oop',
+            'title' => '1.7 Dari Prosedural ke OOP',
             'paragraphs' => [
-                'Object-Oriented Programming (OOP) mengorganisasi program melalui objek yang memiliki data dan perilaku. Dalam konteks lahan basah, sebuah objek ekosistem dapat menyimpan nama dan lokasi serta memiliki perilaku untuk menampilkan informasi.',
-                'Class mendefinisikan struktur dan perilaku objek. Atribut menyimpan data, sedangkan metode merupakan fungsi yang terkait dengan objek. Contoh berikut memperlihatkan bentuk awal class dan objek; pembuatan konstruktor dan atribut tiap objek akan dipelajari lebih lanjut pada BAB 2.',
+                'Object menggabungkan data dan perilaku yang terkait. Class mendeskripsikan kelompok object sejenis. Saat program bertambah besar, pengelompokan state dan behavior membantu membagi tanggung jawab program menjadi bagian yang lebih jelas.',
+                'Dari Pendekatan Prosedural ke Object-Oriented Programming: pada pendekatan prosedural, data dan fungsi dikelola terpisah. Pendekatan ini cocok untuk program kecil, tetapi dapat sulit dirawat saat jumlah entitas dan perilaku bertambah. Ketika kompleksitas meningkat, OOP mengelompokkan data (state) dan perilaku (method) ke dalam object yang dibuat dari class.',
+                'OOP bukan berarti menghapus semua fungsi. Method pada class sendiri adalah fungsi yang terkait dengan object. BAB 2 akan melanjutkan fondasi ini dengan pemodelan class dan object.',
+                'Ayo Coba — Live Coding: lengkapi fungsi status_air() di bawah. Mulailah dengan kondisi untuk nilai tertinggi, lalu jalankan dengan nilai 80, 120, dan 170. Amati hasilnya, ubah urutan kondisi, dan lihat mengapa urutan if/elif penting.',
             ],
-            'code' => <<<'PYTHON'
-class Ekosistem:
-    def tampilkan_info(self):
-        print(f"{self.nama} berada di {self.lokasi}")
+            'tables' => [
+                [
+                    'caption' => 'Istilah dasar OOP',
+                    'headers' => ['Istilah', 'Makna'],
+                    'rows' => [
+                        ['Class', 'Definisi/rancangan yang mendeskripsikan attribute dan perilaku object.'],
+                        ['Object / instance', 'Wujud yang dibuat berdasarkan class.'],
+                        ['Attribute', 'Data yang menggambarkan state object.'],
+                        ['Method', 'Perilaku/fungsi yang terkait dengan object.'],
+                        ['State', 'Keadaan object yang direpresentasikan oleh nilai attribute.'],
+                    ],
+                ],
+            ],
+            'live_codes' => [
+                [
+                    'id' => 'bab1-status-air',
+                    'title' => 'Coba sendiri: Status Air',
+                    'description' => 'Lengkapi fungsi `status_air(tinggi)`: kembalikan `"Waspada"` untuk tinggi >= 150, `"Dipantau"` untuk tinggi >= 100, dan `"Normal"` untuk nilai lainnya. Jalankan dengan nilai `80`, `120`, dan `170`, lalu amati hasilnya. Ubah urutan kondisi dan lihat dampaknya untuk memahami mengapa urutan `if/elif` penting. Gunakan Submit untuk memeriksa hasil serta batas 99, 100, 149, dan 150. Angka ini hanya untuk latihan logika, bukan standar ilmiah kualitas lingkungan.',
+                    'entry_file' => 'main.py',
+                    'files' => [
+                        'main.py' => <<<'PYTHON'
+def status_air(tinggi):
+    # TODO: jika tinggi >= 150, return "Waspada"
+    # TODO: jika tinggi >= 100, return "Dipantau"
+    # selain itu return "Normal"
+    pass
 
-rawa = Ekosistem()
-rawa.nama = "Rawa Bangkau"
-rawa.lokasi = "Hulu Sungai Selatan"
-rawa.tampilkan_info()
+
+print(status_air(120))
 PYTHON,
-            'tip' => 'Pada metode ini, self merujuk pada objek yang sedang digunakan. Pemanggilan rawa.tampilkan_info() membuat self merujuk pada rawa.',
+                    ],
+                    'checker' => <<<'PYTHON'
+results = []
+fungsi = globals().get("status_air")
+tersedia = callable(fungsi)
+results.append({
+    "label": "Fungsi status_air tersedia",
+    "passed": tersedia,
+    "feedback": "" if tersedia else "Definisikan fungsi status_air(tinggi).",
+})
+
+for tinggi, harapan in ((80, "Normal"), (120, "Dipantau"), (170, "Waspada"),
+                       (99, "Normal"), (100, "Dipantau"),
+                       (149, "Dipantau"), (150, "Waspada")):
+    label = f"Nilai {tinggi} menghasilkan {harapan}"
+    petunjuk = f"status_air({tinggi}) harus mengembalikan {harapan!r}. Periksa batas dan urutan if/elif."
+    try:
+        hasil = fungsi(tinggi) if tersedia else None
+        passed = tersedia and hasil == harapan
+        results.append({"label": label, "passed": bool(passed),
+                        "feedback": "" if passed else petunjuk})
+    except Exception as error:
+        results.append({"label": label, "passed": False,
+                        "feedback": f"{petunjuk} ({type(error).__name__}: {error})"})
+PYTHON,
+                ],
+            ],
+            'practice' => [
+                'Buat list berisi tiga nama lokasi lalu tampilkan setiap nama menggunakan for.',
+                'Buat fungsi klasifikasi_suhu(suhu) yang mengembalikan tiga kategori berdasarkan batas yang kamu tentukan sendiri. Jelaskan logikanya.',
+                'Buat fungsi rata_rata(a, b, c) yang mengembalikan nilai rata-rata tiga angka.',
+            ],
         ],
     ],
     'summary' => [
-        'Variabel memberi nama pada nilai; tipe data menentukan cara nilai tersebut dapat diolah.',
-        'Input menerima data, sedangkan output menyampaikan hasil program.',
-        'Operator, percabangan, dan perulangan membantu mengolah data serta mengatur alur instruksi.',
-        'Fungsi membuat instruksi dapat digunakan kembali dengan parameter yang berbeda.',
-        'OOP menggabungkan data dan perilaku dalam objek yang dibuat dari class.',
+        'Python menggunakan nilai, tipe data, variabel, operator, kontrol alur, koleksi, dan fungsi sebagai fondasi pemrograman.',
+        'Parameter berada pada definisi fungsi, sedangkan argument dikirim saat fungsi dipanggil.',
+        'List dan loop akan berguna untuk memproses banyak object.',
+        'OOP menggabungkan state dan behavior dalam object agar tanggung jawab program lebih terorganisasi.',
+    ],
+    'reflection' => [
+        'Bagian dasar Python mana yang masih perlu kamu latih?',
+        'Kapan fungsi terpisah mulai terasa kurang nyaman untuk mengelola banyak entitas?',
+        'Jelaskan OOP menggunakan analogi sederhana dengan bahasamu sendiri.',
     ],
     'quiz' => [
         [
-            'question' => 'Apa fungsi variabel nama_ekosistem pada kode berikut?',
-            'code' => 'nama_ekosistem = "Rawa Bangkau"',
-            'options' => ['Menyimpan nama ekosistem', 'Menyimpan luas rawa', 'Menjalankan perulangan', 'Membuat fungsi'],
-            'correct' => 0,
-            'explanation' => 'nama_ekosistem merujuk pada nilai string "Rawa Bangkau". Variabel memberi nama pada nilai agar dapat digunakan kembali dalam program.',
-        ],
-        [
-            'question' => 'Apa tipe data nilai yang disimpan dalam luas_hektar?',
-            'code' => 'luas_hektar = 120',
-            'options' => ['str (teks)', 'int (bilangan bulat)', 'float (bilangan desimal)', 'bool (nilai benar atau salah)'],
+            'type' => 'multiple_choice',
+            'question' => 'Tipe data yang tepat untuk nilai 7.2 adalah ...',
+            'options' => ['int', 'float', 'str', 'bool'],
             'correct' => 1,
-            'explanation' => '120 adalah bilangan bulat tanpa tanda kutip, sehingga bertipe int. Nilai "120" dengan tanda kutip akan bertipe str.',
+            'explanation' => '7.2 adalah bilangan desimal sehingga pada Python bertipe float.',
         ],
         [
-            'question' => 'Pesan apa yang ditampilkan oleh program pencatatan kondisi air ini?',
-            'code' => <<<'PYTHON'
-kondisi_air = "jernih"
-
-if kondisi_air == "keruh":
-    print("Catat air keruh")
-else:
-    print("Catat kondisi lainnya")
-PYTHON,
-            'options' => ['Catat air keruh', 'Kedua pesan ditampilkan', 'Catat kondisi lainnya', 'Tidak ada pesan yang ditampilkan'],
-            'correct' => 2,
-            'explanation' => 'Nilai kondisi_air adalah "jernih", sehingga perbandingan dengan "keruh" bernilai False. Program menjalankan blok else dan menampilkan "Catat kondisi lainnya".',
-        ],
-        [
-            'question' => 'Berapa kali print(nama) dijalankan pada perulangan berikut?',
-            'code' => <<<'PYTHON'
-ekosistem = ["Sungai Barito", "Rawa Bangkau"]
-
-for nama in ekosistem:
-    print(nama)
-PYTHON,
-            'options' => ['Satu kali', 'Dua kali', 'Tiga kali', 'Terus-menerus tanpa berhenti'],
-            'correct' => 1,
-            'explanation' => 'Perulangan for mengunjungi setiap elemen list satu kali. List ekosistem memiliki dua elemen, sehingga print(nama) dijalankan dua kali.',
-        ],
-        [
-            'question' => 'Apa kegunaan fungsi informasi_habitat pada contoh ini?',
-            'code' => <<<'PYTHON'
-def informasi_habitat(nama, lokasi):
-    return f"{nama} berada di {lokasi}"
-
-print(informasi_habitat("Rawa Bangkau", "Hulu Sungai Selatan"))
-PYTHON,
-            'options' => ['Mengulang program tanpa kondisi berhenti', 'Mengubah semua data menjadi bilangan bulat', 'Membuat class baru untuk setiap habitat', 'Menghasilkan teks informasi yang dapat digunakan kembali untuk habitat berbeda'],
+            'type' => 'multiple_choice',
+            'question' => 'Dalam pemanggilan status_ph(7.2), nilai 7.2 disebut ...',
+            'options' => ['parameter', 'method', 'class', 'argument'],
             'correct' => 3,
-            'explanation' => 'Fungsi menerima parameter nama dan lokasi, lalu mengembalikan teks melalui return. Fungsi yang sama dapat dipanggil lagi dengan data habitat lain.',
+            'explanation' => 'Parameter ditulis pada definisi fungsi, sedangkan 7.2 merupakan nilai yang diberikan ketika fungsi dipanggil sehingga disebut argument.',
+        ],
+        [
+            'type' => 'multiple_choice',
+            'question' => 'Gagasan utama OOP adalah ...',
+            'options' => ['menghilangkan semua fungsi', 'mengelompokkan data dan perilaku terkait ke dalam object', 'menghindari variabel', 'membuat semua program hanya satu class'],
+            'correct' => 1,
+            'explanation' => 'OOP mengorganisasi data/state dan perilaku yang berkaitan ke dalam object.',
+        ],
+        [
+            'type' => 'code_fill',
+            'question' => 'Lengkapi kode berikut agar fungsi mengembalikan teks "Normal":',
+            'code' => <<<'PYTHON'
+def status_air():
+    __________ "Normal"
+PYTHON,
+            'answer' => 'return',
+            'explanation' => 'return mengembalikan hasil dari fungsi kepada pemanggil. Gunakan return "Normal" pada blok fungsi; print() hanya menampilkan output.',
+        ],
+        [
+            'type' => 'code_fill',
+            'question' => 'Lengkapi kode berikut agar kondisi kedua diperiksa dengan benar:',
+            'code' => <<<'PYTHON'
+if tinggi >= 150:
+    status = "Waspada"
+__________ tinggi >= 100:
+    status = "Dipantau"
+PYTHON,
+            'answer' => 'elif',
+            'explanation' => 'elif memeriksa kondisi berikutnya hanya ketika kondisi if sebelumnya tidak terpenuhi. Ini menjaga nilai tinggi >= 150 tetap berstatus "Waspada".',
         ],
     ],
 ];

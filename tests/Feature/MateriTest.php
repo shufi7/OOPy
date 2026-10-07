@@ -27,11 +27,11 @@ class MateriTest extends TestCase
     public function test_chapter_has_breadcrumb_sections_and_safe_navigation(): void
     {
         $response = $this->get('/materi/dasar-pemrograman-oop')->assertOk();
-        $response->assertSee('Dasar Pemrograman Python &amp; OOP', false);
+        $response->assertSee('Dasar Pemrograman Python dan OOP');
         $response->assertSee('aria-label="Breadcrumb"', false);
         $response->assertSee(route('home'))->assertSee(route('materi.index'));
 
-        foreach (['tujuan', 'python', 'variabel', 'tipe-data', 'input-output', 'operator', 'percabangan', 'perulangan', 'fungsi', 'oop', 'rangkuman', 'kuis'] as $id) {
+        foreach (['tujuan', 'apersepsi', 'nilai-tipe-data-variabel', 'operator-ekspresi', 'input-output', 'percabangan', 'perulangan-list', 'fungsi', 'prosedural-ke-oop', 'rangkuman', 'refleksi', 'kuis'] as $id) {
             $response->assertSee('id="'.$id.'"', false)->assertSee('href="#'.$id.'"', false);
         }
 
@@ -52,9 +52,11 @@ class MateriTest extends TestCase
         $this->assertSame(1, substr_count($html, 'css/oopy/live-code/live-code.css'));
         preg_match('/data-role="config">(.*?)<\/script>/s', $html, $matches);
         $config = json_decode($matches[1], true, flags: JSON_THROW_ON_ERROR);
-        $this->assertSame('bab1-variabel', $config['id']);
+        $this->assertSame('bab1-status-air', $config['id']);
         $this->assertSame('main.py', $config['entry_file']);
-        $this->assertStringContainsString('assert nama_ekosistem', $config['checker']);
+        $this->assertStringContainsString('def status_air(tinggi):', $config['files']['main.py']);
+        $this->assertStringContainsString('pass', $config['files']['main.py']);
+        $this->assertNotEmpty($config['checker']);
     }
 
     public function test_unknown_chapter_is_not_found(): void
@@ -152,13 +154,63 @@ class MateriTest extends TestCase
 
             $this->assertCount($count, $questions);
             foreach ($questions as $question) {
-                $this->assertCount(4, $question['options']);
-                $this->assertIsInt($question['correct']);
-                $this->assertArrayHasKey($question['correct'], $question['options']);
+                if (($question['type'] ?? 'multiple_choice') === 'code_fill') {
+                    $this->assertContains($question['answer'], ['return', 'elif']);
+                    $this->assertNotEmpty($question['code']);
+                    $this->assertArrayNotHasKey('options', $question);
+                } else {
+                    $this->assertCount(4, $question['options']);
+                    $this->assertIsInt($question['correct']);
+                    $this->assertArrayHasKey($question['correct'], $question['options']);
+                }
                 $this->assertNotEmpty($question['explanation']);
             }
             $this->assertStringContainsString('js/oopy-quiz.js', $html);
         }
+    }
+
+    public function test_chapter_one_follows_the_new_module_with_tables_practice_and_reflection(): void
+    {
+        $response = $this->get('/materi/dasar-pemrograman-oop')->assertOk()->assertViewIs('materi.show');
+        $content = $response->viewData('content');
+        $this->assertSame('Fondasi singkat yang dibutuhkan sebelum memasuki pemodelan object.', $content['description']);
+        $this->assertCount(5, $content['objectives']);
+        $this->assertCount(8, $content['sections']);
+        $this->assertCount(4, $content['summary']);
+        $this->assertCount(3, $content['reflection']);
+        foreach ([...$content['objectives'], ...$content['reflection']] as $text) {
+            $response->assertSee($text);
+        }
+        $sections = array_column($content['sections'], null, 'id');
+        $this->assertArrayNotHasKey('code', $sections['apersepsi']);
+        $this->assertCount(4, $sections['nilai-tipe-data-variabel']['tables'][0]['rows']);
+        $this->assertCount(3, $sections['operator-ekspresi']['tables'][0]['rows']);
+        $this->assertCount(5, $sections['prosedural-ke-oop']['tables'][0]['rows']);
+        $this->assertCount(3, $sections['prosedural-ke-oop']['practice']);
+        $this->assertSame(['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill'], array_column($content['quiz'], 'type'));
+        $this->assertSame(['return', 'elif'], array_column(array_slice($content['quiz'], 3), 'answer'));
+        $response->assertSee('Ayo Berlatih')->assertSee('klasifikasi_suhu(suhu)')->assertSee('rata_rata(a, b, c)');
+        $response->assertSee('&lt;class &#039;str&#039;&gt;', false);
+        $response->assertDontSee('bab1-variabel')->assertDontSee('id="oop"', false);
+    }
+
+    public function test_structured_section_extensions_escape_content_and_preserve_code(): void
+    {
+        $html = view('materi.partials.section', [
+            'number' => 1,
+            'section' => [
+                'id' => 'contoh', 'title' => 'Contoh',
+                'tables' => [['caption' => '<script>alert(1)</script>', 'headers' => ['Jenis'], 'rows' => [[['code' => '<img src=x onerror=alert(2)>']]]]],
+                'output' => '<class \'str\'>',
+                'practice' => ['<b>Latihan</b>'],
+            ],
+        ])->render();
+        $this->assertStringNotContainsString('<script>', $html);
+        $this->assertStringNotContainsString('<img ', $html);
+        $this->assertStringNotContainsString('<b>', $html);
+        $this->assertStringContainsString('&lt;class &#039;str&#039;&gt;', $html);
+        $this->assertStringContainsString('scope="col"', $html);
+        $this->assertStringContainsString('material-output', $html);
     }
 
     public function test_encapsulation_chapter_has_objectives_reflection_and_code_questions(): void

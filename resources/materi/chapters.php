@@ -3,14 +3,13 @@
 return [
     'dasar-pemrograman-oop' => [
         'bab' => 'BAB 1',
-        'judul' => 'Dasar Pemrograman Python & OOP',
+        'judul' => 'Dasar Pemrograman Python dan OOP',
         'content' => 'dasar-pemrograman-oop.php',
         'poin' => [
-            'Pengenalan Python',
-            'Variabel',
-            'Tipe data',
-            'Struktur kontrol',
-            'Konsep dasar paradigma OOP.',
+            'Nilai, tipe data, variabel, dan penugasan',
+            'Operator, input/output, dan kontrol alur',
+            'List, fungsi, parameter, dan argument',
+            'Dari prosedural ke OOP',
         ],
     ],
     'kelas-dan-objek' => [

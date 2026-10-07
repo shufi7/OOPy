@@ -11,7 +11,11 @@
         <h3>Petunjuk Pengerjaan</h3>
         <ol>
             <li>Bacalah setiap pertanyaan dengan teliti.</li>
+            @if (collect($content['quiz'])->contains(fn ($question) => ($question['type'] ?? 'multiple_choice') === 'code_fill'))
+            <li>Pilih satu jawaban untuk soal pilihan ganda; lengkapi bagian kosong dengan satu kata untuk soal kode. Huruf besar/kecil mengikuti sintaks Python.</li>
+            @else
             <li>Pilih satu jawaban yang menurutmu paling tepat.</li>
+            @endif
             <li>Gunakan tombol Soal Sebelumnya dan Soal Selanjutnya untuk berpindah soal.</li>
             <li>Kamu dapat mengganti jawaban sebelum menyelesaikan kuis.</li>
             <li>Setelah semua soal dijawab, tekan tombol Selesai Kuis.</li>
@@ -34,10 +38,14 @@
                 <pre tabindex="0" aria-label="Kode Python pada soal"><code class="language-python" data-quiz="code"></code></pre>
             </figure>
         </div>
-        <fieldset class="oopy-quiz-options" aria-describedby="quiz-question">
+        <fieldset class="oopy-quiz-options" aria-describedby="quiz-question" data-quiz="options-group">
             <legend>Pilih satu jawaban</legend>
             <div data-quiz="options"></div>
         </fieldset>
+        <div class="oopy-quiz-code-fill-group" data-quiz="code-fill-group" hidden>
+            <label for="quiz-code-fill">Lengkapi bagian kosong</label>
+            <input class="oopy-quiz-code-fill" id="quiz-code-fill" data-quiz="code-fill" type="text" aria-describedby="quiz-question" autocomplete="off" autocapitalize="off" spellcheck="false" disabled>
+        </div>
         <p class="oopy-quiz-validation" data-quiz="validation" role="alert"></p>
         <div class="oopy-quiz-navigation">
             <button class="btn oopy-quiz-previous" type="button" data-quiz="previous">Soal Sebelumnya</button>

@@ -58,3 +58,9 @@
 @media (prefers-reduced-motion: reduce) {
     .oopy-material .material-nav-button { transition: none; }
 }
+
+.oopy-material .material-table-wrapper { max-width: 100%; margin: 24px 0; overflow-x: auto; }
+.oopy-material .material-table { --bs-table-bg: var(--oopy-surface); --bs-table-color: var(--oopy-text); --bs-table-border-color: var(--oopy-border); margin-bottom: 0; font-size: inherit; line-height: 1.6; overflow-wrap: normal; }
+.oopy-material .material-table code { font-size: .95em; color: var(--oopy-link); white-space: nowrap; }
+.oopy-material .material-practice { margin-top: 24px; }
+.oopy-material .material-practice h3 { margin: 0 0 16px; font-size: 1.375rem; line-height: 1.3; font-weight: 700; }

@@ -11,8 +11,9 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 ## Struktur
 
 - `resources/materi/chapters.php`: registry judul, poin card, dan file konten BAB.
-- `resources/materi/dasar-pemrograman-oop.php`: deskripsi, tujuan, sembilan bagian
-  materi, contoh kode, catatan, konfigurasi Live Coding, rangkuman dan data kuis BAB 1.
+- `resources/materi/dasar-pemrograman-oop.php`: modul BAB 1 terbaru, lima tujuan,
+  apersepsi dan bagian 1.1–1.7, tabel konsep, contoh/output, latihan status air,
+  Ayo Berlatih, empat rangkuman, tiga refleksi dan kuis 3 PG + 2 code-fill.
 - `resources/materi/kelas-dan-objek.php`: tujuh bagian BAB 2, termasuk apersepsi,
   bedah kode, latihan Spesies/SensorAir, rangkuman, refleksi, dan delapan soal kuis.
 - `resources/materi/enkapsulasi.php`: lima tujuan, sembilan bagian BAB 3,
@@ -43,9 +44,16 @@ dibatasi ke `.oopy-quiz`. Komponen Live Coding memuat
 beberapa latihan tampil dalam satu halaman. File CSS dipanggil langsung melalui
 link Blade tanpa `@import`; nilai variabel tema tetap berada di `base.css`.
 
-BAB 1 memiliki anchor `tujuan`, `python`, `variabel`, `tipe-data`, `input-output`,
-`operator`, `percabangan`, `perulangan`, `fungsi`, `oop`, `rangkuman`, `kuis`.
-BAB 2 menambahkan Refleksi sesudah Rangkuman dan sebelum Kuis BAB. Sidebar memakai
+BAB 1 berjudul **Dasar Pemrograman Python dan OOP**, dengan deskripsi
+“Fondasi singkat yang dibutuhkan sebelum memasuki pemodelan object.” Slug tetap
+`dasar-pemrograman-oop`. Anchor-nya: `tujuan`, `apersepsi`,
+`nilai-tipe-data-variabel`, `operator-ekspresi`, `input-output`, `percabangan`,
+`perulangan-list`, `fungsi`, `prosedural-ke-oop`, `rangkuman`, `refleksi`, `kuis`.
+Live Coding berada di akhir 1.7, lalu tiga aktivitas Ayo Berlatih berupa latihan
+mandiri (list/for, klasifikasi suhu, rata-rata), tanpa editor tambahan.
+Ilustrasi transisi prosedural ke OOP dijelaskan melalui teks karena asset modul
+belum tersedia. Batas tinggi air/pH adalah angka latihan, bukan standar ilmiah.
+BAB 1–3 memiliki Refleksi sesudah Rangkuman dan sebelum Kuis BAB. Sidebar memakai
 urutan data section yang sama dengan artikel; link Refleksi hanya muncul jika
 `reflection` berisi pertanyaan. Tidak ada jumlah section yang diwajibkan antar-BAB.
 Sidebar sticky pada lebar minimal 992px. Di bawahnya, daftar isi menggunakan
@@ -78,7 +86,12 @@ BAB 3 tidak memiliki Next ke BAB 4. Semua BAB memiliki tautan ke daftar materi.
    Card otomatis menampilkan tautan detail; navigasi sebelumnya/berikutnya
    memakai registry melalui `$previousChapter` dan `$nextChapter`.
 3. Isi setiap section dengan `id` unik dan `title`. `paragraphs`, `code`, `tip`,
-   dan `live_codes` bersifat opsional. ID harus valid untuk anchor dan tidak sama
+   `live_codes`, `tables`, `output`, dan `practice` bersifat opsional.
+   Tabel memiliki `caption`, `headers`, dan `rows`; cell berupa string atau
+   `['code' => '...']`. Tabel dapat digulir secara horizontal dengan keyboard.
+   `output` menggunakan blok kode yang sama tanpa highlighting Python;
+   `practice` adalah daftar latihan mandiri yang tampil setelah Live Coding.
+   ID harus valid untuk anchor dan tidak sama
    dengan `tujuan`, `rangkuman`, `refleksi`, `kuis`, atau ID komponen lainnya.
 4. Tambahkan tes judul, section dan URL BAB baru. Route dan template dapat dipakai
    tanpa menambahkan controller, route, atau view khusus BAB tersebut.
@@ -92,6 +105,17 @@ Semua konten adalah data yang ditulis developer. Blade melakukan escaping pada
 teks dan kode; tidak perlu memasukkan HTML ke dalam file data.
 
 ## Live Coding di materi
+
+BAB 1 memakai satu komponen **Coba sendiri: Status Air** dengan ID
+`bab1-status-air`. Starter menyediakan `def status_air(tinggi)`, komentar TODO,
+`pass`, dan `print(status_air(120))`. Area Tugasmu meminta mahasiswa mencoba
+80/120/170 serta mengamati dampak urutan if/elif.
+Checker `results` memberikan delapan feedback terpisah: fungsi tersedia, lalu
+hasil untuk 80/120/170/99/100/149/150. Starter belum lulus: hanya ketersediaan
+fungsi yang benar (13% setelah Submit). Solusi yang benar mendapat 100%; urutan
+kondisi salah atau batas eksklusif tidak lulus. Implementasi berbeda dengan
+behavior sama tetap diterima. Reset memulihkan starter dan progres latihan 0%.
+Latihan variabel/nama ekosistem lama telah diganti tanpa perubahan engine.
 
 Tambahkan array `live_codes` pada section yang dipilih. Setiap elemennya memakai
 API komponen yang sudah tersedia:
@@ -140,7 +164,8 @@ atau di-reset dan tidak disimpan. Tidak ada konfigurasi atau engine baru.
 
 ## Kuis interaktif
 
-BAB 1 memiliki lima soal: variabel, tipe data, percabangan, perulangan dan fungsi.
+BAB 1 memiliki lima soal sesuai modul: tipe float, argument, gagasan OOP,
+serta melengkapi kode dengan `return` dan `elif`.
 BAB 2 dan BAB 3 masing-masing memiliki delapan soal. Kuis BAB 3 mencakup
 enkapsulasi, public attribute, konvensi `_`, name mangling, getter, validasi setter,
 property, serta analisis kode. Empat soal BAB 3 menggunakan potongan kode Python.
@@ -149,6 +174,7 @@ diserialisasi sebagai JSON oleh Blade. Untuk menambah soal, tambahkan satu eleme
 
 ```php
 [
+    'type' => 'multiple_choice', // Opsional; default untuk data BAB 2/3.
     'question' => 'Apa tipe data nilai ini?',
     'code' => 'jumlah_habitat = 2', // Opsional jika soal tidak memerlukan kode.
     'options' => ['str', 'int', 'float', 'bool'],
@@ -160,6 +186,27 @@ diserialisasi sebagai JSON oleh Blade. Untuk menambah soal, tambahkan satu eleme
 Gunakan empat pilihan dan satu indeks jawaban benar yang valid. Counter dan total
 skor mengikuti jumlah soal. JavaScript membuat pilihan radio dari data, menyimpan
 jawaban selama halaman terbuka, serta mengembalikan pilihan saat berpindah soal.
+
+Untuk soal melengkapi kode, gunakan data berikut tanpa `options`/`correct`:
+
+```php
+[
+    'type' => 'code_fill',
+    'question' => 'Lengkapi kode agar fungsi mengembalikan teks Normal.',
+    'code' => "def status_air():\n    __________ \"Normal\"",
+    'answer' => 'return',
+    'explanation' => 'return mengembalikan hasil kepada pemanggil.',
+],
+```
+
+Engine memakai card/counter/navigasi/hasil yang sama, dengan satu input teks
+berlabel menggantikan radio pada soal code-fill. Jawaban dinormalisasi dengan
+`trim()` dan dibandingkan secara case sensitive; `Return` tidak sama dengan
+`return`. Input kosong atau hanya spasi belum dihitung sebagai jawaban.
+Jawaban teks tetap tersimpan saat berpindah soal dan dihapus saat Coba Lagi atau
+refresh. Pembahasan menampilkan jawaban pengguna dan kunci sebagai teks yang aman.
+BAB 2/3 tetap memakai data pilihan ganda lama tanpa modifikasi konten.
+
 Pengguna boleh melewati soal dan mengubah jawaban sebelum menyelesaikan kuis.
 Jika ada jawaban kosong saat Selesai Kuis ditekan, pengguna diarahkan ke soal kosong
 pertama; hasil belum ditampilkan.
@@ -174,7 +221,7 @@ dan kembali ke soal pertama. Refresh juga mengulang kuis dari awal.
 - Progres BAB ditampilkan sebagai judul dan bar tanpa kartu atau teks keterangan.
   Bar tetap kosong. Tidak
   mengikuti skor Submit, tidak disimpan ke browser maupun server.
-- Latihan Variabel BAB 1, Spesies dan SensorAir BAB 2, serta enkapsulasi BAB 3 memakai komponen
+- Latihan status_air BAB 1, Spesies dan SensorAir BAB 2, serta enkapsulasi BAB 3 memakai komponen
   Monaco/Pyodide yang sama dari CDN. Materi teks dan contoh
   `<pre><code>` tetap dapat dibaca ketika editor belum siap.
 - `input()` dijelaskan dengan contoh untuk terminal lokal; editor browser belum
@@ -200,7 +247,7 @@ git diff --check
 Tes `MateriTest` mencakup BAB 1–3, tautan valid, 404 BAB 4–6, satu navigasi akhir,
 urutan section/sidebar, refleksi kosong/hilang/terisi, array opsional, ID unik,
 ketiga kuis, render Live Coding, serta regresi Beranda dan `/editor`.
-`LiveCodeTest` memeriksa starter BAB 2/3, heading kontekstual, aset sekali,
+`LiveCodeTest` memeriksa starter BAB 1/2/3, heading kontekstual, aset sekali,
 dan seluruh kontrak komponen sebelumnya.
 
 Untuk tes browser, gunakan Playwright dan browser Edge/Chrome yang terpasang
@@ -223,6 +270,9 @@ server berbeda. Tes memeriksa alur Beranda → Materi → BAB 1, navigasi/fokus 
 deep link mobile, dan navigasi tanpa JavaScript. Untuk BAB 2, tes juga memeriksa
 320px, Refleksi/fokus, Prism, navigasi dua arah, reduced motion, satu worker/loader,
 dan Submit starter/salah/benar serta Reset pada kedua latihan.
+BAB 1 turut memeriksa tabel/output/latihan/refleksi, anchor yang sesuai dengan
+sidebar pada 320/390/768/1024/1440px, starter 13%, urutan/batas salah 75%,
+solusi biasa dan implementasi alternatif 100%, serta Reset ke starter dan 0%.
 BAB 3 turut diuji pada 320/390/768/1024/1440px: kesesuaian sidebar/section,
 instruksi, editor dalam viewport, navigasi, ID unik, heading, focus/reduced motion,
 pembacaan tanpa JavaScript, satu worker/loader, dan tanpa error JavaScript.
@@ -239,14 +289,19 @@ penyimpanan nilai ke server selama interaksi kuis. BAB 2 turut diperiksa untuk
 delapan soal, skor 100%, pembahasan dengan Prism, Coba Lagi, dan layout hasil.
 BAB 3 juga memeriksa jawaban kosong, skor 0/88/100%, pembahasan, Coba Lagi,
 refresh, dan layout form/hasil pada kelima lebar tersebut.
+BAB 1 memeriksa 3 PG + 2 code-fill, input kosong/spasi, trim, case sensitivity,
+retensi jawaban teks, Enter, skor 0/80/100%, pembahasan, Coba Lagi, refresh,
+serta layout radio/input pada 320/390/768/1024/1440px.
 
 Jalankan perintah di atas pada environment yang menyediakan dependensi tes;
 integrasi browser memerlukan akses ke CDN Monaco dan Pyodide.
 
-Verifikasi BAB 1–3: `php artisan test` lulus (23 tes, 370 assertions),
+Verifikasi BAB 1–3: `php artisan test` lulus (26 tes, 416 assertions),
 6 tes Node runtime manager lulus, dan ketiga skrip browser `material.mjs`,
 `quiz.mjs`, serta `live-code.mjs` lulus di Edge headless dengan CDN asli.
-Pemeriksaan sintaks JavaScript materi/kuis dan skrip browser, lint PHP BAB 3,
-Pint `--test --dirty` serta tes Pint eksplisit pada file baru, dan
-`git diff --check` juga lulus. Server browser memakai
-session/cache `array` karena MySQL lokal tidak aktif; konfigurasi `.env` tetap.
+`visual.mjs` juga lulus: Prism, output teks, kuis campuran, pembacaan tanpa
+JavaScript dan fallback saat Prism tidak tersedia. Pemeriksaan sintaks JavaScript
+materi/kuis dan skrip browser, lint PHP data BAB 1/registry,
+Pint `--test --dirty`, dan `git diff --check` juga lulus.
+Konten BAB 2/3, layout halaman, CSS global, route, controller dan engine
+Live Coding tetap; konfigurasi `.env` tidak diubah.

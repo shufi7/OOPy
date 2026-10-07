@@ -87,6 +87,22 @@ class LiveCodeTest extends TestCase
         $this->assertStringContainsString('<h3 class="oopy-explorer-title"', $html);
     }
 
+    public function test_chapter_one_uses_one_incomplete_status_air_exercise(): void
+    {
+        $html = $this->get('/materi/dasar-pemrograman-oop')->assertOk()->getContent();
+        $this->assertSame(1, substr_count($html, 'data-live-code'));
+        $this->assertSame(1, substr_count($html, 'css/oopy/live-code/live-code.css'));
+        preg_match('/data-role="config">(.*?)<\/script>/s', $html, $matches);
+        $config = json_decode($matches[1], true, flags: JSON_THROW_ON_ERROR);
+        $this->assertSame('bab1-status-air', $config['id']);
+        $this->assertSame('Coba sendiri: Status Air', $config['title']);
+        $this->assertSame(['main.py'], array_keys($config['files']));
+        $this->assertSame(1, substr_count($config['files']['main.py'], 'pass'));
+        $this->assertStringContainsString('print(status_air(120))', $config['files']['main.py']);
+        $this->assertStringContainsString('results = []', $config['checker']);
+        $this->assertStringContainsString('<h3 id="bab1-status-air-workspace-title"', $html);
+    }
+
     public function test_chapter_three_reuses_live_code_with_an_incomplete_starter_and_checker(): void
     {
         $html = $this->get('/materi/enkapsulasi')->assertOk()->getContent();
