@@ -49,8 +49,12 @@ return [
     'polimorfisme' => [
         'bab' => 'BAB 5',
         'judul' => 'Polimorfisme',
+        'content' => 'polimorfisme.php',
         'poin' => [
-            'penggunaan polimorfisme untuk fleksibilitas kode',
+            'Polimorfisme melalui inheritance',
+            'Method overriding pada subclass',
+            'Duck typing pada Python',
+            'Mengurangi pemeriksaan tipe object',
         ],
     ],
     'kelas-abstrak' => [
