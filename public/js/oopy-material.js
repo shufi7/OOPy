@@ -23,7 +23,6 @@ if (material) {
         links.forEach((link) => {
             if (link.hash === `#${active.id}`) {
                 link.setAttribute('aria-current', 'location');
-                openGroup(link);
             } else link.removeAttribute('aria-current');
         });
     }
@@ -33,11 +32,15 @@ if (material) {
         requestAnimationFrame(markActiveSection);
     }
 
-    menu.querySelectorAll('.material-toc-group').forEach((group) => {
-        group.addEventListener('toggle', () => {
-            if (!group.open && group.querySelector('[aria-current="location"]')) group.open = true;
-        });
-    });
+    // Only explicit navigation reveals a group. Native details retain the user's
+    // collapse choice while scroll/resize merely update the active section.
+    function revealHashGroup() {
+        openGroup(links.find((link) => link.hash === location.hash));
+        const target = sections.find((section) => `#${section.id}` === location.hash);
+        // Revealing a mobile submenu shifts the anchor after the native jump.
+        if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start', behavior: 'instant' }));
+        scheduleUpdate();
+    }
 
     material.addEventListener('click', (event) => {
         const link = event.target.closest('a[href^="#"]');
@@ -57,7 +60,8 @@ if (material) {
 
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
     window.addEventListener('resize', scheduleUpdate);
-    window.addEventListener('hashchange', scheduleUpdate);
+    window.addEventListener('hashchange', revealHashGroup);
+    window.addEventListener('popstate', revealHashGroup);
     // Collapsing the mobile TOC changes layout; restore an initial deep link.
     const initial = sections.find((section) => `#${section.id}` === location.hash);
     if (initial) {

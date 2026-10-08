@@ -225,7 +225,7 @@ try {
         await assertProgress(slug, 5);
         await retry(total);
         assert.equal(await page.locator('[data-role="code-output"]').first().textContent(), originalOutput);
-        assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
+        assert.equal(await page.locator('.material-progress, .material-toc progress').count(), 0);
         console.log(`PASS: ${slug}: 5 questions (3 MC/2 code-fill), scores 0/20/40/60/80/100, 3 fails/4 passes, best results, retry/refresh, responsive form/results`);
     }
     const allProgress = await page.evaluate(() => JSON.parse(localStorage.getItem('oopy.quiz.progress')));

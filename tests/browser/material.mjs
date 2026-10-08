@@ -21,7 +21,86 @@ const inspectSidebar = async (width) => {
     assert.equal(new Set(hashes).size, hashes.length);
     const active = page.locator('.material-toc a[aria-current="location"]');
     assert.equal(await active.count(), 1);
-    assert.equal(await active.evaluate((el) => el.closest('.material-toc-group')?.open ?? true), true);
+};
+const inspectManualCollapse = async (width) => {
+    const toc = page.locator('.material-toc');
+    const showMenu = async () => {
+        if (!await toc.evaluate((el) => el.open)) await toc.locator(':scope > summary').click();
+    };
+    const waitActive = (hash) => page.waitForFunction((hash) => {
+        const active = document.querySelectorAll('.material-toc a[aria-current="location"]');
+        return active.length === 1 && active[0].hash === hash;
+    }, hash);
+    const scrollToSection = async (hash) => {
+        await page.locator(hash).evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
+        await waitActive(hash);
+    };
+    // Allow native toggle events and queued active-section updates to finish.
+    const settle = () => page.evaluate(() => new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 100)));
+    }));
+    for (const name of ['materi', 'penutup']) {
+        const group = page.locator(`[data-toc-group="${name}"]`);
+        const summary = group.locator(':scope > summary');
+        const [first, second] = await group.locator('a').evaluateAll((links) => links.map((link) => link.hash));
+        const assertOpen = async (open) => {
+            await settle();
+            assert.equal(await group.evaluate((el) => el.open), open, `${name} collapse at ${width}px on ${page.url()}`);
+        };
+        await showMenu();
+        await showGroup(name);
+        await group.locator(`a[href="${first}"]`).click();
+        await waitActive(first);
+        // On mobile, expose the summaries again after anchor navigation.
+        await showMenu();
+        await summary.click();
+        await assertOpen(false);
+        await scrollToSection(first);
+        await page.evaluate(() => window.scrollBy({ top: 60, behavior: 'instant' }));
+        await waitActive(first);
+        await assertOpen(false);
+        await scrollToSection(second);
+        await assertOpen(false);
+        await page.setViewportSize({ width: width < 992 ? 1024 : 768, height: 900 });
+        await assertOpen(false);
+        await page.setViewportSize({ width, height: 1000 });
+        await assertOpen(false);
+        await showMenu();
+        await summary.click();
+        await assertOpen(true);
+        await scrollToSection(second);
+        await summary.focus();
+        await page.keyboard.press('Enter');
+        await assertOpen(false);
+        await scrollToSection(second);
+        await assertOpen(false);
+        await page.keyboard.press('Space');
+        await assertOpen(true);
+        await scrollToSection(second);
+
+        // Explicit hash navigation and Back/Forward may reveal a closed group.
+        await summary.click();
+        await assertOpen(false);
+        await page.evaluate((hash) => { location.hash = hash; }, second);
+        await waitActive(second);
+        await assertOpen(true);
+        await summary.click();
+        await assertOpen(false);
+        await page.goBack();
+        await page.waitForURL((url) => url.hash === first);
+        await waitActive(first);
+        await assertOpen(true);
+        await showMenu();
+        await summary.click();
+        await assertOpen(false);
+        await page.goForward();
+        await page.waitForURL((url) => url.hash === second);
+        await waitActive(second);
+        await assertOpen(true);
+    }
+    await inspectSidebar(width);
+    if (width < 992 && await toc.evaluate((el) => el.open)) await toc.locator(':scope > summary').click();
+    console.log(`PASS: manual mouse/keyboard collapse, active sections, scroll/resize and hash/history at ${width}px on ${new URL(page.url()).pathname}`);
 };
 const unlockNextChapter = async () => {
     assert.equal(await page.locator('[data-quiz-next-locked]').isVisible(), true);
@@ -68,6 +147,25 @@ const inspectInstructionLayout = async (width) => {
 };
 
 try {
+    if (process.argv.includes('--sidebar-only')) {
+        for (const slug of ['dasar-pemrograman-oop', 'kelas-dan-objek', 'enkapsulasi']) {
+            for (const width of [320, 390, 768, 1024, 1440]) {
+                await page.setViewportSize({ width, height: 1000 });
+                await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
+                await inspectManualCollapse(width);
+                for (const name of ['materi', 'penutup']) {
+                    const hash = await page.locator(`[data-toc-group="${name}"] a`).first().evaluate((el) => el.hash);
+                    await page.goto(`${base}/materi/${slug}${hash}`, { waitUntil: 'domcontentloaded' });
+                    await page.waitForFunction((hash) => document.querySelector(`.material-toc a[href="${hash}"]`).getAttribute('aria-current') === 'location', hash);
+                    await page.waitForFunction((hash) => Math.abs(document.querySelector(hash).getBoundingClientRect().top - 24) < 5, hash);
+                    assert.equal(await page.locator(`[data-toc-group="${name}"]`).evaluate((el) => el.open), true);
+                }
+                assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${slug} overflow at ${width}px`);
+            }
+        }
+        assert.deepEqual(errors, []);
+        console.log('PASS: sidebar regression and deep links for BAB 1/2/3 at all five viewport widths; no page errors');
+    } else {
     await page.addInitScript(() => {
         const NativeWorker = window.Worker;
         window.pythonWorkerCount = 0;
@@ -111,7 +209,7 @@ try {
     assert.equal(await page.locator('[data-toc-group="materi"]').evaluate((el) => el.open), false);
     await page.locator('#percabangan').evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
     await page.waitForFunction(() => document.querySelector('.material-toc a[href="#percabangan"]').getAttribute('aria-current') === 'location');
-    assert.equal(await page.locator('[data-toc-group="materi"]').evaluate((el) => el.open), true);
+    assert.equal(await page.locator('[data-toc-group="materi"]').evaluate((el) => el.open), false);
 
     for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
@@ -144,6 +242,7 @@ try {
             });
             assert.equal(overlap, false);
         }
+        await inspectManualCollapse(width);
     }
     console.log('PASS: new BAB 1 module, tables/output/practice/reflection, matching sidebar; 320/390/768/1024/1440px layout, focus and anchors');
 
@@ -180,7 +279,7 @@ try {
     await editChapterOne('def status_air(tinggi):\n    if tinggi < 100:\n        return "Normal"\n    if tinggi < 150:\n        return "Dipantau"\n    return "Waspada"');
     await submitChapterOne();
     assert.equal(await role('practice-percentage').textContent(), '100%');
-    assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
+    assert.equal(await page.locator('.material-progress, .material-toc progress').count(), 0);
     assert.equal(await page.locator('#kuis [data-quiz="form"]').isVisible(), true);
     await role('reset-code').click();
     assert.equal(await page.evaluate(() => window.monaco.editor.getModel(window.monaco.Uri.parse('file:///workspaces/bab1-status-air/main.py')).getValue()), chapterOneStarter);
@@ -255,6 +354,7 @@ try {
         await inspectInstructionLayout(width);
         const editorsFit = await page.locator('.oopy-monaco-editor').evaluateAll((elements) => elements.every((el) => el.getBoundingClientRect().right <= innerWidth + 1));
         assert.equal(editorsFit, true);
+        await inspectManualCollapse(width);
     }
     await page.emulateMedia({ reducedMotion: 'reduce' });
     assert.equal(await page.locator('.material-nav-button').evaluateAll((buttons) => buttons.every((el) => getComputedStyle(el).transitionDuration === '0s')), true);
@@ -305,7 +405,7 @@ for objek in sensor:
         await part('reset-code').click();
         assert.equal(await part('practice-percentage').textContent(), '0%');
     }
-    assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
+    assert.equal(await page.locator('.material-progress, .material-toc progress').count(), 0);
     assert.deepEqual(errors, []);
     await unlockNextChapter();
     await page.locator('.material-navigation a[rel="next"]').click();
@@ -345,6 +445,7 @@ for objek in sensor:
         assert.equal(await page.locator('.material-sidebar').evaluate((el) => el.getBoundingClientRect().right <= innerWidth + 1), true);
         await inspectSidebar(width);
         assert.equal(await page.locator('.material-navigation').evaluate((el) => el.scrollWidth <= el.clientWidth + 1), true);
+        await inspectManualCollapse(width);
     }
     const exercise = page.locator('#bab3-enkapsulasi-sensor');
     const part = (name) => exercise.locator(`[data-role="${name}"]`);
@@ -390,7 +491,7 @@ print(alat.tinggi_air)`;
     assert.equal(await part('practice-percentage').textContent(), '100%');
     assert.equal(await part('check-list').locator('li').count(), 9);
     assert.equal(await part('check-list').locator('.is-failed').count(), 0);
-    assert.equal(await page.locator('.material-progress progress').getAttribute('value'), '0');
+    assert.equal(await page.locator('.material-progress, .material-toc progress').count(), 0);
     await part('reset-code').click();
     assert.equal(await part('practice-percentage').textContent(), '0%');
     assert.equal(await part('check-results').isVisible(), false);
@@ -420,6 +521,7 @@ print(alat.tinggi_air)`;
         await page.setViewportSize({ width: 390, height: 900 });
         await page.evaluate(() => scrollTo(0, 0));
         await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/material-mobile.png` });
+    }
     }
 } finally {
     await browser.close();

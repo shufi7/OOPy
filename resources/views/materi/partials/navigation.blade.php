@@ -54,13 +54,6 @@
                     @endif
                 </ol>
             </nav>
-            <div class="material-progress">
-                <div class="material-progress-heading">
-                    <i class="bi bi-bar-chart" aria-hidden="true"></i>
-                    <strong id="chapter-progress-label">Progres {{ $chapter['bab'] }}</strong>
-                </div>
-                <progress value="0" max="100" aria-labelledby="chapter-progress-label">0%</progress>
-            </div>
         </div>
     </details>
 </aside>

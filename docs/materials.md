@@ -25,16 +25,16 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 - `resources/views/materi/partials/quiz.blade.php`: struktur aktivitas kuis dan hasil.
 - `public/js/oopy-quiz.js`: pilihan jawaban, navigasi, hasil agregat, kelulusan,
   progres browser dan Coba Lagi.
-- `resources/views/materi/partials/navigation.blade.php`: daftar isi dan progres.
+- `resources/views/materi/partials/navigation.blade.php`: daftar isi sidebar.
 - `resources/views/materi/partials/section.blade.php`: paragraf, contoh kode, catatan
   serta lokasi opsional komponen Live Coding pada setiap bagian materi.
 - `public/css/oopy/material/index.css`: card pada halaman daftar materi.
 - `public/css/oopy/material/material.css`: struktur artikel, bagian materi dan navigasi antar-BAB.
-- `public/css/oopy/material/navigation.css`: sidebar, daftar isi dan progres BAB.
+- `public/css/oopy/material/navigation.css`: sidebar dan daftar isi BAB.
 - `public/css/oopy/material/code.css`: contoh kode Python dan tema token Prism.
 - `public/css/oopy/material/quiz.css`: form dan kartu hasil agregat kuis.
-- `public/js/oopy-material.js`: menu mobile, penanda bagian aktif, auto-open grup
-  aktif dan fokus anchor.
+- `public/js/oopy-material.js`: menu mobile, penanda bagian aktif, pembukaan grup
+  tujuan navigasi dan fokus anchor.
 
 Layout aplikasi memuat `public/css/oopy/base.css`, `layout.css` dan `navbar.css`,
 diikuti `@stack('styles')`. Beranda menambahkan `home.css` melalui `@push`.
@@ -84,7 +84,8 @@ Sidebar memakai hierarki **BAB → kelompok → submateri**, dengan label BAB ke
 judul 18px, label kelompok 15px, dan submateri 14px. Urutannya adalah Tujuan
 Pembelajaran, Pendahuluan (Apersepsi), Materi BAB, Penutup (Rangkuman/Refleksi),
 lalu Kuis BAB. Semua anchor tetap tersedia tepat sekali; judul dan urutan artikel
-tidak berubah. Progres tetap memakai bar existing dengan jarak yang lebih compact.
+tidak berubah. Sidebar berakhir pada tautan Kuis BAB dengan padding bawah yang
+ringkas, tanpa judul atau bar progres BAB.
 
 Materi dan Penutup memakai native `<details>/<summary>` dan tertutup pada awal
 halaman agar sidebar ringkas. Kelompok kosong tidak ditampilkan. Summary mendukung
@@ -109,16 +110,17 @@ alur Pendahuluan → Materi → Penutup saat menambah BAB.
 
 Link aktif tetap memakai `aria-current="location"`, latar `--oopy-selected`, dan
 garis kiri primary. Bullet pada semua item telah dihapus; garis submenu menunjukkan
-indentasi. JavaScript membuka parent grup ketika section aktif berubah lewat
-scroll, klik anchor, atau direct link seperti `#percabangan`/`#rangkuman`. Grup
-yang memuat link aktif tetap terbuka agar posisi baca tidak tersembunyi.
+indentasi. JavaScript membuka parent grup saat klik anchor, direct link seperti
+`#percabangan`/`#rangkuman`, perubahan hash, atau navigasi Back/Forward. Pengguna
+tetap dapat menutup grup yang memuat link aktif; scroll dan resize memperbarui
+penanda aktif tanpa mengubah pilihan collapse native `<details>`.
 
 Desktop mempertahankan sidebar sticky pada 24px dan lebar layout existing.
 Panel hanya bergulir vertikal bila melebihi viewport, dengan scrollbar tipis.
 Di bawah 992px, menu luar tertutup pada awal halaman dan menampilkan **Daftar Isi
 BAB**; ketika dibuka, struktur kelompoknya sama. Membuka grup aktif tidak membuka
 menu mobile secara otomatis. Indentasi mobile dikurangi dan link minimal 44px
-agar nyaman disentuh. Quiz, Live Coding, progres dan navigasi bawah tidak berubah.
+agar nyaman disentuh. Quiz, Live Coding, progres kuis dan navigasi bawah tidak berubah.
 
 ## Menggunakan template untuk BAB berikutnya
 
@@ -320,9 +322,8 @@ membuka Next. Jumlah benar dari storage harus integer dalam rentang 0–5.
 
 ## Batasan tahap ini
 
-- Progres BAB ditampilkan sebagai judul dan bar tanpa kartu atau teks keterangan.
-  Bar tetap kosong. Tidak
-  mengikuti skor Submit, tidak disimpan ke browser maupun server.
+- Sidebar tidak menampilkan judul atau bar progres BAB. Progres kuis di browser
+  dan progres latihan Live Coding tetap tersedia pada fitur masing-masing.
 - Latihan status_air BAB 1, Spesies dan SensorAir BAB 2, serta enkapsulasi BAB 3 memakai komponen
   Monaco/Pyodide yang sama dari CDN. Materi teks dan contoh
   `<pre><code>` tetap dapat dibaca ketika editor belum siap.
@@ -334,7 +335,7 @@ membuka Next. Jumlah benar dari storage harus integer dalam rentang 0–5.
   ditampilkan pada UI; explanation tetap di data PHP dan tidak dikirim.
   Tidak ada backend progres atau penyimpanan nilai. Setelah login/dashboard dan
   progres backend tersedia, gating dapat dipindahkan ke server. Status kuis tidak
-  mengubah bar progres materi maupun hasil Live Coding.
+  mengubah hasil Live Coding.
 - Hanya BAB 1–3 yang memiliki detail. Tidak ada autentikasi, database materi,
   dashboard, atau perubahan pada engine Live Coding, navbar, footer, dan Beranda.
 
@@ -356,7 +357,8 @@ ketiga kuis, render Live Coding, serta regresi Beranda dan `/editor`.
 Sidebar juga diperiksa untuk kelompok Materi/Penutup, state awal tertutup,
 metadata `nav_title` dan fallback, judul artikel yang tetap lengkap, serta semua
 anchor yang tetap unik dan berurutan. Tes browser memeriksa collapse/expand dengan
-Enter/Space, focus-visible, auto-open parent aktif, `aria-current`, direct link
+Enter/Space, focus-visible, collapse manual selama scroll/resize, `aria-current`,
+pembukaan grup tujuan klik/hash/Back/Forward, direct link
 `#percabangan`/`#rangkuman`, serta native navigasi tanpa JavaScript. Sidebar mobile
 yang dibuka dan seluruh submenu turut diperiksa tanpa horizontal overflow pada
 320/390/768/1024/1440px.
@@ -373,6 +375,7 @@ $env:CACHE_STORE = 'array'
 php artisan serve --host=127.0.0.1 --port=8017 --no-reload
 # Terminal terpisah:
 node tests/browser/material.mjs
+node tests/browser/material.mjs --sidebar-only
 node tests/browser/quiz.mjs
 node tests/browser/live-code.mjs
 node tests/browser/visual.mjs
@@ -380,7 +383,7 @@ node tests/browser/visual.mjs
 
 Atur `OOPY_BROWSER=chrome` jika menggunakan Chrome dan `OOPY_BASE_URL` jika alamat
 server berbeda. Tes memeriksa alur Beranda → Materi → BAB 1, navigasi/fokus pada
-390/768/1024/1440px, Run/Submit/Reset, progres BAB terpisah dari skor latihan,
+390/768/1024/1440px, Run/Submit/Reset, sidebar tanpa bar progres BAB,
 deep link mobile, dan navigasi tanpa JavaScript. Untuk BAB 2, tes juga memeriksa
 320px, Refleksi/fokus, Prism, navigasi dua arah, reduced motion, satu worker/loader,
 dan Submit starter/salah/benar serta Reset pada kedua latihan.
