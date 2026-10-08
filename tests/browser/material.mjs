@@ -167,7 +167,7 @@ try {
             }
         }
         assert.deepEqual(errors, []);
-        console.log('PASS: sidebar regression and deep links for BAB 1–5 at all five viewport widths; no page errors');
+        console.log('PASS: sidebar regression and deep links for BAB 1–6 at all five viewport widths; no page errors');
     } else {
     await page.addInitScript(() => {
         const NativeWorker = window.Worker;
@@ -184,7 +184,7 @@ try {
     await page.waitForURL(`${base}/materi`);
     assert.equal(await page.locator('.materi-card').count(), 6);
     assert.equal(await page.locator('.materi-card a').count(), chapters.length);
-    assert.equal(await page.getByText('Segera hadir', { exact: true }).count(), 1);
+    assert.equal(await page.getByText('Segera hadir', { exact: true }).count(), 0);
     await page.getByRole('link', { name: /Pelajari BAB 1/ }).click();
     await page.waitForURL(`${base}${chapterPath}`);
     await waitReady();
@@ -525,7 +525,7 @@ print(alat.tinggi_air)`;
             assert.equal(await page.locator('[data-quiz-next-link]').getAttribute('href'), `${base}/materi/${chapter.next}`);
             assert.equal(await page.locator('[data-quiz-next-link]').isVisible(), false);
         }
-        assert.equal(await page.locator('a[href$="/materi/kelas-abstrak"]').count(), 0);
+        assert.equal(await page.locator('a[href$="/materi/bab-7"]').count(), 0);
         assert.equal(await page.locator('.material-navigation a[href$="/materi"]').isVisible(), true);
         assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
         assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
@@ -542,7 +542,7 @@ print(alat.tinggi_air)`;
         assert.deepEqual(errors, []);
         console.log(`PASS: ${chapter.slug}: navigation, instructions, unique IDs, responsive sidebar, one worker/loader`);
     }
-    // The last available chapter passes normally without creating a BAB 6 link.
+    // BAB 6 passes normally without creating a link to another chapter.
     const finalQuestions = JSON.parse(await page.locator('[data-quiz="questions"]').textContent());
     for (const question of finalQuestions) {
         if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(question.answer);
@@ -551,14 +551,10 @@ print(alat.tinggi_air)`;
     }
     assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
     assert.equal(await page.locator('[data-quiz="continue"], .material-navigation [rel="next"]').count(), 0);
-    await page.locator('.material-navigation a[rel="prev"]').click();
-    await page.waitForURL(`${base}/materi/pewarisan`);
-    await page.locator('.material-navigation a[rel="prev"]').click();
-    await page.waitForURL(`${base}/materi/enkapsulasi`);
-    await page.locator('.material-navigation a[rel="prev"]').click();
-    await page.waitForURL(`${base}/materi/kelas-dan-objek`);
-    await page.locator('.material-navigation a[rel="prev"]').click();
-    await page.waitForURL(`${base}${chapterPath}`);
+    for (const chapter of chapters.slice(0, -1).reverse()) {
+        await page.locator('.material-navigation a[rel="prev"]').click();
+        await page.waitForURL(`${base}/materi/${chapter.slug}`);
+    }
     console.log('PASS: BAB 1/2 navigation; conditional reflection; instruction titles/tasks/tokens and responsive hierarchy; BAB 2 layout at 320/390/768/1024/1440px; unique IDs, Prism, focus/reduced motion, one worker/loader; incomplete/wrong/correct/reset exercises');
 
     if (process.env.OOPY_SCREENSHOT_DIR) {

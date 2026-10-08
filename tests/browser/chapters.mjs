@@ -4,7 +4,8 @@ export const chapters = [
     { slug: 'kelas-dan-objek', previous: 'dasar-pemrograman-oop', next: 'enkapsulasi' },
     { slug: 'enkapsulasi', previous: 'kelas-dan-objek', next: 'pewarisan' },
     { slug: 'pewarisan', previous: 'enkapsulasi', next: 'polimorfisme' },
-    { slug: 'polimorfisme', previous: 'pewarisan', next: null },
+    { slug: 'polimorfisme', previous: 'pewarisan', next: 'kelas-abstrak' },
+    { slug: 'kelas-abstrak', previous: 'polimorfisme', next: null },
 ];
 
 const inheritance = `class Ekosistem:
@@ -46,6 +47,25 @@ class SensorKekeruhan:
 sensor = [SensorPH(), SensorSuhu(), SensorTinggiAir(), SensorKekeruhan()]
 for item in sensor:
     print(item.status())`;
+
+const abstractSensors = `from abc import ABC, abstractmethod
+
+class AlatPantau(ABC):
+    @abstractmethod
+    def baca(self):
+        pass
+
+class SensorTinggiAir(AlatPantau):
+    def baca(self):
+        return 128
+
+class SensorSuhu(AlatPantau):
+    def baca(self):
+        return 29.5
+
+sensor = [SensorTinggiAir(), SensorSuhu()]
+for item in sensor:
+    print(item.baca())`;
 
 export const exercises = [
     {
@@ -105,6 +125,42 @@ for item in sensor:
             { source: sensors.replace('    print(item.status())', '    if type(item) is SensorPH:\n        print(item.status())\n    else:\n        print(item.status())'), label: /melalui satu loop/ },
             { source: sensors.replace('    print(item.status())', '    if item.__class__.__name__ == "SensorPH":\n        print(item.status())\n    else:\n        print(item.status())'), label: /melalui satu loop/ },
             { source: sensors.replace('    print(item.status())', '    kind = type(item)\n    if kind is SensorPH:\n        print(item.status())\n    else:\n        print(item.status())'), label: /melalui satu loop/ },
+        ],
+    },
+    {
+        slug: 'kelas-abstrak', id: 'bab6-kelas-abstrak-alat-pantau', checks: 9,
+        solution: abstractSensors, output: /128\s+29\.5/,
+        alternatives: [
+            abstractSensors.replace('return 128', 'return 0').replace('return 29.5', 'return 21.75'),
+            abstractSensors.replace('return 128', 'return "Tinggi air: 128 cm"').replace('return 29.5', 'return "Suhu: 29.5 C"'),
+            abstractSensors.replaceAll('sensor', 'alat_pantau')
+                .replace('for item in alat_pantau:\n    print(item.baca())', 'for index, device in enumerate(alat_pantau):\n    print(device.baca())'),
+            abstractSensors.replace('for item in sensor:\n    print(item.baca())', 'print([device.baca() for device in sensor])'),
+            abstractSensors.replace('for item in sensor:\n    print(item.baca())', 'def tampilkan(device):\n    print(device.baca())\nfor device in sensor:\n    tampilkan(device)'),
+            abstractSensors.replace('class SensorTinggiAir(AlatPantau):', 'class SensorTinggiAir(AlatPantau):\n    def __init__(self, nilai):\n        self.nilai = nilai')
+                .replace('return 128', 'return self.nilai').replace('SensorTinggiAir(),', 'SensorTinggiAir(128),'),
+            abstractSensors.replace('class SensorSuhu(AlatPantau):', 'class PembacaSuhu(AlatPantau):')
+                .replace('sensor = [', 'class SensorSuhu(PembacaSuhu):\n    pass\n\nsensor = ['),
+        ],
+        incorrect: [
+            { source: abstractSensors.replace('    @abstractmethod\n', ''), label: /benar-benar abstrak/ },
+            { source: abstractSensors.replace('class AlatPantau(ABC):', 'class AlatPantau:').replace('    @abstractmethod\n', ''), label: /merupakan ABC/ },
+            { source: abstractSensors.replace('class SensorSuhu(AlatPantau):\n    def baca(self):\n        return 29.5', 'class SensorSuhu(AlatPantau):\n    pass')
+                .replace('sensor = [SensorTinggiAir(), SensorSuhu()]', 'try:\n    sensor = [SensorTinggiAir(), SensorSuhu()]\nexcept TypeError:\n    sensor = []'), label: /subclass konkret/ },
+            { source: abstractSensors.replace('class SensorSuhu(AlatPantau):', 'class SensorSuhu:'), label: /SensorSuhu mewarisi/ },
+            ...['None', '"   "', 'True', 'float("nan")', 'float("inf")', '128'].map((value) => ({
+                source: abstractSensors.replace('return 29.5', `return ${value}`), label: /bermakna dan berbeda/,
+            })),
+            { source: abstractSensors.replace('sensor = [SensorTinggiAir(), SensorSuhu()]', 'sensor = [SensorTinggiAir()]'), label: /disimpan dalam satu list/ },
+            { source: abstractSensors.replace('sensor = [SensorTinggiAir(), SensorSuhu()]', 'sensor = (SensorTinggiAir(), SensorSuhu())'), label: /disimpan dalam satu list/ },
+            { source: abstractSensors.replace('for item in sensor:\n    print(item.baca())', 'print(sensor[0].baca())\nprint(sensor[1].baca())'), label: /melalui loop baca/ },
+            { source: abstractSensors.replace('for item in sensor:', 'for item in []:'), label: /melalui loop baca/ },
+            { source: abstractSensors.replace('for item in sensor:', 'for item in sensor[:1]:'), label: /melalui loop baca/ },
+            { source: abstractSensors.replace('for item in sensor:\n    print(item.baca())', 'if False:\n    for item in sensor:\n        print(item.baca())'), label: /melalui loop baca/ },
+            { source: abstractSensors.replace('    print(item.baca())', '    print("baca()")'), label: /melalui loop baca/ },
+        ],
+        runtimeErrors: [
+            { source: abstractSensors.replace('        return 29.5', '        pass\n    baca = AlatPantau.baca'), error: /TypeError.*abstract/s },
         ],
     },
 ];

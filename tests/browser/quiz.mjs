@@ -113,7 +113,7 @@ try {
         assert.equal(await part('results').isVisible(), false);
         await assertGate(false, hasNext);
         if (hasNext) assert.equal(await page.locator('[data-quiz-next-link]').getAttribute('href'), `${base}/materi/${nextSlug}`);
-        assert.equal(await page.locator('a[href$="/materi/kelas-abstrak"]').count(), 0);
+        assert.equal(await page.locator('a[href$="/materi/bab-7"]').count(), 0);
         await assertNoFeedback();
         await assertLayout(`${slug}-form`);
         const originalOutput = await page.locator('[data-role="code-output"]').first().textContent();

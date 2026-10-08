@@ -258,4 +258,18 @@ materi/sidebar/kuis/Live Coding/visual lulus di Edge headless dengan CDN asli.
 Starter BAB 4 mendapat 25%, BAB 5 mendapat 29%; solusi benar dan alternatif
 mendapat 100%. Sintaks JavaScript, `git diff --check`, serta Pint `--test --dirty`
 juga lulus. Rincian perintah dan keterbatasan lingkungan dicatat dalam
-[hasil verifikasi materi](materials.md#hasil-verifikasi-integrasi--8-oktober-2026).
+[hasil verifikasi materi](materials.md).
+
+BAB 6 memakai `bab6-kelas-abstrak-alat-pantau` dengan satu main.py dan sembilan
+check: ABC asli, abstract method, penolakan instansiasi, dua relasi inheritance,
+subclass konkret, hasil baca() bermakna/berbeda, list object dan loop yang dijalankan.
+Nama list bebas; constructor dengan argument, helper, enumerate, comprehension
+dan implementasi yang diwarisi tetap diterima jika kontrak terpenuhi. Starter
+valid secara sintaks mendapat 56%; solusi benar/alternatif mendapat 100%.
+Instruksi sembilan langkah tampil sebelum editor, dengan eksplorasi TypeError
+dan pemulihan baca() sesudah editor. Engine/worker/editor existing dipertahankan.
+
+Verifikasi implementasi BAB 6: 29 tes Laravel (1011 assertions), 10 tes Node
+(55 skenario checker dan empat contoh materi), seluruh lima perintah browser,
+sintaks JavaScript, Pint --test --dirty dan git diff --check lulus. Rincian
+eksekusi serta batasan sumber DOCX tersedia di dokumentasi materi tersebut.

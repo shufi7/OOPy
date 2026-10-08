@@ -16,17 +16,12 @@ class MateriTest extends TestCase
         $response->assertSee(route('materi.show', 'enkapsulasi'))->assertSee('Pelajari BAB 3');
         $this->get('/materi/kelas-dan-objek')->assertOk();
         $this->get('/materi/enkapsulasi')->assertOk();
-        foreach (['pewarisan', 'polimorfisme'] as $slug) {
+        foreach (['pewarisan', 'polimorfisme', 'kelas-abstrak'] as $slug) {
             $response->assertSee(route('materi.show', $slug));
             $this->get('/materi/'.$slug)->assertOk();
         }
-        $this->assertSame(5, substr_count($response->getContent(), '<span>Pelajari BAB'));
-        $this->assertSame(1, substr_count($response->getContent(), 'Segera hadir'));
-
-        foreach (['kelas-abstrak'] as $slug) {
-            $response->assertDontSee(route('materi.show', $slug));
-            $this->get('/materi/'.$slug)->assertNotFound();
-        }
+        $this->assertSame(6, substr_count($response->getContent(), '<span>Pelajari BAB'));
+        $this->assertSame(0, substr_count($response->getContent(), 'Segera hadir'));
     }
 
     public function test_chapter_has_breadcrumb_sections_and_safe_navigation(): void
@@ -68,6 +63,7 @@ class MateriTest extends TestCase
     {
         $this->get('/materi/tidak-ada')->assertNotFound();
         $this->get('/materi/dasar-pemrograman-oop.php')->assertNotFound();
+        $this->get('/materi/kelas-abstrak.php')->assertNotFound();
     }
 
     public function test_available_chapters_share_the_template_and_have_one_dynamic_footer_navigation(): void
@@ -78,7 +74,8 @@ class MateriTest extends TestCase
             'kelas-dan-objek' => ['dasar-pemrograman-oop', 'enkapsulasi'],
             'enkapsulasi' => ['kelas-dan-objek', 'pewarisan'],
             'pewarisan' => ['enkapsulasi', 'polimorfisme'],
-            'polimorfisme' => ['pewarisan', null],
+            'polimorfisme' => ['pewarisan', 'kelas-abstrak'],
+            'kelas-abstrak' => ['polimorfisme', null],
         ];
         foreach ($neighbors as $slug => [$previous, $next]) {
             $content = require resource_path('materi/'.$chapters[$slug]['content']);
@@ -104,7 +101,7 @@ class MateriTest extends TestCase
                     $this->assertSame(route('materi.show', $target), $xpath->query($navigation.'/a[@rel="'.$relation.'"]')->item(0)->getAttribute('href'));
                 }
             }
-            $response->assertDontSee(route('materi.show', 'kelas-abstrak'));
+            $response->assertDontSee(route('materi.show', 'bab-7'));
             $response->assertSee($chapters[$slug]['judul']);
             foreach ([...$content['objectives'], ...$content['summary'], ...$content['reflection']] as $text) {
                 $response->assertSee($text);
@@ -186,6 +183,7 @@ class MateriTest extends TestCase
             'enkapsulasi' => ['@property', '@tinggi_air.setter'],
             'pewarisan' => ['Ekosistem', 'super().__init__(nama, lokasi)'],
             'polimorfisme' => ['status', 'info'],
+            'kelas-abstrak' => ['@abstractmethod', 'abc'],
         ];
         foreach ($answers as $slug => $codeAnswers) {
             $response = $this->get('/materi/'.$slug)->assertOk();
@@ -289,6 +287,58 @@ class MateriTest extends TestCase
             ->assertSee('bukan data hasil pengukuran lapangan');
         $this->assertSame('pewarisan', $response->viewData('nextChapter')['slug']);
         $this->assertSame('kelas-dan-objek', $response->viewData('previousChapter')['slug']);
+    }
+
+    public function test_abstract_chapter_matches_the_learning_contract_and_renders_examples(): void
+    {
+        $response = $this->get('/materi/kelas-abstrak')->assertOk()->assertViewIs('materi.show');
+        $content = $response->viewData('content');
+        $this->assertSame('Menyatakan kontrak perilaku minimum ketika desain memerlukannya.', $content['description']);
+        $this->assertSame([
+            'Menjelaskan perbedaan class konkret dan abstract base class.',
+            'Menggunakan ABC dan abstractmethod dari modul abc.',
+            'Membuat subclass konkret yang memenuhi abstract method.',
+            'Menggabungkan ABC dengan inheritance dan polimorfisme.',
+            'Menjelaskan bahwa ABC bersifat pilihan desain dalam Python, bukan syarat untuk semua polimorfisme.',
+        ], $content['objectives']);
+        $this->assertSame(['apersepsi', 'membuat-abstract-base-class', 'abstract-method-method-konkret', 'kapan-abc-digunakan', 'ayo-coba-kelas-abstrak', 'ayo-berlatih-kelas-abstrak'], array_column($content['sections'], 'id'));
+        $this->assertCount(5, $content['summary']);
+        $this->assertCount(3, $content['reflection']);
+        $sections = array_column($content['sections'], null, 'id');
+        $this->assertCount(3, $sections['ayo-berlatih-kelas-abstrak']['practice']);
+        $this->assertCount(9, $sections['ayo-coba-kelas-abstrak']['instructions']);
+        $this->assertCount(2, $sections['ayo-coba-kelas-abstrak']['exploration']);
+        $this->assertSame(['SensorPH', 'SensorSuhu'], array_column($sections['membuat-abstract-base-class']['hierarchy']['children'], 'label'));
+        $this->assertSame("OOPy\n29.5", $sections['abstract-method-method-konkret']['output']);
+        $this->assertSame([1, 3, 1], array_column(array_slice($content['quiz'], 0, 3), 'correct'));
+        foreach (['Gambar 6.1', 'Bedah Kode', 'TypeError: SensorBelumLengkap', 'Abstract method dan method konkret', 'Class Biasa vs Abstract Base Class', 'Coba sendiri: Kontrak AlatPantau'] as $text) {
+            $response->assertSee($text);
+        }
+        $this->assertSame('polimorfisme', $response->viewData('previousChapter')['slug']);
+        $this->assertNull($response->viewData('nextChapter'));
+        $dom = new DOMDocument;
+        @$dom->loadHTML('<?xml encoding="UTF-8">'.$response->getContent());
+        $xpath = new DOMXPath($dom);
+        $this->assertSame(1, $xpath->query('//*[@id="ayo-coba-kelas-abstrak"]/*[@class="material-practice"]/following-sibling::*[@data-live-code]')->length);
+        $this->assertSame(1, $xpath->query('//*[@id="ayo-coba-kelas-abstrak"]/*[@data-live-code]/following-sibling::aside[@aria-label="Eksplorasi setelah latihan"]')->length);
+    }
+
+    public function test_extended_section_examples_and_hierarchy_escape_developer_content(): void
+    {
+        $html = view('materi.partials.section', [
+            'number' => 1,
+            'section' => [
+                'id' => 'kontrak', 'title' => 'Kontrak', 'breakdown' => ['<b>Uraian</b>'],
+                'hierarchy' => ['caption' => '<img src=x>', 'label' => 'Induk', 'contract' => '<script>', 'children' => [['label' => 'Anak', 'contract' => '<b>Method</b>']]],
+                'examples' => [['title' => '<img src=x>', 'paragraphs' => ['<script>'], 'code' => '<script>', 'output' => '<b>Output</b>']],
+                'instructions' => ['<script>'], 'exploration' => ['<img src=x>'],
+            ],
+        ])->render();
+        foreach (['<img ', '<script>', '<b>'] as $markup) {
+            $this->assertStringNotContainsString($markup, $html);
+        }
+        $this->assertStringContainsString('aria-labelledby="kontrak-hierarchy-caption"', $html);
+        $this->assertStringContainsString('id="kontrak-example-0-title"', $html);
     }
 
     public function test_home_and_editor_remain_available(): void

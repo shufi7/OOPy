@@ -32,3 +32,22 @@ for (const exercise of exercises) {
         }
     });
 }
+
+test('BAB 6: every teaching example executes with the documented output', () => {
+    const php = spawnSync(process.env.OOPY_PHP || 'php', ['-d', 'display_errors=stderr', '-r',
+        "$chapter = require 'resources/materi/kelas-abstrak.php'; $examples = []; foreach ($chapter['sections'] as $section) { if (isset($section['code'], $section['output'])) { $examples[] = $section; } foreach ($section['examples'] ?? [] as $example) { $examples[] = $example; } } echo json_encode($examples);",
+    ], { encoding: 'utf8' });
+    assert.equal(php.status, 0, php.stderr);
+    const examples = JSON.parse(php.stdout);
+    assert.equal(examples.length, 4);
+    const python = spawnSync(process.env.OOPY_PYTHON || 'python', ['-c', `import contextlib, io, json, sys
+results = []
+for example in json.load(sys.stdin):
+    output = io.StringIO()
+    with contextlib.redirect_stdout(output):
+        exec(compile(example["code"], "<contoh>", "exec"), {"__name__": "__main__"})
+    results.append(output.getvalue().strip())
+json.dump(results, sys.stdout)`], { input: JSON.stringify(examples), encoding: 'utf8' });
+    assert.equal(python.status, 0, python.stderr);
+    assert.deepEqual(JSON.parse(python.stdout), examples.map((example) => example.output));
+});

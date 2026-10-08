@@ -59,13 +59,14 @@ return [
     ],
     'kelas-abstrak' => [
         'bab' => 'BAB 6',
-        'judul' => 'Kelas Abstrak',
+        'judul' => 'Kelas Abstrak (Abstract Class)',
         'content' => 'kelas-abstrak.php',
         'poin' => [
-            'Membuat Abstract Base Class (ABC)',
+            'Abstract Base Class (ABC)',
             'Abstract method dan method konkret',
-            'Kapan Abstract Base Class digunakan',
-            'Inheritance dan polimorfisme dengan ABC',
+            'Implementasi subclass konkret',
+            'ABC, inheritance, dan polimorfisme',
+            'Kapan menggunakan ABC dibandingkan duck typing',
         ],
     ],
 ];

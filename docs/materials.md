@@ -1,9 +1,9 @@
 # Halaman materi OOPy
 
-Daftar BAB tetap berada di `/materi`. BAB 1–5 tersedia melalui route `materi.show`
+Daftar BAB tetap berada di `/materi`. BAB 1–6 tersedia melalui route `materi.show`
 (`GET /materi/{slug}`): `dasar-pemrograman-oop`, `kelas-dan-objek`, `enkapsulasi`,
-`pewarisan`, dan `polimorfisme`. Daftar menampilkan lima tombol **Pelajari BAB**.
-Hanya BAB 6 (`kelas-abstrak`) berstatus **Segera hadir**, tanpa tautan detail.
+`pewarisan`, `polimorfisme`, dan `kelas-abstrak`. Daftar menampilkan enam tombol
+**Pelajari BAB**, termasuk **Pelajari BAB 6**, tanpa card Segera hadir.
 Slug yang belum
 memiliki konten atau tidak dikenal menghasilkan 404; controller hanya membaca
 filename yang tercantum dalam registry, bukan path dari URL pengguna.
@@ -24,6 +24,9 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 - `resources/materi/polimorfisme.php`: tujuan, enam bagian BAB 5, termasuk
   polimorfisme melalui inheritance, duck typing, pengurangan pemeriksaan tipe,
   Live Coding dan Ayo Berlatih; empat rangkuman, tiga refleksi.
+- `resources/materi/kelas-abstrak.php`: lima tujuan, enam bagian BAB 6, contoh
+  ABC/TypeError/method konkret/duck typing, hierarki sensor, dua tabel, Live Coding,
+  tiga latihan mandiri, lima rangkuman, tiga refleksi dan kuis 3 PG + 2 isian kode.
 - `app/Http/Controllers/MateriController.php`: `index()` untuk daftar dan `show()`
   untuk detail yang terdaftar, tanpa query database.
 - `resources/views/materi/show.blade.php`: breadcrumb, header, konten BAB,
@@ -61,7 +64,7 @@ Live Coding berada di akhir 1.7, lalu tiga aktivitas Ayo Berlatih berupa latihan
 mandiri (list/for, klasifikasi suhu, rata-rata), tanpa editor tambahan.
 Ilustrasi transisi prosedural ke OOP dijelaskan melalui teks karena asset modul
 belum tersedia. Batas tinggi air/pH adalah angka latihan, bukan standar ilmiah.
-BAB 1–5 memiliki Refleksi sesudah Rangkuman dan sebelum Kuis BAB. Sidebar memakai
+BAB 1–6 memiliki Refleksi sesudah Rangkuman dan sebelum Kuis BAB. Sidebar memakai
 urutan data section yang sama dengan artikel; link Refleksi hanya muncul jika
 `reflection` berisi pertanyaan. Tidak ada jumlah section yang diwajibkan antar-BAB.
 Sidebar sticky pada lebar minimal 992px. Di bawahnya, daftar isi menggunakan
@@ -81,12 +84,13 @@ juga divalidasi.
 Rujukan konsep Python: [konvensi non-public dan name mangling](https://docs.python.org/3/tutorial/classes.html#private-variables)
 serta [property dan setter](https://docs.python.org/3/library/functions.html#property).
 
-Navigasi otomatis mengikuti registry: BAB 1 → BAB 2 → BAB 3 → BAB 4 → BAB 5.
+Navigasi otomatis mengikuti registry: BAB 1 → BAB 2 → BAB 3 → BAB 4 → BAB 5 → BAB 6.
 BAB 3 memiliki Previous ke BAB 2 dan Next ke BAB 4; BAB 4 memiliki Previous ke
 BAB 3 dan Next ke BAB 5. Next terkunci sebelum kuis lulus (minimal 4/5 benar).
-BAB 5 memiliki Previous ke BAB 4 dan tautan ke daftar materi, tanpa Next/CTA ke
-BAB 6, termasuk setelah lulus. Controller dan routing existing sudah mendukung
-alur ini; direct URL BAB 4/5 tetap HTTP 200 tanpa progres tersimpan.
+BAB 5 memiliki Previous ke BAB 4 dan Next/CTA ke BAB 6 yang terbuka setelah
+kuis lulus. BAB 6 memiliki Previous ke BAB 5 dan kembali ke daftar materi,
+tanpa Next/CTA karena belum ada BAB lanjutan. Controller dan routing existing
+mendukung alur ini; direct URL seluruh BAB tetap HTTP 200 tanpa progres tersimpan.
 
 ## Sidebar navigasi BAB
 
@@ -158,8 +162,14 @@ agar nyaman disentuh. Quiz, Live Coding, progres kuis dan navigasi bawah tidak b
 
 Urutan pembelajaran: Tujuan → Apersepsi (section opsional) → konsep/contoh/bedah
 kode → aktivitas Live Coding → Rangkuman → Refleksi (opsional) → Kuis → navigasi.
-Section tetap mengikuti urutan data. BAB 4/5 memakai template yang sama;
-BAB 6 belum mempunyai file konten dalam registry.
+Section tetap mengikuti urutan data. BAB 1–6 memakai template yang sama.
+Entry kelas-abstrak memuat kelas-abstrak.php; tidak ada route atau view BAB khusus.
+
+BAB 6 menambahkan field opsional `breakdown` (list Bedah Kode), `hierarchy`
+(caption, label, contract, children), `examples` (title, paragraphs, code, output),
+`instructions` (langkah bernomor sebelum editor), dan `exploration` (catatan sesudah
+editor). Partial section memakai gaya existing, HTML semantik dan escaping Blade.
+Field yang tidak disediakan tidak dirender sehingga struktur BAB 1–5 tetap sama.
 
 Semua konten adalah data yang ditulis developer. Blade melakukan escaping pada
 teks dan kode; tidak perlu memasukkan HTML ke dalam file data.
@@ -250,6 +260,62 @@ ditolak; pemakaian type() untuk debugging di luar percabangan tetap diperbolehka
 Starter mendapat 29%; solusi benar mendapat 100%. Run/Submit/Reset, feedback,
 persentase dan batas runtime memakai engine yang sama dengan BAB 1–3.
 
+### BAB 6 — Kelas Abstrak (Abstract Class)
+
+Deskripsi BAB: **Menyatakan kontrak perilaku minimum ketika desain memerlukannya.**
+Dokumen OOPy_Modul_Ajar_FINAL(2).docx tidak tersedia dalam workspace; materi
+mengikuti spesifikasi lengkap BAB 6 dalam permintaan implementasi.
+
+Lima tujuan pembelajaran: membedakan class konkret dan ABC; memakai ABC dan
+abstractmethod dari abc; membuat subclass konkret; menggabungkan ABC dengan
+inheritance/polimorfisme; serta memahami bahwa ABC adalah pilihan desain,
+bukan syarat semua polimorfisme. Enam section berurutan:
+
+1. `apersepsi`: sensor pH, suhu dan tinggi air pada lahan basah Kalimantan Selatan,
+   dikaitkan dengan inheritance BAB 4 dan polimorfisme BAB 5.
+2. `membuat-abstract-base-class`: class konkret/abstrak, modul abc, decorator,
+   contoh SensorLingkungan → SensorPH (output 7.1), Bedah Kode dan hierarki
+   SensorPH/SensorSuhu sebagai representasi semantik Gambar 6.1. Contoh tambahan
+   menangkap TypeError pada ABC/subclass yang belum lengkap dan menjelaskan
+   bahwa error itu diharapkan.
+3. `abstract-method-method-konkret`: sumber() diwarisi, baca() diimplementasikan
+   SensorSuhu; output OOPy dan 29.5, beserta tabel perbandingan kedua jenis method.
+4. `kapan-abc-digunakan`: manfaat/batasan kontrak eksplisit, tabel Class Biasa vs
+   ABC, contoh duck typing tanpa ABC dengan output simulasi/pengamatan manual.
+5. `ayo-coba-kelas-abstrak`: sembilan langkah, komponen Live Coding dan eksplorasi
+   menghapus/pemulihan baca() setelah editor.
+6. `ayo-berlatih-kelas-abstrak`: LaporanAir/LaporanHabitat, method konkret sumber(),
+   dan pemilihan duck typing beserta alasan desain.
+
+ABC memeriksa pemenuhan method abstrak, bukan otomatis membuktikan kebenaran
+hasilnya. Abstract method boleh memiliki body. Mewarisi ABC tanpa abstract method
+yang belum terpenuhi tidak otomatis melarang instansiasi. Angka sensor adalah
+data simulasi latihan dan tidak menyatakan ambang ilmiah kondisi lingkungan.
+
+Live Coding **Coba sendiri: Kontrak AlatPantau** memakai ID
+`bab6-kelas-abstrak-alat-pantau`, satu main.py, Monaco/Pyodide dan engine existing.
+Starter valid secara sintaks, bisa Run tanpa error, dan masih memiliki tiga pass.
+Sembilan pemeriksaan menilai:
+
+1. AlatPantau mewarisi ABC Python dan masih abstrak.
+2. baca() benar-benar tercatat sebagai abstract method, bukan teks decorator saja.
+3. Instansiasi ABC dan subclass yang belum lengkap ditolak dengan TypeError;
+   exception yang diharapkan ditangani dalam checker.
+4. SensorTinggiAir mewarisi AlatPantau.
+5. SensorSuhu mewarisi AlatPantau.
+6. Kedua subclass konkret, menyediakan baca(), dan object dapat dibuat.
+7. Hasil baca() berupa angka terbatas (termasuk 0) atau teks sensor tidak kosong,
+   serta berbeda. None, bool, NaN, infinity dan string kosong ditolak.
+8. Satu object tiap subclass disimpan dalam satu list dengan nama variabel bebas.
+9. Loop yang dijalankan benar-benar memanggil baca() pada kedua object.
+
+Checker memakai introspeksi dan AST/replay dalam workspace virtual existing,
+dengan output replay disembunyikan. Alias list, enumerate, comprehension,
+helper, constructor berargument dan implementasi yang diwarisi dari subclass
+konkret diterima. Tidak ada string hasil atau angka pengukuran tunggal yang
+diwajibkan. Loop mati/kosong/yang hanya membaca satu object gagal. Starter mendapat
+56%; solusi benar/alternatif mendapat 100%. Runtime dan jumlah worker tidak berubah.
+
 ## Kuis interaktif
 
 BAB 1 memiliki lima soal sesuai modul: tipe float, argument, gagasan OOP,
@@ -264,6 +330,11 @@ BAB 4 menguji superclass, super(), relasi has-a, deklarasi `Ekosistem`, dan
 `super().__init__(nama, lokasi)`. BAB 5 menguji polimorfisme, duck typing,
 fleksibilitas pemanggil, overriding `status`, dan pemanggilan `info` melalui loop.
 Seluruh BAB tersedia memakai engine kuis existing dan standar kelulusan yang sama.
+BAB 6 memakai soal ABC untuk kontrak eksplisit (B), class abstrak tidak dapat
+diinstansiasi secara normal (D), ABC tidak wajib untuk semua polimorfisme (B),
+serta isian `@abstractmethod` dan `abc`. Explanation tetap tersedia di data PHP
+dan disaring dari JSON UI sesuai engine existing. Lulus BAB 6 menampilkan
+Evaluasi selesai tanpa Next; retry/refresh tetap mempertahankan hasil terbaik.
 Data berasal dari array `quiz` di file materi masing-masing BAB dan
 diserialisasi sebagai JSON oleh Blade. Schema data tetap mempertahankan `correct`,
 `answer`, dan `explanation`; `explanation` disaring sebelum dikirim ke halaman.
@@ -302,7 +373,7 @@ berlabel menggantikan radio pada soal code-fill. Jawaban dinormalisasi dengan
 `return`. Input kosong atau hanya spasi belum dihitung sebagai jawaban.
 Jawaban teks tetap tersimpan saat berpindah soal dan dihapus saat Coba Lagi atau
 refresh. Hasil tidak menampilkan jawaban pengguna, kunci, atau pembahasan soal.
-BAB 1–5 memakai engine campuran yang sama. Code-fill juga dapat berupa assignment
+BAB 1–6 memakai engine campuran yang sama. Code-fill juga dapat berupa assignment
 atau decorator, bukan hanya satu kata. Isi setelah trim harus sama dengan `answer`;
 soal assignment BAB 2 meminta satu spasi di kedua sisi tanda `=` agar format jelas.
 
@@ -376,7 +447,7 @@ membuka Next. Jumlah benar dari storage harus integer dalam rentang 0–5.
   Tidak ada backend progres atau penyimpanan nilai. Setelah login/dashboard dan
   progres backend tersedia, gating dapat dipindahkan ke server. Status kuis tidak
   mengubah hasil Live Coding.
-- BAB 1–5 memiliki detail; BAB 6 masih Segera hadir. Tidak ada autentikasi, database materi,
+- BAB 1–6 memiliki detail. Belum ada BAB lanjutan, autentikasi, database materi,
   dashboard, atau perubahan pada engine Live Coding, navbar, footer, dan Beranda.
 
 ## Pengujian
@@ -391,9 +462,9 @@ php vendor/bin/pint --test resources/materi/enkapsulasi.php
 git diff --check
 ```
 
-Tes `MateriTest` mencakup BAB 1–5, tautan valid, 404 BAB 6/slug tidak dikenal, satu navigasi akhir,
+Tes `MateriTest` mencakup BAB 1–6, tautan valid, 404 slug tidak dikenal, satu navigasi akhir,
 urutan section/sidebar, refleksi kosong/hilang/terisi, array opsional, ID unik,
-kelima kuis, render Live Coding, serta regresi Beranda dan `/editor`.
+keenam kuis, render Live Coding, serta regresi Beranda dan `/editor`.
 Sidebar juga diperiksa untuk kelompok Materi/Penutup, state awal tertutup,
 metadata `nav_title` dan fallback, judul artikel yang tetap lengkap, serta semua
 anchor yang tetap unik dan berurutan. Tes browser memeriksa collapse/expand dengan
@@ -402,10 +473,10 @@ pembukaan grup tujuan klik/hash/Back/Forward, direct link
 `#percabangan`/`#rangkuman`, serta native navigasi tanpa JavaScript. Sidebar mobile
 yang dibuka dan seluruh submenu turut diperiksa tanpa horizontal overflow pada
 320/390/768/1024/1440px.
-`LiveCodeTest` memeriksa starter BAB 1–5, heading kontekstual, aset sekali,
+`LiveCodeTest` memeriksa starter BAB 1–6, heading kontekstual, aset sekali,
 dan seluruh kontrak komponen sebelumnya.
-`tests/browser/chapters.mjs` menyimpan kontrak eksplisit kelima BAB dan fixture
-solusi BAB 4/5 yang digunakan bersama oleh test browser dan checker lokal.
+`tests/browser/chapters.mjs` menyimpan kontrak eksplisit keenam BAB dan fixture
+solusi BAB 4/5/6 yang digunakan bersama oleh test browser dan checker lokal.
 `node --test tests/js/*.test.js` juga menjalankan checker Python dari file materi
 terhadap starter, solusi salah dan alternatif benar. PHP dan Python perlu tersedia
 di PATH (override: `OOPY_PHP`, `OOPY_PYTHON`). Harness memakai file temporer yang
@@ -445,7 +516,7 @@ dan 0%.
 `OOPY_SCREENSHOT_DIR` opsional
 menyimpan screenshot desktop dan mobile ke direktori yang sudah ada.
 
-Tes kuis memeriksa BAB 1–5: hasil awal tersembunyi, Next terkunci, semua soal wajib
+Tes kuis memeriksa BAB 1–6: hasil awal tersembunyi, Next terkunci, semua soal wajib
 dijawab, 0–3 benar tetap terkunci, tepat 4 benar membuka Next tanpa reload, semua
 benar bernilai 100, CTA memakai URL yang sama, hasil agregat tanpa review/kunci,
 refresh setelah lulus, Coba Lagi serta kegagalan berikutnya tetap mempertahankan
@@ -464,17 +535,20 @@ Prism pada soal dan hasil agregat yang sama ketika Prism tidak tersedia.
 Jalankan perintah di atas pada environment yang menyediakan dependensi tes;
 integrasi browser memerlukan akses ke CDN Monaco dan Pyodide.
 
-Integrasi ini mempertahankan materi utama BAB 1–3, CSS, route, controller, engine
-Monaco/Pyodide, aturan kuis 80%, localStorage, dan manual collapse sidebar.
-Perubahan materi BAB 4/5 dibatasi pada checker serta pemformatan token instruksi
-BAB 5. Konfigurasi `.env` tidak diubah.
+Implementasi BAB 6 mempertahankan materi utama BAB 1–5, CSS, route, controller,
+engine Monaco/Pyodide, aturan kuis 80%, localStorage, dan manual collapse sidebar.
+Partial section hanya mendapat field opsional untuk materi BAB 6. Konfigurasi
+`.env` dan database tidak diubah; tidak ada dependency baru, commit atau push.
 
 Progres localStorage hanya berlaku pada browser dan origin yang sama, tidak
 tersinkron antarperangkat atau akun. Menghapus storage menghapus kelulusan;
 penyimpanan yang diblokir hanya mempertahankan kelulusan selama halaman terbuka.
 Hasil latihan coding dan jawaban kuis tidak dipersistenkan.
 
-## Hasil verifikasi integrasi — 8 Oktober 2026
+## Riwayat verifikasi BAB 4/5 — 8 Oktober 2026 (sebelum BAB 6)
+
+Tabel berikut mencatat eksekusi sebelum aktivasi BAB 6. Pada tahap itu BAB 5
+merupakan BAB terakhir. Hasil implementasi BAB 6 dicatat sesudah riwayat ini.
 
 | Perintah | Hasil eksekusi |
 | --- | --- |
@@ -503,3 +577,34 @@ PHP CLI masih mengeluarkan peringatan `Module "openssl" is already loaded` dari
 konfigurasi lingkungan. Peringatan tersebut tidak menggagalkan tes; konfigurasi
 PHP di luar repository tidak diubah. Tidak ada tes wajib yang belum dijalankan
 atau kegagalan fungsional yang masih terbuka pada pekerjaan ini.
+
+## Hasil verifikasi implementasi BAB 6 — 8 Oktober 2026
+
+| Perintah | Hasil eksekusi |
+| --- | --- |
+| `php artisan test` (eksekusi memakai `--compact`) | Lulus: 29 tes, 1011 assertions. |
+| `node --test tests/js/*.test.js` | Lulus: 10 tes, mencakup 55 skenario checker BAB 4/5/6 serta empat contoh Python BAB 6 dengan output yang sesuai. |
+| `node tests/browser/material.mjs` | Lulus: alur BAB 1 → 6, BAB 5 → 6 terbuka setelah 4/5 benar, BAB 6 tanpa Next, Previous kembali ke BAB 1, sidebar/layout, regresi latihan BAB 1–3. |
+| `node tests/browser/material.mjs --sidebar-only` | Lulus: 6 BAB × 5 viewport, collapse mouse/Enter/Space, scroll/resize, deep link, Back/Forward, anchor dan aria-current. |
+| `node tests/browser/quiz.mjs` | Lulus: keenam kuis, 3 PG + 2 isian, nilai 0/20/40/60/80/100, jawaban kosong/spasi, retry, refresh, skor lebih rendah, storage kosong/rusak/tidak tersedia. |
+| `node tests/browser/live-code.mjs` | Lulus: regresi engine dan BAB 4/5/6 melalui Monaco/Pyodide asli, Run/Submit/Reset, output, feedback, progres, solusi alternatif, satu worker/loader. Eksperimen TypeError BAB 6 diuji saat Run dan Submit sebelum memulihkan solusi. |
+| `node tests/browser/visual.mjs` | Lulus: 9 halaman dan seluruh enam BAB; contoh Python utama/tambahan dengan Prism, fallback saat Prism diblokir, pembacaan tanpa JavaScript, kuis dan responsivitas. |
+| `node --check public/js/oopy-material.js` | Lulus. |
+| `node --check public/js/oopy-quiz.js` | Lulus. |
+| `php vendor/bin/pint --test --dirty` | Lulus. |
+| `git diff --check` | Lulus. |
+
+Browser menggunakan Edge headless dengan akses CDN existing dan server Laravel
+lokal pada 127.0.0.1:8017. Ukuran materi/kuis/sidebar/visual adalah
+320, 390, 768, 1024 dan 1440px. Tidak ada page error JavaScript pada hasil akhir.
+BAB 6 mempunyai 26 fixture checker: starter 56%, 17 solusi salah ditolak, serta
+solusi benar dan tujuh alternatif memperoleh 100%. TypeError kontrak abstrak
+ditangani aman oleh checker; TypeError eksplorasi program ditampilkan oleh
+runtime existing tanpa menggagalkan suite.
+
+Tidak ada pengujian wajib yang belum dijalankan atau kegagalan yang masih terbuka.
+Peringatan konfigurasi PHP OpenSSL ganda tetap tidak menghambat pengujian.
+DOCX acuan tidak tersedia, sehingga kesesuaian materi didasarkan pada spesifikasi
+tertulis dalam permintaan. Kode/skor latihan belum dipersistenkan; input interaktif,
+autentikasi, sinkronisasi progres server dan BAB lanjutan belum tersedia.
+Tidak ada dependency baru, commit atau push pada implementasi ini.

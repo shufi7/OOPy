@@ -128,9 +128,9 @@ class LiveCodeTest extends TestCase
         $this->assertSame($ids[1], array_values(array_unique($ids[1])));
     }
 
-    public function test_chapters_four_and_five_embed_their_registered_exercise_contracts(): void
+    public function test_chapters_four_to_six_embed_their_registered_exercise_contracts(): void
     {
-        foreach (['pewarisan' => 'bab4-pewarisan-ekosistem', 'polimorfisme' => 'bab5-polimorfisme-sensor'] as $slug => $id) {
+        foreach (['pewarisan' => 'bab4-pewarisan-ekosistem', 'polimorfisme' => 'bab5-polimorfisme-sensor', 'kelas-abstrak' => 'bab6-kelas-abstrak-alat-pantau'] as $slug => $id) {
             $chapter = require resource_path('materi/'.$slug.'.php');
             $expected = array_merge(...array_column(array_filter($chapter['sections'], fn ($section) => isset($section['live_codes'])), 'live_codes'));
             $html = $this->get('/materi/'.$slug)->assertOk()->getContent();
@@ -155,7 +155,7 @@ class LiveCodeTest extends TestCase
 
     public function test_material_activity_headers_render_one_task_before_the_editor(): void
     {
-        foreach (['dasar-pemrograman-oop' => 1, 'kelas-dan-objek' => 2, 'enkapsulasi' => 1, 'pewarisan' => 1, 'polimorfisme' => 1] as $slug => $count) {
+        foreach (['dasar-pemrograman-oop' => 1, 'kelas-dan-objek' => 2, 'enkapsulasi' => 1, 'pewarisan' => 1, 'polimorfisme' => 1, 'kelas-abstrak' => 1] as $slug => $count) {
             $html = $this->get('/materi/'.$slug)->assertOk()->getContent();
             $dom = new DOMDocument;
             @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);

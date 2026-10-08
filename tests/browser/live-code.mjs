@@ -186,6 +186,15 @@ try {
         await run(id);
         assert.doesNotMatch(await output(id), /Python Error|Traceback/);
         assert.ok(await submit() > 0, `${slug}: starter must be incomplete`);
+        for (const expected of exercise.runtimeErrors || []) {
+            await edit(id, 'main.py', expected.source);
+            await run(id);
+            assert.match(await output(id), expected.error);
+            await run(id, 'check-code');
+            assert.match(await output(id), expected.error);
+            assert.equal(await role(id, 'practice-percentage').textContent(), '0%');
+            assert.equal(await role(id, 'check-results').isVisible(), false);
+        }
         for (const incorrect of exercise.incorrect) {
             await edit(id, 'main.py', incorrect.source);
             assert.ok(await submit() > 0);
