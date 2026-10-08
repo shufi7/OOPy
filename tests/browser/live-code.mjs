@@ -1,6 +1,7 @@
 // Run with Playwright installed, a local Laravel server, and an installed browser.
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { exercises } from './chapters.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
@@ -159,6 +160,52 @@ try {
     await noMonaco.waitForFunction(() => document.querySelector('[data-role="editor-loading"]').textContent.includes('tidak dapat diunduh'));
     await noMonaco.close();
     console.log('PASS: Python CDN failure/retry and Monaco CDN failure message');
+
+    // Exercise the actual chapter configs through Monaco and the Pyodide worker.
+    for (const exercise of exercises) {
+        const { id, slug } = exercise;
+        await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
+        await waitReady();
+        const config = JSON.parse(await role(id, 'config').textContent());
+        assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
+        assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
+        assert.equal(await page.locator('script[src$="js/live-code/live-code.js"]').count(), 1);
+        assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), 1);
+        assert.equal(await page.evaluate((id) => window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${id}/main.py`)).getValue(), id), config.files['main.py']);
+        const submit = async () => {
+            await run(id, 'check-code');
+            assert.equal(await role(id, 'check-results').isVisible(), true);
+            assert.equal(await role(id, 'check-list').locator('li').count(), exercise.checks);
+            const failed = await role(id, 'check-list').locator('.is-failed').count();
+            const percentage = Math.round((exercise.checks - failed) / exercise.checks * 100);
+            assert.equal(await role(id, 'practice-percentage').textContent(), `${percentage}%`);
+            assert.equal(await role(id, 'practice-progress').getAttribute('aria-valuenow'), String(percentage));
+            assert.doesNotMatch(await output(id), /Python Error|Traceback/);
+            return failed;
+        };
+        await run(id);
+        assert.doesNotMatch(await output(id), /Python Error|Traceback/);
+        assert.ok(await submit() > 0, `${slug}: starter must be incomplete`);
+        for (const incorrect of exercise.incorrect) {
+            await edit(id, 'main.py', incorrect.source);
+            assert.ok(await submit() > 0);
+            assert.match((await role(id, 'check-list').locator('.is-failed').allTextContents()).join('\n'), incorrect.label);
+        }
+        await edit(id, 'main.py', exercise.solution);
+        await run(id);
+        assert.match(await output(id), exercise.output);
+        assert.equal(await submit(), 0);
+        for (const source of exercise.alternatives) {
+            await edit(id, 'main.py', source);
+            assert.equal(await submit(), 0, `${slug}: alternative solution`);
+        }
+        await role(id, 'reset-code').click();
+        assert.equal(await role(id, 'practice-percentage').textContent(), '0%');
+        assert.equal(await role(id, 'check-results').isVisible(), false);
+        assert.equal(await page.evaluate((id) => window.monaco.editor.getModels()[0].getValue(), id), config.files['main.py']);
+        assert.deepEqual(errors, []);
+        console.log(`PASS: ${slug}: starter/wrong rejected, solution/alternatives 100%, real Python output, feedback/progress, Reset, one worker/loader; no page errors`);
+    }
 } finally {
     await browser.close();
 }

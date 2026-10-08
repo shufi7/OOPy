@@ -175,7 +175,23 @@ check("Nama objek", lambda: objek.nama == "Rawa Bangkau", "Periksa atribut nama.
 format salah menghasilkan error checker, bukan skor 100%. Error selain assert
 ditampilkan sebagai `Checker Python Error` beserta traceback. Skor adalah persentase
 hasil yang lulus dan akan dihapus jika kode diedit atau di-reset. Contoh Pewarisan
-mempertahankan 11 pemeriksaan perilaku dari prototype.
+di `/editor` mempertahankan 11 pemeriksaan perilaku dari prototype. Latihan BAB 4
+(`bab4-pewarisan-ekosistem`) menggunakan delapan pemeriksaan inheritance,
+inisialisasi, super(), overriding dan data instance. Latihan BAB 5
+(`bab5-polimorfisme-sensor`) menggunakan tujuh pemeriksaan class, perilaku
+status(), list dan loop. Keduanya memakai `main.py`, starter belum lengkap,
+feedback per pemeriksaan, Run/Submit/Reset dan engine existing yang sama.
+
+Checker BAB 4 mengamati pemanggilan super().__init__ yang benar-benar dijalankan,
+termasuk nilai yang diinisialisasi pada object; source yang hanya memuat super()
+dalam komentar atau cabang mati tidak lulus. BAB 5 membaca source dari file
+workspace virtual, menggunakan AST untuk memeriksa percabangan tipe dan mengamati
+status() saat replay program dalam namespace terpisah. Replay tidak menambahkan
+output ke terminal. Alias list, enumerate, comprehension, helper dan implementasi
+status() melalui inheritance diterima jika keempat object memenuhi kontrak.
+Status diperiksa pada object mahasiswa sehingga constructor dengan argument
+tidak dipaksa menjadi constructor tanpa argument.
+Detail dan hasil pengujian terkini ada di [dokumentasi materi](materials.md).
 
 ## Fitur dan keterbatasan
 
@@ -211,6 +227,9 @@ git diff --check
 Tes Laravel memeriksa route, tiga komponen, ID unik, aset sekali, serialisasi JSON,
 entry custom, enam file, dan validasi config. Tes Node memeriksa antrean dan routing,
 pembatalan, failure/retry, serta timeout tanpa harus memuat CDN.
+Test Node checker BAB 4/5 juga memerlukan PHP dan Python lokal (PATH atau
+`OOPY_PHP`/`OOPY_PYTHON`); test memakai fixture tepercaya dan direktori temporer,
+bukan eksekusi kode pengguna pada server aplikasi.
 
 Tes browser memakai Monaco dan Pyodide asli. Instal Playwright sebagai alat lokal
 pengujian (tidak diperlukan oleh aplikasi), kemudian jalankan server di atas:
@@ -225,15 +244,18 @@ URL default `http://127.0.0.1:8017`; ubah melalui `OOPY_BASE_URL`. Tes mencakup 
 B Run, A edit, C Submit, A Reset; checker gagal; syntax/import error; package dan
 entry custom; cache import; output limit; Stop/timeout dan pemulihan antrean;
 keyboard; lebar 390/768/940/1440; serta kegagalan CDN dan retry. CDN harus dapat diakses.
+Suite yang sama juga membuka BAB 4/5, menguji starter dan solusi salah, solusi
+benar/alternatif 100%, output Python, feedback/persentase, Reset serta satu worker
+dan loader per halaman.
 
 Pemeriksaan manual tambahan: baca instruksi dan feedback dengan pembaca layar,
 pastikan konfirmasi Reset/navigasi muncul setelah perubahan, dan buka Beranda serta
 Materi untuk memastikan layout global tetap normal.
 
-Hasil verifikasi refactor: 7 tes Laravel (18 assertions), 6 tes runtime manager Node,
-dan seluruh skenario browser di atas lulus pada Edge headless dengan CDN asli.
-Pemeriksaan sintaks JavaScript, `git diff --check`, dan Pint untuk file pekerjaan ini
-juga lulus. `php vendor/bin/pint --test` seluruh repository masih melaporkan masalah
-format yang sudah ada pada `HomeController.php`, `MateriController.php`, `User.php`,
-`bootstrap/providers.php`, `config/auth.php`, dan `UserFactory.php`; file tersebut
-tidak diubah oleh refactor ini.
+Verifikasi integrasi 8 Oktober 2026: 27 tes Laravel (853 assertions), 8 tes Node
+(6 runtime manager dan 2 suite checker, 29 skenario), serta seluruh suite browser
+materi/sidebar/kuis/Live Coding/visual lulus di Edge headless dengan CDN asli.
+Starter BAB 4 mendapat 25%, BAB 5 mendapat 29%; solusi benar dan alternatif
+mendapat 100%. Sintaks JavaScript, `git diff --check`, serta Pint `--test --dirty`
+juga lulus. Rincian perintah dan keterbatasan lingkungan dicatat dalam
+[hasil verifikasi materi](materials.md#hasil-verifikasi-integrasi--8-oktober-2026).

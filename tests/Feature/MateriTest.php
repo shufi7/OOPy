@@ -16,9 +16,14 @@ class MateriTest extends TestCase
         $response->assertSee(route('materi.show', 'enkapsulasi'))->assertSee('Pelajari BAB 3');
         $this->get('/materi/kelas-dan-objek')->assertOk();
         $this->get('/materi/enkapsulasi')->assertOk();
-        $this->assertSame(3, substr_count($response->getContent(), 'Segera hadir'));
+        foreach (['pewarisan', 'polimorfisme'] as $slug) {
+            $response->assertSee(route('materi.show', $slug));
+            $this->get('/materi/'.$slug)->assertOk();
+        }
+        $this->assertSame(5, substr_count($response->getContent(), '<span>Pelajari BAB'));
+        $this->assertSame(1, substr_count($response->getContent(), 'Segera hadir'));
 
-        foreach (['pewarisan', 'polimorfisme', 'kelas-abstrak'] as $slug) {
+        foreach (['kelas-abstrak'] as $slug) {
             $response->assertDontSee(route('materi.show', $slug));
             $this->get('/materi/'.$slug)->assertNotFound();
         }
@@ -71,7 +76,9 @@ class MateriTest extends TestCase
         $neighbors = [
             'dasar-pemrograman-oop' => [null, 'kelas-dan-objek'],
             'kelas-dan-objek' => ['dasar-pemrograman-oop', 'enkapsulasi'],
-            'enkapsulasi' => ['kelas-dan-objek', null],
+            'enkapsulasi' => ['kelas-dan-objek', 'pewarisan'],
+            'pewarisan' => ['enkapsulasi', 'polimorfisme'],
+            'polimorfisme' => ['pewarisan', null],
         ];
         foreach ($neighbors as $slug => [$previous, $next]) {
             $content = require resource_path('materi/'.$chapters[$slug]['content']);
@@ -97,7 +104,13 @@ class MateriTest extends TestCase
                     $this->assertSame(route('materi.show', $target), $xpath->query($navigation.'/a[@rel="'.$relation.'"]')->item(0)->getAttribute('href'));
                 }
             }
-            $response->assertDontSee(route('materi.show', 'pewarisan'));
+            $response->assertDontSee(route('materi.show', 'kelas-abstrak'));
+            $response->assertSee($chapters[$slug]['judul']);
+            foreach ([...$content['objectives'], ...$content['summary'], ...$content['reflection']] as $text) {
+                $response->assertSee($text);
+            }
+            $this->assertSame($previous, $response->viewData('previousChapter')['slug'] ?? null);
+            $this->assertSame($next, $response->viewData('nextChapter')['slug'] ?? null);
 
             $expectedIds = ['tujuan', ...array_column($content['sections'], 'id'), 'rangkuman'];
             if (! empty($content['reflection'])) {
@@ -171,6 +184,8 @@ class MateriTest extends TestCase
             'dasar-pemrograman-oop' => ['return', 'elif'],
             'kelas-dan-objek' => ['self.nama = nama', 'Ekosistem'],
             'enkapsulasi' => ['@property', '@tinggi_air.setter'],
+            'pewarisan' => ['Ekosistem', 'super().__init__(nama, lokasi)'],
+            'polimorfisme' => ['status', 'info'],
         ];
         foreach ($answers as $slug => $codeAnswers) {
             $response = $this->get('/materi/'.$slug)->assertOk();
@@ -272,7 +287,7 @@ class MateriTest extends TestCase
         $response->assertSee('Bedah Kode SensorAir')->assertSee('name mangling')
             ->assertSee('non-public by convention')->assertSee('@property')
             ->assertSee('bukan data hasil pengukuran lapangan');
-        $this->assertNull($response->viewData('nextChapter'));
+        $this->assertSame('pewarisan', $response->viewData('nextChapter')['slug']);
         $this->assertSame('kelas-dan-objek', $response->viewData('previousChapter')['slug']);
     }
 

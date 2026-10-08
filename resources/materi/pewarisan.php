@@ -291,7 +291,8 @@ PYTHON,
 
                     // PEMERIKSA OTOMATIS LIVE CODING
                     'checker' => <<<'PYTHON'
-import ast
+import builtins
+import sys
 
 results = []
 
@@ -314,42 +315,52 @@ def check(label, operation, hint):
 
 
 def menggunakan_super(nama_class):
-    with open("main.py", encoding="utf-8") as file:
-        pohon = ast.parse(file.read())
-
-    kelas = next(
-        (
-            n for n in pohon.body
-            if isinstance(n, ast.ClassDef)
-            and n.name == nama_class
-        ),
-        None
-    )
-
-    if kelas is None:
-        return False
-
-    init = next(
-        (
-            n for n in kelas.body
-            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
-            and n.name == "__init__"
-        ),
-        None
-    )
-
+    kelas = globals().get(nama_class)
+    init = kelas.__dict__.get("__init__")
     if init is None:
         return False
 
-    return any(
-        isinstance(n, ast.Call)
-        and isinstance(n.func, ast.Attribute)
-        and n.func.attr == "__init__"
-        and isinstance(n.func.value, ast.Call)
-        and isinstance(n.func.value.func, ast.Name)
-        and n.func.value.func.id == "super"
-        for n in ast.walk(init)
-    )
+    # Observe an actual super().__init__ call, not comments or unreachable code.
+    # Resolve zero-argument super in the learner's frame; explicit super works too.
+    namespace = init.__globals__
+    missing = object()
+    previous = namespace.get("super", missing)
+    calls = []
+
+    class SuperProbe:
+        def __getattribute__(self, name):
+            target = object.__getattribute__(self, "target")
+            method = getattr(target, name)
+            if name != "__init__":
+                return method
+
+            def initialize(*args, **kwargs):
+                result = method(*args, **kwargs)
+                obj = target.__self__
+                calls.append((obj, getattr(obj, "nama", None), getattr(obj, "lokasi", None)))
+                return result
+            return initialize
+
+    def observed_super(*args):
+        if not args:
+            frame = sys._getframe(1)
+            args = (frame.f_locals["__class__"],
+                    frame.f_locals[frame.f_code.co_varnames[0]])
+        proxy = object.__new__(SuperProbe)
+        object.__setattr__(proxy, "target", builtins.super(*args))
+        return proxy
+
+    try:
+        namespace["super"] = observed_super
+        obj = kelas("Uji super", "Lokasi uji", 12.5)
+        return (any(instance is obj and nama == "Uji super" and lokasi == "Lokasi uji"
+                    for instance, nama, lokasi in calls)
+                and obj.nama == "Uji super" and obj.lokasi == "Lokasi uji")
+    finally:
+        if previous is missing:
+            namespace.pop("super", None)
+        else:
+            namespace["super"] = previous
 
 
 def cek_sungai():
@@ -373,26 +384,25 @@ def cek_rawa():
 
 
 def cek_info(kelas, nama, lokasi, angka):
-    obj = kelas(nama, lokasi, angka)
-    hasil = obj.info()
-
-    return (
-        isinstance(hasil, str)
-        and nama in hasil
-        and lokasi in hasil
-        and str(angka) in hasil
-        and " - " != hasil
-    )
+    for data in ((nama, lokasi, angka), ("Uji lain", "Lokasi lain", 12.5)):
+        hasil = kelas(*data).info()
+        if not isinstance(hasil, str) or not all(str(value) in hasil for value in data):
+            return False
+    return True
 
 
 def cek_data_terpisah():
-    satu = Sungai("Satu", "A", 10)
-    dua = Sungai("Dua", "B", 20)
-
-    return (
-        satu.nama != dua.nama
-        and satu.panjang_km != dua.panjang_km
-    )
+    for kelas, atribut in ((Sungai, "panjang_km"), (Rawa, "luas_ha")):
+        satu = kelas("Satu", "A", 10)
+        dua = kelas("Dua", "B", 20)
+        if (satu.nama, satu.lokasi, getattr(satu, atribut)) != ("Satu", "A", 10):
+            return False
+        satu.nama = "Diubah"
+        satu.lokasi = "C"
+        setattr(satu, atribut, 30)
+        if (dua.nama, dua.lokasi, getattr(dua, atribut)) != ("Dua", "B", 20):
+            return False
+    return True
 
 
 check(

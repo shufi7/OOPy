@@ -128,9 +128,34 @@ class LiveCodeTest extends TestCase
         $this->assertSame($ids[1], array_values(array_unique($ids[1])));
     }
 
+    public function test_chapters_four_and_five_embed_their_registered_exercise_contracts(): void
+    {
+        foreach (['pewarisan' => 'bab4-pewarisan-ekosistem', 'polimorfisme' => 'bab5-polimorfisme-sensor'] as $slug => $id) {
+            $chapter = require resource_path('materi/'.$slug.'.php');
+            $expected = array_merge(...array_column(array_filter($chapter['sections'], fn ($section) => isset($section['live_codes'])), 'live_codes'));
+            $html = $this->get('/materi/'.$slug)->assertOk()->getContent();
+            preg_match_all('/data-role="config">(.*?)<\/script>/s', $html, $matches);
+            $this->assertCount(1, $matches[1]);
+            $config = json_decode($matches[1][0], true, flags: JSON_THROW_ON_ERROR);
+            $this->assertSame($id, $config['id']);
+            $this->assertSame('main.py', $config['entry_file']);
+            $this->assertSame(['main.py'], array_keys($config['files']));
+            $this->assertSame($expected[0]['files'], $config['files']);
+            $this->assertSame($expected[0]['checker'], $config['checker']);
+            $this->assertStringContainsString('pass', $config['files']['main.py']);
+            $this->assertStringContainsString('results = []', $config['checker']);
+            $this->assertSame(1, substr_count($html, 'data-live-code'));
+            $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));
+            $this->assertSame(1, substr_count($html, 'css/oopy/live-code/live-code.css'));
+            $this->assertStringContainsString('<h3 id="'.$id.'-workspace-title"', $html);
+            preg_match_all('/\sid="([^"]+)"/', $html, $ids);
+            $this->assertSame($ids[1], array_values(array_unique($ids[1])));
+        }
+    }
+
     public function test_material_activity_headers_render_one_task_before_the_editor(): void
     {
-        foreach (['dasar-pemrograman-oop' => 1, 'kelas-dan-objek' => 2, 'enkapsulasi' => 1] as $slug => $count) {
+        foreach (['dasar-pemrograman-oop' => 1, 'kelas-dan-objek' => 2, 'enkapsulasi' => 1, 'pewarisan' => 1, 'polimorfisme' => 1] as $slug => $count) {
             $html = $this->get('/materi/'.$slug)->assertOk()->getContent();
             $dom = new DOMDocument;
             @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);

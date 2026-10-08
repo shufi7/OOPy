@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { chapters } from './chapters.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
@@ -19,6 +20,8 @@ const inspectSidebar = async (width) => {
     assert.equal(await page.locator('#chapter-navigation').evaluate((el) => el.scrollWidth <= el.clientWidth + 1), true, `Sidebar overflow at ${width}px`);
     const hashes = await page.locator('.material-toc nav a').evaluateAll((links) => links.map((link) => link.hash));
     assert.equal(new Set(hashes).size, hashes.length);
+    assert.deepEqual(hashes, await page.locator('[data-material-section]').evaluateAll((sections) => sections.map((section) => `#${section.id}`)));
+    assert.equal(await page.locator('.material-progress, .material-toc progress').count(), 0);
     const active = page.locator('.material-toc a[aria-current="location"]');
     assert.equal(await active.count(), 1);
 };
@@ -148,7 +151,7 @@ const inspectInstructionLayout = async (width) => {
 
 try {
     if (process.argv.includes('--sidebar-only')) {
-        for (const slug of ['dasar-pemrograman-oop', 'kelas-dan-objek', 'enkapsulasi']) {
+        for (const { slug } of chapters) {
             for (const width of [320, 390, 768, 1024, 1440]) {
                 await page.setViewportSize({ width, height: 1000 });
                 await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
@@ -164,7 +167,7 @@ try {
             }
         }
         assert.deepEqual(errors, []);
-        console.log('PASS: sidebar regression and deep links for BAB 1/2/3 at all five viewport widths; no page errors');
+        console.log('PASS: sidebar regression and deep links for BAB 1–5 at all five viewport widths; no page errors');
     } else {
     await page.addInitScript(() => {
         const NativeWorker = window.Worker;
@@ -180,8 +183,8 @@ try {
     await page.getByRole('link', { name: /Mulai Belajar/i }).click();
     await page.waitForURL(`${base}/materi`);
     assert.equal(await page.locator('.materi-card').count(), 6);
-    assert.equal(await page.locator('.materi-card a').count(), 3);
-    assert.equal(await page.getByText('Segera hadir', { exact: true }).count(), 3);
+    assert.equal(await page.locator('.materi-card a').count(), chapters.length);
+    assert.equal(await page.getByText('Segera hadir', { exact: true }).count(), 1);
     await page.getByRole('link', { name: /Pelajari BAB 1/ }).click();
     await page.waitForURL(`${base}${chapterPath}`);
     await waitReady();
@@ -411,7 +414,8 @@ for objek in sensor:
     await page.locator('.material-navigation a[rel="next"]').click();
     await page.waitForURL(`${base}/materi/enkapsulasi`);
     await waitReady();
-    assert.equal(await page.locator('.material-navigation a[rel="next"]').count(), 0);
+    assert.equal(await page.locator('.material-navigation a[rel="next"]').getAttribute('href'), `${base}/materi/pewarisan`);
+    assert.equal(await page.locator('[data-quiz-next-locked]').isVisible(), true);
     assert.equal(await page.locator('.material-navigation a[rel="prev"]').getAttribute('href'), `${base}/materi/kelas-dan-objek`);
     assert.equal(await page.locator('[data-material-section]').count(), 13);
     assert.deepEqual(await page.locator('.material-toc nav a').evaluateAll((links) => links.map((link) => link.hash.slice(1))),
@@ -499,7 +503,7 @@ print(alat.tinggi_air)`;
     await page.keyboard.press('Tab');
     await page.locator('.material-navigation a[rel="prev"]').focus();
     assert.notEqual(await page.locator('.material-navigation a[rel="prev"]').evaluate((el) => getComputedStyle(el).outlineStyle), 'none');
-    assert.equal(await page.locator('.material-nav-button').evaluate((el) => getComputedStyle(el).transitionDuration), '0s');
+    assert.equal(await page.locator('.material-nav-button').evaluateAll((buttons) => buttons.every((el) => getComputedStyle(el).transitionDuration === '0s')), true);
     const noJsThree = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 320, height: 900 } });
     await noJsThree.goto(`${base}/materi/enkapsulasi`, { waitUntil: 'domcontentloaded' });
     assert.equal(await noJsThree.locator('[data-material-section]').count(), 13);
@@ -509,6 +513,48 @@ print(alat.tinggi_air)`;
     await noJsThree.close();
     assert.deepEqual(errors, []);
     console.log('PASS: BAB 3 navigation, sidebar/sections, responsive layout at 320/390/768/1024/1440px, headings/focus/reduced motion, no-JS reading; nine behavior checks reject starter/negative setter/corrupted state, correct solution 100%, Reset restores starter and 0%; one worker/loader and no JS errors');
+    for (const chapter of chapters.slice(3)) {
+        await unlockNextChapter();
+        await page.locator('.material-navigation a[rel="next"]').click();
+        await page.waitForURL(`${base}/materi/${chapter.slug}`);
+        await waitReady();
+        assert.equal(await page.locator('.material-navigation').count(), 1);
+        assert.equal(await page.locator('.material-navigation [rel="prev"]').getAttribute('href'), `${base}/materi/${chapter.previous}`);
+        assert.equal(await page.locator('.material-navigation [rel="next"]').count(), chapter.next ? 1 : 0);
+        if (chapter.next) {
+            assert.equal(await page.locator('[data-quiz-next-link]').getAttribute('href'), `${base}/materi/${chapter.next}`);
+            assert.equal(await page.locator('[data-quiz-next-link]').isVisible(), false);
+        }
+        assert.equal(await page.locator('a[href$="/materi/kelas-abstrak"]').count(), 0);
+        assert.equal(await page.locator('.material-navigation a[href$="/materi"]').isVisible(), true);
+        assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
+        assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
+        const ids = await page.locator('[id]').evaluateAll((elements) => elements.map((el) => el.id));
+        assert.equal(new Set(ids).size, ids.length);
+        await inspectInstructions();
+        for (const width of [320, 390, 768, 1024, 1440]) {
+            await page.setViewportSize({ width, height: 1000 });
+            await page.waitForFunction((width) => document.querySelector('.material-toc').open === (width >= 992), width);
+            await inspectInstructionLayout(width);
+            await inspectManualCollapse(width);
+            assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${chapter.slug}: overflow at ${width}px`);
+        }
+        assert.deepEqual(errors, []);
+        console.log(`PASS: ${chapter.slug}: navigation, instructions, unique IDs, responsive sidebar, one worker/loader`);
+    }
+    // The last available chapter passes normally without creating a BAB 6 link.
+    const finalQuestions = JSON.parse(await page.locator('[data-quiz="questions"]').textContent());
+    for (const question of finalQuestions) {
+        if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(question.answer);
+        else await page.locator('[data-quiz="options"] input').nth(question.correct).check();
+        await page.locator('[data-quiz="next"]').click();
+    }
+    assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
+    assert.equal(await page.locator('[data-quiz="continue"], .material-navigation [rel="next"]').count(), 0);
+    await page.locator('.material-navigation a[rel="prev"]').click();
+    await page.waitForURL(`${base}/materi/pewarisan`);
+    await page.locator('.material-navigation a[rel="prev"]').click();
+    await page.waitForURL(`${base}/materi/enkapsulasi`);
     await page.locator('.material-navigation a[rel="prev"]').click();
     await page.waitForURL(`${base}/materi/kelas-dan-objek`);
     await page.locator('.material-navigation a[rel="prev"]').click();
