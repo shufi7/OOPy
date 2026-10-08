@@ -37,7 +37,7 @@ return [
     ],
     'pewarisan' => [
         'bab' => 'BAB 4',
-        'judul' => 'Pewarisan (Inheritance)',
+        'judul' => 'Pewarisan',
         'content' => 'pewarisan.php',
         'poin' => [
             'Superclass dan subclass',
@@ -60,10 +60,12 @@ return [
     'kelas-abstrak' => [
         'bab' => 'BAB 6',
         'judul' => 'Kelas Abstrak',
+        'content' => 'kelas-abstrak.php',
         'poin' => [
-            'Implementasi abstract base class (ABC)',
-            'metode abstrak',
-            'antarmuka dalam OOP Python',
+            'Membuat Abstract Base Class (ABC)',
+            'Abstract method dan method konkret',
+            'Kapan Abstract Base Class digunakan',
+            'Inheritance dan polimorfisme dengan ABC',
         ],
     ],
 ];
