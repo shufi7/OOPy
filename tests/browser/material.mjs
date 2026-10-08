@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
-import { chapters } from './chapters.mjs';
+import { chapters, evaluationChapter } from './chapters.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
@@ -182,8 +182,8 @@ try {
     await page.goto(base, { waitUntil: 'domcontentloaded' });
     await page.getByRole('link', { name: /Mulai Belajar/i }).click();
     await page.waitForURL(`${base}/materi`);
-    assert.equal(await page.locator('.materi-card').count(), 6);
-    assert.equal(await page.locator('.materi-card a').count(), chapters.length);
+    assert.equal(await page.locator('.materi-card').count(), chapters.length + 1);
+    assert.equal(await page.locator('.materi-card a').count(), chapters.length + 1);
     assert.equal(await page.getByText('Segera hadir', { exact: true }).count(), 0);
     await page.getByRole('link', { name: /Pelajari BAB 1/ }).click();
     await page.waitForURL(`${base}${chapterPath}`);
@@ -542,7 +542,7 @@ print(alat.tinggi_air)`;
         assert.deepEqual(errors, []);
         console.log(`PASS: ${chapter.slug}: navigation, instructions, unique IDs, responsive sidebar, one worker/loader`);
     }
-    // BAB 6 passes normally without creating a link to another chapter.
+    // BAB 6 unlocks the separate final evaluation using the existing quiz gate.
     const finalQuestions = JSON.parse(await page.locator('[data-quiz="questions"]').textContent());
     for (const question of finalQuestions) {
         if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(question.answer);
@@ -550,9 +550,13 @@ print(alat.tinggi_air)`;
         await page.locator('[data-quiz="next"]').click();
     }
     assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
-    assert.equal(await page.locator('[data-quiz="continue"], .material-navigation [rel="next"]').count(), 0);
-    for (const chapter of chapters.slice(0, -1).reverse()) {
-        await page.locator('.material-navigation a[rel="prev"]').click();
+    assert.equal(await page.locator('.material-navigation [rel="next"]').getAttribute('href'), `${base}/materi/${evaluationChapter.slug}`);
+    await page.locator('.material-navigation [rel="next"]').click();
+    await page.waitForURL(`${base}/materi/${evaluationChapter.slug}`);
+    assert.equal(await page.locator('.oopy-final-exam').getAttribute('data-exam-page'), 'intro');
+    assert.equal(await page.locator('[rel="next"]').count(), 0);
+    for (const chapter of [...chapters].reverse()) {
+        await page.locator('a[rel="prev"]').click();
         await page.waitForURL(`${base}/materi/${chapter.slug}`);
     }
     console.log('PASS: BAB 1/2 navigation; conditional reflection; instruction titles/tasks/tokens and responsive hierarchy; BAB 2 layout at 320/390/768/1024/1440px; unique IDs, Prism, focus/reduced motion, one worker/loader; incomplete/wrong/correct/reset exercises');

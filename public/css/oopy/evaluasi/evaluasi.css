@@ -1,0 +1,135 @@
+.oopy-final-exam { background: linear-gradient(125deg, var(--oopy-bg), var(--oopy-surface)); color: var(--oopy-text); padding: 28px 0 56px; }
+.oopy-final-exam *, .oopy-final-exam *::before, .oopy-final-exam *::after { box-sizing: border-box; }
+.oopy-final-exam [hidden] { display: none !important; }
+.oopy-final-exam .exam-container { width: min(1320px, calc(100% - 64px)); margin: auto; }
+.oopy-final-exam .exam-breadcrumb ol { display: flex; flex-wrap: wrap; list-style: none; gap: 10px; padding: 0; font-size: .875rem; }
+.oopy-final-exam .exam-breadcrumb li + li::before { content: '/'; margin-right: 10px; }
+.oopy-final-exam a { color: var(--oopy-link); text-underline-offset: 4px; }
+.oopy-final-exam .exam-intro { margin: 26px 0 30px; max-width: 850px; }
+.oopy-final-exam .exam-eyebrow { display: block; font-size: .8125rem; font-weight: 800; letter-spacing: .09em; color: var(--oopy-link); margin-bottom: 10px; }
+.oopy-final-exam h1 { font-size: clamp(1.9rem, 1.5rem + 1.4vw, 2.65rem); font-weight: 800; line-height: 1.25; letter-spacing: -.03em; margin-bottom: 16px; overflow-wrap: anywhere; }
+.oopy-final-exam h2 { font-size: clamp(1.25rem, 1.1rem + .4vw, 1.5rem); font-weight: 750; line-height: 1.35; }
+.oopy-final-exam h3 { font-size: 1.125rem; font-weight: 700; margin: 24px 0 14px; }
+.oopy-final-exam p, .oopy-final-exam li { line-height: 1.7; overflow-wrap: anywhere; }
+.oopy-final-exam .exam-card { min-width: 0; background: var(--oopy-surface); border: 1px solid var(--oopy-border); border-radius: 18px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 8px 24px rgb(64 81 78 / 5%); }
+.oopy-final-exam .exam-card-heading { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 20px 28px; background: var(--oopy-primary); color: var(--oopy-on-primary); }
+.oopy-final-exam .exam-card-heading h2 { margin: 0; }
+.oopy-final-exam .exam-card-heading > span { font-size: .875rem; font-weight: 600; }
+.oopy-final-exam .exam-card-heading.light { background: var(--oopy-selected); color: var(--oopy-text); }
+.oopy-final-exam .exam-card-body { padding: 28px; }
+.oopy-final-exam .exam-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-bottom: 26px; }
+.oopy-final-exam .exam-facts > div { padding: 18px 20px; background: var(--oopy-bg); border-radius: 12px; }
+.oopy-final-exam .exam-facts strong, .oopy-final-exam .exam-facts span { display: block; }
+.oopy-final-exam .exam-facts strong { font-size: 1.4rem; font-weight: 800; }
+.oopy-final-exam .exam-facts span { font-size: .875rem; }
+.oopy-final-exam .exam-rule-list { padding-left: 22px; }
+.oopy-final-exam .exam-rule-list li { padding-left: 6px; margin-bottom: 12px; }
+.oopy-final-exam .exam-muted { font-size: .875rem; }
+.oopy-final-exam .exam-notice { background: var(--oopy-selected); border-left: 4px solid var(--oopy-primary); border-radius: 8px; padding: 16px 20px; font-size: .9375rem; }
+.oopy-final-exam .exam-actions, .oopy-final-exam .exam-navigation { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 22px; }
+.oopy-final-exam .exam-button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; max-width: 100%; padding: 11px 18px; border: 1px solid var(--oopy-primary); border-radius: 9px; background: var(--oopy-primary); color: var(--oopy-on-primary); font-family: inherit; font-size: .9375rem; font-weight: 650; line-height: 1.45; text-align: center; text-decoration: none; overflow-wrap: anywhere; cursor: pointer; transition: background .15s; }
+.oopy-final-exam .exam-button:hover { background: var(--oopy-accent); color: var(--oopy-text); }
+.oopy-final-exam .exam-button.secondary { background: var(--oopy-surface); color: var(--oopy-link); border-color: var(--oopy-border); }
+.oopy-final-exam .exam-button.secondary:hover { background: var(--oopy-bg); }
+.oopy-final-exam .exam-button:disabled { cursor: default; opacity: .65; }
+.oopy-final-exam button:focus-visible, .oopy-final-exam a:focus-visible, .oopy-final-exam summary:focus-visible, .oopy-final-exam input:focus-visible, .oopy-final-exam textarea:focus-visible { outline: 3px solid var(--oopy-dark); outline-offset: 3px; }
+.oopy-final-exam .exam-table-wrap { max-width: 100%; overflow: auto; }
+.oopy-final-exam table { width: 100%; border-collapse: collapse; font-size: .9375rem; }
+.oopy-final-exam caption { caption-side: top; font-size: .875rem; margin-bottom: 12px; color: var(--oopy-text); }
+.oopy-final-exam th, .oopy-final-exam td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--oopy-border); vertical-align: top; }
+.oopy-final-exam thead { background: var(--oopy-bg); }
+.oopy-final-exam .exam-tag { display: inline-block; padding: 5px 10px; border: 1px solid var(--oopy-border); border-radius: 6px; background: var(--oopy-bg); font-size: .8125rem; font-weight: 650; }
+.oopy-final-exam .exam-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 28px; align-items: start; }
+.oopy-final-exam .exam-sidebar { min-width: 0; background: var(--oopy-surface); border: 1px solid var(--oopy-border); border-radius: 16px; padding: 22px; position: sticky; top: 24px; }
+.oopy-final-exam .exam-sidebar-heading { padding-bottom: 18px; border-bottom: 1px solid var(--oopy-border); }
+.oopy-final-exam .exam-sidebar-heading strong, .oopy-final-exam .exam-sidebar-heading span { display: block; }
+.oopy-final-exam .exam-sidebar-heading strong { font-size: 1.125rem; }
+.oopy-final-exam .exam-sidebar-heading span { font-size: .8125rem; margin-top: 5px; }
+.oopy-final-exam .exam-timer { margin: 20px 0; padding: 16px; border-radius: 10px; background: var(--oopy-bg); text-align: center; }
+.oopy-final-exam .exam-timer > span { display: block; font-size: .875rem; }
+.oopy-final-exam .exam-timer strong { font-size: 2.25rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--oopy-link); }
+.oopy-final-exam .exam-timer p { font-size: .8125rem; margin: 6px 0 0; }
+.oopy-final-exam .exam-timer[data-warning="five"] { border: 2px solid var(--oopy-primary); }
+.oopy-final-exam .exam-timer[data-warning="one"] { border: 3px double var(--oopy-dark); background: var(--oopy-selected); }
+.oopy-final-exam .exam-number-panel > summary { cursor: pointer; font-weight: 750; font-size: .9375rem; }
+.oopy-final-exam .exam-number-panel > summary span { float: right; }
+.oopy-final-exam .exam-number-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; margin-top: 16px; }
+.oopy-final-exam .exam-number { min-width: 0; min-height: 44px; padding: 6px 2px; border: 1px solid var(--oopy-border); background: var(--oopy-surface); border-radius: 7px; color: var(--oopy-text); font-weight: 600; position: relative; }
+.oopy-final-exam .exam-number.answered { background: var(--oopy-selected); border-color: var(--oopy-primary); }
+.oopy-final-exam .exam-number[aria-current="step"] { outline: 2px solid var(--oopy-dark); outline-offset: 1px; font-weight: 800; }
+.oopy-final-exam .exam-number.marked { border: 2px dashed var(--oopy-dark); }
+.oopy-final-exam .exam-number small { position: absolute; font-size: .65rem; top: 1px; right: 3px; }
+.oopy-final-exam .exam-legend { list-style: none; padding: 0; margin: 20px 0 0; font-size: .8125rem; }
+.oopy-final-exam .exam-legend li { margin-bottom: 7px; }
+.oopy-final-exam .exam-legend span { display: inline-block; width: 18px; font-weight: 800; color: var(--oopy-link); }
+.oopy-final-exam .exam-progress { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--oopy-border); font-size: .875rem; }
+.oopy-final-exam .exam-progress p { margin-bottom: 8px; }
+.oopy-final-exam progress { width: 100%; height: 8px; accent-color: var(--oopy-primary); }
+.oopy-final-exam .exam-progress > span { display: block; font-size: .8125rem; margin-top: 8px; }
+.oopy-final-exam .exam-question-heading { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; padding: 22px 28px; background: var(--oopy-selected); border-bottom: 1px solid var(--oopy-border); }
+.oopy-final-exam .exam-question-heading h2 { margin: 0; }
+.oopy-final-exam .exam-question-status { font-size: .875rem; color: var(--oopy-link); }
+.oopy-final-exam .exam-question-text { font-size: 1.125rem; font-weight: 650; }
+.oopy-final-exam .exam-options { min-width: 0; margin-top: 22px; }
+.oopy-final-exam .exam-options legend { font-size: .875rem; font-weight: 650; margin-bottom: 12px; }
+.oopy-final-exam .exam-option { display: flex; gap: 12px; align-items: start; padding: 17px 18px; border: 1px solid var(--oopy-border); border-radius: 10px; margin-bottom: 12px; cursor: pointer; }
+.oopy-final-exam .exam-option:has(input:checked) { background: var(--oopy-bg); border-color: var(--oopy-primary); }
+.oopy-final-exam .exam-option input { flex-shrink: 0; width: 18px; height: 18px; margin-top: 5px; accent-color: var(--oopy-primary); }
+.oopy-final-exam .exam-option > span { min-width: 0; overflow-wrap: anywhere; }
+.oopy-final-exam .exam-answer label { display: block; font-weight: 650; margin-bottom: 10px; }
+.oopy-final-exam .exam-answer input, .oopy-final-exam .exam-answer textarea { display: block; width: 100%; min-width: 0; padding: 14px; color: var(--oopy-text); border: 1px solid var(--oopy-border); border-radius: 8px; background: var(--oopy-surface); font: inherit; }
+.oopy-final-exam .exam-answer input { font-family: Consolas, monospace; }
+.oopy-final-exam .exam-answer textarea { resize: vertical; min-height: 190px; }
+.oopy-final-exam .exam-answer p { font-size: .8125rem; margin-top: 10px; }
+.oopy-final-exam .exam-navigation { border-top: 1px solid var(--oopy-border); padding-top: 22px; margin-top: 28px; justify-content: space-between; }
+.oopy-final-exam .exam-workspace-footer { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+.oopy-final-exam .exam-code { margin: 22px 0; overflow: hidden; border-radius: 10px; background: #1e1e2e; color: var(--oopy-mint); }
+.oopy-final-exam .exam-code figcaption { padding: 10px 16px; border-bottom: 1px solid var(--oopy-dark); font-size: .8125rem; }
+.oopy-final-exam .exam-code pre { padding: 18px; overflow: auto; margin: 0; font: var(--oopy-font-code)/1.65 Consolas, monospace; }
+.oopy-final-exam .exam-code code { font: inherit; color: inherit; }
+.oopy-final-exam .exam-inline-answer { display: inline-block; width: var(--answer-width, 18ch); min-width: 8ch; max-width: min(40ch, calc(100vw - 150px)); min-height: 44px; padding: 6px 8px; border: 2px solid var(--oopy-accent); border-radius: 6px; background: var(--oopy-surface); color: var(--oopy-text); font: inherit; line-height: 1.4; vertical-align: middle; }
+.oopy-final-exam .exam-inline-answer.is-inline { width: var(--answer-width, 12ch); }
+.oopy-final-exam .exam-inline-answer:focus-visible { outline-color: var(--oopy-accent); }
+.oopy-final-exam .token.keyword { color: var(--oopy-accent); }
+.oopy-final-exam .token.string { color: #f1d6a7; }
+.oopy-final-exam .token.function { color: #b9e8cc; }
+.oopy-final-exam .token.class-name { color: #8fdee2; }
+.oopy-final-exam .token.builtin { color: #b5d5ff; }
+.oopy-final-exam .token.number { color: #dec4e8; }
+.oopy-final-exam .token.comment { color: #a5bcb6; }
+.oopy-final-exam .exam-result-lead { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; margin-bottom: 22px; }
+.oopy-final-exam .exam-result-lead > div > * { display: block; }
+.oopy-final-exam .exam-result-lead strong { font-size: 3rem; line-height: 1.25; color: var(--oopy-link); font-weight: 800; }
+.oopy-final-exam .exam-result-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.oopy-final-exam .exam-result-facts > div { padding: 16px; border-radius: 9px; background: var(--oopy-bg); }
+.oopy-final-exam .exam-result-facts dt { font-size: .875rem; }
+.oopy-final-exam .exam-result-facts dd { font-size: 1.125rem; font-weight: 750; margin-bottom: 0; }
+.oopy-final-exam .exam-review > summary { padding: 22px 28px; font-size: 1.125rem; font-weight: 750; cursor: pointer; }
+.oopy-final-exam .exam-review-item { border-bottom: 1px solid var(--oopy-border); margin-bottom: 22px; padding-bottom: 20px; }
+.oopy-final-exam .exam-review-item p { white-space: pre-wrap; }
+.oopy-final-exam .exam-page-links { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--oopy-border); font-size: .9375rem; }
+.oopy-final-exam .exam-dialog { max-width: min(540px, calc(100% - 32px)); padding: 28px; border: 1px solid var(--oopy-border); border-radius: 16px; color: var(--oopy-text); background: var(--oopy-surface); }
+.oopy-final-exam .exam-dialog::backdrop { background: rgb(64 81 78 / 50%); }
+@media (max-width: 991.98px) {
+    .oopy-final-exam .exam-container { width: calc(100% - 32px); }
+    .oopy-final-exam .exam-layout { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .oopy-final-exam .exam-sidebar { position: static; }
+    .oopy-final-exam .exam-sidebar-heading { display: none; }
+    .oopy-final-exam .exam-timer { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: space-between; margin-top: 0; padding: 10px 16px; }
+    .oopy-final-exam .exam-timer strong { font-size: 1.75rem; }
+    .oopy-final-exam .exam-timer p { flex-basis: 100%; }
+}
+@media (max-width: 575.98px) {
+    .oopy-final-exam .exam-container { width: calc(100% - 24px); }
+    .oopy-final-exam .exam-intro { margin: 20px 0 24px; }
+    .oopy-final-exam .exam-card-body, .oopy-final-exam .exam-card-heading, .oopy-final-exam .exam-question-heading { padding: 20px 18px; }
+    .oopy-final-exam .exam-facts { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .oopy-final-exam .exam-facts > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 14px; padding: 13px 16px; align-items: center; }
+    .oopy-final-exam .exam-actions, .oopy-final-exam .exam-navigation { align-items: stretch; }
+    .oopy-final-exam .exam-actions > *, .oopy-final-exam .exam-navigation > * { flex: 1 1 100%; }
+    .oopy-final-exam .exam-result-facts { grid-template-columns: minmax(0, 1fr); }
+    .oopy-final-exam .exam-sidebar { padding: 18px; }
+    .oopy-final-exam .exam-workspace-footer > * { width: 100%; }
+    .oopy-final-exam .exam-dialog { padding: 22px 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .oopy-final-exam .exam-button { transition: none; } }

@@ -5,8 +5,10 @@ export const chapters = [
     { slug: 'enkapsulasi', previous: 'kelas-dan-objek', next: 'pewarisan' },
     { slug: 'pewarisan', previous: 'enkapsulasi', next: 'polimorfisme' },
     { slug: 'polimorfisme', previous: 'pewarisan', next: 'kelas-abstrak' },
-    { slug: 'kelas-abstrak', previous: 'polimorfisme', next: null },
+    { slug: 'kelas-abstrak', previous: 'polimorfisme', next: 'evaluasi-akhir' },
 ];
+
+export const evaluationChapter = { slug: 'evaluasi-akhir', previous: 'kelas-abstrak', next: null };
 
 const inheritance = `class Ekosistem:
     def __init__(self, nama, lokasi):

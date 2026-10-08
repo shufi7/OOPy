@@ -69,4 +69,14 @@ return [
             'Kapan menggunakan ABC dibandingkan duck typing',
         ],
     ],
+    'evaluasi-akhir' => [
+        'bab' => 'BAB 7',
+        'judul' => 'Evaluasi Akhir',
+        'content' => 'evaluasi-akhir.php',
+        'poin' => [
+            'Evaluasi konsep OOP Python',
+            '20 soal pilihan ganda, isian kode, dan uraian',
+            'Hasil dan riwayat evaluasi',
+        ],
+    ],
 ];

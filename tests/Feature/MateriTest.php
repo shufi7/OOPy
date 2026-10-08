@@ -16,11 +16,11 @@ class MateriTest extends TestCase
         $response->assertSee(route('materi.show', 'enkapsulasi'))->assertSee('Pelajari BAB 3');
         $this->get('/materi/kelas-dan-objek')->assertOk();
         $this->get('/materi/enkapsulasi')->assertOk();
-        foreach (['pewarisan', 'polimorfisme', 'kelas-abstrak'] as $slug) {
+        foreach (['pewarisan', 'polimorfisme', 'kelas-abstrak', 'evaluasi-akhir'] as $slug) {
             $response->assertSee(route('materi.show', $slug));
             $this->get('/materi/'.$slug)->assertOk();
         }
-        $this->assertSame(6, substr_count($response->getContent(), '<span>Pelajari BAB'));
+        $this->assertSame(7, substr_count($response->getContent(), '<span>Pelajari BAB'));
         $this->assertSame(0, substr_count($response->getContent(), 'Segera hadir'));
     }
 
@@ -75,7 +75,7 @@ class MateriTest extends TestCase
             'enkapsulasi' => ['kelas-dan-objek', 'pewarisan'],
             'pewarisan' => ['enkapsulasi', 'polimorfisme'],
             'polimorfisme' => ['pewarisan', 'kelas-abstrak'],
-            'kelas-abstrak' => ['polimorfisme', null],
+            'kelas-abstrak' => ['polimorfisme', 'evaluasi-akhir'],
         ];
         foreach ($neighbors as $slug => [$previous, $next]) {
             $content = require resource_path('materi/'.$chapters[$slug]['content']);
@@ -315,7 +315,7 @@ class MateriTest extends TestCase
             $response->assertSee($text);
         }
         $this->assertSame('polimorfisme', $response->viewData('previousChapter')['slug']);
-        $this->assertNull($response->viewData('nextChapter'));
+        $this->assertSame('evaluasi-akhir', $response->viewData('nextChapter')['slug']);
         $dom = new DOMDocument;
         @$dom->loadHTML('<?xml encoding="UTF-8">'.$response->getContent());
         $xpath = new DOMXPath($dom);

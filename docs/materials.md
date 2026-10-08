@@ -2,8 +2,9 @@
 
 Daftar BAB tetap berada di `/materi`. BAB 1–6 tersedia melalui route `materi.show`
 (`GET /materi/{slug}`): `dasar-pemrograman-oop`, `kelas-dan-objek`, `enkapsulasi`,
-`pewarisan`, `polimorfisme`, dan `kelas-abstrak`. Daftar menampilkan enam tombol
-**Pelajari BAB**, termasuk **Pelajari BAB 6**, tanpa card Segera hadir.
+`pewarisan`, `polimorfisme`, dan `kelas-abstrak`. BAB 7 (`evaluasi-akhir`) tersedia
+dengan layout evaluasi tersendiri. Katalog menampilkan tujuh tombol **Pelajari BAB**,
+tanpa card Segera hadir.
 Slug yang belum
 memiliki konten atau tidak dikenal menghasilkan 404; controller hanya membaca
 filename yang tercantum dalam registry, bukan path dari URL pengguna.
@@ -27,6 +28,15 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 - `resources/materi/kelas-abstrak.php`: lima tujuan, enam bagian BAB 6, contoh
   ABC/TypeError/method konkret/duck typing, hierarki sensor, dua tabel, Live Coding,
   tiga latihan mandiri, lima rangkuman, tiga refleksi dan kuis 3 PG + 2 isian kode.
+- `resources/materi/evaluasi-akhir.php`: bank 20 soal (10 PG, 5 isian, 5 uraian),
+  jawaban objektif dan pertanyaan uraian.
+- `config/evaluasi.php`: durasi, ambang objektif, key dan versi storage.
+- `app/Http/Controllers/EvaluasiAkhirController.php`: tiga halaman BAB 7;
+  route spesifik didefinisikan sebelum route materi dinamis.
+- `resources/views/evaluasi/`: layout OOPy bersama, aturan/riwayat, ujian, hasil
+  dan hasil evaluasi.
+- `public/js/evaluasi/`: model/penilaian, storage, ticker dan interaksi halaman.
+- `public/css/oopy/evaluasi/evaluasi.css`: gaya khusus `.oopy-final-exam`.
 - `app/Http/Controllers/MateriController.php`: `index()` untuk daftar dan `show()`
   untuk detail yang terdaftar, tanpa query database.
 - `resources/views/materi/show.blade.php`: breadcrumb, header, konten BAB,
@@ -84,13 +94,14 @@ juga divalidasi.
 Rujukan konsep Python: [konvensi non-public dan name mangling](https://docs.python.org/3/tutorial/classes.html#private-variables)
 serta [property dan setter](https://docs.python.org/3/library/functions.html#property).
 
-Navigasi otomatis mengikuti registry: BAB 1 → BAB 2 → BAB 3 → BAB 4 → BAB 5 → BAB 6.
+Navigasi otomatis mengikuti registry: BAB 1 → BAB 2 → BAB 3 → BAB 4 → BAB 5 → BAB 6 → BAB 7.
 BAB 3 memiliki Previous ke BAB 2 dan Next ke BAB 4; BAB 4 memiliki Previous ke
 BAB 3 dan Next ke BAB 5. Next terkunci sebelum kuis lulus (minimal 4/5 benar).
 BAB 5 memiliki Previous ke BAB 4 dan Next/CTA ke BAB 6 yang terbuka setelah
-kuis lulus. BAB 6 memiliki Previous ke BAB 5 dan kembali ke daftar materi,
-tanpa Next/CTA karena belum ada BAB lanjutan. Controller dan routing existing
-mendukung alur ini; direct URL seluruh BAB tetap HTTP 200 tanpa progres tersimpan.
+kuis lulus. BAB 6 memiliki Previous ke BAB 5 dan Next ke Evaluasi Akhir setelah
+minimal 4/5 benar (80%). BAB 7 memiliki Previous ke BAB 6 dan kembali ke daftar
+materi, tanpa Next ke BAB lanjutan. Direct URL seluruh BAB tetap HTTP 200 tanpa
+progres tersimpan; gate tersebut mengarahkan alur belajar pada browser.
 
 ## Sidebar navigasi BAB
 
@@ -333,8 +344,8 @@ Seluruh BAB tersedia memakai engine kuis existing dan standar kelulusan yang sam
 BAB 6 memakai soal ABC untuk kontrak eksplisit (B), class abstrak tidak dapat
 diinstansiasi secara normal (D), ABC tidak wajib untuk semua polimorfisme (B),
 serta isian `@abstractmethod` dan `abc`. Explanation tetap tersedia di data PHP
-dan disaring dari JSON UI sesuai engine existing. Lulus BAB 6 menampilkan
-Evaluasi selesai tanpa Next; retry/refresh tetap mempertahankan hasil terbaik.
+dan disaring dari JSON UI sesuai engine existing. Lulus BAB 6 membuka Next ke
+BAB 7; retry/refresh tetap mempertahankan hasil terbaik.
 Data berasal dari array `quiz` di file materi masing-masing BAB dan
 diserialisasi sebagai JSON oleh Blade. Schema data tetap mempertahankan `correct`,
 `answer`, dan `explanation`; `explanation` disaring sebelum dikirim ke halaman.
@@ -399,8 +410,9 @@ Sebelum lulus, BAB berkuis yang memiliki
 sejak HTML awal. Sesudah lulus, link Next di navigasi bawah langsung terbuka tanpa
 reload dan CTA dengan URL yang sama muncul di kartu hasil. Previous dan kembali
 ke daftar materi tetap tersedia. BAB tanpa kuis tetap memiliki link Next biasa.
-BAB terakhir tidak membuat CTA/URL kosong dan menampilkan **Evaluasi selesai.**
-ketika lulus, tanpa menyebut BAB berikutnya.
+Template BAB berkuis tanpa `$nextChapter` tidak membuat CTA/URL kosong dan
+menampilkan **Evaluasi selesai.** ketika lulus. Saat ini keenam BAB berkuis
+memiliki Next; BAB 7 menggunakan evaluasi terpisah dan tidak memakai engine ini.
 
 Controller mengirim `$chapter['slug']`; Blade meneruskannya melalui
 `data-chapter-slug`, sehingga engine tidak menebak URL atau hardcode identitas BAB.
@@ -447,7 +459,7 @@ membuka Next. Jumlah benar dari storage harus integer dalam rentang 0–5.
   Tidak ada backend progres atau penyimpanan nilai. Setelah login/dashboard dan
   progres backend tersedia, gating dapat dipindahkan ke server. Status kuis tidak
   mengubah hasil Live Coding.
-- BAB 1–6 memiliki detail. Belum ada BAB lanjutan, autentikasi, database materi,
+- BAB 1–6 memiliki detail dan BAB 7 memiliki evaluasi khusus. Belum ada BAB 8, autentikasi, database materi,
   dashboard, atau perubahan pada engine Live Coding, navbar, footer, dan Beranda.
 
 ## Pengujian
@@ -520,7 +532,7 @@ Tes kuis memeriksa BAB 1–6: hasil awal tersembunyi, Next terkunci, semua soal 
 dijawab, 0–3 benar tetap terkunci, tepat 4 benar membuka Next tanpa reload, semua
 benar bernilai 100, CTA memakai URL yang sama, hasil agregat tanpa review/kunci,
 refresh setelah lulus, Coba Lagi serta kegagalan berikutnya tetap mempertahankan
-progres, dan BAB terakhir tanpa Next. Browser baru, storage rusak dan kegagalan
+progres, serta BAB 6 yang membuka evaluasi khusus. Browser baru, storage rusak dan kegagalan
 penyimpanan turut diperiksa. Layout form/hasil diuji pada 320/390/768/1024/1440px.
 Semua BAB memeriksa 3 PG + 2 code-fill, input kosong/spasi, trim, case sensitivity,
 radio keyboard, retensi/pengubahan jawaban, Enter, nilai 0/20/40/60/80/100, dan sidebar
@@ -578,7 +590,10 @@ konfigurasi lingkungan. Peringatan tersebut tidak menggagalkan tes; konfigurasi
 PHP di luar repository tidak diubah. Tidak ada tes wajib yang belum dijalankan
 atau kegagalan fungsional yang masih terbuka pada pekerjaan ini.
 
-## Hasil verifikasi implementasi BAB 6 — 8 Oktober 2026
+## Riwayat verifikasi implementasi BAB 6 — 8 Oktober 2026 (sebelum BAB 7)
+
+Tabel ini mencatat kondisi sebelum Evaluasi Akhir tersedia. BAB 6 masih menjadi
+BAB terakhir pada eksekusi tersebut; hasil BAB 7 dicatat pada bagian berikutnya.
 
 | Perintah | Hasil eksekusi |
 | --- | --- |
@@ -608,3 +623,199 @@ DOCX acuan tidak tersedia, sehingga kesesuaian materi didasarkan pada spesifikas
 tertulis dalam permintaan. Kode/skor latihan belum dipersistenkan; input interaktif,
 autentikasi, sinkronisasi progres server dan BAB lanjutan belum tersedia.
 Tidak ada dependency baru, commit atau push pada implementasi ini.
+
+## BAB 7 — Evaluasi Akhir
+
+Tiga halaman menggunakan visual OOPy dan pola dua screenshot referensi:
+
+| URL | Named route | Isi |
+| --- | --- | --- |
+| `/materi/evaluasi-akhir` | `evaluasi.index` | Aturan, konfirmasi Mulai, resume sesi dan riwayat. |
+| `/materi/evaluasi-akhir/ujian` | `evaluasi.exam` | Timer, grid 20 nomor, satu soal, penanda tinjauan dan ringkasan pengumpulan. |
+| `/materi/evaluasi-akhir/hasil` | `evaluasi.results` | Hasil objektif, uraian Belum dinilai, tinjauan jawaban, riwayat dan ulangi. Query `attempt` memilih hasil tersimpan tertentu. |
+
+Dokumen OOPy_Modul_Ajar_FINAL(2).docx tidak tersedia dalam workspace. Bank soal,
+pertanyaan uraian mengikuti teks lengkap dalam permintaan.
+Screenshot dipakai sebagai inspirasi susunan aturan/riwayat serta sidebar/soal;
+tidak ada logo, palet, pertanyaan atau footer StegoLearn yang disalin.
+
+### Konfigurasi
+
+Ubah `config/evaluasi.php` untuk aturan latihan. Durasi 40 menit dan nilai 70
+merupakan konfigurasi referensi UI, bukan ketentuan asli modul. Evaluasi dapat
+langsung diulang setelah selesai, termasuk setelah nilai di bawah ambang atau waktu habis.
+Jumlah/komposisi soal diturunkan dari bank di `resources/materi/evaluasi-akhir.php`.
+
+| Key | Default | Makna |
+| --- | ---: | --- |
+| `duration_seconds` | 2400 | Durasi setelah pengguna mengonfirmasi Mulai. |
+| `pass_threshold` | 70 | Ambang nilai bagian objektif, bukan kelulusan keseluruhan. |
+| `storage_key` | `oopy.finalExam.v1` | Namespace terpisah dari `oopy.quiz.progress`. |
+| `schema_version` / `content_version` | 1 / 1 | Kontrak data dan versi bank soal; perubahan versi memerlukan migrasi/penanganan sesi lama. |
+
+Sesi menyimpan snapshot durasi/ambang sehingga perubahan konfigurasi
+tidak diam-diam mengubah aturan sesi yang sudah dimulai. Jika konfigurasi Laravel
+di-cache, perbarui cache konfigurasi melalui prosedur deployment yang digunakan.
+
+### Pengerjaan, timer dan navigasi
+
+Tidak ada sesi sebelum pengguna mengonfirmasi dialog Mulai. Sesi menyimpan
+startedAt/deadline dan timer selalu menghitung selisih timestamp. Refresh,
+berpindah halaman dan melanjutkan pengerjaan tidak memulai ulang 40 menit.
+Satu ticker per dokumen dihentikan saat pagehide dan dipulihkan saat kembali
+melalui bfcache. Peringatan tampil pada lima menit dan satu menit terakhir.
+Saat deadline tercapai, sesi diselesaikan sekali, termasuk ketika halaman aturan
+sedang terbuka. Waktu selesai otomatis dibatasi pada deadline. Setelah selesai,
+tombol Ulangi Evaluasi langsung aktif tanpa countdown jeda.
+
+Grid lima kolom memiliki 20 tombol. Jawaban/soal aktif/penanda disimpan setiap
+perubahan. Label aria-current, teks aria-label dan simbol membedakan terjawab,
+belum dijawab, aktif dan ditandai, tanpa memberi indikator jawaban salah selama
+sesi aktif. Desktop mulai 992px memakai sidebar 280px dan card soal. Tablet/mobile
+memakai satu kolom, timer ringkas dan native details "Navigasi Soal".
+
+Selesai Evaluasi membuka ringkasan jumlah terjawab/belum dijawab dan sisa waktu.
+Pengguna bisa kembali mengerjakan atau mengumpulkan dengan konfirmasi. Pengumpulan
+dengan jawaban kosong diperbolehkan setelah ringkasan; objektif kosong dihitung
+tidak benar, sedangkan uraian tetap tidak diberi nilai otomatis.
+
+### Penilaian dan hasil
+
+Bank berisi 10 PG, 5 isian kode dan 5 uraian. Kunci PG (indeks 0-based):
+2, 3, 0, 2, 0, 2, 3, 0, 1, 3. Kunci isian: self.nilai = nilai,
+return self._ph, super().__init__(nama, lokasi), baca_data, @abstractmethod.
+Isian dibandingkan sebagai token terbatas: case Python dan batas token dipertahankan;
+spasi luar/jarak antartoken yang setara diterima. Substring, tambahan statement,
+komentar atau newline di tengah jawaban tidak diterima. Tidak ada eval atau
+eksekusi isian kode.
+
+Nilai objektif = benar / 15 × 100. Status memakai nilai sebelum pembulatan;
+tampilan maksimal dua angka desimal. Contoh 10/15 = 66,67 di bawah 70, sedangkan
+11/15 = 73,33 memenuhi ambang. Uraian hanya dihitung keterisiannya, ditampilkan
+untuk tinjauan dengan label Belum dinilai, dan tidak dinilai berdasarkan panjang
+teks. Tidak ada status Lulus Evaluasi Akhir karena uraian belum dinilai.
+Peninjauan jawaban benar/salah hanya tersedia setelah sesi selesai.
+
+Riwayat berasal dari sesi nyata, terbaru di atas, dan tidak disemai dengan contoh.
+ID sesi menjaga idempotensi Submit/refresh. Hasil kedaluwarsa ditandai Waktu habis
+beserta status objektif tersendiri. Durasi, jumlah benar/tidak benar dan uraian
+ditampilkan terpisah. Kunci di data frontend diperlukan untuk penilaian browser
+dan dapat diperiksa melalui developer tools, meskipun tidak ditampilkan sebagai
+feedback selama ujian berlangsung.
+
+### Penyimpanan dan batasan
+
+Schema v1 berisi `version`, `active`, dan `history`. Attempt menyimpan id,
+contentVersion, startedAt, deadline, policy, status, current, answers dan review;
+record selesai menambahkan finishedAt, timedOut dan result. Pembacaan memvalidasi
+ID, timestamp/deadline, jawaban, penanda, status serta versi; hasil tersimpan
+dihitung ulang dari jawaban. Record rusak diabaikan dengan pesan dan record valid
+dipertahankan. Write menggabungkan riwayat menurut ID agar Submit berulang atau
+record yang sudah ada tidak terduplikasi.
+
+Storage read/write menggunakan try/catch. Jika sesi baru tidak bisa disimpan,
+timer tidak dilanjutkan ke halaman ujian dan pengguna mendapat pesan. Jika write
+gagal saat sesi aktif, jawaban dipertahankan dalam memori halaman dengan peringatan
+agar tidak refresh/pindah. Jika pengumpulan gagal disimpan, hasil sementara tetap
+terlihat dan tombol Coba Simpan Hasil Lagi dapat memulihkan hasil setelah storage
+tersedia. Kuis BAB 1–6 tidak membaca/menulis namespace evaluasi.
+
+Penyimpanan hanya berlaku pada browser/origin yang sama, tanpa akun, backend,
+sinkronisasi perangkat, atau jaminan akses bersamaan lintas-tab. Menghapus storage
+menghapus progres/riwayat. Timer dan kunci di sisi browser dapat dimanipulasi;
+fitur ini merupakan latihan mandiri dan bukan pengamanan atau sertifikasi ujian resmi.
+
+### Isian kode langsung di dalam potongan kode
+
+Lima isian kode mempunyai satu textbox kosong pada posisi garis bawah di dalam
+pre/code. Teks sebelum dan sesudah kotak mempertahankan indentasi serta syntax
+highlighting; Prism hanya memproses dua span teks sehingga tidak menghapus input
+atau event penyimpanannya. Jawaban disimpan sebagai string yang sama seperti versi
+sebelumnya, dengan aturan normalisasi dan penilaian objektif tetap.
+
+Kotak pada potongan print(item.[kotak]()) dibuat lebih ringkas daripada kotak
+pernyataan lengkap. Input berlabel aksesibel, mendukung keyboard/focus ring,
+mempertahankan jawaban saat pindah soal/refresh, dan diuji pada lima viewport.
+
+Mini project evaluasi akhir dihapus: tidak ada route, halaman, data/rubrik,
+editor atau tombol mini project pada katalog, aturan dan hasil. URL lama
+/materi/evaluasi-akhir/mini-project menghasilkan 404. Live Coding BAB 1–6 tetap.
+
+Riwayat dan sesi aktif v1 tetap terbaca. Field cooldownSeconds pada policy lama
+diabaikan/dihapus ketika data dibaca; jawaban, deadline dan hasil tetap dipertahankan.
+
+### Menjalankan tes Evaluasi Akhir
+
+Gunakan server/dependensi browser yang telah dijelaskan di atas, kemudian:
+
+```powershell
+php artisan test
+node --test tests/js/*.test.js
+node tests/browser/evaluasi.mjs
+node tests/browser/material.mjs
+node tests/browser/quiz.mjs
+node tests/browser/visual.mjs
+Get-ChildItem public/js/evaluasi/*.js | ForEach-Object { node --check $_.FullName }
+php vendor/bin/pint --test --dirty
+git diff --check
+```
+
+Test baru mencakup bank soal dan route, nilai/ambang tanpa pembulatan, normalisasi
+token, deadline, migrasi policy lama, schema rusak, write failure, interval tunggal/binding
+browser, UI keyboard/grid/flag, refresh/resume, Submit ganda, expiry, review tanpa
+HTML injection, pemulihan penyimpanan, kotak isian inline dan layout lima viewport.
+
+### Riwayat verifikasi awal BAB 7 — 8 Oktober 2026 (sebelum penghapusan jeda/mini project)
+
+Bagian ini mencatat implementasi awal. Jeda ulang dan mini project kemudian
+dihapus sesuai permintaan; verifikasi perubahan tersebut dicatat sesudah riwayat ini.
+
+| Perintah | Hasil yang dijalankan |
+| --- | --- |
+| `php artisan test` | Lulus: 33 tes, 1152 assertions, termasuk regresi BAB 1–6. |
+| `node --test tests/js/*.test.js` | Lulus: 19 tes (9 logika evaluasi, 10 regresi runtime/checker/contoh materi). |
+| `node tests/browser/evaluasi.mjs` | Lulus: konfirmasi/timer, 20 nomor, PG/isian/uraian, flag, refresh/resume, hasil 66,67/73,33, cooldown, expiry saat ujian/aturan, Submit ganda, review aman, storage rusak/ditolak, retry write dan mini project asli. |
+| `node tests/browser/material.mjs` | Lulus: BAB 1–6 dan gate BAB 6 → BAB 7, kembali melalui Previous, sidebar dan latihan existing. |
+| `node tests/browser/quiz.mjs` | Lulus: keenam kuis lima soal, passing 80%, retry/refresh/storage dan Next BAB 6 menuju evaluasi. |
+| `node tests/browser/visual.mjs` | Lulus: 13 halaman (9 existing + 4 evaluasi), Prism/fallback/no-JS dan responsivitas. |
+| `node --check public/js/evaluasi/*.js` (tiap file), `oopy-material.js`, `oopy-quiz.js` | Lulus. |
+| `php vendor/bin/pint --test --dirty` serta pemeriksaan empat file PHP baru | Lulus. |
+| `git diff --check` | Lulus. |
+
+Browser menggunakan Edge headless dan CDN existing pada server lokal
+127.0.0.1:8017. Viewport: 320, 390, 768, 1024 dan 1440px; input isian kode dan
+textarea uraian turut diuji pada kelima ukuran tersebut. Screenshot aturan dan
+ujian desktop/mobile diperiksa. Verifikasi tambahan mini project memastikan
+Run/Reset tampil, sedangkan Submit/progres otomatis disembunyikan untuk rubrik
+manual. Tidak ada page error JavaScript pada eksekusi akhir.
+
+Percobaan awal browser menemukan kesalahan binding fungsi timer Chromium;
+fungsi global kini dipanggil dengan receiver yang benar dan mempunyai test regresi.
+Test navigasi kembali juga diperbarui untuk layout BAB 7 yang terpisah dari
+material-navigation. Pengujian terkait diulang dan lulus, tanpa menghapus
+assertion penting. Tidak ada kegagalan yang masih terbuka atau perintah wajib
+yang belum dijalankan. Peringatan konfigurasi PHP OpenSSL ganda tetap tidak
+menggagalkan tes; konfigurasi PHP di luar repository tidak diubah.
+
+Semua perubahan berada pada workspace lokal. Tidak ada commit/push, dependency,
+database, autentikasi, atau perubahan engine kuis/editor existing dalam pekerjaan ini.
+
+### Verifikasi perubahan evaluasi — 8 Oktober 2026
+
+Jeda ulang dan mini project telah dihapus. Kelima textbox isian berada di dalam
+potongan kode pada posisi garis kosong, dengan lebar menyesuaikan jawaban dan
+batas responsif. Syntax highlighting memproses teks di kedua sisi kotak tanpa
+menghapus input. Riwayat/jawaban lama tetap tersedia; policy jeda lama tidak
+mengunci tombol Ulangi Evaluasi.
+
+| Pengujian | Hasil eksekusi |
+| --- | --- |
+| `php artisan test --compact` | 33 tes lulus, 1143 assertions. |
+| `node --test tests/js/*.test.js` | 19 tes lulus, termasuk kompatibilitas sesi/riwayat lama tanpa jeda. |
+| `node tests/browser/evaluasi.mjs` | Lulus: ulang langsung setelah gagal/expiry dan riwayat lama, kelima input inline pada lima viewport, highlighting, autosave/refresh, penilaian, storage error/recovery, serta 404 mini project. |
+| `node tests/browser/visual.mjs` | Lulus: 12 halaman existing/evaluasi, Prism/fallback, keenam kuis dan lima viewport. |
+| Sintaks JS evaluasi, Pint `--test --dirty`/file PHP terkait, `git diff --check` | Lulus. |
+
+Browser menggunakan Edge headless dengan aset CDN existing. Tidak ada page error
+JavaScript atau kegagalan pengujian tersisa. Tidak ada perubahan pada kuis atau
+Live Coding BAB 1–6, commit, maupun push.

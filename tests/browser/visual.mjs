@@ -9,6 +9,7 @@ const errors = [];
 page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
 const chapters = chapterData.map(({ slug }) => `/materi/${slug}`);
+const evaluationPages = ['/materi/evaluasi-akhir', '/materi/evaluasi-akhir/ujian', '/materi/evaluasi-akhir/hasil'];
 const samples = new Map();
 const luminance = (color) => {
     const [r, g, b] = color.match(/[\d.]+/g).slice(0, 3).map(Number).map((value) => {
@@ -20,7 +21,7 @@ const luminance = (color) => {
 const contrast = (a, b) => (Math.max(luminance(a), luminance(b)) + .05) / (Math.min(luminance(a), luminance(b)) + .05);
 
 try {
-    for (const path of ['/', '/materi', ...chapters, '/editor']) {
+    for (const path of ['/', '/materi', ...chapters, ...evaluationPages, '/editor']) {
         assert.equal((await page.goto(`${base}${path}`, { waitUntil: 'networkidle' })).status(), 200);
         if (chapters.includes(path)) {
             const codes = page.locator('.material-section:not(.material-quiz) .material-code:not(.material-output) code');
@@ -30,6 +31,9 @@ try {
             if (await page.locator('[data-quiz="code-card"]').isVisible()) {
                 assert.ok(await page.locator('[data-quiz="code"] .token').count());
             }
+        } else if (evaluationPages.includes(path)) {
+            assert.equal(await page.locator('.oopy-final-exam').count(), 1);
+            assert.equal(await page.locator('script[src*="vendor/prism"]').count(), 1);
         } else {
             assert.equal(await page.locator('script[src*="vendor/prism"]').count(), 0);
         }
@@ -39,7 +43,7 @@ try {
             assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${path}: overflow at ${width}px`);
         }
     }
-    console.log('PASS: nine pages, highlighted BAB 1–6 examples, no overflow at 320/390/768/1024/1440px');
+    console.log('PASS: twelve pages, BAB 1–6 examples and three final evaluation pages, no overflow at 320/390/768/1024/1440px');
 
     await page.goto(`${base}${chapters[1]}`, { waitUntil: 'networkidle' });
     const source = '# Catatan habitat\nclass Ekosistem:\n    def info(self, nama):\n        return f"{nama} memiliki {120} hektar"\n\nprint(len(range(85)))\nhtml = "<img src=x onerror=alert(1)> & rawa"';
