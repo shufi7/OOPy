@@ -39,6 +39,11 @@
 
     {{-- Konten Utama --}}
     <main class="flex-grow-1 d-flex flex-column">
+        @if (session('status'))
+            <div class="container pt-3">
+                <div class="alert alert-success mb-0" role="status">{{ session('status') }}</div>
+            </div>
+        @endif
         @yield('content')
     </main>
 

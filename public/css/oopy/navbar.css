@@ -34,6 +34,31 @@
     background-color: var(--oopy-selected);
 }
 
+.site-navbar .oopy-account {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.site-navbar .oopy-account-toggle {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.site-navbar .oopy-account-menu {
+    width: min(20rem, calc(100vw - 2rem));
+    max-width: 100%;
+    border-color: var(--oopy-border);
+    box-shadow: var(--oopy-shadow);
+    font-size: 1rem;
+}
+
+.site-navbar .oopy-account-menu .dropdown-item-text {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
 @media (max-width: 575.98px) {
     .navbar-logo {
         width: 52px;

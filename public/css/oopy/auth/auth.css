@@ -1,0 +1,132 @@
+.oopy-auth {
+    display: grid;
+    place-items: center;
+    flex: 1;
+    padding: clamp(1rem, 4vw, 3rem) 1rem;
+    background: var(--oopy-bg);
+}
+
+.oopy-auth-card {
+    width: 100%;
+    max-width: 460px;
+    min-width: 0;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border: 1px solid var(--oopy-border);
+    border-radius: 20px;
+    background: var(--oopy-surface);
+    box-shadow: var(--oopy-shadow);
+    overflow-wrap: anywhere;
+}
+
+.oopy-auth-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    margin-bottom: 1.5rem;
+    color: var(--oopy-primary);
+    font-size: 1.75rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.oopy-auth-card h1 {
+    margin-bottom: .75rem;
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
+    font-weight: 800;
+    text-align: center;
+}
+
+.oopy-auth-intro {
+    margin-bottom: 1.75rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.oopy-auth-form {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.oopy-auth-label {
+    display: block;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.oopy-auth-input-wrap {
+    position: relative;
+}
+
+.oopy-auth-input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: .7rem .85rem;
+    border: 1px solid var(--oopy-border);
+    border-radius: 8px;
+    background: var(--oopy-surface);
+    color: var(--oopy-text);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.oopy-auth-input:focus-visible {
+    outline: 2px solid var(--oopy-primary);
+    outline-offset: 2px;
+}
+
+.oopy-auth-input[aria-invalid="true"] {
+    border-color: #a02626;
+}
+
+.oopy-auth-input-password {
+    padding-right: 6.5rem;
+}
+
+.oopy-auth-password-toggle {
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    min-height: 40px;
+    padding: .25rem .4rem;
+    border: 0;
+    border-radius: 4px;
+    background: var(--oopy-mint);
+    color: var(--oopy-link);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.oopy-auth-hint,
+.oopy-auth-error {
+    margin: .5rem 0 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.oopy-auth-error {
+    color: #a02626;
+}
+
+.oopy-auth-button {
+    width: 100%;
+    min-height: 48px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.oopy-auth-switch {
+    margin: 1.5rem 0 0;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.oopy-auth-switch a {
+    font-weight: 700;
+}
