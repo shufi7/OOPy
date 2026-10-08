@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { chapters } from './chapters.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
@@ -97,7 +98,8 @@ const assertProgress = async (slug, bestCorrect) => {
 };
 
 try {
-    for (const [slug, hasNext] of [['dasar-pemrograman-oop', true], ['kelas-dan-objek', true], ['enkapsulasi', false]]) {
+    for (const { slug, next: nextSlug } of chapters) {
+        const hasNext = nextSlug !== null;
         await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
         await ready();
         const questions = JSON.parse(await part('questions').textContent());
@@ -110,6 +112,8 @@ try {
         assert.ok(questions.every((question) => !Object.hasOwn(question, 'explanation')));
         assert.equal(await part('results').isVisible(), false);
         await assertGate(false, hasNext);
+        if (hasNext) assert.equal(await page.locator('[data-quiz-next-link]').getAttribute('href'), `${base}/materi/${nextSlug}`);
+        assert.equal(await page.locator('a[href$="/materi/kelas-abstrak"]').count(), 0);
         await assertNoFeedback();
         await assertLayout(`${slug}-form`);
         const originalOutput = await page.locator('[data-role="code-output"]').first().textContent();
@@ -229,41 +233,49 @@ try {
         console.log(`PASS: ${slug}: 5 questions (3 MC/2 code-fill), scores 0/20/40/60/80/100, 3 fails/4 passes, best results, retry/refresh, responsive form/results`);
     }
     const allProgress = await page.evaluate(() => JSON.parse(localStorage.getItem('oopy.quiz.progress')));
-    assert.deepEqual(Object.keys(allProgress).sort(), ['dasar-pemrograman-oop', 'kelas-dan-objek', 'enkapsulasi'].sort());
+    assert.deepEqual(Object.keys(allProgress).sort(), chapters.map((chapter) => chapter.slug).sort());
     for (const slug of Object.keys(allProgress)) await assertProgress(slug, 5);
 
-    const fresh = await browser.newContext();
-    const freshPage = await fresh.newPage();
-    await freshPage.goto(`${base}/materi/kelas-dan-objek`, { waitUntil: 'domcontentloaded' });
-    await freshPage.locator('[data-quiz="form"]').waitFor({ state: 'visible' });
-    assert.equal(await freshPage.locator('[data-quiz-next-locked]').isVisible(), true);
-    assert.equal(await freshPage.locator('[data-quiz-next-link]').isVisible(), false);
-    assert.equal(await freshPage.locator('.material-navigation [rel="prev"]').isVisible(), true);
-    assert.equal(await freshPage.getByRole('link', { name: 'Kembali ke Daftar Materi' }).isVisible(), true);
-    await fresh.close();
-
-    // Corrupted progress fails closed, and a denied storage write still allows a session to pass.
-    const malformed = await browser.newContext();
-    const malformedPage = await malformed.newPage();
-    const storageErrors = [];
-    malformedPage.on('pageerror', (error) => storageErrors.push(error.message));
-    await malformedPage.addInitScript(() => localStorage.setItem('oopy.quiz.progress', '{bad JSON'));
-    await malformedPage.goto(`${base}/materi/kelas-dan-objek`, { waitUntil: 'domcontentloaded' });
-    await malformedPage.locator('[data-quiz="form"]').waitFor({ state: 'visible' });
-    assert.equal(await malformedPage.locator('[data-quiz-next-locked]').isVisible(), true);
-    await malformedPage.evaluate(() => {
-        Storage.prototype.setItem = () => { throw new Error('Storage disabled'); };
-    });
-    const storedQuestions = JSON.parse(await malformedPage.locator('[data-quiz="questions"]').textContent());
-    for (const question of storedQuestions) {
-        if (question.type === 'code_fill') await malformedPage.locator('[data-quiz="code-fill"]').fill(correctAnswer(question));
-        else await malformedPage.locator('[data-quiz="options"] input').nth(question.correct).check();
-        await malformedPage.locator('[data-quiz="next"]').click();
+    for (const { slug, next: nextSlug } of chapters) {
+        const fresh = await browser.newContext();
+        const freshPage = await fresh.newPage();
+        const storageErrors = [];
+        freshPage.on('pageerror', (error) => storageErrors.push(error.message));
+        await freshPage.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
+        await freshPage.locator('[data-quiz="form"]').waitFor({ state: 'visible' });
+        const assertFreshGate = async () => {
+            if (nextSlug) {
+                assert.equal(await freshPage.locator('[data-quiz-next-locked]').isVisible(), true);
+                assert.equal(await freshPage.locator('[data-quiz-next-link]').isVisible(), false);
+            } else {
+                assert.equal(await freshPage.locator('[data-quiz-next-link], [data-quiz-next-locked]').count(), 0);
+            }
+        };
+        await assertFreshGate();
+        assert.equal(await freshPage.getByRole('link', { name: 'Kembali ke Daftar Materi' }).isVisible(), true);
+        // Malformed JSON, malformed roots and invalid records all fail closed.
+        for (const value of ['{bad JSON', '[]', 'null', '42', ...[-1, 6, '4', null].map((bestCorrect) => JSON.stringify({ [slug]: { passed: true, bestCorrect } }))]) {
+            await freshPage.evaluate((value) => localStorage.setItem('oopy.quiz.progress', value), value);
+            await freshPage.reload({ waitUntil: 'domcontentloaded' });
+            await freshPage.locator('[data-quiz="form"]').waitFor({ state: 'visible' });
+            await assertFreshGate();
+        }
+        // A denied write still permits passing within the current page.
+        await freshPage.evaluate(() => {
+            Storage.prototype.setItem = () => { throw new Error('Storage disabled'); };
+        });
+        const storedQuestions = JSON.parse(await freshPage.locator('[data-quiz="questions"]').textContent());
+        for (const question of storedQuestions) {
+            if (question.type === 'code_fill') await freshPage.locator('[data-quiz="code-fill"]').fill(correctAnswer(question));
+            else await freshPage.locator('[data-quiz="options"] input').nth(question.correct).check();
+            await freshPage.locator('[data-quiz="next"]').click();
+        }
+        assert.equal(await freshPage.locator('[data-quiz="status"]').textContent(), 'Lulus');
+        if (nextSlug) assert.equal(await freshPage.locator('[data-quiz-next-link]').isVisible(), true);
+        else assert.equal(await freshPage.locator('[data-quiz="continue"], [data-quiz-next-link]').count(), 0);
+        assert.deepEqual(storageErrors, []);
+        await fresh.close();
     }
-    assert.equal(await malformedPage.locator('[data-quiz="status"]').textContent(), 'Lulus');
-    assert.equal(await malformedPage.locator('[data-quiz-next-link]').isVisible(), true);
-    assert.deepEqual(storageErrors, []);
-    await malformed.close();
 
     // Passes under the retired one-correct rule must not unlock the new five-question quiz.
     const legacy = await browser.newContext();

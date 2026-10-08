@@ -170,7 +170,7 @@ PYTHON,
 
                     'title' => 'Coba sendiri: Satu method untuk empat sensor',
 
-                    'description' => 'Lengkapi status() pada SensorPH dan SensorSuhu, tambahkan SensorTinggiAir serta SensorKekeruhan dengan status() yang berbeda, masukkan semuanya ke list sensor, lalu panggil item.status() melalui satu loop tanpa isinstance().',
+                    'description' => 'Lengkapi `status()` pada `SensorPH` dan `SensorSuhu`, tambahkan `SensorTinggiAir` serta `SensorKekeruhan` dengan status() yang berbeda, masukkan semuanya ke list `sensor`, lalu panggil status() melalui satu loop tanpa percabangan berdasarkan tipe object.',
 
                     'entry_file' => 'main.py',
 
@@ -217,6 +217,9 @@ PYTHON,
                     // ======================================
                     'checker' => <<<'PYTHON'
 import ast
+import contextlib
+import io
+import sys
 
 results = []
 
@@ -277,13 +280,13 @@ def cek_status():
     hasil = []
 
     for kelas in nama_class:
-
-        # Method harus dibuat pada class
-        # yang bersangkutan.
-        if "status" not in kelas.__dict__:
+        # Use the learner's actual objects, including constructors with arguments.
+        items = globals().get("sensor", [])
+        obj = next((item for item in items if type(item) is kelas), None)
+        if obj is None or not callable(getattr(obj, "status", None)):
             return False
 
-        teks = kelas().status()
+        teks = obj.status()
 
         # Method harus menghasilkan teks.
         if not isinstance(teks, str):
@@ -334,77 +337,88 @@ def cek_list_sensor():
 # ======================================
 
 def cek_loop_umum():
+    with open("main.py", encoding="utf-8") as berkas:
+        source = berkas.read()
+    pohon = ast.parse(source)
+    sensor_names = {"SensorPH", "SensorSuhu", "SensorTinggiAir", "SensorKekeruhan"}
 
-    with open(
-        "main.py",
-        encoding="utf-8"
-    ) as berkas:
-        pohon = ast.parse(berkas.read())
-
-    # Tidak menggunakan pemeriksaan tipe
-    # untuk memilih jenis sensor.
-    for node in ast.walk(pohon):
-
-        if isinstance(node, ast.Call):
-            if isinstance(node.func, ast.Name):
-
-                if node.func.id in (
-                    "isinstance",
-                    "type"
-                ):
-                    return False
-
-    # Cari loop yang membaca list sensor.
-    for node in ast.walk(pohon):
-
-        if not isinstance(node, ast.For):
-            continue
-
-        if not isinstance(node.target, ast.Name):
-            continue
-
-        if not isinstance(node.iter, ast.Name):
-            continue
-
-        if node.iter.id != "sensor":
-            continue
-
-        nama_item = node.target.id
-
-        # Cari pemanggilan item.status()
-        # pada body loop.
-        for bagian in node.body:
-
-            for panggilan in ast.walk(bagian):
-
-                if not isinstance(
-                    panggilan,
-                    ast.Call
-                ):
-                    continue
-
-                if not isinstance(
-                    panggilan.func,
-                    ast.Attribute
-                ):
-                    continue
-
-                if panggilan.func.attr != "status":
-                    continue
-
-                if not isinstance(
-                    panggilan.func.value,
-                    ast.Name
-                ):
-                    continue
-
-                if (
-                    panggilan.func.value.id
-                    == nama_item
-                ):
+    # Reject type dispatch in branch conditions, while allowing unrelated
+    # validation/debugging and ordinary value-based conditions in status().
+    def type_dispatch(test):
+        for node in ast.walk(test):
+            if isinstance(node, ast.Name) and node.id in sensor_names:
+                return True
+            if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value in sensor_names:
+                return True
+            if isinstance(node, ast.Attribute) and node.attr == "__class__":
+                return True
+            if not isinstance(node, ast.Call):
+                continue
+            name = (node.func.id if isinstance(node.func, ast.Name)
+                    else node.func.attr if isinstance(node.func, ast.Attribute) else "")
+            if name == "type":
+                return True
+            if name == "isinstance" and len(node.args) > 1:
+                if any(isinstance(part, ast.Name) and part.id in sensor_names
+                       for part in ast.walk(node.args[1])):
                     return True
+        return False
 
-    return False
+    for node in ast.walk(pohon):
+        if isinstance(node, (ast.If, ast.IfExp)) and type_dispatch(node.test):
+            return False
+        if isinstance(node, ast.Match):
+            if type_dispatch(node.subject) or any(
+                isinstance(part, ast.MatchClass) for part in ast.walk(node)
+            ):
+                return False
+
+    loops = [(node.lineno, node.end_lineno) for node in ast.walk(pohon)
+             if isinstance(node, (ast.For, ast.While, ast.ListComp,
+                                  ast.SetComp, ast.DictComp, ast.GeneratorExp))]
+    if not loops:
+        return False
+
+    # Replay the learner's source in an isolated namespace and observe real
+    # status() calls. A dead loop, empty iterable, or one sensor cannot pass.
+    # This accepts aliases, enumerate, comprehensions, and helper functions.
+    replay = {"__name__": "__main__", "__file__": __file__}
+    observed = []
+
+    def observe_status(obj, *args, **kwargs):
+        frame = sys._getframe(1)
+        in_loop = False
+        while frame is not None:
+            if frame.f_code.co_filename == __file__ and any(
+                start <= frame.f_lineno <= end for start, end in loops
+            ):
+                in_loop = True
+                break
+            frame = frame.f_back
+        value = obj.status(*args, **kwargs)
+        if in_loop:
+            observed.append((obj, value))
+        return value
+
+    class ObserveCalls(ast.NodeTransformer):
+        def visit_Call(self, node):
+            self.generic_visit(node)
+            if isinstance(node.func, ast.Attribute) and node.func.attr == "status":
+                replacement = ast.Call(
+                    func=ast.Name(id="_oopy_observe_status", ctx=ast.Load()),
+                    args=[node.func.value, *node.args], keywords=node.keywords)
+                return ast.copy_location(replacement, node)
+            return node
+
+    replay["_oopy_observe_status"] = observe_status
+    instrumented = ast.fix_missing_locations(ObserveCalls().visit(pohon))
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(compile(instrumented, __file__, "exec"), replay)
+    items = replay.get("sensor", [])
+    if not isinstance(items, list) or len(items) != 4:
+        return False
+    return all(any(obj is item and isinstance(value, str) and value.strip()
+                   for obj, value in observed) for item in items)
 
 
 # ======================================
@@ -438,7 +452,7 @@ check(
 check(
     "Empat implementasi status() berbeda",
     cek_status,
-    "Setiap class harus punya status() sendiri yang return teks berbeda dan tidak kosong."
+    "Setiap object harus menyediakan status() yang return teks berbeda dan tidak kosong."
 )
 
 check(
@@ -450,7 +464,7 @@ check(
 check(
     "Pemanggilan status() melalui satu loop",
     cek_loop_umum,
-    "Gunakan for item in sensor: print(item.status()) tanpa isinstance() atau type()."
+    "Proses keempat object dalam list sensor melalui loop yang memanggil status(), tanpa percabangan berdasarkan tipe."
 )
 PYTHON,
                 ],

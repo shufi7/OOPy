@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { chapters as chapterData } from './chapters.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
@@ -7,7 +8,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const errors = [];
 page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
-const chapters = ['/materi/dasar-pemrograman-oop', '/materi/kelas-dan-objek', '/materi/enkapsulasi'];
+const chapters = chapterData.map(({ slug }) => `/materi/${slug}`);
 const samples = new Map();
 const luminance = (color) => {
     const [r, g, b] = color.match(/[\d.]+/g).slice(0, 3).map(Number).map((value) => {
@@ -38,7 +39,7 @@ try {
             assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${path}: overflow at ${width}px`);
         }
     }
-    console.log('PASS: six pages, highlighted BAB 1/2/3 examples, no overflow at 320/390/768/1024/1440px');
+    console.log('PASS: eight pages, highlighted BAB 1–5 examples, no overflow at 320/390/768/1024/1440px');
 
     await page.goto(`${base}${chapters[1]}`, { waitUntil: 'networkidle' });
     const source = '# Catatan habitat\nclass Ekosistem:\n    def info(self, nama):\n        return f"{nama} memiliki {120} hektar"\n\nprint(len(range(85)))\nhtml = "<img src=x onerror=alert(1)> & rawa"';
@@ -124,7 +125,7 @@ try {
         await fallback.close();
     }
     assert.deepEqual(errors, []);
-    console.log('PASS: no-JS reading, blocked Prism fallback, five-question mixed quizzes in BAB 1/2/3, no page errors');
+    console.log('PASS: no-JS reading, blocked Prism fallback, five-question mixed quizzes in BAB 1–5, no page errors');
 
     if (process.env.OOPY_SCREENSHOT_DIR) {
         await page.goto(`${base}${chapters[1]}`, { waitUntil: 'networkidle' });
