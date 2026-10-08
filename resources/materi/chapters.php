@@ -1,3 +1,4 @@
+
 <?php
 
 return [
@@ -36,10 +37,13 @@ return [
     ],
     'pewarisan' => [
         'bab' => 'BAB 4',
-        'judul' => 'Pewarisan',
+        'judul' => 'Pewarisan (Inheritance)',
+        'content' => 'pewarisan.php',
         'poin' => [
-            'Hierarki Kelas',
-            'Override Metode',
+            'Superclass dan subclass',
+            'super() dan penggunaan ulang kode',
+            'Method overriding',
+            'Inheritance (is-a) vs composition (has-a)',
         ],
     ],
     'polimorfisme' => [
