@@ -85,19 +85,35 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         find('answered').textContent = `${answers.filter((answer, index) => hasAnswer(questions[index], answer)).length} dari ${questions.length} soal dijawab`;
     }
 
+    function sizeCodeFill() {
+        const input = find('code-fill');
+        const minimum = input.classList.contains('is-inline') ? 12 : 18;
+        input.style.setProperty('--answer-width', `${Math.max(minimum, input.value.length + 3)}ch`);
+    }
+
     function renderQuestion(focus = true) {
         const question = questions[current];
         find('counter').textContent = `Soal ${current + 1} dari ${questions.length} soal`;
         find('question').textContent = question.question;
         find('code-card').hidden = !question.code;
-        find('code').textContent = question.code || '';
-        window.OopySyntax?.highlight(find('code'));
-        find('options').replaceChildren();
         const codeFill = isCodeFill(question);
+        const source = question.code || '';
+        const blank = codeFill ? /_{3,}/.exec(source) : null;
+        const before = blank ? source.slice(0, blank.index) : source;
+        const after = blank ? source.slice(blank.index + blank[0].length) : '';
+        find('code-before').textContent = before;
+        find('code-after').textContent = after;
+        // Highlight source fragments, preserving the input and its event listener.
+        window.OopySyntax?.highlight(find('code-before'));
+        window.OopySyntax?.highlight(find('code-after'));
+        find('options').replaceChildren();
         find('options-group').hidden = codeFill;
         find('code-fill-group').hidden = !codeFill;
         find('code-fill').disabled = !codeFill;
+        find('code-fill').hidden = !codeFill;
+        find('code-fill').classList.toggle('is-inline', /\S/.test(after.split('\n')[0]));
         find('code-fill').value = codeFill ? answers[current] ?? '' : '';
+        sizeCodeFill();
         if (!codeFill) question.options.forEach((option, index) => {
             const label = document.createElement('label');
             label.className = 'oopy-quiz-option';
@@ -148,6 +164,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     find('code-fill').addEventListener('input', (event) => {
         if (completed || !isCodeFill(questions[current])) return;
         answers[current] = event.target.value;
+        sizeCodeFill();
         find('validation').textContent = '';
         updateAnswered();
     });

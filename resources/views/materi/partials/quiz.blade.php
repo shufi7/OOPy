@@ -12,7 +12,7 @@
         <ol>
             <li>Bacalah setiap pertanyaan dengan teliti.</li>
             @if (collect($content['quiz'])->contains(fn ($question) => ($question['type'] ?? 'multiple_choice') === 'code_fill'))
-            <li>Pilih satu jawaban untuk soal pilihan ganda; lengkapi bagian kosong dengan kode yang diminta untuk soal kode. Huruf besar/kecil mengikuti sintaks Python.</li>
+            <li>Pilih satu jawaban untuk soal pilihan ganda; untuk isian kode, ketik jawaban langsung di kotak kosong dalam potongan kode. Huruf besar/kecil mengikuti sintaks Python.</li>
             @else
             <li>Pilih satu jawaban yang menurutmu paling tepat.</li>
             @endif
@@ -35,7 +35,7 @@
             <p id="quiz-question" data-quiz="question"></p>
             <figure class="material-code" data-quiz="code-card" hidden>
                 <figcaption>Contoh Python</figcaption>
-                <pre tabindex="0" aria-label="Kode Python pada soal"><code class="language-python" data-quiz="code"></code></pre>
+                <pre tabindex="0" aria-label="Kode Python pada soal"><code data-quiz="code"><span class="language-python" data-quiz="code-before"></span><input class="oopy-quiz-code-fill" id="quiz-code-fill" data-quiz="code-fill" type="text" aria-label="Lengkapi bagian kosong pada kode Python" aria-describedby="quiz-question quiz-code-help" autocomplete="off" autocapitalize="off" spellcheck="false" disabled hidden><span class="language-python" data-quiz="code-after"></span></code></pre>
             </figure>
         </div>
         <fieldset class="oopy-quiz-options" aria-describedby="quiz-question" data-quiz="options-group">
@@ -43,8 +43,7 @@
             <div data-quiz="options"></div>
         </fieldset>
         <div class="oopy-quiz-code-fill-group" data-quiz="code-fill-group" hidden>
-            <label for="quiz-code-fill">Lengkapi bagian kosong</label>
-            <input class="oopy-quiz-code-fill" id="quiz-code-fill" data-quiz="code-fill" type="text" aria-describedby="quiz-question" autocomplete="off" autocapitalize="off" spellcheck="false" disabled>
+            <p id="quiz-code-help">Isi kotak kosong langsung di dalam kode. Huruf besar/kecil dan penulisan jawaban mengikuti sintaks yang diminta.</p>
         </div>
         <p class="oopy-quiz-validation" data-quiz="validation" role="alert"></p>
         <div class="oopy-quiz-navigation">

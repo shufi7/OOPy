@@ -12,6 +12,14 @@ page.on('request', (request) => { if (request.method() !== 'GET') writes.push(re
 const quiz = page.locator('#kuis');
 const part = (role) => quiz.locator(`[data-quiz="${role}"]`);
 const options = () => part('options').locator('input[type="radio"]');
+const assertInline = async (question) => {
+    const blank = /_{3,}/.exec(question.code);
+    assert.equal(await part('code-fill').evaluate((input) => input.parentElement === document.querySelector('[data-quiz="code"]') && input.closest('pre') !== null), true);
+    assert.equal(await part('code-before').textContent(), question.code.slice(0, blank.index));
+    assert.equal(await part('code-after').textContent(), question.code.slice(blank.index + blank[0].length));
+    assert.equal(await part('code-card').locator('input').count(), 1);
+    assert.doesNotMatch(await part('code').textContent(), /_{3,}/);
+};
 const next = () => part('next').click();
 const choose = async (answer) => {
     if (await part('code-fill').isVisible()) await part('code-fill').fill(String(answer));
@@ -22,6 +30,7 @@ const correctAnswer = (question) => question.type === 'code_fill' ? ` ${question
 const wrongAnswer = (question) => question.type === 'code_fill' ? question.answer.toUpperCase() : (question.correct + 1) % question.options.length;
 const answerAll = async (questions, correctIndices) => {
     for (const [index, question] of questions.entries()) {
+        if (question.type === 'code_fill') await assertInline(question);
         await choose(correctIndices.includes(index) ? correctAnswer(question) : wrongAnswer(question));
         await next();
     }
@@ -84,7 +93,11 @@ const assertLayout = async (label) => {
             assert.ok(await button.evaluate((el) => el.getBoundingClientRect().right <= innerWidth + 1), `${label}: button clipped at ${width}px`);
         }
         if (await part('code-fill').isVisible()) {
-            assert.ok(await part('code-fill').evaluate((el) => Math.abs(el.getBoundingClientRect().width - el.parentElement.getBoundingClientRect().width) < 1));
+            await part('code-fill').scrollIntoViewIfNeeded();
+            assert.ok(await part('code-fill').evaluate((el) => {
+                const rect = el.getBoundingClientRect();
+                return rect.left >= 0 && rect.right <= innerWidth + 1 && rect.height >= 44;
+            }), `${label}: inline input clipped at ${width}px`);
         }
         if (process.env.OOPY_SCREENSHOT_DIR && [390, 1440].includes(width)) {
             await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/${label}-${width}.png` });
@@ -194,6 +207,25 @@ try {
             await assertGate(false, hasNext);
             await assertProgress(slug, correct);
         }
+
+        // Both inline blanks retain keyboard edits and remain usable at every size.
+        for (let index = 0; index < 3; index++) { await choose(correctAnswer(questions[index])); await next(); }
+        for (const index of [3, 4]) {
+            await assertInline(questions[index]);
+            await part('code-fill').focus();
+            await page.keyboard.insertText(correctAnswer(questions[index]));
+            assert.equal(await part('code-fill').inputValue(), correctAnswer(questions[index]));
+            await assertLayout(`${slug}-inline-${index + 1}`);
+            if (index === 3) await next();
+        }
+        await part('previous').click();
+        assert.equal(await part('code-fill').inputValue(), correctAnswer(questions[3]));
+        await next();
+        assert.equal(await part('code-fill').inputValue(), correctAnswer(questions[4]));
+        // Return to an unsubmitted attempt so the existing 4/5 boundary test stays independent.
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await ready();
+        await assertGate(false, hasNext);
 
         // Four correct passes, including a trimmed code-fill answer in every chapter.
         await answerAll(questions, [0, 1, 2, 3]);

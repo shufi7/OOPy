@@ -91,7 +91,9 @@ try {
         assert.deepEqual(quizQuestions.map((question) => question.type), ['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill']);
         for (const question of quizQuestions) {
             if (question.code) {
-                assert.equal(await page.locator('[data-quiz="code"]').textContent(), question.code);
+                const expected = question.type === 'code_fill' ? question.code.replace(/_{3,}/, '') : question.code;
+                assert.equal(await page.locator('[data-quiz="code"]').textContent(), expected);
+                if (question.type === 'code_fill') assert.equal(await page.locator('[data-quiz="code"] input').count(), 1);
                 assert.ok(await page.locator('[data-quiz="code"] .token').count());
             }
             if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(question.answer);

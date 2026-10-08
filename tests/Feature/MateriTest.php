@@ -191,6 +191,13 @@ class MateriTest extends TestCase
             preg_match('/data-quiz="questions">(.*?)<\/script>/s', $html, $matches);
             $questions = json_decode($matches[1], true, flags: JSON_THROW_ON_ERROR);
 
+            $dom = new DOMDocument;
+            @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+            $xpath = new DOMXPath($dom);
+            $this->assertSame(1, $xpath->query('//*[@id="kuis"]//pre/code/input[@data-quiz="code-fill"]')->length);
+            $this->assertSame(1, $xpath->query('//*[@id="kuis"]//input[@data-quiz="code-fill"]')->length);
+            $this->assertSame(2, $xpath->query('//*[@id="kuis"]//pre/code/span[contains(@class,"language-python")]')->length);
+
             $this->assertCount(5, $questions);
             $this->assertSame(['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill'], array_column($questions, 'type'));
             $this->assertSame($codeAnswers, array_column(array_slice($questions, 3), 'answer'));
@@ -198,6 +205,7 @@ class MateriTest extends TestCase
                 if (($question['type'] ?? 'multiple_choice') === 'code_fill') {
                     $this->assertContains($question['answer'], $codeAnswers);
                     $this->assertNotEmpty($question['code']);
+                    $this->assertSame(1, preg_match_all('/_{3,}/', $question['code']));
                     $this->assertArrayNotHasKey('options', $question);
                 } else {
                     $this->assertCount(4, $question['options']);

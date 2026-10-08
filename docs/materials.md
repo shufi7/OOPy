@@ -378,12 +378,29 @@ Untuk soal melengkapi kode, gunakan data berikut tanpa `options`/`correct`:
 ],
 ```
 
-Engine memakai card/counter/navigasi/hasil yang sama, dengan satu input teks
-berlabel menggantikan radio pada soal code-fill. Jawaban dinormalisasi dengan
+Engine memakai card/counter/navigasi/hasil yang sama. Pada soal code-fill,
+input teks berada langsung pada posisi garis kosong di dalam potongan kode,
+bukan pada field terpisah di bawahnya. Kotak memiliki label aksesibel dan
+lebar menyesuaikan teks dengan batas responsif. Jawaban dinormalisasi dengan
 `trim()` dan dibandingkan secara case sensitive; `Return` tidak sama dengan
 `return`. Input kosong atau hanya spasi belum dihitung sebagai jawaban.
 Jawaban teks tetap tersimpan saat berpindah soal dan dihapus saat Coba Lagi atau
 refresh. Hasil tidak menampilkan jawaban pengguna, kunci, atau pembahasan soal.
+Syntax highlighting memproses span kode sebelum dan sesudah kotak, sehingga
+input beserta event penilaiannya tidak tergantikan oleh Prism. Potongan kode
+pilihan ganda tetap menampilkan source lengkap tanpa kotak isian. Mekanisme ini
+berlaku pada dua isian di setiap kuis BAB 1–6, termasuk decorator dan isian di
+tengah ekspresi. Enter, validasi jawaban kosong, passing 80% dan progres terbaik
+localStorage memakai perilaku existing.
+
+Verifikasi isian inline BAB 1–6 pada 8 Oktober 2026: `php artisan test --compact`
+lulus (33 tes, 1173 assertions), 19 tes Node lulus, serta `quiz.mjs`, `visual.mjs`
+dan `material.mjs` lulus di Edge headless. Dua isian tiap BAB diuji pada
+320/390/768/1024/1440px, termasuk posisi kotak, indentasi/source, keyboard/Enter,
+retensi dan pengubahan jawaban, jawaban kosong/spasi, nilai 0–100, gate 80%,
+retry/refresh/progres terbaik serta fallback Prism. Screenshot desktop/mobile
+diperiksa. Sintaks JavaScript, Pint `--test --dirty` dan `git diff --check` lulus;
+tidak ada page error JavaScript pada eksekusi browser akhir.
 BAB 1–6 memakai engine campuran yang sama. Code-fill juga dapat berupa assignment
 atau decorator, bukan hanya satu kata. Isi setelah trim harus sama dengan `answer`;
 soal assignment BAB 2 meminta satu spasi di kedua sisi tanda `=` agar format jelas.
