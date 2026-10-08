@@ -7,13 +7,13 @@
     --oopy-bg: var(--oopy-mint);
     --oopy-primary: var(--oopy-teal);
     --oopy-accent: var(--oopy-aqua);
-    --oopy-text: var(--oopy-dark);
+    --oopy-text: #000000;
     --oopy-surface: #fff;
     --oopy-border: rgb(17 153 158 / 24%);
     --oopy-selected: color-mix(in srgb, var(--oopy-mint) 80%, var(--oopy-aqua));
-    /* Darker teal for small text; deep green gives 4.67:1 on primary buttons. */
+    /* Teal links retain the brand; pure black improves text contrast. */
     --oopy-link: #08777b;
-    --oopy-on-primary: #0b2522;
+    --oopy-on-primary: var(--oopy-text);
     --oopy-code-bg: #2f3e3b;
 
     /* Compatibility aliases for existing OOPy components. */
@@ -28,8 +28,8 @@
     --bs-primary-rgb: 17, 153, 158;
     --bs-link-color: var(--oopy-link);
     --bs-link-color-rgb: 8, 119, 123;
-    --bs-link-hover-color: var(--oopy-dark);
-    --bs-link-hover-color-rgb: 64, 81, 78;
+    --bs-link-hover-color: var(--oopy-text);
+    --bs-link-hover-color-rgb: 0, 0, 0;
     --bs-secondary-color: var(--oopy-text);
     --bs-border-color: var(--oopy-border);
     --bs-body-color: var(--oopy-ink);
@@ -41,6 +41,7 @@
 }
 
 body {
+    color: var(--oopy-text);
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: var(--oopy-font-body);
     line-height: 1.7;
