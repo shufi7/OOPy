@@ -139,10 +139,10 @@ class LiveCodeTest extends TestCase
             $config = json_decode($matches[1][0], true, flags: JSON_THROW_ON_ERROR);
             $this->assertSame($id, $config['id']);
             $this->assertSame('main.py', $config['entry_file']);
-            $this->assertSame(['main.py'], array_keys($config['files']));
+            $this->assertSame($slug === 'pewarisan' ? ['ekosistem.py', 'sungai.py', 'rawa.py', 'main.py'] : ['main.py'], array_keys($config['files']));
             $this->assertSame($expected[0]['files'], $config['files']);
             $this->assertSame($expected[0]['checker'], $config['checker']);
-            $this->assertStringContainsString('pass', $config['files']['main.py']);
+            $this->assertStringContainsString('pass', $config['files'][$slug === 'pewarisan' ? 'sungai.py' : 'main.py']);
             $this->assertStringContainsString('results = []', $config['checker']);
             $this->assertSame(1, substr_count($html, 'data-live-code'));
             $this->assertSame(1, substr_count($html, 'js/live-code/live-code.js'));

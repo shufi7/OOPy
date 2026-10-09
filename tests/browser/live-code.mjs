@@ -7,7 +7,7 @@ const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
 const page = await browser.newPage();
 const errors = [];
-page.on('pageerror', (error) => errors.push(error.message));
+page.on('pageerror', (error) => { errors.push(error.message); console.error(error.stack); });
 page.on('dialog', (dialog) => dialog.accept());
 const role = (id, name) => page.locator(`#${id} [data-role="${name}"]`);
 const output = (id) => role(id, 'code-output').textContent();
@@ -15,6 +15,9 @@ const waitReady = () => page.waitForFunction(() => [...document.querySelectorAll
 const edit = (id, name, code) => page.evaluate(({ id, name, code }) => {
     window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${id}/${name}`)).setValue(code);
 }, { id, name, code });
+const editProject = async (id, source) => {
+    for (const [file, code] of Object.entries(typeof source === 'string' ? { 'main.py': source } : source)) await edit(id, file, code);
+};
 const run = async (id, action = 'run-code') => {
     await role(id, action).click();
     await page.waitForFunction((id) => !document.querySelector(`#${id} [data-role="run-code"]`).disabled, id, { timeout: 110000 });
@@ -42,6 +45,7 @@ try {
             }
         };
     });
+    if (!process.argv.includes('--chapters-only')) {
     await page.goto(`${base}/editor`, { waitUntil: 'domcontentloaded' });
     await waitReady();
     assert.equal(await page.locator('[data-live-code]').count(), 3);
@@ -160,6 +164,7 @@ try {
     await noMonaco.waitForFunction(() => document.querySelector('[data-role="editor-loading"]').textContent.includes('tidak dapat diunduh'));
     await noMonaco.close();
     console.log('PASS: Python CDN failure/retry and Monaco CDN failure message');
+    }
 
     // Exercise the actual chapter configs through Monaco and the Pyodide worker.
     for (const exercise of exercises) {
@@ -170,7 +175,7 @@ try {
         assert.equal(await page.evaluate(() => window.pythonWorkerCount), 1);
         assert.equal(await page.locator('script[src*="vs/loader.js"]').count(), 1);
         assert.equal(await page.locator('script[src$="js/live-code/live-code.js"]').count(), 1);
-        assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), 1);
+        assert.equal(await page.evaluate(() => window.monaco.editor.getModels().length), Object.keys(config.files).length);
         assert.equal(await page.evaluate((id) => window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${id}/main.py`)).getValue(), id), config.files['main.py']);
         const submit = async () => {
             await run(id, 'check-code');
@@ -186,8 +191,41 @@ try {
         await run(id);
         assert.doesNotMatch(await output(id), /Python Error|Traceback/);
         assert.ok(await submit() > 0, `${slug}: starter must be incomplete`);
+        if (slug === 'pewarisan') {
+            assert.deepEqual(Object.keys(config.files), ['ekosistem.py', 'sungai.py', 'rawa.py', 'main.py']);
+            assert.equal((await page.locator(`#${id} [role="tab"][aria-selected="true"]`).textContent()).trim(), 'main.py');
+            for (const [file, starter] of Object.entries(config.files)) {
+                await page.locator(`#${id} [role="tab"][data-file="${file}"]`).click();
+                await edit(id, file, `${starter}\n# Edit tersimpan: ${file}`);
+                await page.evaluate(() => window.monaco.editor.getEditors()[0].setPosition({ lineNumber: 2, column: 1 }));
+                assert.equal(await page.locator(`#${id} [data-file="${file}"] .oopy-file-dirty:not([hidden])`).count(), 2);
+            }
+            for (const [file, starter] of Object.entries(config.files)) {
+                await page.locator(`#${id} [role="tab"][data-file="${file}"]`).click();
+                assert.equal(await page.evaluate(({ id, file }) => window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${id}/${file}`)).getValue(), { id, file }), `${starter}\n# Edit tersimpan: ${file}`);
+                assert.deepEqual(await page.evaluate(() => window.monaco.editor.getEditors()[0].getPosition()), { lineNumber: 2, column: 1 });
+            }
+            await role(id, 'reset-code').click();
+            for (const [file, starter] of Object.entries(config.files)) {
+                assert.equal(await page.evaluate(({ id, file }) => window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${id}/${file}`)).getValue(), { id, file }), starter);
+            }
+            assert.equal(await page.locator(`#${id} .oopy-file-dirty:not([hidden])`).count(), 0);
+            for (const width of [320, 390, 768, 1024, 1440]) {
+                await page.setViewportSize({ width, height: 1000 });
+                await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+                assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `BAB 4 overflow at ${width}px`);
+                assert.equal(await page.locator(`#${id} [role="tab"]`).count(), 4);
+                await page.waitForFunction(id => {
+                    const strip = document.querySelector(`#${id} .oopy-file-tabs`).getBoundingClientRect();
+                    const tab = document.querySelector(`#${id} [role="tab"][aria-selected="true"]`).getBoundingClientRect();
+                    return tab.left >= strip.left - 1 && tab.right <= strip.right + 1;
+                }, id);
+                if (process.env.OOPY_SCREENSHOT_DIR && [390, 1440].includes(width)) await page.locator(`#${id}`).screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/bab4-multifile-${width}.png` });
+            }
+            console.log('PASS BAB 4: four tabs/models, independent edits, dirty indicators, cursor restoration, all-file Reset and five responsive sizes');
+        }
         for (const expected of exercise.runtimeErrors || []) {
-            await edit(id, 'main.py', expected.source);
+            await editProject(id, expected.source);
             await run(id);
             assert.match(await output(id), expected.error);
             await run(id, 'check-code');
@@ -196,22 +234,25 @@ try {
             assert.equal(await role(id, 'check-results').isVisible(), false);
         }
         for (const incorrect of exercise.incorrect) {
-            await edit(id, 'main.py', incorrect.source);
+            await editProject(id, incorrect.source);
             assert.ok(await submit() > 0);
             assert.match((await role(id, 'check-list').locator('.is-failed').allTextContents()).join('\n'), incorrect.label);
         }
-        await edit(id, 'main.py', exercise.solution);
+        await editProject(id, exercise.solution);
+        if (slug === 'pewarisan') await page.locator(`#${id} [role="tab"][data-file="ekosistem.py"]`).click();
         await run(id);
         assert.match(await output(id), exercise.output);
         assert.equal(await submit(), 0);
         for (const source of exercise.alternatives) {
-            await edit(id, 'main.py', source);
+            await editProject(id, source);
             assert.equal(await submit(), 0, `${slug}: alternative solution`);
         }
         await role(id, 'reset-code').click();
         assert.equal(await role(id, 'practice-percentage').textContent(), '0%');
         assert.equal(await role(id, 'check-results').isVisible(), false);
-        assert.equal(await page.evaluate((id) => window.monaco.editor.getModels()[0].getValue(), id), config.files['main.py']);
+        for (const [file, source] of Object.entries(config.files)) {
+            assert.equal(await page.evaluate(({ id, file }) => window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${id}/${file}`)).getValue(), { id, file }), source);
+        }
         assert.deepEqual(errors, []);
         console.log(`PASS: ${slug}: starter/wrong rejected, solution/alternatives 100%, real Python output, feedback/progress, Reset, one worker/loader; no page errors`);
     }

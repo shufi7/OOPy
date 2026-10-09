@@ -15,6 +15,18 @@ export function createLiveCode(root, config) {
     let editor;
     let activeFile = config.entry_file;
     let running = false;
+    const tabStrip = root.querySelector('.oopy-file-tabs');
+
+    function revealActiveTab() {
+        const tab = tabStrip.querySelector('[aria-selected="true"]');
+        if (!tab) return;
+        const bounds = tabStrip.getBoundingClientRect();
+        const active = tab.getBoundingClientRect();
+        if (active.left < bounds.left) tabStrip.scrollLeft += active.left - bounds.left;
+        else if (active.right > bounds.right) tabStrip.scrollLeft += active.right - bounds.right;
+    }
+    const tabObserver = new ResizeObserver(revealActiveTab);
+    tabObserver.observe(tabStrip);
 
     function updateButtons() {
         runButton.disabled = !editor || runtimeManager.state !== 'ready' || running;
@@ -72,6 +84,7 @@ export function createLiveCode(root, config) {
         });
         byId('editor-panel').setAttribute('aria-labelledby', `${config.id}-tab-${fileNames.indexOf(name)}`);
         byId('active-file-path').textContent = `workspace / ${name}`;
+        revealActiveTab();
     }
 
     function showRuntimeState() {
@@ -156,6 +169,9 @@ export function createLiveCode(root, config) {
                 autoIndent: 'full', matchBrackets: 'always', renderLineHighlight: 'none',
                 overviewRulerLanes: 0, hideCursorInOverviewRuler: true, contextmenu: true,
                 bracketPairColorization: { enabled: false },
+                // Monaco 0.52 can reject pending word-highlight requests on a
+                // model switch. Syntax tokens remain enabled; skip this optional overlay.
+                occurrencesHighlight: fileNames.length > 1 ? 'off' : 'singleFile',
                 guides: { indentation: false }, scrollbar: { verticalScrollbarSize: 6, horizontalScrollbarSize: 6 },
                 ariaLabel: `${config.title}. Tekan Ctrl+Enter untuk menjalankan ${config.entry_file}.`,
             });
@@ -167,6 +183,7 @@ export function createLiveCode(root, config) {
                 run: () => execute('run'),
             });
             byId('editor-loading').hidden = true;
+            revealActiveTab();
             updateButtons();
         } catch (error) {
             byId('editor-loading').textContent = error.message || 'Editor gagal dimuat. Periksa koneksi lalu muat ulang halaman.';
@@ -209,6 +226,6 @@ export function createLiveCode(root, config) {
     startEditor();
     return {
         isDirty: () => [...models].some(([name, model]) => model.getValue() !== starterFiles[name]),
-        unsubscribe,
+        unsubscribe: () => { unsubscribe(); tabObserver.disconnect(); },
     };
 }

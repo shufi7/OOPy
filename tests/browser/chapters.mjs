@@ -34,6 +34,18 @@ class Rawa(Ekosistem):
 print(Sungai("Sungai Barito", "Banjarmasin", 25).info())
 print(Rawa("Bangkau", "Hulu Sungai Selatan", 15).info())`;
 
+export function inheritanceProject(source) {
+    const sungai = source.indexOf('class Sungai');
+    const rawa = source.indexOf('class Rawa');
+    const main = source.indexOf('print(Sungai');
+    return {
+        'ekosistem.py': source.slice(0, sungai).trim(),
+        'sungai.py': `from ekosistem import Ekosistem\n\n${source.slice(sungai, rawa).trim()}`,
+        'rawa.py': `from ekosistem import Ekosistem\n\n${source.slice(rawa, main).trim()}`,
+        'main.py': `from sungai import Sungai\nfrom rawa import Rawa\n\n${source.slice(main)}`,
+    };
+}
+
 const sensors = `class SensorPH:
     def status(self):
         return "pH: 7.1"
@@ -166,3 +178,38 @@ for item in sensor:
         ],
     },
 ];
+
+// Keep the existing behavior fixtures, but exercise real module boundaries in BAB 4.
+const inheritanceExercise = exercises.find(exercise => exercise.slug === 'pewarisan');
+inheritanceExercise.solution = inheritanceProject(inheritanceExercise.solution);
+inheritanceExercise.alternatives = inheritanceExercise.alternatives.map(inheritanceProject);
+inheritanceExercise.incorrect = inheritanceExercise.incorrect.map(entry => ({ ...entry, source: inheritanceProject(entry.source) }));
+const correctProject = inheritanceExercise.solution;
+const variant = (file, from, to) => ({ ...correctProject, [file]: correctProject[file].replace(from, to) });
+inheritanceExercise.incorrect.push(
+    { source: variant('rawa.py', 'class Rawa(Ekosistem):', 'class Rawa:'), label: /Pewarisan Rawa/ },
+    { source: variant('sungai.py', 'self.panjang_km = panjang_km', 'pass'), label: /Inisialisasi Sungai/ },
+    { source: variant('rawa.py', 'self.luas_ha = luas_ha', 'pass'), label: /Inisialisasi Rawa/ },
+    { source: { ...correctProject, 'rawa.py': 'from ekosistem import Ekosistem\nclass Rawa(Ekosistem):\n    pass', 'main.py': 'from sungai import Sungai\nfrom rawa import Rawa' }, label: /Overriding info\(\) Rawa/ },
+    { source: { ...correctProject, 'sungai.py': 'from ekosistem import Ekosistem\nclass Sungai(Ekosistem):\n    pass', 'main.py': 'from sungai import Sungai\nfrom rawa import Rawa' }, label: /Overriding info\(\) Sungai/ },
+);
+inheritanceExercise.alternatives.push({ ...correctProject, 'sungai.py': `from builtins import super\n${correctProject['sungai.py']}` });
+inheritanceExercise.runtimeErrors = [
+    { source: { ...correctProject, 'main.py': 'from sungai_salah import Sungai' }, error: /ModuleNotFoundError.*sungai_salah/s },
+    { source: variant('rawa.py', 'from ekosistem import Ekosistem', 'from ekosistem_salah import Ekosistem'), error: /ModuleNotFoundError.*ekosistem_salah/s },
+    { source: { ...correctProject, 'main.py': 'from sungai import Sungai\nSungai("Data tidak lengkap")' }, error: /TypeError/ },
+];
+// Isolate checker feedback from main's print calls when testing incomplete classes.
+inheritanceExercise.incorrect = inheritanceExercise.incorrect.map(entry => ({
+    ...entry,
+    source: { ...entry.source, 'main.py': 'from sungai import Sungai\nfrom rawa import Rawa' },
+}));
+inheritanceExercise.incorrect.push({
+    source: {
+        ...correctProject,
+        'sungai.py': 'from ekosistem import Ekosistem\nclass Sungai(Ekosistem):\n    pass',
+        'rawa.py': 'from ekosistem import Ekosistem\nclass Rawa(Ekosistem):\n    pass',
+        'main.py': inheritance,
+    },
+    label: /Inisialisasi Sungai/,
+});

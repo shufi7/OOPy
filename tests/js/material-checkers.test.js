@@ -10,12 +10,25 @@ for (const exercise of exercises) {
         ], { encoding: 'utf8' });
         assert.equal(php.status, 0, php.stderr);
         const config = JSON.parse(php.stdout);
-        const sources = [config.files['main.py'], ...exercise.incorrect.map((entry) => entry.source), exercise.solution, ...exercise.alternatives];
+        const sources = [config.files, ...exercise.incorrect.map((entry) => entry.source), exercise.solution, ...exercise.alternatives, ...(exercise.runtimeErrors || []).map(entry => entry.source)];
         const python = spawnSync(process.env.OOPY_PYTHON || 'python', ['tests/js/checker-harness.py'], {
             input: JSON.stringify({ checker: config.checker, sources }), encoding: 'utf8',
         });
         assert.equal(python.status, 0, python.stderr);
-        const results = JSON.parse(python.stdout);
+        const reports = JSON.parse(python.stdout);
+        const gradedCount = sources.length - (exercise.runtimeErrors || []).length;
+        const results = reports.slice(0, gradedCount).map(report => {
+            assert.equal(report.error, undefined, report.error);
+            assert.equal(report.super_restored, true, 'Restore module globals after observing super()');
+            return report.results;
+        });
+        for (const [index, expected] of (exercise.runtimeErrors || []).entries()) {
+            assert.match(reports[gradedCount + index].error, expected.error);
+        }
+        if (exercise.slug === 'pewarisan') {
+            assert.equal(reports[0].output, '', 'Starter imports must not instantiate unfinished subclasses');
+            assert.match(reports[exercise.incorrect.length + 1].output, exercise.output);
+        }
         for (const checks of results) {
             assert.equal(checks.length, exercise.checks);
             for (const check of checks) {

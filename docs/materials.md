@@ -245,7 +245,9 @@ Pemeriksaan property dilakukan pada object Python, bukan pencarian syntax.
 Setiap kegagalan memberikan petunjuk. Skor latihan kembali 0% saat kode diedit
 atau di-reset dan tidak disimpan. Tidak ada konfigurasi atau engine baru.
 
-BAB 4 menggunakan `bab4-pewarisan-ekosistem` dengan `main.py`. Mahasiswa
+BAB 4 menggunakan `bab4-pewarisan-ekosistem` dengan empat file dalam satu editor:
+`ekosistem.py` (superclass lengkap), `sungai.py`/`rawa.py` (subclass TODO), dan
+`main.py` (entry import serta TODO pembuatan object/output). Mahasiswa
 melengkapi `Sungai` dan `Rawa`, mewarisi `Ekosistem`, menggunakan
 `super().__init__()` untuk nama/lokasi, menyimpan `panjang_km`/`luas_ha`, dan
 override `info()`. Delapan check memeriksa inheritance, inisialisasi kedua class,
@@ -256,6 +258,24 @@ atau super yang menginisialisasi nilai salah tidak cukup untuk lulus. Bentuk
 super eksplisit dan penyimpanan referensi super juga diterima. `info()` diuji
 dengan beberapa data; perubahan satu instance tidak boleh mengubah instance lain,
 termasuk pada Rawa. Starter mendapat 25%; solusi benar mendapat 100%.
+
+Latihan multi-file BAB 4 mempertahankan satu komponen, main.py sebagai tab awal
+dan entry. Ekosistem lengkap berada di ekosistem.py; kedua subclass di sungai.py
+dan rawa.py hanya import/TODO/pass. Main memberi TODO object dan print(),
+sehingga starter dapat Run tanpa crash. Tabel langkah lokal menjelaskan urutan
+file; description menandai file/class/method dengan inline code existing.
+Checker mengimpor class dari modul project, bukan bergantung pada globals
+main.py. Probe super menggunakan globals constructor tiap modul dan memulihkan
+namespace melalui finally. Delapan pemeriksaan/skor tidak berubah; kunci dan
+soal kuis BAB 4 tetap sama. Detail batasan DB dan perbaikan overlay Monaco ada
+di [live-coding.md](live-coding.md#bab-4-satu-project-empat-modul).
+Verifikasi multi-file pada 9 Oktober 2026: 116 test PHP/2599 assertions dan
+19 test Node lulus; browser live-code.mjs serta material.mjs lulus. Empat tab,
+Run main.py saat tab superclass aktif, delapan feedback, solusi 100%, kasus
+negatif, Reset semua file, dirty/cursor, isolasi import dan responsive
+320/390/768/1024/1440px diperiksa pada Monaco/Pyodide asli tanpa page error.
+Seeder tetap menyimpan entry main.py saja; full-project persistence/versioning
+belum disediakan oleh schema exercises/exercise_submissions existing.
 
 BAB 5 menggunakan `bab5-polimorfisme-sensor` dengan `main.py`. Targetnya empat
 object `SensorPH`, `SensorSuhu`, `SensorTinggiAir`, dan `SensorKekeruhan` dalam

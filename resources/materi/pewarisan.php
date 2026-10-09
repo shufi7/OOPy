@@ -243,19 +243,33 @@ PYTHON,
                 'Klik Run Code untuk menjalankan kode. Setelah selesai, klik Submit untuk memeriksa pewarisan, atribut, pemanggilan super(), dan overriding. Kamu dapat mencoba membuat dua object dan menampilkan hasilnya pada akhir program.',
             ],
 
+            'tables' => [
+                [
+                    'caption' => 'Cara mengerjakan latihan multi-file',
+                    'headers' => ['Langkah', 'File', 'Tugas'],
+                    'rows' => [
+                        ['1', ['code' => 'ekosistem.py'], 'Pelajari class induk Ekosistem yang sudah lengkap.'],
+                        ['2', ['code' => 'sungai.py'], 'Lengkapi constructor dan info() pada subclass Sungai.'],
+                        ['3', ['code' => 'rawa.py'], 'Lengkapi constructor dan info() pada subclass Rawa.'],
+                        ['4', ['code' => 'main.py'], 'Buat kedua object dan tampilkan informasi masing-masing.'],
+                        ['5', ['code' => 'main.py'], 'Klik Run Code untuk menjalankan program, kemudian Submit untuk memeriksa.'],
+                    ],
+                ],
+            ],
+
             'live_codes' => [
                 [
                     'id' => 'bab4-pewarisan-ekosistem',
 
                     'title' => 'Coba sendiri: Sungai dan Rawa',
 
-                    'description' => 'Lengkapi `Sungai` dan `Rawa` sebagai turunan `Ekosistem`. Buat `__init__()` menggunakan `super().__init__(nama, lokasi)`, simpan `panjang_km` atau `luas_ha`, dan override `info()` agar memuat nama, lokasi, serta atribut khusus. Buat object, lalu coba tampilkan hasil `info()`.',
+                    'description' => 'Gunakan empat file Python: `ekosistem.py` menyediakan class induk `Ekosistem`. Lengkapi `Sungai` di `sungai.py` dan `Rawa` di `rawa.py` dengan `super().__init__(nama, lokasi)`, atribut `panjang_km` atau `luas_ha`, dan overriding `info()`. Di `main.py`, buat kedua object dan tampilkan informasinya. Klik Run Code, lalu Submit.',
 
                     'entry_file' => 'main.py',
 
                     // KODE AWAL UNTUK PENGGUNA
                     'files' => [
-                        'main.py' => <<<'PYTHON'
+                        'ekosistem.py' => <<<'PYTHON'
 class Ekosistem:
     def __init__(self, nama, lokasi):
         self.nama = nama
@@ -263,6 +277,9 @@ class Ekosistem:
 
     def info(self):
         return f"{self.nama} - {self.lokasi}"
+PYTHON,
+                        'sungai.py' => <<<'PYTHON'
+from ekosistem import Ekosistem
 
 
 class Sungai(Ekosistem):
@@ -271,6 +288,9 @@ class Sungai(Ekosistem):
     # Simpan panjang_km sebagai atribut instance
     # TODO: override info() dan tampilkan panjang_km
     pass
+PYTHON,
+                        'rawa.py' => <<<'PYTHON'
+from ekosistem import Ekosistem
 
 
 class Rawa(Ekosistem):
@@ -279,22 +299,43 @@ class Rawa(Ekosistem):
     # Simpan luas_ha sebagai atribut instance
     # TODO: override info() dan tampilkan luas_ha
     pass
+PYTHON,
+                        'main.py' => <<<'PYTHON'
+from sungai import Sungai
+from rawa import Rawa
 
 
-# Setelah kedua subclass selesai, coba:
-# sungai = Sungai("Sungai Barito", "Banjarmasin", 25)
-# rawa = Rawa("Bangkau", "Hulu Sungai Selatan", 15)
-# print(sungai.info())
-# print(rawa.info())
+# TODO: Buat object Sungai dan Rawa setelah kedua subclass selesai.
+# Sungai: nama="Sungai Barito", lokasi="Banjarmasin", panjang_km=25.
+# Rawa: nama="Bangkau", lokasi="Hulu Sungai Selatan", luas_ha=15.
+# TODO: Tampilkan informasi keduanya menggunakan method info().
 PYTHON,
                     ],
 
                     // PEMERIKSA OTOMATIS LIVE CODING
                     'checker' => <<<'PYTHON'
 import builtins
+import importlib
 import sys
 
 results = []
+
+
+def class_project(module_name, class_name):
+    try:
+        module = importlib.import_module(module_name)
+        kelas = getattr(module, class_name)
+        if not isinstance(kelas, type) or kelas.__module__ != module_name:
+            return None
+        return kelas
+    except Exception:
+        return None
+
+
+# Main may import only the subclasses. Inspect the project modules themselves.
+Ekosistem = class_project("ekosistem", "Ekosistem")
+Sungai = class_project("sungai", "Sungai")
+Rawa = class_project("rawa", "Rawa")
 
 def check(label, operation, hint):
     try:
@@ -408,25 +449,25 @@ def cek_data_terpisah():
 check(
     "Pewarisan Sungai",
     lambda: issubclass(Sungai, Ekosistem),
-    "Deklarasikan class Sungai(Ekosistem)."
+    "Periksa import Ekosistem dan deklarasi class Sungai(Ekosistem) di sungai.py."
 )
 
 check(
     "Pewarisan Rawa",
     lambda: issubclass(Rawa, Ekosistem),
-    "Deklarasikan class Rawa(Ekosistem)."
+    "Periksa import Ekosistem dan deklarasi class Rawa(Ekosistem) di rawa.py."
 )
 
 check(
     "Inisialisasi Sungai",
     cek_sungai,
-    "Sungai harus menerima nama, lokasi, panjang_km dan menyimpan ketiganya."
+    "Lengkapi __init__ di sungai.py: terima nama, lokasi, panjang_km dan simpan ketiganya."
 )
 
 check(
     "Inisialisasi Rawa",
     cek_rawa,
-    "Rawa harus menerima nama, lokasi, luas_ha dan menyimpan ketiganya."
+    "Lengkapi __init__ di rawa.py: terima nama, lokasi, luas_ha dan simpan ketiganya."
 )
 
 check(
@@ -435,7 +476,7 @@ check(
         menggunakan_super("Sungai")
         and menggunakan_super("Rawa")
     ),
-    "Panggil super().__init__(nama, lokasi) di kedua constructor."
+    "Jalankan super().__init__(nama, lokasi) di constructor sungai.py dan rawa.py."
 )
 
 check(
@@ -449,7 +490,7 @@ check(
             25
         )
     ),
-    "Override info() Sungai agar memuat nama, lokasi, dan panjang_km."
+    "Override info() di sungai.py agar memuat nama, lokasi, dan panjang_km."
 )
 
 check(
@@ -463,7 +504,7 @@ check(
             15
         )
     ),
-    "Override info() Rawa agar memuat nama, lokasi, dan luas_ha."
+    "Override info() di rawa.py agar memuat nama, lokasi, dan luas_ha."
 )
 
 check(

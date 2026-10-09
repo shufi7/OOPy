@@ -179,10 +179,14 @@ di `/editor` mempertahankan 11 pemeriksaan perilaku dari prototype. Latihan BAB 
 (`bab4-pewarisan-ekosistem`) menggunakan delapan pemeriksaan inheritance,
 inisialisasi, super(), overriding dan data instance. Latihan BAB 5
 (`bab5-polimorfisme-sensor`) menggunakan tujuh pemeriksaan class, perilaku
-status(), list dan loop. Keduanya memakai `main.py`, starter belum lengkap,
+status(), list dan loop. Keduanya memakai entry `main.py`; BAB 4 mempunyai
+empat modul ekosistem.py/sungai.py/rawa.py/main.py, sedangkan BAB 5 satu file.
+Starter belum lengkap,
 feedback per pemeriksaan, Run/Submit/Reset dan engine existing yang sama.
 
-Checker BAB 4 mengamati pemanggilan super().__init__ yang benar-benar dijalankan,
+Checker BAB 4 mengambil class dari modul project dengan importlib dan memeriksa
+asal class, bukan definisi tiruan di main.py. Checker mengamati pemanggilan
+super().__init__ yang benar-benar dijalankan,
 termasuk nilai yang diinisialisasi pada object; source yang hanya memuat super()
 dalam komentar atau cabang mati tidak lulus. BAB 5 membaca source dari file
 workspace virtual, menggunakan AST untuk memeriksa percabangan tipe dan mengamati
@@ -194,6 +198,99 @@ tidak dipaksa menjadi constructor tanpa argument.
 Detail dan hasil pengujian terkini ada di [dokumentasi materi](materials.md).
 
 ## Fitur dan keterbatasan
+
+### BAB 4: satu project, empat modul
+
+```text
+bab4-pewarisan-ekosistem/
+├── ekosistem.py   # Ekosistem lengkap sebagai referensi
+├── sungai.py      # import Ekosistem; constructor/info() TODO
+├── rawa.py        # import Ekosistem; constructor/info() TODO
+└── main.py        # import Sungai/Rawa; object/output TODO; entry point
+```
+
+ID dan judul **Coba sendiri: Sungai dan Rawa** tetap. Explorer dan tab berada
+dalam satu komponen/instance Monaco; tab awal main.py. Nama file, class/method
+pada instruksi memakai inline code existing, dengan tabel langkah singkat di
+bagian Ayo Coba. Paragraf materi dan kuis BAB 4 tidak diubah.
+
+Ekosistem.__init__(nama, lokasi) serta info() tetap seperti sebelumnya.
+Sungai/Rawanya sengaja belum lengkap (pass). Main hanya mengimpor keduanya dan
+memberi TODO untuk Sungai Barito/Banjarmasin/25 serta Bangkau/Hulu Sungai
+Selatan/15. Tidak ada instansiasi awal tiga parameter sebelum subclass selesai:
+Run starter berhasil tanpa output/error, sedangkan Submit memberi delapan hasil
+dengan enam pemeriksaan belum lulus (25%). Reset membersihkan skor kembali 0%.
+
+Runtime existing menulis seluruh files ke /workspaces/{id}, memasang root
+project di sys.path, lalu mengeksekusi main.py, terlepas dari tab aktif. Import
+normal Python menghubungkan kedua subclass ke Ekosistem pada modul yang sama.
+Filesystem/module cache dan globals diisolasi per job. Tidak ada perubahan
+python-worker, project-runner, runtime-manager atau engine Run/Submit/Reset.
+
+Checker memakai importlib untuk mengambil Ekosistem/Sungai/Rawa dari modul
+project dan memeriksa __module__. Class lengkap yang ditulis hanya di main.py
+tidak menggantikan subclass TODO di modul lain. Delapan label/kontrak lama dan
+perhitungan skor tetap: dua inheritance, dua constructor, super pada keduanya,
+dua overriding, dan data instance terpisah. Probe super memakai __init__.__globals__
+masing-masing modul dan selalu memulihkan binding sebelumnya dalam finally,
+termasuk binding yang memang sudah ada sebelum pemeriksaan.
+
+Setiap operasi checker dibungkus sehingga subclass yang belum lengkap tidak
+menghilangkan hasil lainnya. Feedback menunjukkan file yang perlu diperbaiki.
+Jika program/import sendiri gagal dieksekusi, runtime tetap menampilkan Program
+Python Error/traceback asli; skor tidak dibuat dari program yang crash.
+
+#### Perbaikan minimal Monaco
+
+Pengujian empat tab/cursor/Reset menemukan rejected promise Canceled dari
+overlay semantic word highlighting Monaco 0.52.2 saat setModel mengganti model.
+Satu opsi di live-code-instance.js diubah menjadi occurrencesHighlight='off'
+untuk project multi-file; editor satu file mempertahankan default singleFile.
+Syntax highlighting Python, tab, cursor, suggestion, Run dan checker tetap
+berfungsi. Tidak ada global error handler atau filtering pageerror pada test.
+[Dokumentasi opsi Monaco](https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor_editor_api.editor.IEditorOptions.html#occurrencesHighlight).
+Pada layar sempit, tab main.py yang berada terakhir sebelumnya dapat berada
+di luar bagian strip yang terlihat. Scroll horizontal tab kini menampakkan tab
+aktif pada selection/resize melalui ResizeObserver, tanpa menggulir halaman
+materi secara vertikal. Observer dilepas bersama subscription instance.
+
+#### Kompatibilitas database
+
+OopyContentSeeder tetap membaca files[entry_file] untuk exercises.starter_code.
+Dengan demikian, seed berikutnya menyimpan source main.py saja, bukan seluruh
+project. Keempat source dan checker tetap berasal dari konfigurasi PHP untuk
+editor. Tidak ada seeding DB lokal, migration baru, atau perubahan history
+exercise_submissions pada task ini. ID exercise tetap sama. Penyimpanan multi-file
+ke server perlu rancangan file manifest/source snapshot/versioning tersendiri;
+jangan menganggap starter_code atau submission.code sudah menyimpan empat file.
+
+Fixture test kini mendukung file map dan fresh import antar-case di CPython.
+Browser fixture memakai empat modul asli, termasuk solusi valid, super eksplisit,
+alias super, binding super yang dipulihkan, missing attributes/overrides,
+inheritance salah, import salah, dan class tiruan di main.py. Browser menguji
+empat tab, perubahan independen, dirty indicators, cursor restoration, Run pada
+tab superclass yang tetap menjalankan main.py, Submit, dan Reset seluruh file.
+
+#### Verifikasi BAB 4 multi-file — 9 Oktober 2026
+
+| Pemeriksaan | Hasil |
+| --- | --- |
+| php artisan test --compact | 116 test lulus, 2599 assertions. |
+| node --test tests/js/*.test.js | 19 test lulus; checker memakai eksekusi Python dan import modul, bukan string assertion saja. |
+| node tests/browser/live-code.mjs | Lulus penuh: /editor, isolasi module/files/stream, Stop/timeout/queue, CDN retry, BAB 4–6 starter/negatif/solusi/alternatif, tanpa page error. |
+| BAB 4 Run | Starter berhasil tanpa crash; solusi menghasilkan informasi Sungai Barito dan Bangkau, meskipun tab ekosistem.py aktif. |
+| BAB 4 Submit | Delapan feedback tetap; starter 25%, solusi valid/alternatif 100%; import salah dan TypeError tampil sebagai error Python asli. |
+| BAB 4 Reset | Seluruh empat model kembali ke starter, dirty indicators/hasiI pemeriksaan hilang, main.py aktif dan progres 0%. |
+| Tab dan cursor | Empat tab, edit per model, retensi cursor/teks dan tab aktif terlihat pada viewport sempit lulus. |
+| Responsive BAB 4 | 320/390/768/1024/1440px tanpa overflow halaman; strip tab dapat scroll horizontal dan tab aktif selalu terlihat. Screenshot 390/1440 diperiksa. |
+| node tests/browser/material.mjs | Regresi materi penuh lulus: sidebar/anchor/no-JS, kuis, Live Coding BAB lain dan navigasi ke BAB 7. |
+| Pint PHP pekerjaan, sintaks JS, git diff --check | Lulus. |
+
+Semua browser test memakai server testing terpisah dengan SQLite dan credential
+fixture acak untuk bagian yang memerlukan authentication. DB lokal tidak
+di-seed/diubah; kuis, dashboard, auth, bank materi BAB lain dan engine Evaluasi
+Akhir tidak diubah. Tidak ada commit/push otomatis. Peringatan OpenSSL ganda
+berasal dari lingkungan PHP dan tidak menggagalkan pengujian.
 
 - Ctrl+Enter / Cmd+Enter menjalankan latihan yang fokus. Tab file mendukung panah,
   Home dan End; dirty indicator, posisi/cursor per tab, serta konfirmasi Reset tetap ada.
