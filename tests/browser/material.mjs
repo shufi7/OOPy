@@ -1,10 +1,12 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { chapters, evaluationChapter } from './chapters.mjs';
+import { cacheAssets, registerAccount, answerQuiz } from './quiz-helpers.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await cacheAssets(page.context());
 const errors = [];
 page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
@@ -108,13 +110,8 @@ const inspectManualCollapse = async (width) => {
 const unlockNextChapter = async () => {
     assert.equal(await page.locator('[data-quiz-next-locked]').isVisible(), true);
     assert.equal(await page.locator('.material-navigation a[rel="next"]').isVisible(), false);
-    const questions = JSON.parse(await page.locator('[data-quiz="questions"]').textContent());
-    for (const [index, question] of questions.entries()) {
-        if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(index < 4 ? ` ${question.answer} ` : question.answer.toUpperCase());
-        else await page.locator('[data-quiz="options"] input').nth(question.correct).check();
-        await page.locator('[data-quiz="next"]').click();
-    }
-    assert.equal(questions.length, 5);
+    const slug = await page.locator('[data-oopy-quiz]').getAttribute('data-chapter-slug');
+    await answerQuiz(page, slug, [0, 1, 2, 3]);
     assert.equal(await page.locator('[data-quiz="correct"]').textContent(), '4');
     assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
     assert.equal(await page.locator('[data-quiz-next-locked]').isVisible(), false);
@@ -169,6 +166,7 @@ try {
         assert.deepEqual(errors, []);
         console.log('PASS: sidebar regression and deep links for BAB 1–6 at all five viewport widths; no page errors');
     } else {
+    await registerAccount(page, base);
     await page.addInitScript(() => {
         const NativeWorker = window.Worker;
         window.pythonWorkerCount = 0;
@@ -543,12 +541,7 @@ print(alat.tinggi_air)`;
         console.log(`PASS: ${chapter.slug}: navigation, instructions, unique IDs, responsive sidebar, one worker/loader`);
     }
     // BAB 6 unlocks the separate final evaluation using the existing quiz gate.
-    const finalQuestions = JSON.parse(await page.locator('[data-quiz="questions"]').textContent());
-    for (const question of finalQuestions) {
-        if (question.type === 'code_fill') await page.locator('[data-quiz="code-fill"]').fill(question.answer);
-        else await page.locator('[data-quiz="options"] input').nth(question.correct).check();
-        await page.locator('[data-quiz="next"]').click();
-    }
+    await answerQuiz(page, 'kelas-abstrak');
     assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
     assert.equal(await page.locator('.material-navigation [rel="next"]').getAttribute('href'), `${base}/materi/${evaluationChapter.slug}`);
     await page.locator('.material-navigation [rel="next"]').click();

@@ -211,12 +211,14 @@ dan tidak menggagalkan pemeriksaan. Tidak ada commit atau push otomatis.
 ## Batasan dan tahap berikutnya
 
 Tahap ini mencakup authentication session dan fondasi authorization saja.
-Dashboard, lupa password, verifikasi email, OAuth, course gating, serta
-penyimpanan progres database belum diimplementasikan. Materi, kuis,
-Live Coding Monaco/Pyodide, evaluasi BAB 7, syarat lulus 4/5, dan localStorage
-tetap memakai perilaku existing. Database lokal tidak menerima akun test/admin.
+Dashboard, lupa password, verifikasi email, OAuth, dan pembatasan URL materi
+belum diimplementasikan. Kuis BAB 1–6 sekarang memakai endpoint `auth`, policy
+ownership, penilaian server, dan progres database; lihat
+[quiz-progress.md](quiz-progress.md). Materi tetap dapat dibaca guest, sedangkan
+pengumpulan kuis resmi memerlukan login. Live Coding dan BAB 7 belum diintegrasikan.
+Database lokal tidak menerima akun test/admin.
 
-Integrasi berikutnya perlu endpoint progres/submission/attempt dengan `auth`,
+Integrasi berikutnya untuk Live Coding/BAB 7 perlu endpoint dengan `auth`,
 validasi ownership/policies, dan penilaian server. Jangan menerima role, nilai,
 kelulusan, atau `is_correct` dari browser sebagai sumber otoritatif. Rencanakan
 pemetaan progres localStorage, versioning soal, kebijakan akses materi, dan

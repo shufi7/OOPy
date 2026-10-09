@@ -2,7 +2,15 @@
     <span class="material-eyebrow">CEK PEMAHAMAN</span>
     <h2 id="kuis-title">Kuis {{ $chapter['bab'] }}</h2>
     <p>Jawab semua soal, lalu lihat nilai, jumlah benar dan salah, serta status kelulusanmu.</p>
-    <script type="application/json" data-quiz="questions">{!! \Illuminate\Support\Js::encode(collect($content['quiz'])->map(fn ($question) => \Illuminate\Support\Arr::except($question, ['explanation']))->all()) !!}</script>
+    <script type="application/json" data-quiz="questions">{!! \Illuminate\Support\Js::encode($quizQuestions) !!}</script>
+    <script type="application/json" data-quiz="config">{!! \Illuminate\Support\Js::encode($quizConfig) !!}</script>
+
+    @guest
+    <div class="oopy-quiz-account-notice">
+        <p>Masuk untuk mengerjakan kuis yang dinilai dan menyimpan nilai, riwayat, serta kelulusan pada akunmu.</p>
+        <a class="btn btn-brand" href="{{ route('login') }}">Masuk untuk Mengerjakan Kuis</a>
+    </div>
+    @endguest
 
     <button type="button" class="oopy-quiz-instructions-button" data-quiz="instructions-toggle" aria-expanded="false" aria-controls="quiz-instructions" hidden>
         <i class="bi bi-info-circle" aria-hidden="true"></i> Instruksi Pengerjaan
@@ -20,13 +28,14 @@
             <li>Kamu dapat mengganti jawaban sebelum menyelesaikan kuis.</li>
             <li>Setelah semua soal dijawab, tekan tombol Selesai Kuis.</li>
         </ol>
-        <p>Jawaban dan hasil akan kembali dari awal jika halaman dimuat ulang. Status kelulusan dan hasil terbaik tersimpan di browser ini.</p>
+        <p>Jawaban sementara kembali dari awal jika halaman dimuat ulang. Hasil yang sudah dikumpulkan dan kelulusan tersimpan pada akunmu.</p>
     </div>
 
-    <p data-quiz="loading">Kuis sedang disiapkan. Jika kuis tidak muncul, muat ulang halaman.</p>
+    <p data-quiz="loading" @guest hidden @endguest>Kuis sedang disiapkan. Jika kuis tidak muncul, muat ulang halaman.</p>
     <noscript><p>Aktifkan JavaScript untuk mengerjakan kuis interaktif.</p></noscript>
 
     <form data-quiz="form" hidden>
+        @csrf
         <div class="oopy-quiz-counter">
             <h3 data-quiz="counter" tabindex="-1"></h3>
             <span data-quiz="answered" role="status"></span>

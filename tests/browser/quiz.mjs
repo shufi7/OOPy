@@ -1,330 +1,202 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { chapters } from './chapters.mjs';
+import { cacheAssets, registerAccount, loginAccount, logoutAccount, answerQuiz, quizFixtures } from './quiz-helpers.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
-const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+await cacheAssets(context);
+const page = await context.newPage();
 const errors = [];
-const writes = [];
-page.on('pageerror', (error) => errors.push(error.message));
-page.on('request', (request) => { if (request.method() !== 'GET') writes.push(request.url()); });
+page.on('pageerror', error => errors.push(error.message));
 const quiz = page.locator('#kuis');
-const part = (role) => quiz.locator(`[data-quiz="${role}"]`);
-const options = () => part('options').locator('input[type="radio"]');
-const assertInline = async (question) => {
-    const blank = /_{3,}/.exec(question.code);
-    assert.equal(await part('code-fill').evaluate((input) => input.parentElement === document.querySelector('[data-quiz="code"]') && input.closest('pre') !== null), true);
-    assert.equal(await part('code-before').textContent(), question.code.slice(0, blank.index));
-    assert.equal(await part('code-after').textContent(), question.code.slice(blank.index + blank[0].length));
-    assert.equal(await part('code-card').locator('input').count(), 1);
-    assert.doesNotMatch(await part('code').textContent(), /_{3,}/);
-};
-const next = () => part('next').click();
-const choose = async (answer) => {
-    if (await part('code-fill').isVisible()) await part('code-fill').fill(String(answer));
-    else await options().nth(answer).check();
-};
+const part = role => quiz.locator(`[data-quiz="${role}"]`);
 const ready = () => part('form').waitFor({ state: 'visible' });
-const correctAnswer = (question) => question.type === 'code_fill' ? ` ${question.answer} ` : question.correct;
-const wrongAnswer = (question) => question.type === 'code_fill' ? question.answer.toUpperCase() : (question.correct + 1) % question.options.length;
-const answerAll = async (questions, correctIndices) => {
-    for (const [index, question] of questions.entries()) {
-        if (question.type === 'code_fill') await assertInline(question);
-        await choose(correctIndices.includes(index) ? correctAnswer(question) : wrongAnswer(question));
-        await next();
-    }
+const load = async slug => {
+    const progressResponse = page.waitForResponse(response => response.url().endsWith(`/materi/${slug}/kuis/progress`));
+    await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
+    await ready();
+    await progressResponse;
 };
-const assertNoFeedback = async () => {
-    assert.equal(await quiz.locator('.oopy-quiz-review, [data-quiz="review"], .is-correct, .is-incorrect, .oopy-quiz-verdict').count(), 0);
-    assert.doesNotMatch(await quiz.innerText(), /Pembahasan|Jawaban kamu:|Jawaban benar:|Jawaban yang benar|Penjelasan:/i);
+const gate = async unlocked => {
+    assert.equal(await page.locator('[data-quiz-next-link]').isVisible(), unlocked);
+    assert.equal(await page.locator('[data-quiz-next-locked]').isVisible(), !unlocked);
 };
-const assertGate = async (unlocked, hasNext) => {
-    const navigation = page.locator('.material-navigation');
-    assert.equal(await navigation.getByRole('link', { name: 'Kembali ke Daftar Materi' }).isVisible(), true);
-    if (!hasNext) {
-        assert.equal(await navigation.locator('[rel="next"], [data-quiz-next-locked]').count(), 0);
-        assert.equal(await part('continue').count(), 0);
-        return;
-    }
-    assert.equal(await navigation.locator('[data-quiz-next-link]').isVisible(), unlocked);
-    assert.equal(await navigation.locator('[data-quiz-next-locked]').isVisible(), !unlocked);
-    assert.equal(await navigation.getByRole('link', { name: /Lanjut ke BAB/ }).count(), unlocked ? 1 : 0);
-    if (!unlocked) assert.match(await navigation.innerText(), /terkunci.*minimal 4 dari 5 soal dengan benar/s);
-};
-const assertResult = async (correct, total, hasNext) => {
-    const passed = correct >= 4;
-    assert.equal(await part('results').isVisible(), true);
-    assert.equal(await part('form').isVisible(), false);
-    assert.equal(await part('score').textContent(), String(Math.round(correct / total * 100)));
+const result = async (correct, unlocked = correct >= 4) => {
+    await part('results').waitFor({ state: 'visible' });
+    assert.equal(await part('score').textContent(), String(correct * 20));
     assert.equal(await part('correct').textContent(), String(correct));
-    assert.equal(await part('incorrect').textContent(), String(total - correct));
-    assert.equal(await part('status').textContent(), passed ? 'Lulus' : 'Belum Lulus');
-    assert.equal(await part('result-title').evaluate((el) => el === document.activeElement), true);
-    assert.equal(await part('results').locator('[role="status"][aria-atomic="true"]').count(), 1);
-    if (hasNext) {
-        assert.equal(await part('continue').isVisible(), passed);
-        assert.equal(await part('continue').getAttribute('href'), await page.locator('[data-quiz-next-link]').getAttribute('href'));
-        assert.match(await part('message').textContent(), passed ? /dapat melanjutkan/ : /minimal 4 dari 5 soal dengan benar/);
-    } else {
-        assert.doesNotMatch(await part('message').textContent(), /BAB berikutnya/);
-        if (passed) assert.equal(await part('message').textContent(), 'Evaluasi selesai.');
-    }
-    await assertNoFeedback();
+    assert.equal(await part('incorrect').textContent(), String(5 - correct));
+    assert.equal(await part('status').textContent(), correct >= 4 ? 'Lulus' : 'Belum Lulus');
+    assert.equal(await part('continue').isVisible(), unlocked);
+    assert.equal(await part('result-title').evaluate(el => el === document.activeElement), true);
+    assert.equal(await quiz.locator('.oopy-quiz-review, .is-correct, .is-incorrect, [data-quiz="review"]').count(), 0);
+    assert.doesNotMatch(await quiz.innerText(), /Pembahasan|Jawaban benar:|Jawaban kamu:|Penjelasan:/i);
+    await gate(unlocked);
 };
-const retry = async (total) => {
+const progress = async slug => {
+    const response = await page.request.get(`${base}/materi/${slug}/kuis/progress`);
+    assert.equal(response.status(), 200);
+    return response.json();
+};
+const retry = async () => {
     await part('retry').click();
-    assert.equal(await part('results').isVisible(), false);
-    assert.equal(await part('counter').textContent(), `Soal 1 dari ${total} soal`);
-    assert.equal(await part('answered').textContent(), `0 dari ${total} soal dijawab`);
-    assert.equal(await part('previous').isDisabled(), true);
+    await ready();
+    assert.equal(await part('counter').textContent(), 'Soal 1 dari 5 soal');
+    assert.equal(await part('answered').textContent(), '0 dari 5 soal dijawab');
     assert.equal(await part('options').locator('input:checked').count(), 0);
-    assert.equal(await part('code-fill').inputValue(), '');
-    assert.equal(await part('validation').textContent(), '');
-    for (const role of ['score', 'correct', 'incorrect', 'status', 'message']) assert.equal(await part(role).textContent(), '');
 };
-const assertLayout = async (label) => {
+const layout = async label => {
     for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
-        await quiz.evaluate((el) => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
+        await quiz.evaluate(el => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${label}: overflow at ${width}px`);
-        assert.equal(await page.locator('.material-navigation').evaluate((el) => el.scrollWidth <= el.clientWidth + 1), true);
         for (const button of await quiz.locator('button:visible, a.btn:visible').all()) {
-            assert.ok(await button.evaluate((el) => el.getBoundingClientRect().right <= innerWidth + 1), `${label}: button clipped at ${width}px`);
+            assert.ok(await button.evaluate(el => el.getBoundingClientRect().right <= innerWidth + 1), `${label}: clipped button at ${width}px`);
         }
         if (await part('code-fill').isVisible()) {
             await part('code-fill').scrollIntoViewIfNeeded();
-            assert.ok(await part('code-fill').evaluate((el) => {
+            assert.ok(await part('code-fill').evaluate(el => {
                 const rect = el.getBoundingClientRect();
                 return rect.left >= 0 && rect.right <= innerWidth + 1 && rect.height >= 44;
-            }), `${label}: inline input clipped at ${width}px`);
+            }));
         }
         if (process.env.OOPY_SCREENSHOT_DIR && [390, 1440].includes(width)) {
             await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/${label}-${width}.png` });
         }
     }
 };
-
-const progressRecord = (slug) => page.evaluate((slug) => JSON.parse(localStorage.getItem('oopy.quiz.progress'))?.[slug] ?? null, slug);
-const assertProgress = async (slug, bestCorrect) => {
-    assert.deepEqual(await progressRecord(slug), { passed: bestCorrect >= 4, bestCorrect, bestScore: bestCorrect * 20 });
+const noSecrets = data => {
+    for (const [key, value] of Object.entries(data)) {
+        assert.ok(!['correct', 'correct_answer', 'answer', 'answers', 'is_correct', 'explanation'].includes(key), `Secret field ${key}`);
+        if (value && typeof value === 'object') noSecrets(value);
+    }
 };
 
 try {
-    for (const { slug, next: nextSlug } of chapters) {
-        const hasNext = nextSlug !== null;
-        await page.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
-        await ready();
-        const questions = JSON.parse(await part('questions').textContent());
-        const total = questions.length;
-        assert.equal(total, 5);
-        assert.deepEqual(questions.map((question) => question.type), ['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill']);
-        assert.equal(await quiz.getAttribute('data-chapter-slug'), slug);
-        assert.equal(await quiz.evaluate((el) => el.previousElementSibling.id), 'refleksi');
-        assert.equal(await progressRecord(slug), null);
-        assert.ok(questions.every((question) => !Object.hasOwn(question, 'explanation')));
-        assert.equal(await part('results').isVisible(), false);
-        await assertGate(false, hasNext);
-        if (hasNext) assert.equal(await page.locator('[data-quiz-next-link]').getAttribute('href'), `${base}/materi/${nextSlug}`);
-        assert.equal(await page.locator('a[href$="/materi/bab-7"]').count(), 0);
-        await assertNoFeedback();
-        await assertLayout(`${slug}-form`);
-        const originalOutput = await page.locator('[data-role="code-output"]').first().textContent();
-
-        await part('instructions-toggle').click();
-        assert.equal(await part('instructions-toggle').getAttribute('aria-expanded'), 'true');
-        assert.equal(await page.locator('#quiz-instructions').isVisible(), true);
-        assert.doesNotMatch(await page.locator('#quiz-instructions').innerText(), /satu kata/);
-        await part('instructions-toggle').click();
-        assert.equal(await page.locator('#quiz-instructions').isVisible(), false);
-
-        // Incomplete attempts neither compute a result nor save progress.
-        for (let i = 0; i < total; i++) await next();
+    const account = await registerAccount(page, base);
+    await logoutAccount(page, base);
+    await loginAccount(page, base, account);
+    if (!process.argv.includes('--resilience-only')) {
+    for (const { slug, next } of chapters) {
+        await load(slug);
+        const publicQuestions = JSON.parse(await part('questions').textContent());
+        assert.equal(publicQuestions.length, 5);
+        assert.deepEqual(publicQuestions.map(q => q.type), ['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill']);
+        publicQuestions.forEach(question => { noSecrets(question); assert.ok(Number.isInteger(question.question_id)); });
+        assert.equal(await page.locator('[data-quiz-next-link]').getAttribute('href'), `${base}/materi/${next}`);
+        await gate(false);
+        await layout(`${slug}-form`);
+        await page.evaluate(slug => localStorage.setItem('oopy.quiz.progress', JSON.stringify({ [slug]: { passed: true, bestCorrect: 5, bestScore: 100 } })), slug);
+        await load(slug);
+        await gate(false);
+        assert.equal((await progress(slug)).best_score, 0);
+        for (let i = 0; i < 5; i++) await part('next').click();
         assert.equal(await part('validation').textContent(), 'Masih ada soal yang belum dijawab.');
-        assert.equal(await part('counter').textContent(), 'Soal 1 dari 5 soal');
         assert.equal(await part('results').isVisible(), false);
-        await assertGate(false, hasNext);
-        assert.equal(await progressRecord(slug), null);
-
-        await page.locator('.material-toc a[href="#kuis"]').click();
-        await page.waitForFunction(() => document.querySelector('.material-toc a[href="#kuis"]').getAttribute('aria-current') === 'location');
-        // Keyboard selection, retained/changed answers, and no per-question verdict.
-        await options().nth(0).focus();
-        await page.keyboard.press('Space');
-        await page.keyboard.press('ArrowDown');
-        assert.equal(await options().nth(1).isChecked(), true);
-        await next();
-        assert.equal(await part('counter').evaluate((el) => el === document.activeElement), true);
-        await part('previous').click();
-        assert.equal(await options().nth(1).isChecked(), true);
-        await choose(wrongAnswer(questions[0]));
-        await assertNoFeedback();
-        assert.equal(await part('results').isVisible(), false);
-        await next();
-        for (const question of questions.slice(1, 3)) { await choose(wrongAnswer(question)); await next(); }
-        await assertLayout(`${slug}-code-fill`);
-        assert.equal(await part('options-group').isVisible(), false);
-        await choose('   ');
-        assert.equal(await part('answered').textContent(), '3 dari 5 soal dijawab');
-        await next();
-        await choose(wrongAnswer(questions[4]));
-        await next();
-        assert.equal(await part('validation').textContent(), 'Masih ada soal yang belum dijawab.');
-        assert.equal(await part('counter').textContent(), 'Soal 4 dari 5 soal');
-        assert.equal(await part('results').isVisible(), false);
-        await assertGate(false, hasNext);
-        assert.equal(await progressRecord(slug), null);
-        await choose(wrongAnswer(questions[3]));
-        await part('previous').click();
-        assert.equal(await part('code-fill').isDisabled(), true);
-        await next();
-        assert.equal(await part('code-fill').inputValue(), wrongAnswer(questions[3]));
-        await part('code-fill').focus();
-        await page.keyboard.press('Enter');
-        assert.equal(await part('counter').textContent(), 'Soal 5 dari 5 soal');
-        await next();
-
-        // Case-sensitive code-fill and zero correct: failed, locked, best result 0.
-        await assertResult(0, total, hasNext);
-        await assertGate(false, hasNext);
-        await assertProgress(slug, 0);
-        await assertLayout(`${slug}-failed`);
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await ready();
-        await assertGate(false, hasNext);
-
-        // Every failing score, especially the 3/5 boundary, stays locked after refresh/retry.
-        for (const correct of [1, 2, 3]) {
-            await answerAll(questions, Array.from({ length: correct }, (_, index) => index));
-            await assertResult(correct, total, hasNext);
-            await assertGate(false, hasNext);
-            await assertProgress(slug, correct);
-            await retry(total);
-            await assertGate(false, hasNext);
-            await page.reload({ waitUntil: 'domcontentloaded' });
-            await ready();
-            assert.equal(await part('results').isVisible(), false);
-            await assertGate(false, hasNext);
-            await assertProgress(slug, correct);
+        for (const correct of [0, 1, 2, 3, 4, 2, 5, 0]) {
+            const unlocked = correct >= 4 || (await progress(slug)).next_unlocked;
+            const finalResponse = page.waitForResponse(response => response.url().includes('/submit') && response.request().method() === 'POST');
+            await answerQuiz(page, slug, Array.from({ length: correct }, (_, index) => index));
+            const response = await finalResponse;
+            assert.equal(response.status(), 200);
+            const summary = await response.json();
+            noSecrets(summary);
+            await result(correct, unlocked);
+            if ([3, 4].includes(correct)) await layout(`${slug}-${correct === 3 ? 'failed' : 'passed'}`);
+            const body = response.request().postDataJSON();
+            body.answers[0].answer = (body.answers[0].answer + 1) % 4;
+            const duplicate = await page.request.post(response.url(), { data: body, headers: { 'X-CSRF-TOKEN': await page.locator('meta[name="csrf-token"]').getAttribute('content') } });
+            assert.equal(duplicate.status(), 200);
+            assert.deepEqual(await duplicate.json(), summary);
+            await retry();
+            await load(slug);
+            await gate(unlocked);
         }
-
-        // Both inline blanks retain keyboard edits and remain usable at every size.
-        for (let index = 0; index < 3; index++) { await choose(correctAnswer(questions[index])); await next(); }
-        for (const index of [3, 4]) {
-            await assertInline(questions[index]);
-            await part('code-fill').focus();
-            await page.keyboard.insertText(correctAnswer(questions[index]));
-            assert.equal(await part('code-fill').inputValue(), correctAnswer(questions[index]));
-            await assertLayout(`${slug}-inline-${index + 1}`);
-            if (index === 3) await next();
-        }
-        await part('previous').click();
-        assert.equal(await part('code-fill').inputValue(), correctAnswer(questions[3]));
-        await next();
-        assert.equal(await part('code-fill').inputValue(), correctAnswer(questions[4]));
-        // Return to an unsubmitted attempt so the existing 4/5 boundary test stays independent.
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await ready();
-        await assertGate(false, hasNext);
-
-        // Four correct passes, including a trimmed code-fill answer in every chapter.
-        await answerAll(questions, [0, 1, 2, 3]);
-        await assertResult(4, total, hasNext);
-        await assertGate(true, hasNext);
-        await assertProgress(slug, 4);
-        await assertLayout(`${slug}-passed`);
-        await retry(total);
-        await assertGate(true, hasNext);
-        await assertProgress(slug, 4);
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await ready();
+        assert.equal((await progress(slug)).best_score, 100);
+        for (let i = 0; i < 3; i++) await part('next').click();
+        const source = quizFixtures[slug][3].code;
+        const blank = /_{3,}/.exec(source);
+        assert.equal(await part('code-before').textContent(), source.slice(0, blank.index));
+        assert.equal(await part('code-after').textContent(), source.slice(blank.index + blank[0].length));
+        await part('code-fill').fill('   ');
         assert.equal(await part('answered').textContent(), '0 dari 5 soal dijawab');
-        assert.equal(await part('results').isVisible(), false);
-        await assertGate(true, hasNext);
-
-        // A lower score does not lower the best result or revoke an earlier pass.
-        await answerAll(questions, [0, 1]);
-        await assertResult(2, total, hasNext);
-        await assertGate(true, hasNext);
-        await assertProgress(slug, 4);
-        await retry(total);
-
-        await answerAll(questions, [0, 1, 2, 3, 4]);
-        await assertResult(5, total, hasNext);
-        await assertProgress(slug, 5);
-        await retry(total);
-        await assertGate(true, hasNext);
-
-        await answerAll(questions, []);
-        await assertResult(0, total, hasNext);
-        await assertGate(true, hasNext);
-        await assertProgress(slug, 5);
-        await retry(total);
-        assert.equal(await page.locator('[data-role="code-output"]').first().textContent(), originalOutput);
-        assert.equal(await page.locator('.material-progress, .material-toc progress').count(), 0);
-        console.log(`PASS: ${slug}: 5 questions (3 MC/2 code-fill), scores 0/20/40/60/80/100, 3 fails/4 passes, best results, retry/refresh, responsive form/results`);
+        await part('code-fill').fill(quizFixtures[slug][3].answer);
+        await layout(`${slug}-inline`);
+        console.log(`PASS ${slug}: scores 0/20/40/60/80/100, no keys, validation, immutable replay, monotonic progress, retry/refresh, five responsive sizes`);
     }
-    const allProgress = await page.evaluate(() => JSON.parse(localStorage.getItem('oopy.quiz.progress')));
-    assert.deepEqual(Object.keys(allProgress).sort(), chapters.map((chapter) => chapter.slug).sort());
-    for (const slug of Object.keys(allProgress)) await assertProgress(slug, 5);
-
-    for (const { slug, next: nextSlug } of chapters) {
-        const fresh = await browser.newContext();
-        const freshPage = await fresh.newPage();
-        const storageErrors = [];
-        freshPage.on('pageerror', (error) => storageErrors.push(error.message));
-        await freshPage.goto(`${base}/materi/${slug}`, { waitUntil: 'domcontentloaded' });
-        await freshPage.locator('[data-quiz="form"]').waitFor({ state: 'visible' });
-        const assertFreshGate = async () => {
-            if (nextSlug) {
-                assert.equal(await freshPage.locator('[data-quiz-next-locked]').isVisible(), true);
-                assert.equal(await freshPage.locator('[data-quiz-next-link]').isVisible(), false);
-            } else {
-                assert.equal(await freshPage.locator('[data-quiz-next-link], [data-quiz-next-locked]').count(), 0);
-            }
-        };
-        await assertFreshGate();
-        assert.equal(await freshPage.getByRole('link', { name: 'Kembali ke Daftar Materi' }).isVisible(), true);
-        // Malformed JSON, malformed roots and invalid records all fail closed.
-        for (const value of ['{bad JSON', '[]', 'null', '42', ...[-1, 6, '4', null].map((bestCorrect) => JSON.stringify({ [slug]: { passed: true, bestCorrect } }))]) {
-            await freshPage.evaluate((value) => localStorage.setItem('oopy.quiz.progress', value), value);
-            await freshPage.reload({ waitUntil: 'domcontentloaded' });
-            await freshPage.locator('[data-quiz="form"]').waitFor({ state: 'visible' });
-            await assertFreshGate();
-        }
-        // A denied write still permits passing within the current page.
-        await freshPage.evaluate(() => {
-            Storage.prototype.setItem = () => { throw new Error('Storage disabled'); };
-        });
-        const storedQuestions = JSON.parse(await freshPage.locator('[data-quiz="questions"]').textContent());
-        for (const question of storedQuestions) {
-            if (question.type === 'code_fill') await freshPage.locator('[data-quiz="code-fill"]').fill(correctAnswer(question));
-            else await freshPage.locator('[data-quiz="options"] input').nth(question.correct).check();
-            await freshPage.locator('[data-quiz="next"]').click();
-        }
-        assert.equal(await freshPage.locator('[data-quiz="status"]').textContent(), 'Lulus');
-        if (nextSlug) assert.equal(await freshPage.locator('[data-quiz-next-link]').isVisible(), true);
-        else assert.equal(await freshPage.locator('[data-quiz="continue"], [data-quiz-next-link]').count(), 0);
-        assert.deepEqual(storageErrors, []);
-        await fresh.close();
+    await logoutAccount(page, base);
+    await loginAccount(page, base, account);
+    await load(chapters[0].slug);
+    await gate(true);
+    const device = await browser.newContext({ viewport: { width: 390, height: 900 } });
+    await cacheAssets(device);
+    const devicePage = await device.newPage();
+    await loginAccount(devicePage, base, account);
+    await devicePage.goto(`${base}/materi/${chapters[0].slug}`);
+    assert.equal(await devicePage.locator('[data-quiz-next-link]').isVisible(), true);
+    await device.close();
     }
-
-    // Passes under the retired one-correct rule must not unlock the new five-question quiz.
-    const legacy = await browser.newContext();
-    const legacyPage = await legacy.newPage();
-    await legacyPage.addInitScript(() => {
-        localStorage.setItem('oopy.quiz.passed.kelas-dan-objek', JSON.stringify({ passed: true }));
-        localStorage.setItem('oopy.quiz.progress', JSON.stringify({ 'kelas-dan-objek': { passed: true, bestCorrect: 3, bestScore: 60 } }));
+    await logoutAccount(page, base);
+    await registerAccount(page, base);
+    let releaseProgress;
+    let captureProgress;
+    const delayedProgress = new Promise(resolve => { releaseProgress = resolve; });
+    const capturedProgress = new Promise(resolve => { captureProgress = resolve; });
+    await page.route('**/kuis/progress', async route => {
+        const snapshot = await route.fetch();
+        captureProgress();
+        await delayedProgress;
+        await route.fulfill({ response: snapshot });
     });
-    await legacyPage.goto(`${base}/materi/kelas-dan-objek`, { waitUntil: 'domcontentloaded' });
-    await legacyPage.locator('[data-quiz="form"]').waitFor({ state: 'visible' });
-    assert.equal(await legacyPage.locator('[data-quiz-next-link]').isVisible(), false);
-    assert.equal(await legacyPage.locator('[data-quiz-next-locked]').isVisible(), true);
-    await legacy.close();
+    await page.goto(`${base}/materi/${chapters[0].slug}`);
+    await ready();
+    await capturedProgress;
+    await gate(false);
+    assert.equal((await progress(chapters[0].slug)).best_score, 0);
 
-    assert.deepEqual(writes, []);
+    const slug = chapters[0].slug;
+    await page.route('**/kuis/attempts/*/submit', route => route.abort());
+    for (const question of quizFixtures[slug]) {
+        if (question.type === 'code_fill') await part('code-fill').fill(question.answer);
+        else await part('options').locator('input').nth(question.correct).check();
+        await part('next').click();
+    }
+    await page.waitForFunction(() => document.querySelector('[data-quiz="validation"]').textContent.includes('Koneksi gagal'));
+    assert.equal(await part('results').isVisible(), false);
+    assert.equal(await part('code-fill').inputValue(), quizFixtures[slug][4].answer);
+    await gate(false);
+    await page.unroute('**/kuis/attempts/*/submit');
+    let release;
+    const barrier = new Promise(resolve => { release = resolve; });
+    let requests = 0;
+    await page.route('**/kuis/attempts/*/submit', async route => { requests++; await barrier; await route.continue(); });
+    await part('next').click();
+    await page.waitForFunction(() => document.querySelector('[data-quiz="next"]').disabled);
+    assert.equal(await part('next').textContent(), 'Menyimpan hasil…');
+    assert.equal(await part('results').isVisible(), false);
+    await part('form').evaluate(form => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+    release();
+    await result(5);
+    assert.equal(requests, 1);
+    await retry();
+    const staleResponse = page.waitForResponse(response => response.url().endsWith('/kuis/progress'));
+    releaseProgress();
+    await (await staleResponse).finished();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await gate(true);
+    await page.unroute('**/kuis/progress');
+    console.log('PASS separate accounts, loading/double-submit, network failure/retry, delayed progress cannot revoke confirmed completion after Coba Lagi');
+    await logoutAccount(page, base);
+    await page.goto(`${base}/materi/${slug}`);
+    assert.equal(await part('form').isVisible(), false);
+    assert.equal(await page.getByRole('link', { name: 'Masuk untuk Mengerjakan Kuis' }).isVisible(), true);
+    await gate(false);
+    const guest = await page.request.post(`${base}/materi/${slug}/kuis/attempts`, { headers: { Accept: 'application/json', 'X-CSRF-TOKEN': await page.locator('meta[name="csrf-token"]').getAttribute('content') } });
+    assert.equal(guest.status(), 401);
     assert.deepEqual(errors, []);
-    console.log('PASS: fresh/malformed/unavailable storage, no answer feedback, no server writes or Live Coding changes, no page errors');
+    console.log('PASS guest public reading, login CTA, authenticated endpoints, no JavaScript errors');
 } finally {
     await browser.close();
 }

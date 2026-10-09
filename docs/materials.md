@@ -38,12 +38,14 @@ filename yang tercantum dalam registry, bukan path dari URL pengguna.
 - `public/js/evaluasi/`: model/penilaian, storage, ticker dan interaksi halaman.
 - `public/css/oopy/evaluasi/evaluasi.css`: gaya khusus `.oopy-final-exam`.
 - `app/Http/Controllers/MateriController.php`: `index()` untuk daftar dan `show()`
-  untuk detail yang terdaftar, tanpa query database.
+  untuk detail yang terdaftar; akun login membaca soal/progres kuis dari database.
 - `resources/views/materi/show.blade.php`: breadcrumb, header, konten BAB,
   kuis dan satu navigasi dinamis antar-BAB beserta tautan kembali ke daftar materi.
 - `resources/views/materi/partials/quiz.blade.php`: struktur aktivitas kuis dan hasil.
-- `public/js/oopy-quiz.js`: pilihan jawaban, navigasi, hasil agregat, kelulusan,
-  progres browser dan Coba Lagi.
+- `public/js/oopy-quiz.js`: pilihan jawaban, navigasi, submit ke Laravel,
+  hasil agregat/progres dari server dan Coba Lagi. Tidak menilai jawaban di browser.
+- `config/quiz.php`, `ChapterQuizService`, `QuizGradingService`: aturan 4/5,
+  attempt, penilaian, transaksi dan progres resmi akun; lihat [quiz-progress.md](quiz-progress.md).
 - `resources/views/materi/partials/navigation.blade.php`: daftar isi sidebar.
 - `resources/views/materi/partials/section.blade.php`: paragraf, contoh kode, catatan
   serta lokasi opsional komponen Live Coding pada setiap bagian materi.
@@ -346,9 +348,10 @@ diinstansiasi secara normal (D), ABC tidak wajib untuk semua polimorfisme (B),
 serta isian `@abstractmethod` dan `abc`. Explanation tetap tersedia di data PHP
 dan disaring dari JSON UI sesuai engine existing. Lulus BAB 6 membuka Next ke
 BAB 7; retry/refresh tetap mempertahankan hasil terbaik.
-Data berasal dari array `quiz` di file materi masing-masing BAB dan
-diserialisasi sebagai JSON oleh Blade. Schema data tetap mempertahankan `correct`,
-`answer`, dan `explanation`; `explanation` disaring sebelum dikirim ke halaman.
+Data authoring berasal dari array `quiz` di file materi masing-masing BAB dan
+disemai ke database. Pengguna login mendapat soal dari tabel `questions`.
+Schema authoring tetap mempertahankan `correct`, `answer`, dan `explanation`;
+ketiganya tidak dikirim ke halaman. JSON menggunakan whitelist field publik.
 Untuk mengganti soal, pertahankan total lima elemen. Contoh pilihan ganda:
 
 ```php
@@ -391,7 +394,7 @@ input beserta event penilaiannya tidak tergantikan oleh Prism. Potongan kode
 pilihan ganda tetap menampilkan source lengkap tanpa kotak isian. Mekanisme ini
 berlaku pada dua isian di setiap kuis BAB 1–6, termasuk decorator dan isian di
 tengah ekspresi. Enter, validasi jawaban kosong, passing 80% dan progres terbaik
-localStorage memakai perilaku existing.
+database memakai penilaian Laravel; localStorage tidak digunakan untuk kuis resmi.
 
 Verifikasi isian inline BAB 1–6 pada 8 Oktober 2026: `php artisan test --compact`
 lulus (33 tes, 1173 assertions), 19 tes Node lulus, serta `quiz.mjs`, `visual.mjs`
@@ -410,7 +413,7 @@ Jika ada jawaban kosong saat Selesai Kuis ditekan, pengguna diarahkan ke soal ko
 pertama dengan pesan **Masih ada soal yang belum dijawab.** Hasil belum dihitung,
 ditampilkan, atau disimpan sebagai kelulusan.
 
-Nilai integer dihitung dengan `Math.round(jawabanBenar / jumlahSoal * 100)`.
+Nilai integer dihitung server dengan `round(jawabanBenar / jumlahSoal * 100)`.
 Kartu **Kuis Selesai** hanya menampilkan **Nilai**, **Benar**, **Salah**, dan
 **Status** beserta pesan dan tombol latihan/navigasi. Tidak ada verdict per soal,
 warna berdasarkan benar/salah, jawaban pengguna, kunci, atau pembahasan, baik saat
@@ -418,8 +421,9 @@ memilih jawaban maupun setelah submit. DOM `.oopy-quiz-review` dan seluruh rende
 review lama telah dihapus. Hasil memakai `role="status"`, `aria-live="polite"`,
 dan heading yang menerima fokus sesudah submit.
 
-Aturan kelulusan diatur melalui `TOTAL_QUESTIONS = 5` dan
-`MIN_CORRECT_TO_PASS = 4` pada `public/js/oopy-quiz.js`.
+Aturan kelulusan diatur melalui `config/quiz.php`: lima soal dan minimal empat
+jawaban benar. Seeder menyimpan `passing_score = 80`; server menolak konfigurasi
+bank soal yang tidak sesuai. JavaScript mendapat aturan UI dari Laravel.
 **0–3 benar = Belum Lulus; 4–5 benar = Lulus**, berdasarkan jumlah benar,
 tanpa passing grade persentase. Nilai berturut-turut adalah 0, 20, 40, 60, 80, 100.
 Sebelum lulus, BAB berkuis yang memiliki
@@ -433,46 +437,30 @@ memiliki Next; BAB 7 menggunakan evaluasi terpisah dan tidak memakai engine ini.
 
 Controller mengirim `$chapter['slug']`; Blade meneruskannya melalui
 `data-chapter-slug`, sehingga engine tidak menebak URL atau hardcode identitas BAB.
-Progres menggunakan satu key localStorage **`oopy.quiz.progress`** dengan object
-yang memetakan slug BAB ke hasil terbaik:
-
-```json
-{
-  "dasar-pemrograman-oop": {"passed": true, "bestCorrect": 4, "bestScore": 80},
-  "kelas-dan-objek": {"passed": false, "bestCorrect": 3, "bestScore": 60}
-}
-```
-
-Hanya `passed`, `bestCorrect`, dan `bestScore` disimpan; tidak ada response,
-kunci, atau explanation. Setiap percobaan lengkap, termasuk yang belum lulus,
-memperbarui hasil terbaik menggunakan maksimum jumlah benar. Contoh 3 → 4 → 2
-menyimpan hasil terbaik 4/80 dan `passed: true`; nilai terbaik tidak turun.
-`passed` hanya menjadi true ketika hasil terbaik minimal 4 dari 5.
-Saat refresh, hasil terbaik dibaca untuk mempertahankan Next yang sudah
-terbuka, sementara jawaban dan hasil percobaan kembali kosong. **Coba Lagi**
-menghapus semua jawaban, validasi dan angka/status hasil serta kembali ke soal
-pertama, tetapi tidak menghapus kelulusan sebelumnya. Percobaan berikutnya yang
-gagal juga tidak mencabut progres. Browser baru/storage kosong kembali terkunci.
-Data storage yang rusak diabaikan; jika storage tidak tersedia, kelulusan tetap
-membuka Next pada halaman saat ini, tetapi tidak bertahan setelah refresh.
-Entry lama `oopy.quiz.passed.<slug>` dari aturan minimal 1 benar tidak dibaca
-atau dihapus. Entry tersebut tidak membuktikan kelulusan aturan baru 4/5.
-Record baru dengan `passed: true` tetapi `bestCorrect` di bawah 4 juga tidak
-membuka Next. Jumlah benar dari storage harus integer dalam rentang 0–5.
+Progres resmi berasal dari `user_progress` akun yang login. Setiap attempt
+selesai disimpan beserta lima jawaban; nilai terbaik dihitung dari attempt
+completed. Kelulusan `completed` dan waktu kelulusan pertama tidak diturunkan
+oleh kegagalan latihan ulang. HTML awal membaca status database dan response
+submit mengaktifkan Next langsung tanpa reload. Browser/perangkat lain dengan
+akun yang sama membaca progres yang sama; akun berbeda tidak mewarisinya.
+**Coba Lagi** mengosongkan jawaban sementara; interaksi berikutnya membuat
+attempt baru setelah attempt sebelumnya selesai. Refresh tidak membuat attempt.
+Key lama `oopy.quiz.progress`/`oopy.quiz.passed.<slug>` tidak dibaca, dihapus,
+atau diimpor. Jawaban sementara hanya ada di memori halaman.
 
 ## Batasan tahap ini
 
-- Sidebar tidak menampilkan judul atau bar progres BAB. Progres kuis di browser
-  dan progres latihan Live Coding tetap tersedia pada fitur masing-masing.
+- Sidebar tidak menampilkan judul atau bar progres BAB. Progres kuis resmi ada
+  di database akun; progres latihan Live Coding tetap memakai engine existing.
 - Latihan status_air BAB 1, Spesies dan SensorAir BAB 2, serta enkapsulasi BAB 3 memakai komponen
   Monaco/Pyodide yang sama dari CDN, termasuk pewarisan BAB 4 dan polimorfisme BAB 5. Materi teks dan contoh
   `<pre><code>` tetap dapat dibaca ketika editor belum siap.
 - `input()` dijelaskan dengan contoh untuk terminal lokal; editor browser belum
   mendukung input interaktif.
-- Gating kuis merupakan **client-side learning flow**, bukan security/access-control.
-  Pengguna masih dapat membuka URL BAB langsung atau mengubah localStorage.
-  Kunci untuk perhitungan frontend tetap tersedia di JSON browser, meski tidak
-  ditampilkan pada UI; explanation tetap di data PHP dan tidak dikirim.
+- Navigasi Next memakai kelulusan database; proteksi URL materi langsung belum
+  diterapkan. Materi tetap publik, sedangkan start/submit/progress kuis memerlukan
+  authentication dan submission memeriksa ownership di server.
+  Kunci/pembahasan tidak tersedia dalam JSON BAB 1–6 maupun response kuis.
   Tidak ada backend progres atau penyimpanan nilai. Setelah login/dashboard dan
   progres backend tersedia, gating dapat dipindahkan ke server. Status kuis tidak
   mengubah hasil Live Coding.

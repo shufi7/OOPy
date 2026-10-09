@@ -175,7 +175,7 @@ class MateriTest extends TestCase
         $this->assertSame(1, substr_count($html, 'class="material-navigation"'));
     }
 
-    public function test_all_available_quizzes_embed_questions_with_valid_answers(): void
+    public function test_all_available_quizzes_embed_public_questions_without_answer_keys(): void
     {
         $answers = [
             'dasar-pemrograman-oop' => ['return', 'elif'],
@@ -200,22 +200,22 @@ class MateriTest extends TestCase
 
             $this->assertCount(5, $questions);
             $this->assertSame(['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill'], array_column($questions, 'type'));
-            $this->assertSame($codeAnswers, array_column(array_slice($questions, 3), 'answer'));
+            $this->assertSame($codeAnswers, array_column(array_slice($response->viewData('content')['quiz'], 3), 'answer'));
             foreach ($questions as $index => $question) {
                 if (($question['type'] ?? 'multiple_choice') === 'code_fill') {
-                    $this->assertContains($question['answer'], $codeAnswers);
                     $this->assertNotEmpty($question['code']);
                     $this->assertSame(1, preg_match_all('/_{3,}/', $question['code']));
-                    $this->assertArrayNotHasKey('options', $question);
+                    $this->assertNull($question['options']);
                 } else {
                     $this->assertCount(4, $question['options']);
-                    $this->assertIsInt($question['correct']);
-                    $this->assertArrayHasKey($question['correct'], $question['options']);
                 }
-                $this->assertArrayNotHasKey('explanation', $question);
+                foreach (['correct', 'correct_answer', 'answer', 'is_correct', 'explanation'] as $key) {
+                    $this->assertArrayNotHasKey($key, $question);
+                }
                 $this->assertNotEmpty($response->viewData('content')['quiz'][$index]['explanation']);
             }
             $this->assertStringContainsString('js/oopy-quiz.js', $html);
+            $response->assertSee('Masuk untuk Mengerjakan Kuis');
             $this->assertStringContainsString('data-chapter-slug="'.$slug.'"', $html);
             $this->assertStringContainsString('data-quiz="results" hidden', $html);
             $this->assertStringContainsString('role="status" aria-live="polite" aria-atomic="true"', $html);

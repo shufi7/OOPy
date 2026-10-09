@@ -8,9 +8,14 @@ tabel `questions`; opsi pilihan ganda berupa JSON, bukan tabel opsi terpisah.
 Desain_Database.pdf tidak tersedia dalam workspace, sehingga struktur mengikuti
 spesifikasi tugas dan konten repository yang telah diaudit.
 
-Pada tahap ini controller, Blade, JavaScript, Monaco/Pyodide dan localStorage
-tetap menggunakan implementasi existing. Membuat tabel tidak otomatis memindahkan
-progres browser ke server. Python pengguna tetap dieksekusi di Pyodide browser.
+Kuis BAB 1–6 sekarang memakai bank soal DB, penilaian server, `quiz_attempts`,
+`quiz_answers` dan `user_progress` melalui relasi existing. Kelulusan dan
+nilai terbaik akun tidak mempercayai localStorage. Tidak ada tabel atau kolom
+tambahan; satu migration kompatibilitas memperbaiki default timestamp
+`quiz_attempts.started_at` di MariaDB tanpa auto-update. Lihat
+[quiz-progress.md](quiz-progress.md).
+Live Coding dan Evaluasi Akhir masih memakai engine existing. Python pengguna
+tetap dieksekusi di Pyodide browser.
 Mini project BAB 7 yang telah dihapus tidak dibuat ulang atau disemai.
 
 ## Sepuluh tabel utama
@@ -392,6 +397,8 @@ Urutan migration baru (semua prefix 2026_10_09):
 9. 000009_create_quiz_attempts_table
 10. 000010_create_quiz_answers_table
 11. 000011_add_learning_integrity_constraints
+12. 000012_fix_quiz_attempt_started_at_timestamp (batch 3 lokal; mempertahankan
+    started_at saat completion dengan menghapus implicit ON UPDATE).
 
 Tiga migration bawaan tidak diubah. Down menghapus tabel sesuai urutan terbalik
 ketika aman; pengumpulan/progres/attempt/answer menolak rollback ketika berisi
@@ -408,8 +415,9 @@ Data akhir: 7 chapters, 6 materials, 7 exercises, 7 quizzes, 50 questions.
 Enam kuis masing-masing 3 PG + 2 code_fill = 30 soal; final_exam berisi
 10 PG + 5 code_fill + 5 essay = 20. Total tipe: 28 PG, 17 code_fill, 5 essay.
 Jawaban/opsi/kode/explanation mengikuti PHP; explanation final NULL jika tidak
-disediakan source. Empat tabel riwayat pengguna kosong sampai integrasi backend
-dibuat. User seeder tidak membuat akun dengan password tetap.
+disediakan source. Progres, attempt dan jawaban kuis mulai terisi melalui endpoint
+terautentikasi BAB 1–6. `exercise_submissions` belum dihubungkan ke frontend.
+User seeder tidak membuat akun dengan password tetap.
 
 ## Contoh query
 
@@ -468,10 +476,10 @@ database default migrations dan engine Python tidak diubah.
 
 ## Tahap integrasi berikutnya
 
-1. Tambahkan autentikasi, authorization/policies dan kontrol role sebelum API
-   progres/riwayat dapat diakses; validasi ownership di server.
-2. Buat layanan percobaan/penilaian objektif berdasarkan bank soal DB, deadline
-   dan kebijakan server; jangan percaya skor/is_correct/localStorage dari client.
+1. Authentication/role dan ownership kuis BAB 1–6 sudah terintegrasi. Terapkan
+   policy yang sama kuatnya pada endpoint Live Coding/Evaluasi Akhir berikutnya.
+2. Layanan penilaian kuis BAB 1–6 sudah tersedia; rancang layanan Evaluasi Akhir
+   dengan deadline/kebijakan tersendiri. Jangan percaya skor/is_correct/localStorage.
 3. Rancang snapshot/versioning soal dan passing policy agar editing bank soal
    tidak mengubah riwayat. Sediakan grading manual uraian dengan audit yang benar.
 4. Hubungkan progres dan pengumpulan browser ke endpoint secara bertahap;

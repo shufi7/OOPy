@@ -1,10 +1,24 @@
-// Browser learning-flow progress only; this does not restrict direct chapter URLs.
-const TOTAL_QUESTIONS = 5;
-const MIN_CORRECT_TO_PASS = 4;
-const PROGRESS_KEY = 'oopy.quiz.progress';
+// Official results and navigation progress come from Laravel. Direct material URLs remain public.
 
 document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     const find = (name) => root.querySelector(`[data-quiz="${name}"]`);
+    const config = JSON.parse(find('config').textContent);
+    const TOTAL_QUESTIONS = config.total_questions;
+    const MIN_CORRECT_TO_PASS = config.minimum_correct;
+    const navigation = root.closest('.material-article')?.querySelector('.material-navigation');
+    const nextLink = navigation?.querySelector('[data-quiz-next-link]');
+    const nextLocked = navigation?.querySelector('[data-quiz-next-locked]');
+    const continueLink = find('continue');
+    let previouslyPassed = config.authenticated && config.progress.next_unlocked === true;
+    function updateNavigation() {
+        if (nextLink) nextLink.hidden = !previouslyPassed;
+        if (nextLocked) nextLocked.hidden = previouslyPassed;
+    }
+    updateNavigation();
+    if (!config.authenticated) {
+        find('loading').hidden = true;
+        return;
+    }
     const questions = JSON.parse(find('questions').textContent);
     if (questions.length !== TOTAL_QUESTIONS) {
         find('loading').textContent = 'Kuis belum tersedia. Silakan coba lagi nanti.';
@@ -13,32 +27,15 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     let answers = Array(questions.length).fill(null);
     let current = 0;
     let completed = false;
-    const chapterSlug = root.dataset.chapterSlug;
-    const navigation = root.closest('.material-article')?.querySelector('.material-navigation');
-    const nextLink = navigation?.querySelector('[data-quiz-next-link]');
-    const nextLocked = navigation?.querySelector('[data-quiz-next-locked]');
-    const continueLink = find('continue');
-    function readProgress() {
-        try {
-            const stored = JSON.parse(localStorage.getItem(PROGRESS_KEY));
-            if (stored && typeof stored === 'object' && !Array.isArray(stored)) return stored;
-        } catch {
-            // Missing, malformed, or unavailable storage starts with no progress.
-        }
-        return {};
-    }
-    let progress = readProgress();
-    const storedCorrect = progress[chapterSlug]?.bestCorrect;
-    let bestCorrect = Number.isInteger(storedCorrect) && storedCorrect >= 0 && storedCorrect <= TOTAL_QUESTIONS ? storedCorrect : 0;
-    let previouslyPassed = bestCorrect >= MIN_CORRECT_TO_PASS;
+    let submittedOnThisPage = false;
+    let busy = false;
+    let attempt = null;
+    let starting = null;
     const letter = (index) => String.fromCharCode(65 + index);
     const isCodeFill = (question) => question.type === 'code_fill';
     const hasAnswer = (question, answer) => isCodeFill(question)
         ? typeof answer === 'string' && answer.trim() !== ''
         : answer !== null;
-    const isCorrect = (question, answer) => isCodeFill(question)
-        ? typeof answer === 'string' && answer.trim() === question.answer
-        : answer === question.correct;
     const element = (tag, text, className) => {
         const node = document.createElement(tag);
         node.textContent = text;
@@ -46,31 +43,62 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         return node;
     };
 
-    function updateNavigation() {
-        if (nextLink) nextLink.hidden = !previouslyPassed;
-        if (nextLocked) nextLocked.hidden = previouslyPassed;
+    async function request(url, body) {
+        let response;
+        try {
+            response = await fetch(url, {
+                method: body === undefined ? 'GET' : 'POST',
+                credentials: 'same-origin',
+                cache: 'no-store',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+            });
+        } catch {
+            throw new Error('Koneksi gagal. Jawaban tetap tersedia di halaman ini; silakan coba lagi.');
+        }
+        if (response.status === 401 || response.status === 419) {
+            previouslyPassed = false;
+            updateNavigation();
+            if (continueLink) continueLink.hidden = true;
+            throw new Error('Sesi berakhir. Silakan masuk kembali sebelum mengumpulkan kuis.');
+        }
+        const data = await response.json().catch(() => null);
+        if (!response.ok) {
+            const validation = data?.errors && Object.values(data.errors).flat()[0];
+            throw new Error(validation || 'Kuis belum berhasil disimpan. Silakan coba lagi.');
+        }
+        if (!data) throw new Error('Respons server belum dapat dibaca. Silakan coba lagi.');
+        return data;
     }
 
-    function saveResult(correct) {
-        // Merge the latest records so attempts in another chapter/tab are retained.
-        progress = { ...progress, ...readProgress() };
-        const latestCorrect = progress[chapterSlug]?.bestCorrect;
-        if (Number.isInteger(latestCorrect) && latestCorrect >= 0 && latestCorrect <= TOTAL_QUESTIONS) {
-            bestCorrect = Math.max(bestCorrect, latestCorrect);
-        }
-        bestCorrect = Math.max(bestCorrect, correct);
-        previouslyPassed = bestCorrect >= MIN_CORRECT_TO_PASS;
-        progress[chapterSlug] = {
-            passed: previouslyPassed,
-            bestCorrect,
-            bestScore: Math.round(bestCorrect / TOTAL_QUESTIONS * 100),
-        };
-        try {
-            localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-        } catch {
-            // Passing still unlocks this page when browser storage is unavailable.
-        }
-        updateNavigation();
+    function startAttempt() {
+        if (attempt) return Promise.resolve(attempt);
+        if (starting) return starting;
+        starting = request(config.start_url, {}).then((data) => {
+            attempt = data;
+            return data;
+        }).finally(() => { starting = null; });
+        return starting;
+    }
+
+    function beginInteraction() {
+        // Start lazily, never merely because a page was loaded/refreshed.
+        startAttempt().catch((error) => { find('validation').textContent = error.message; });
+    }
+
+    function setBusy(value) {
+        busy = value;
+        find('form').setAttribute('aria-busy', String(value));
+        find('next').disabled = value;
+        find('previous').disabled = value || current === 0;
+        find('form').querySelectorAll('input').forEach((input) => {
+            if (input.type !== 'hidden') input.disabled = value || (input === find('code-fill') && !isCodeFill(questions[current]));
+        });
+        find('next').textContent = value ? 'Menyimpan hasil…' : (current === questions.length - 1 ? 'Selesai Kuis' : 'Soal Selanjutnya');
     }
 
     function clearResults() {
@@ -123,9 +151,11 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
             input.value = String(index);
             input.checked = answers[current] === index;
             input.addEventListener('change', () => {
+                if (busy || completed) return;
                 answers[current] = index;
                 find('validation').textContent = '';
                 updateAnswered();
+                beginInteraction();
             });
             label.append(input, element('span', `${letter(index)}.`, 'oopy-quiz-letter'), element('span', option));
             find('options').append(label);
@@ -136,7 +166,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         if (focus) find('counter').focus();
     }
 
-    function finish() {
+    async function finish() {
         const missing = answers.findIndex((answer, index) => !hasAnswer(questions[index], answer));
         if (missing !== -1) {
             current = missing;
@@ -144,40 +174,59 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
             find('validation').textContent = 'Masih ada soal yang belum dijawab.';
             return;
         }
-        completed = true;
-        const correct = questions.filter((question, index) => isCorrect(question, answers[index])).length;
-        const passed = correct >= MIN_CORRECT_TO_PASS;
-        find('score').textContent = String(Math.round(correct / questions.length * 100));
-        find('correct').textContent = String(correct);
-        find('incorrect').textContent = String(questions.length - correct);
-        find('status').textContent = passed ? 'Lulus' : 'Belum Lulus';
-        find('message').textContent = passed
-            ? (continueLink ? 'Selamat, kamu dapat melanjutkan ke BAB berikutnya.' : 'Evaluasi selesai.')
-            : `Kamu harus menjawab minimal ${MIN_CORRECT_TO_PASS} dari ${TOTAL_QUESTIONS} soal dengan benar ${continueLink ? 'untuk melanjutkan ke BAB berikutnya.' : 'untuk lulus kuis ini.'}`;
-        saveResult(correct);
-        if (continueLink) continueLink.hidden = !passed;
-        find('form').hidden = true;
-        find('results').hidden = false;
-        find('result-title').focus();
+        setBusy(true);
+        find('validation').textContent = 'Menyimpan jawaban dan hasil kuis…';
+        try {
+            const active = await startAttempt();
+            const data = await request(active.submit_url, {
+                answers: questions.map((question, index) => ({ question_id: question.question_id, answer: answers[index] })),
+            });
+            const result = data.result;
+            if (!result || typeof result.passed !== 'boolean' || typeof data.progress?.next_unlocked !== 'boolean'
+                || !Number.isFinite(result.score) || !Number.isInteger(result.correct_count) || !Number.isInteger(result.incorrect_count)) {
+                throw new Error('Respons hasil belum dapat dibaca. Jawaban tetap tersedia; silakan coba lagi.');
+            }
+            completed = true;
+            submittedOnThisPage = true;
+            find('score').textContent = String(result.score);
+            find('correct').textContent = String(result.correct_count);
+            find('incorrect').textContent = String(result.incorrect_count);
+            find('status').textContent = result.passed ? 'Lulus' : 'Belum Lulus';
+            previouslyPassed = data.progress.next_unlocked === true;
+            updateNavigation();
+            find('message').textContent = result.passed
+                ? 'Selamat, kamu dapat melanjutkan ke BAB berikutnya.'
+                : `Kamu harus menjawab minimal ${MIN_CORRECT_TO_PASS} dari ${TOTAL_QUESTIONS} soal dengan benar untuk melanjutkan.`;
+            if (continueLink) continueLink.hidden = !previouslyPassed;
+            find('form').hidden = true;
+            find('results').hidden = false;
+            find('result-title').focus();
+        } catch (error) {
+            find('validation').textContent = error.message;
+        } finally {
+            setBusy(false);
+        }
     }
 
     find('code-fill').addEventListener('input', (event) => {
-        if (completed || !isCodeFill(questions[current])) return;
+        if (completed || busy || !isCodeFill(questions[current])) return;
         answers[current] = event.target.value;
         sizeCodeFill();
         find('validation').textContent = '';
         updateAnswered();
+        beginInteraction();
     });
 
     find('form').addEventListener('submit', (event) => {
         event.preventDefault();
-        if (completed) return;
+        if (completed || busy) return;
         find('validation').textContent = '';
+        beginInteraction();
         if (current === questions.length - 1) finish();
         else { current += 1; renderQuestion(); }
     });
     find('previous').addEventListener('click', () => {
-        if (current === 0 || completed) return;
+        if (current === 0 || completed || busy) return;
         current -= 1;
         find('validation').textContent = '';
         renderQuestion();
@@ -186,6 +235,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         answers = Array(questions.length).fill(null);
         current = 0;
         completed = false;
+        attempt = null;
         clearResults();
         find('form').hidden = false;
         find('validation').textContent = '';
@@ -204,4 +254,10 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     find('loading').hidden = true;
     find('instructions-toggle').hidden = false;
     find('form').hidden = false;
+    // Read current account progress on activation too, without touching browser storage.
+    request(config.progress_url).then((progress) => {
+        if (submittedOnThisPage) return;
+        previouslyPassed = progress.next_unlocked === true;
+        updateNavigation();
+    }).catch((error) => { find('validation').textContent = error.message; });
 });

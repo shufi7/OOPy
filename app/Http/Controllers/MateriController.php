@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ChapterQuizService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 
 class MateriController extends Controller
 {
@@ -13,7 +15,7 @@ class MateriController extends Controller
         ]);
     }
 
-    public function show(string $slug)
+    public function show(Request $request, string $slug, ChapterQuizService $quizzes)
     {
         $chapters = require resource_path('materi/chapters.php');
 
@@ -64,11 +66,39 @@ class MateriController extends Controller
             }
         }
 
-        return view('materi.show', compact(
+        // Guests can read material without querying account data. Never serialize answer keys.
+        $quizQuestions = collect($content['quiz'] ?? [])->map(fn ($question, $index) => [
+            'question_id' => null,
+            'question_order' => $index + 1,
+            'type' => $question['type'] ?? 'multiple_choice',
+            'question' => $question['question'],
+            'options' => $question['options'] ?? null,
+            'code' => $question['code'] ?? null,
+        ])->all();
+        $quizProgress = ['passed' => false, 'next_unlocked' => false];
+        if ($request->user() && $quizQuestions) {
+            $quiz = $quizzes->quiz($slug);
+            $quizQuestions = $quizzes->publicQuestions($quiz);
+            $quizProgress = $quizzes->progress($quiz, $request->user());
+            $nextChapter = $quizzes->nextChapter($quiz);
+        }
+        $quizConfig = [
+            'authenticated' => $request->user() !== null,
+            'total_questions' => config('quiz.total_questions'),
+            'minimum_correct' => config('quiz.minimum_correct'),
+            'start_url' => route('quiz.start', $slug),
+            'progress_url' => route('quiz.progress', $slug),
+            'progress' => $quizProgress,
+        ];
+
+        return response()->view('materi.show', compact(
             'chapter',
             'content',
             'previousChapter',
-            'nextChapter'
-        ));
+            'nextChapter',
+            'quizQuestions',
+            'quizConfig',
+            'quizProgress'
+        ))->header('Cache-Control', 'no-store, private');
     }
 }

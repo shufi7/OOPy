@@ -271,7 +271,7 @@ class LearningDatabaseTest extends TestCase
     {
         $user = User::factory()->create();
         $password = $user->getRawOriginal('password');
-        $this->artisan('migrate:rollback', ['--database' => 'sqlite', '--step' => 11, '--force' => true])->assertExitCode(0);
+        $this->artisan('migrate:rollback', ['--database' => 'sqlite', '--step' => 12, '--force' => true])->assertExitCode(0);
         $this->assertTrue(Schema::hasTable('users'));
         $this->assertFalse(Schema::hasColumn('users', 'role'));
         $this->assertFalse(Schema::hasTable('chapters'));

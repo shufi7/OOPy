@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('materi.index'));
         $middleware->alias(['role' => EnsureUserHasRole::class]);
+        // Code answers use the old quiz engine's exact whitespace/case comparison.
+        $middleware->trimStrings(except: ['answers.*.answer']);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

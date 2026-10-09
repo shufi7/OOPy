@@ -6,6 +6,7 @@ use App\Http\Controllers\EditorController;
 use App\Http\Controllers\EvaluasiAkhirController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MateriController;
+use App\Http\Controllers\QuizController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -24,3 +25,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/materi/{slug}/kuis/attempts', [QuizController::class, 'start'])->name('quiz.start');
+    Route::post('/materi/{slug}/kuis/attempts/{attempt}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+    Route::get('/materi/{slug}/kuis/progress', [QuizController::class, 'progress'])->name('quiz.progress');
+});

@@ -57,7 +57,7 @@ class OopyContentSeeder extends Seeder
                     'chapter_id' => $chapter->id,
                     'title' => $final ? 'Evaluasi Akhir OOPy' : 'Kuis '.$metadata['bab'],
                     'type' => $final ? 'final_exam' : 'chapter_quiz',
-                    'passing_score' => $final ? config('evaluasi.pass_threshold') : 80,
+                    'passing_score' => $final ? config('evaluasi.pass_threshold') : round(config('quiz.minimum_correct') / config('quiz.total_questions') * 100),
                     'duration_seconds' => $final ? config('evaluasi.duration_seconds') : null,
                 ]);
                 foreach (($final ? $content['questions'] : $content['quiz']) as $index => $question) {
