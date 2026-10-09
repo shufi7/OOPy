@@ -31,7 +31,9 @@
 <body class="d-flex flex-column min-vh-100 @yield('body-class')">
 
     {{-- Komponen Navbar --}}
-    @hasSection('learning-sidebar')
+    @hasSection('app-navigation')
+        @yield('app-navigation')
+    @elseif (View::hasSection('learning-sidebar'))
         @yield('learning-sidebar')
     @else
         @include('components.navbar')

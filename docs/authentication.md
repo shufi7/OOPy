@@ -211,8 +211,10 @@ dan tidak menggagalkan pemeriksaan. Tidak ada commit atau push otomatis.
 ## Batasan dan tahap berikutnya
 
 Tahap ini mencakup authentication session dan fondasi authorization saja.
-Dashboard, lupa password, verifikasi email, OAuth, dan pembatasan URL materi
-belum diimplementasikan. Kuis BAB 1–6 sekarang memakai endpoint `auth`, policy
+Dashboard pembelajaran kini tersedia di GET /dashboard dengan middleware auth,
+dan hanya membaca progres akun session; lihat [dashboard.md](dashboard.md).
+Lupa password, verifikasi email, OAuth, dan pembatasan URL materi belum
+diimplementasikan. Kuis BAB 1–6 sekarang memakai endpoint `auth`, policy
 ownership, penilaian server, dan progres database; lihat
 [quiz-progress.md](quiz-progress.md). Materi tetap dapat dibaca guest, sedangkan
 pengumpulan kuis resmi memerlukan login. Live Coding dan BAB 7 belum diintegrasikan.

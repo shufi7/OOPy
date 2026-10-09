@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\EvaluasiAkhirController;
 use App\Http\Controllers\HomeController;
@@ -25,6 +26,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::post('/materi/{slug}/kuis/attempts', [QuizController::class, 'start'])->name('quiz.start');

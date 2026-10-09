@@ -33,6 +33,9 @@
                         <a href="{{ route('register') }}" class="btn btn-brand fw-bold px-4 py-2" @if(request()->routeIs('register')) aria-current="page" @endif>Daftar</a>
                     </li>
                 @else
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard') }}" class="nav-link px-2 {{ request()->routeIs('dashboard') ? 'active' : '' }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>Dashboard</a>
+                    </li>
                     <li class="nav-item dropdown oopy-account">
                         <button class="nav-link dropdown-toggle px-2 oopy-account-toggle" type="button" id="oopyAccountMenu" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ auth('web')->user()->name }}
