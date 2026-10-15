@@ -10,7 +10,9 @@
     <section class="oopy-workspace" aria-labelledby="{{ $config['id'] }}-workspace-title">
         <header class="oopy-activity-header">
             <div class="oopy-activity-intro">
-                <span class="oopy-activity-label"><i class="bi bi-code-slash" aria-hidden="true"></i> AKTIVITAS LIVE CODING</span>
+                @if ($config['show_activity_label'] ?? true)
+                    <span class="oopy-activity-label"><i class="bi bi-code-slash" aria-hidden="true"></i> AKTIVITAS LIVE CODING</span>
+                @endif
                 <h{{ $headingLevel }} id="{{ $config['id'] }}-workspace-title" data-role="workspace-title" class="oopy-activity-title">{{ $config['title'] }}</h{{ $headingLevel }}>
             </div>
             @if ($config['description'] !== '')
@@ -54,7 +56,7 @@
 
     <section class="oopy-terminal" aria-labelledby="{{ $config['id'] }}-output-title">
         <div class="oopy-terminal-heading">
-            <h{{ $headingLevel }} id="{{ $config['id'] }}-output-title" data-role="output-title"><i class="bi bi-terminal" aria-hidden="true"></i> Output</h{{ $headingLevel }}>
+            <h{{ $headingLevel }} id="{{ $config['id'] }}-output-title" data-role="output-title"><i class="bi bi-terminal" aria-hidden="true"></i> {{ !empty($config['persistence_enabled']) ? 'Output Program' : 'Output' }}</h{{ $headingLevel }}>
             <div class="oopy-terminal-tools">
                 <span class="oopy-runtime-status" id="{{ $config['id'] }}-python-status" data-role="python-status" data-state="loading" role="status"><span></span><span id="{{ $config['id'] }}-python-status-text" data-role="python-status-text">Menyiapkan Python...</span></span>
                 <button type="button" class="oopy-terminal-retry" id="{{ $config['id'] }}-retry-runtime" data-role="retry-runtime" hidden>Coba lagi</button>

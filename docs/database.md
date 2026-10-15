@@ -14,8 +14,10 @@ nilai terbaik akun tidak mempercayai localStorage. Tidak ada tabel atau kolom
 tambahan; satu migration kompatibilitas memperbaiki default timestamp
 `quiz_attempts.started_at` di MariaDB tanpa auto-update. Lihat
 [quiz-progress.md](quiz-progress.md).
-Live Coding dan Evaluasi Akhir masih memakai engine existing. Python pengguna
-tetap dieksekusi di Pyodide browser.
+Live Coding materi dan Evaluasi Akhir masih memakai engine existing. Fitur
+[Coding](coding.md) memakai dua exercise tambahan dan exercise_submissions untuk
+progres resmi akun; Run Code tetap Pyodide, sedangkan Submit resmi diverifikasi
+service sandbox privat sebelum disimpan. Tidak ada perubahan schema database.
 Mini project BAB 7 yang telah dihapus tidak dibuat ulang atau disemai.
 
 ## Sepuluh tabel utama

@@ -15,6 +15,8 @@ export function createLiveCode(root, config) {
     let editor;
     let activeFile = config.entry_file;
     let running = false;
+    let submitting = false;
+    let completed = Boolean(config.completed);
     const tabStrip = root.querySelector('.oopy-file-tabs');
 
     function revealActiveTab() {
@@ -29,13 +31,16 @@ export function createLiveCode(root, config) {
     tabObserver.observe(tabStrip);
 
     function updateButtons() {
-        runButton.disabled = !editor || runtimeManager.state !== 'ready' || running;
-        checkButton.disabled = !editor || runtimeManager.state !== 'ready' || running || !config.checker.trim();
-        resetButton.disabled = !editor || running;
+        const busy = running || submitting;
+        runButton.disabled = !editor || runtimeManager.state !== 'ready' || busy;
+        checkButton.disabled = !editor || runtimeManager.state !== 'ready' || busy || !config.checker.trim();
+        checkButton.setAttribute('aria-busy', String(busy));
+        checkButton.lastChild.textContent = submitting ? ' Verifikasi server...' : ' Submit';
+        resetButton.disabled = !editor || busy;
         runButton.hidden = running;
         stopButton.hidden = !running;
-        byId('clear-output').disabled = running;
-        editor?.updateOptions({ readOnly: running });
+        byId('clear-output').disabled = busy;
+        editor?.updateOptions({ readOnly: busy });
     }
 
     function setStatus(state, message) {
@@ -62,7 +67,7 @@ export function createLiveCode(root, config) {
         byId('check-list').replaceChildren();
         byId('check-score').textContent = '';
         byId('check-summary').textContent = '';
-        setProgress(0);
+        setProgress(config.persistence_enabled && completed ? 100 : 0);
     }
 
     function selectFile(name, focusEditor = false) {
@@ -90,20 +95,29 @@ export function createLiveCode(root, config) {
     function showRuntimeState() {
         const state = runtimeManager.state;
         byId('retry-runtime').hidden = state !== 'error';
-        if (!running) setStatus(state, state === 'ready' ? 'Python + Pyodide Ready' : state === 'error' ? 'Python gagal dimuat. Periksa koneksi, lalu Coba lagi.' : 'Menyiapkan Python...');
+        if (!running && !submitting) setStatus(state, state === 'ready' ? 'Python + Pyodide Ready' : state === 'error' ? 'Python gagal dimuat. Periksa koneksi, lalu Coba lagi.' : 'Menyiapkan Python...');
         updateButtons();
     }
 
     function execute(type) {
-        if (!editor || runtimeManager.state !== 'ready' || running) return;
+        if (!editor || runtimeManager.state !== 'ready' || running || submitting) return;
         if (type === 'check' && !config.checker.trim()) return;
+        const files = Object.fromEntries([...models].map(([name, model]) => [name, model.getValue()]));
+        if (config.require_code && Object.values(files).every(source => !source.trim())) {
+            clearResults();
+            output.replaceChildren();
+            appendOutput('Editor masih kosong. Tulis kode Python di main.py sebelum Run Code atau Submit.\n', 'muted');
+            setStatus('ready', 'Belum ada kode. Tulis program Python terlebih dahulu.');
+            editor.focus();
+            return;
+        }
         running = true;
         clearResults();
         output.replaceChildren();
         appendOutput(type === 'check' ? `[Memeriksa ${fileNames.length} file ...]\n` : `[Menjalankan ${config.entry_file} ...]\n`, 'muted');
         updateButtons();
         runtimeManager.submit(config.id, {
-            type, files: Object.fromEntries([...models].map(([name, model]) => [name, model.getValue()])),
+            type, files,
             entryFile: config.entry_file, checker: config.checker,
         }, (data) => {
             if (data.type === 'queued') setStatus('busy', 'Menunggu antrean Python...');
@@ -113,15 +127,17 @@ export function createLiveCode(root, config) {
             else if (['done', 'error', 'cancelled'].includes(data.type)) {
                 appendOutput(data.type === 'done' ? '\n✓ Selesai.\n' : `\n${data.message}\n`, data.type === 'done' ? 'success' : 'error');
                 running = false;
-                showRuntimeState();
+                if (type === 'check' && data.type !== 'cancelled' && config.persistence_enabled && config.authenticated) {
+                    submitOfficial(files);
+                } else showRuntimeState();
             }
         });
     }
 
-    function renderResults(results) {
+    function renderResults(results, official = false) {
         const passed = results.filter((result) => result.passed).length;
         const score = results.length ? Math.round(passed / results.length * 100) : 0;
-        byId('check-score').textContent = `Skor: ${score}`;
+        byId('check-score').textContent = `${config.persistence_enabled && !official ? 'Skor lokal' : 'Skor'}: ${score}`;
         byId('check-summary').textContent = `${passed} dari ${results.length} pemeriksaan berhasil. ${score === 100 ? 'Semua pemeriksaan latihan berhasil.' : 'Ikuti petunjuk di bawah, perbaiki kode, lalu submit kembali.'}`;
         const list = byId('check-list');
         list.replaceChildren();
@@ -142,8 +158,57 @@ export function createLiveCode(root, config) {
             list.append(item);
         });
         byId('check-results').hidden = false;
-        setProgress(score);
+        if (config.persistence_enabled && !official) {
+            byId('check-summary').textContent = `${passed} dari ${results.length} pemeriksaan lokal berhasil. ${config.authenticated ? 'Menunggu verifikasi resmi server; progres belum disimpan.' : 'Masuk untuk menyimpan hasil latihan. Hasil lokal ini belum merupakan nilai resmi.'}`;
+        }
+        setProgress(config.persistence_enabled ? (completed ? 100 : 0) : score);
         byId('check-results').scrollIntoView({ behavior: 'auto', block: 'nearest' });
+    }
+
+    async function submitOfficial(files) {
+        submitting = true;
+        updateButtons();
+        setStatus('busy', 'Memverifikasi jawaban di server...');
+        byId('check-results').hidden = false;
+        byId('check-summary').textContent = 'Menunggu verifikasi resmi server; progres belum disimpan.';
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 20000);
+        try {
+            const response = await fetch(config.submit_url, {
+                method: 'POST', credentials: 'same-origin', signal: controller.signal,
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                body: JSON.stringify({ files }),
+            });
+            const messages = {
+                401: 'Sesi masuk berakhir. Masuk kembali untuk menyimpan hasil latihan.',
+                419: 'Sesi keamanan berakhir. Salin kode kamu, lalu muat ulang halaman sebelum Submit.',
+                422: 'Kode tidak dapat dikirim. Gunakan satu main.py dengan maksimal 30.000 karakter dan 60 KB.',
+                429: 'Terlalu banyak Submit. Tunggu satu menit dan coba lagi.',
+            };
+            const report = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(messages[response.status] || report.message || 'Server gagal memverifikasi jawaban. Coba lagi; penyimpanan belum terkonfirmasi.');
+            if (!['passed', 'failed', 'error'].includes(report.status) || !Array.isArray(report.checks) || typeof report.completed !== 'boolean') {
+                throw new Error('Respons server tidak valid. Penyimpanan belum terkonfirmasi.');
+            }
+            completed = completed || report.completed;
+            renderResults(report.checks, true);
+            byId('check-score').textContent = `Skor resmi: ${report.score}`;
+            byId('check-summary').textContent = report.message;
+            if (completed) {
+                document.querySelectorAll('[data-coding-completion]').forEach((status) => {
+                    status.textContent = '✓ Selesai';
+                    status.classList.add('is-completed');
+                });
+            }
+        } catch (error) {
+            byId('check-summary').textContent = error.name === 'AbortError'
+                ? 'Waktu tunggu verifikasi habis. Penyimpanan belum terkonfirmasi; muat ulang untuk memeriksa progres atau coba Submit lagi.'
+                : (error.message || 'Koneksi terputus. Penyimpanan belum terkonfirmasi. Coba lagi.');
+        } finally {
+            clearTimeout(timer);
+            submitting = false;
+            showRuntimeState();
+        }
     }
 
     async function startEditor() {
@@ -210,7 +275,10 @@ export function createLiveCode(root, config) {
     byId('clear-output').addEventListener('click', () => output.replaceChildren());
     resetButton.addEventListener('click', () => {
         const changed = [...models].some(([name, model]) => model.getValue() !== starterFiles[name]);
-        if (changed && !window.confirm('Kembalikan semua file ke kode awal? Perubahan kode kamu akan dihapus.')) return;
+        const resetMessage = config.require_code
+            ? 'Kosongkan seluruh kode? Perubahan kode kamu yang belum disimpan akan dihapus.'
+            : 'Kembalikan semua file ke kode awal? Perubahan kode kamu akan dihapus.';
+        if (changed && !window.confirm(resetMessage)) return;
         // Switch first so resetting the active model does not immediately cancel
         // the language work it just scheduled.
         selectFile(config.entry_file);
@@ -223,6 +291,7 @@ export function createLiveCode(root, config) {
     });
 
     const unsubscribe = runtimeManager.subscribe(showRuntimeState);
+    setProgress(config.persistence_enabled && completed ? 100 : 0);
     startEditor();
     return {
         isDirty: () => [...models].some(([name, model]) => model.getValue() !== starterFiles[name]),

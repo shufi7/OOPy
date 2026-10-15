@@ -21,7 +21,7 @@ class Exercise extends LearningModel
             'exercise_key' => ['required', 'string', 'alpha_dash:ascii', 'max:191'],
             'title' => ['required', 'string', 'max:255'],
             'instruction' => ['required', 'string'],
-            'starter_code' => ['required', 'string'],
+            'starter_code' => ['present', 'string'],
             'expected_output' => ['nullable', 'string'],
         ];
     }

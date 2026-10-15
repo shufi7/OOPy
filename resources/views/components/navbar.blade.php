@@ -25,6 +25,11 @@
                         Materi
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link px-2 {{ request()->routeIs('coding.*') ? 'active' : '' }}"
+                       @if (request()->routeIs('coding.*')) aria-current="page" @endif
+                       href="{{ route('coding.index') }}">Coding</a>
+                </li>
                 @guest('web')
                     <li class="nav-item">
                         <a href="{{ route('login') }}" class="nav-link px-2 {{ request()->routeIs('login') ? 'active' : '' }}" @if(request()->routeIs('login')) aria-current="page" @endif>Masuk</a>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CodingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\EvaluasiAkhirController;
@@ -17,6 +18,10 @@ Route::get('/materi/evaluasi-akhir/ujian', [EvaluasiAkhirController::class, 'exa
 Route::get('/materi/evaluasi-akhir/hasil', [EvaluasiAkhirController::class, 'results'])->name('evaluasi.results');
 Route::get('/materi/{slug}', [MateriController::class, 'show'])->name('materi.show');
 Route::get('/editor', [EditorController::class, 'index'])->name('editor.index');
+Route::get('/coding', [CodingController::class, 'index'])->name('coding.index');
+Route::get('/coding/{slug}', [CodingController::class, 'show'])->where('slug', 'latihan-[12]')->name('coding.show');
+Route::post('/coding/{slug}/submit', [CodingController::class, 'submit'])
+    ->where('slug', 'latihan-[12]')->middleware(['auth', 'throttle:6,1'])->name('coding.submit');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');

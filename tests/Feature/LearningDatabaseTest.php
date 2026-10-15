@@ -93,7 +93,7 @@ class LearningDatabaseTest extends TestCase
         $this->assertSame('<p>Authored content must survive seeding.</p>', $material->fresh()->content);
         $this->assertSame(7, Chapter::count());
         $this->assertSame(6, Material::count());
-        $this->assertSame(7, Exercise::count());
+        $this->assertSame(9, Exercise::count());
         $this->assertSame(7, Quiz::count());
         $this->assertSame(50, Question::count());
         $this->assertSame(0, User::count(), 'Content seeding must not create default accounts.');
