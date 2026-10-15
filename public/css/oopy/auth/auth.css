@@ -80,7 +80,7 @@
 }
 
 .oopy-auth-input[aria-invalid="true"] {
-    border-color: #a02626;
+    border-color: var(--oopy-danger);
 }
 
 .oopy-auth-input-password {
@@ -112,7 +112,7 @@
 }
 
 .oopy-auth-error {
-    color: #a02626;
+    color: var(--oopy-danger);
 }
 
 .oopy-auth-button {

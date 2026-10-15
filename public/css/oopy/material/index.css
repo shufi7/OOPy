@@ -8,7 +8,7 @@
 
 .materi-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 36px rgb(64 81 78 / 18%);
+    box-shadow: 0 16px 36px rgb(64 81 78 / 10%);
 }
 
 .materi-card .card-body {
@@ -36,7 +36,7 @@
     padding: 9px 16px;
     border-radius: 12px;
     font-weight: 700;
-    box-shadow: 0 6px 14px rgb(17 153 158 / 16%);
+    box-shadow: 0 6px 14px rgb(64 81 78 / 8%);
     transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
     line-height: 1.4;
 }
@@ -53,7 +53,7 @@
 }
 
 .materi-card-link:hover {
-    box-shadow: 0 8px 18px rgb(17 153 158 / 22%);
+    box-shadow: 0 8px 18px rgb(64 81 78 / 12%);
 }
 
 .materi-card-link:hover > .bi {
@@ -63,7 +63,7 @@
 .materi-bab {
     display: inline-block;
     padding: 4px 10px;
-    background-color: var(--oopy-bg);
+    background-color: var(--oopy-brand-mint);
     border-radius: 8px;
     color: var(--oopy-link);
     font-size: 1.05rem;

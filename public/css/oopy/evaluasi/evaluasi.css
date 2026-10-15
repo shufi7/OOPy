@@ -50,8 +50,9 @@
 .oopy-final-exam .exam-timer > span { display: block; font-size: .875rem; }
 .oopy-final-exam .exam-timer strong { font-size: 2.25rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--oopy-link); }
 .oopy-final-exam .exam-timer p { font-size: .8125rem; margin: 6px 0 0; }
-.oopy-final-exam .exam-timer[data-warning="five"] { border: 2px solid var(--oopy-primary); }
-.oopy-final-exam .exam-timer[data-warning="one"] { border: 3px double var(--oopy-dark); background: var(--oopy-selected); }
+.oopy-final-exam .exam-timer[data-warning="five"] { border: 2px solid var(--oopy-warning); background: var(--oopy-warning-soft); }
+.oopy-final-exam .exam-timer[data-warning="one"] { border: 3px double var(--oopy-danger); background: var(--oopy-danger-soft); }
+.oopy-final-exam .exam-timer[data-warning="one"] strong { color: var(--oopy-danger); }
 .oopy-final-exam .exam-number-panel > summary { display: flex; align-items: center; justify-content: space-between; min-height: var(--oopy-control-min); cursor: pointer; font-weight: 750; font-size: .9375rem; }
 .oopy-final-exam .exam-number-panel > summary span { float: right; }
 .oopy-final-exam .exam-number-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--oopy-control-min), 1fr)); gap: 7px; margin-top: 16px; }
@@ -74,7 +75,7 @@
 .oopy-final-exam .exam-options { min-width: 0; margin-top: 22px; }
 .oopy-final-exam .exam-options legend { font-size: .875rem; font-weight: 650; margin-bottom: 12px; }
 .oopy-final-exam .exam-option { display: flex; gap: 12px; align-items: start; padding: 17px 18px; border: 1px solid var(--oopy-control-border); border-radius: 10px; margin-bottom: 12px; cursor: pointer; }
-.oopy-final-exam .exam-option:has(input:checked) { background: var(--oopy-bg); border-color: var(--oopy-primary); }
+.oopy-final-exam .exam-option:has(input:checked) { background: var(--oopy-selected); border-color: var(--oopy-primary); }
 .oopy-final-exam .exam-option input { flex-shrink: 0; width: 18px; height: 18px; margin-top: 5px; accent-color: var(--oopy-primary); }
 .oopy-final-exam .exam-option > span { min-width: 0; overflow-wrap: anywhere; }
 .oopy-final-exam .exam-answer label { display: block; font-weight: 650; margin-bottom: 10px; }
@@ -88,9 +89,9 @@
 .oopy-final-exam .exam-code figcaption { padding: 10px 16px; border-bottom: 1px solid var(--oopy-dark); font-size: .8125rem; }
 .oopy-final-exam .exam-code pre { padding: 18px; overflow: auto; margin: 0; font: var(--oopy-font-code)/1.65 Consolas, monospace; }
 .oopy-final-exam .exam-code code { font: inherit; color: inherit; }
-.oopy-final-exam .exam-inline-answer { display: inline-block; width: var(--answer-width, 18ch); min-width: 8ch; max-width: min(40ch, calc(100vw - 150px)); min-height: 44px; padding: 6px 8px; border: 2px solid var(--oopy-accent); border-radius: 6px; background: var(--oopy-surface); color: var(--oopy-text); font: inherit; line-height: 1.4; vertical-align: middle; }
+.oopy-final-exam .exam-inline-answer { display: inline-block; width: var(--answer-width, 18ch); min-width: 8ch; max-width: min(40ch, calc(100vw - 150px)); min-height: 44px; padding: 6px 8px; border: 2px solid var(--oopy-action); border-radius: 6px; background: var(--oopy-surface); color: var(--oopy-text); font: inherit; line-height: 1.4; vertical-align: middle; }
 .oopy-final-exam .exam-inline-answer.is-inline { width: var(--answer-width, 12ch); }
-.oopy-final-exam .exam-inline-answer:focus-visible { outline-color: var(--oopy-accent); }
+.oopy-final-exam .exam-inline-answer:focus-visible { outline-color: var(--oopy-focus); }
 .oopy-final-exam .token.keyword { color: var(--oopy-accent); }
 .oopy-final-exam .token.string { color: #f1d6a7; }
 .oopy-final-exam .token.function { color: #b9e8cc; }

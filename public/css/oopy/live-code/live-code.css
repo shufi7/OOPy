@@ -17,7 +17,7 @@
 .oopy-live-code .oopy-icon-button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--oopy-control-min); height: var(--oopy-control-min); padding: 0; border: 1px solid var(--oopy-control-border); border-radius: var(--oopy-radius-control); background: transparent; color: inherit; }
 .oopy-live-code .oopy-icon-button:hover { background: var(--oopy-bg); }
 .oopy-live-code .oopy-progress-track { height: 6px; margin-top: 8px; border-radius: 8px; background: var(--oopy-border); overflow: hidden; }
-.oopy-live-code .oopy-progress-track > span { display: block; height: 100%; width: 0; background: var(--oopy-accent); transition: width .25s; }
+.oopy-live-code .oopy-progress-track > span { display: block; height: 100%; width: 0; background: var(--oopy-action); transition: width .25s; }
 .oopy-live-code .oopy-workspace { margin-top: 20px; border: 1px solid var(--editor-border); border-radius: 13px; overflow: hidden; background: #fff; }
 .oopy-live-code .oopy-activity-header { display: grid; gap: 20px; min-width: 0; padding: 24px; border-bottom: 1px solid var(--editor-border); background: linear-gradient(135deg, var(--oopy-bg), var(--oopy-surface)); overflow-wrap: anywhere; }
 .oopy-live-code .oopy-activity-intro { display: grid; gap: 12px; }
@@ -38,7 +38,7 @@
 .oopy-live-code .oopy-file-button > i { font-size: 12px; }
 .oopy-live-code .oopy-explorer-hint { position: absolute; bottom: 13px; left: 18px; right: 15px; display: flex; align-items: center; gap: 6px; color: var(--oopy-text); font-size: .8125rem; line-height: 1.4; flex-wrap: wrap; }
 .oopy-live-code .oopy-explorer-hint > span:last-child { margin-left: auto; }
-.oopy-live-code .oopy-python-dot { width: 5px; height: 5px; border-radius: 50%; background: #e8ba49; }
+.oopy-live-code .oopy-python-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--oopy-brand); }
 .oopy-live-code .oopy-code-pane { min-width: 0; background: #1e1e2e; }
 .oopy-live-code .oopy-file-tabs { display: flex; overflow-x: auto; background: #14141f; scrollbar-width: thin; }
 .oopy-live-code .oopy-file-tab { display: flex; align-items: center; gap: 8px; flex-shrink: 0; height: auto; padding: 8px 15px; border: 0; border-right: 1px solid #ffffff04; border-top: 2px solid transparent; background: transparent; color: #8991a8; font: .875rem/1.4 Consolas, 'Courier New', monospace; min-width: var(--oopy-control-min); min-height: var(--oopy-control-min); }
@@ -57,18 +57,21 @@
 .oopy-live-code .oopy-button { display: inline-flex; align-items: center; justify-content: center; gap: var(--oopy-space-2); min-width: var(--oopy-control-min); min-height: var(--oopy-control-min); padding: var(--oopy-space-2) var(--oopy-space-3); border: 1px solid transparent; border-radius: var(--oopy-radius-control); font-size: 1rem; font-weight: 600; line-height: 1.4; text-decoration: none; cursor: pointer; transition: background-color .15s; }
 .oopy-live-code .oopy-button:disabled { opacity: 1; cursor: wait; background: var(--oopy-control-disabled-bg); color: var(--oopy-control-disabled-text); border-color: var(--oopy-control-border); }
 .oopy-live-code .oopy-button > .bi { font-size: 14px; line-height: 1; }
-.oopy-live-code .oopy-button-primary { background: var(--editor-blue); color: var(--oopy-on-action); }
+.oopy-live-code .oopy-button-primary:not(:disabled) { background: var(--editor-blue); color: var(--oopy-on-action); }
 .oopy-live-code .oopy-button-primary:not(:disabled):hover { background: var(--oopy-action-hover); }
 .oopy-live-code .oopy-button-primary:not(:disabled):active { background: var(--oopy-action-active); }
-.oopy-live-code .oopy-button-muted { background: var(--oopy-bg); color: var(--oopy-text); border-color: var(--oopy-control-border); }
+.oopy-live-code .oopy-button-muted:not(:disabled) { background: var(--oopy-bg); color: var(--oopy-text); border-color: var(--oopy-control-border); }
 .oopy-live-code .oopy-button-muted:not(:disabled):hover { background: var(--oopy-selected); }
-.oopy-live-code .oopy-button-success { background: #1e7547; color: #fff; }
-.oopy-live-code .oopy-button-success:not(:disabled):hover { background: #185f39; }
-.oopy-live-code .oopy-button-success:not(:disabled):active { background: #124d2e; }
-.oopy-live-code .oopy-button-danger { background: #b9362e; color: #fff; }
+.oopy-live-code .oopy-button-muted[data-role="reset-code"]:not(:disabled) { background: var(--oopy-danger-soft); color: var(--oopy-danger); border-color: var(--oopy-danger); }
+.oopy-live-code .oopy-button-muted[data-role="reset-code"]:not(:disabled):hover,
+.oopy-live-code .oopy-button-muted[data-role="reset-code"]:not(:disabled):active { background: var(--oopy-danger); color: var(--oopy-on-action); border-color: var(--oopy-danger); }
+.oopy-live-code .oopy-button-success:not(:disabled) { background: var(--oopy-action); color: var(--oopy-on-action); }
+.oopy-live-code .oopy-button-success:not(:disabled):hover { background: var(--oopy-action-hover); }
+.oopy-live-code .oopy-button-success:not(:disabled):active { background: var(--oopy-action-active); }
+.oopy-live-code .oopy-button-danger:not(:disabled) { background: #b9362e; color: #fff; }
 .oopy-live-code .oopy-button-danger:not(:disabled):hover { background: #a12e27; }
 .oopy-live-code .oopy-button-danger:not(:disabled):active { background: #8e2823; }
-.oopy-live-code .oopy-button-white { background: #fff; color: var(--oopy-text); border-color: var(--oopy-control-border); }
+.oopy-live-code .oopy-button-white:not(:disabled) { background: #fff; color: var(--oopy-text); border-color: var(--oopy-control-border); }
 .oopy-live-code .oopy-button-white:not(:disabled):hover { background: var(--oopy-selected); }
 .oopy-live-code .oopy-run-hint { display: inline-flex; align-items: center; gap: 5px; margin-left: 5px; font-size: .8125rem; color: var(--oopy-text); line-height: 1.4; flex-wrap: wrap; }
 .oopy-live-code .oopy-run-hint code { color: var(--oopy-text); font-size: inherit; }
@@ -76,7 +79,7 @@
 .oopy-live-code .oopy-terminal { margin-top: 20px; border: 1px solid #232332; border-radius: 12px; overflow: hidden; background: #10101b; }
 .oopy-live-code .oopy-terminal-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 15px; background: #161622; flex-wrap: wrap; }
 .oopy-live-code .oopy-terminal-heading [data-role="output-title"] { display: flex; align-items: center; gap: 9px; margin: 0; color: #dedee9; font: 600 1rem/1.4 Consolas, 'Courier New', monospace; }
-.oopy-live-code .oopy-terminal-heading [data-role="output-title"] > i { color: #35db87; font-size: 16px; }
+.oopy-live-code .oopy-terminal-heading [data-role="output-title"] > i { color: var(--oopy-brand-aqua); font-size: 16px; }
 .oopy-live-code .oopy-terminal-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
 .oopy-live-code .oopy-runtime-status { display: flex; align-items: center; gap: 6px; padding: 4px 7px; border-radius: 4px; background: #ffffff06; color: #aaaabe; font: .8125rem/1.4 Consolas, 'Courier New', monospace; }
 .oopy-live-code .oopy-runtime-status > span:first-child { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }

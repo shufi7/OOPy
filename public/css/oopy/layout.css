@@ -8,6 +8,6 @@
 
 .hero-section,
 .materi-section {
-    background: linear-gradient(112deg, var(--oopy-selected) 0%, var(--oopy-bg) 68%, var(--oopy-surface) 100%);
+    background: linear-gradient(112deg, var(--oopy-selected) 0%, var(--oopy-canvas) 68%, var(--oopy-surface) 100%);
     min-height: calc(100svh - 165px);
 }

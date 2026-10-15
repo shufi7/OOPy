@@ -1,5 +1,5 @@
 .site-navbar {
-    background-color: var(--oopy-cream);
+    background-color: var(--oopy-surface);
     border-bottom: 1px solid var(--oopy-mist);
     --bs-navbar-color: var(--oopy-ink);
     --bs-navbar-hover-color: var(--oopy-link);
@@ -35,7 +35,7 @@
 
 .site-navbar .nav-link.active {
     background-color: var(--oopy-selected);
-    box-shadow: inset 0 -3px var(--oopy-accent);
+    box-shadow: inset 0 -3px var(--oopy-action);
 }
 
 .site-navbar .nav-link:hover {
@@ -62,6 +62,17 @@
 }
 
 .site-navbar .oopy-account-menu {
+    --bs-dropdown-color: var(--oopy-text);
+    --bs-dropdown-bg: var(--oopy-surface);
+    --bs-dropdown-border-color: var(--oopy-border);
+    --bs-dropdown-link-color: var(--oopy-ink);
+    --bs-dropdown-link-hover-color: var(--oopy-action-hover);
+    --bs-dropdown-link-hover-bg: var(--oopy-brand-mint);
+    --bs-dropdown-link-active-color: var(--oopy-on-action);
+    --bs-dropdown-link-active-bg: var(--oopy-action);
+    --bs-dropdown-link-disabled-color: var(--oopy-muted);
+    --bs-dropdown-divider-bg: var(--oopy-line);
+    --bs-dropdown-header-color: var(--oopy-muted);
     width: min(20rem, calc(100vw - 2rem));
     max-width: 100%;
     border-color: var(--oopy-border);
