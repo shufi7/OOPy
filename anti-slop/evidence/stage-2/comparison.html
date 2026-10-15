@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOPy: perbandingan beranda Tahap 2</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; padding: 24px; max-width: 1500px; background: #f6fbf9; color: #243b39; font: 16px/1.6 system-ui, sans-serif; }
+  h1 { line-height: 1.25; }
+  a { color: #076d71; text-underline-offset: 3px; }
+  a:focus-visible { outline: 3px solid #076d71; outline-offset: 4px; }
+  section { margin-block: 40px; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+  figure { margin: 0; min-width: 0; }
+  figcaption { margin-bottom: 12px; font-weight: 700; }
+  img { display: block; width: 100%; height: auto; border: 1px solid #63827c; }
+  .mobile img { max-width: 390px; }
+  @media (max-width: 650px) { .pair { grid-template-columns: 1fr; } body { padding: 16px; } }
+</style>
+<main>
+  <h1>OOPy: beranda sebelum dan sesudah Tahap 2</h1>
+  <p>Screenshot halaman penuh dari Edge headless 155, tinggi viewport 1000px. Gambar ditampilkan sesuai lebar dokumen; buka gambar untuk melihat resolusi aslinya.</p>
+  <p><a href="../../stage-2-2026-10-16.md">Laporan implementasi dan Delivery Gate</a> · <a href="after-results.json">Hasil browser beranda</a> · <a href="foundation-regression/foundation-results.json">Regresi Tahap 1</a></p>
+  <section>
+    <h2>Desktop: 1440px, pengunjung</h2>
+    <div class="pair">
+      <figure><figcaption>Sebelum</figcaption><a href="before-guest-1440.png"><img src="before-guest-1440.png" alt="Beranda lama: Selamat Datang, logo dengan stacked card dan latar gradien" width="1440" loading="lazy"></a></figure>
+      <figure><figcaption>Sesudah</figcaption><a href="after-guest-1440.png"><img src="after-guest-1440.png" alt="Beranda baru: judul manfaat praktik, dua aksi belajar dan logo pendukung" width="1440" loading="lazy"></a></figure>
+    </div>
+  </section>
+  <section>
+    <h2>Tablet: 768px, pengunjung</h2>
+    <div class="pair">
+      <figure><figcaption>Sebelum</figcaption><a href="before-guest-768.png"><img src="before-guest-768.png" alt="Beranda lama pada tablet" width="768" loading="lazy"></a></figure>
+      <figure><figcaption>Sesudah</figcaption><a href="after-guest-768.png"><img src="after-guest-768.png" alt="Beranda baru pada tablet dengan hero dua kolom" width="768" loading="lazy"></a></figure>
+    </div>
+  </section>
+  <section class="mobile">
+    <h2>Mobile: 390px, pengunjung</h2>
+    <div class="pair">
+      <figure><figcaption>Sebelum</figcaption><a href="before-guest-390.png"><img src="before-guest-390.png" alt="Beranda lama pada mobile" width="390" loading="lazy"></a></figure>
+      <figure><figcaption>Sesudah</figcaption><a href="after-guest-390.png"><img src="after-guest-390.png" alt="Beranda baru pada mobile: judul, deskripsi, aksi, kemudian logo" width="390" loading="lazy"></a></figure>
+    </div>
+  </section>
+  <section>
+    <h2>Sesudah masuk ke akun</h2>
+    <p>Catatan penyimpanan progres berubah menjadi tautan ke dashboard. Data pribadi pada screenshot hanya berasal dari akun pengujian sementara.</p>
+    <div class="pair mobile">
+      <figure><figcaption>Desktop 1440px</figcaption><a href="after-authenticated-1440.png"><img style="max-width:none" src="after-authenticated-1440.png" alt="Beranda pengguna masuk pada desktop" width="1440" loading="lazy"></a></figure>
+      <figure><figcaption>Mobile 390px</figcaption><a href="after-authenticated-390.png"><img src="after-authenticated-390.png" alt="Beranda pengguna masuk pada mobile dengan tautan Buka Dashboard" width="390" loading="lazy"></a></figure>
+    </div>
+  </section>
+  <p>Bukti lengkap juga tersedia untuk lebar 360 dan 1024px. Lihat daftar screenshot dalam laporan.</p>
+</main>
+</html>

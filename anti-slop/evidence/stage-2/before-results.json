@@ -1,0 +1,198 @@
+{
+  "phase": "before",
+  "layouts": [
+    {
+      "state": "guest",
+      "width": 360,
+      "scroll": 360,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 24,
+        "right": 336,
+        "top": 160.609375,
+        "bottom": 206.6875,
+        "width": 312
+      },
+      "description": {
+        "left": 24,
+        "right": 336,
+        "top": 222.6875,
+        "bottom": 406.25,
+        "width": 312
+      },
+      "logo": {
+        "left": 43,
+        "right": 301,
+        "top": 555.875,
+        "bottom": 813.875,
+        "width": 258
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 185.171875,
+          "height": 50.625,
+          "left": 24,
+          "right": 209.171875,
+          "top": 438.25,
+          "bottom": 488.875
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 390,
+      "scroll": 390,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 24,
+        "right": 366,
+        "top": 160.90625,
+        "bottom": 206.984375,
+        "width": 342
+      },
+      "description": {
+        "left": 24,
+        "right": 366,
+        "top": 222.984375,
+        "bottom": 375.953125,
+        "width": 342
+      },
+      "logo": {
+        "left": 43,
+        "right": 331,
+        "top": 525.578125,
+        "bottom": 813.578125,
+        "width": 288
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 185.171875,
+          "height": 50.625,
+          "left": 24,
+          "right": 209.171875,
+          "top": 407.953125,
+          "bottom": 458.578125
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 768,
+      "scroll": 768,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 24,
+        "right": 744,
+        "top": 164.984375,
+        "bottom": 211.0625,
+        "width": 720
+      },
+      "description": {
+        "left": 24,
+        "right": 574,
+        "top": 227.0625,
+        "bottom": 319.875,
+        "width": 550
+      },
+      "logo": {
+        "left": 206,
+        "right": 546,
+        "top": 475.5,
+        "bottom": 815.5,
+        "width": 340
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 185.171875,
+          "height": 50.625,
+          "left": 24,
+          "right": 209.171875,
+          "top": 351.875,
+          "bottom": 402.5
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 1024,
+      "scroll": 1024,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 48,
+        "right": 569.328125,
+        "top": 388.171875,
+        "bottom": 437.3125,
+        "width": 521.328125
+      },
+      "description": {
+        "left": 48,
+        "right": 569.328125,
+        "top": 453.3125,
+        "bottom": 579.1875,
+        "width": 521.328125
+      },
+      "logo": {
+        "left": 642.34375,
+        "right": 935,
+        "top": 356.421875,
+        "bottom": 649.078125,
+        "width": 292.65625
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 185.171875,
+          "height": 50.625,
+          "left": 48,
+          "right": 233.171875,
+          "top": 611.1875,
+          "bottom": 661.8125
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 1440,
+      "scroll": 1440,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 48,
+        "right": 696,
+        "top": 378.453125,
+        "bottom": 443.734375,
+        "width": 648
+      },
+      "description": {
+        "left": 48,
+        "right": 598,
+        "top": 459.734375,
+        "bottom": 588.921875,
+        "width": 550
+      },
+      "logo": {
+        "left": 1011,
+        "right": 1351,
+        "top": 332.75,
+        "bottom": 672.75,
+        "width": 340
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 185.171875,
+          "height": 50.625,
+          "left": 48,
+          "right": 233.171875,
+          "top": 620.921875,
+          "bottom": 671.546875
+        }
+      ]
+    }
+  ],
+  "colors": [],
+  "navigation": [],
+  "errors": []
+}

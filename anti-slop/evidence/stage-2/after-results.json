@@ -1,0 +1,971 @@
+{
+  "phase": "after",
+  "layouts": [
+    {
+      "state": "guest",
+      "width": 360,
+      "scroll": 360,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 16,
+        "right": 344,
+        "top": 143,
+        "bottom": 308.5625,
+        "width": 328
+      },
+      "description": {
+        "left": 16,
+        "right": 344,
+        "top": 332.5625,
+        "bottom": 458.5625,
+        "width": 328
+      },
+      "actions": {
+        "left": 16,
+        "right": 344,
+        "top": 490.5625,
+        "bottom": 599.34375,
+        "width": 328
+      },
+      "logo": {
+        "left": 97.203125,
+        "right": 262.796875,
+        "top": 631.34375,
+        "bottom": 796.9375,
+        "width": 165.59375
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 328,
+          "height": 48.390625,
+          "left": 16,
+          "right": 344,
+          "top": 490.5625,
+          "bottom": 538.953125
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 328,
+          "height": 48.390625,
+          "left": 16,
+          "right": 344,
+          "top": 550.953125,
+          "bottom": 599.34375
+        },
+        {
+          "text": "Masuk ke akun",
+          "width": 112.5625,
+          "height": 44,
+          "left": 40,
+          "right": 152.5625,
+          "top": 1343.515625,
+          "bottom": 1387.515625
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 390,
+      "scroll": 390,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 16,
+        "right": 374,
+        "top": 143,
+        "bottom": 267.171875,
+        "width": 358
+      },
+      "description": {
+        "left": 16,
+        "right": 374,
+        "top": 291.171875,
+        "bottom": 417.171875,
+        "width": 358
+      },
+      "actions": {
+        "left": 16,
+        "right": 374,
+        "top": 449.171875,
+        "bottom": 557.953125,
+        "width": 358
+      },
+      "logo": {
+        "left": 105.296875,
+        "right": 284.6875,
+        "top": 589.953125,
+        "bottom": 769.34375,
+        "width": 179.390625
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 358,
+          "height": 48.390625,
+          "left": 16,
+          "right": 374,
+          "top": 449.171875,
+          "bottom": 497.5625
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 358,
+          "height": 48.390625,
+          "left": 16,
+          "right": 374,
+          "top": 509.5625,
+          "bottom": 557.953125
+        },
+        {
+          "text": "Masuk ke akun",
+          "width": 112.5625,
+          "height": 44,
+          "left": 40,
+          "right": 152.5625,
+          "top": 1316.46875,
+          "bottom": 1360.46875
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 768,
+      "scroll": 768,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 24,
+        "right": 482.65625,
+        "top": 155,
+        "bottom": 237.78125,
+        "width": 458.65625
+      },
+      "description": {
+        "left": 24,
+        "right": 482.65625,
+        "top": 261.78125,
+        "bottom": 356.28125,
+        "width": 458.65625
+      },
+      "actions": {
+        "left": 24,
+        "right": 482.65625,
+        "top": 388.28125,
+        "bottom": 436.671875,
+        "width": 458.65625
+      },
+      "logo": {
+        "left": 514.65625,
+        "right": 743.984375,
+        "top": 181.171875,
+        "bottom": 410.5,
+        "width": 229.328125
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 147.4375,
+          "height": 48.390625,
+          "left": 24,
+          "right": 171.4375,
+          "top": 388.28125,
+          "bottom": 436.671875
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 166.921875,
+          "height": 48.390625,
+          "left": 183.4375,
+          "right": 350.359375,
+          "top": 388.28125,
+          "bottom": 436.671875
+        },
+        {
+          "text": "Masuk ke akun",
+          "width": 112.5625,
+          "height": 44,
+          "left": 364.796875,
+          "right": 477.359375,
+          "top": 904.53125,
+          "bottom": 948.53125
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 1024,
+      "scroll": 1024,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 24,
+        "right": 653.328125,
+        "top": 164.203125,
+        "bottom": 258.390625,
+        "width": 629.328125
+      },
+      "description": {
+        "left": 24,
+        "right": 653.328125,
+        "top": 282.390625,
+        "bottom": 345.390625,
+        "width": 629.328125
+      },
+      "actions": {
+        "left": 24,
+        "right": 653.328125,
+        "top": 377.390625,
+        "bottom": 425.78125,
+        "width": 629.328125
+      },
+      "logo": {
+        "left": 702.65625,
+        "right": 982.65625,
+        "top": 155,
+        "bottom": 435,
+        "width": 280
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 147.4375,
+          "height": 48.390625,
+          "left": 24,
+          "right": 171.4375,
+          "top": 377.390625,
+          "bottom": 425.78125
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 166.921875,
+          "height": 48.390625,
+          "left": 183.4375,
+          "right": 350.359375,
+          "top": 377.390625,
+          "bottom": 425.78125
+        },
+        {
+          "text": "Masuk ke akun",
+          "width": 112.5625,
+          "height": 44,
+          "left": 467.1875,
+          "right": 579.75,
+          "top": 877.65625,
+          "bottom": 921.65625
+        }
+      ]
+    },
+    {
+      "state": "guest",
+      "width": 1440,
+      "scroll": 1440,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 120,
+        "right": 877.328125,
+        "top": 179,
+        "bottom": 298.59375,
+        "width": 757.328125
+      },
+      "description": {
+        "left": 120,
+        "right": 877.328125,
+        "top": 322.59375,
+        "bottom": 385.59375,
+        "width": 757.328125
+      },
+      "actions": {
+        "left": 120,
+        "right": 877.328125,
+        "top": 417.59375,
+        "bottom": 465.984375,
+        "width": 757.328125
+      },
+      "logo": {
+        "left": 990.65625,
+        "right": 1270.65625,
+        "top": 182.484375,
+        "bottom": 462.484375,
+        "width": 280
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 147.4375,
+          "height": 48.390625,
+          "left": 120,
+          "right": 267.4375,
+          "top": 417.59375,
+          "bottom": 465.984375
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 166.921875,
+          "height": 48.390625,
+          "left": 279.4375,
+          "right": 446.359375,
+          "top": 417.59375,
+          "bottom": 465.984375
+        },
+        {
+          "text": "Masuk ke akun",
+          "width": 112.5625,
+          "height": 44,
+          "left": 652.796875,
+          "right": 765.359375,
+          "top": 878.921875,
+          "bottom": 922.921875
+        }
+      ]
+    },
+    {
+      "state": "authenticated",
+      "width": 360,
+      "scroll": 360,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 16,
+        "right": 344,
+        "top": 143,
+        "bottom": 308.5625,
+        "width": 328
+      },
+      "description": {
+        "left": 16,
+        "right": 344,
+        "top": 332.5625,
+        "bottom": 458.5625,
+        "width": 328
+      },
+      "actions": {
+        "left": 16,
+        "right": 344,
+        "top": 490.5625,
+        "bottom": 599.34375,
+        "width": 328
+      },
+      "logo": {
+        "left": 97.203125,
+        "right": 262.796875,
+        "top": 631.34375,
+        "bottom": 796.9375,
+        "width": 165.59375
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 328,
+          "height": 48.390625,
+          "left": 16,
+          "right": 344,
+          "top": 490.5625,
+          "bottom": 538.953125
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 328,
+          "height": 48.390625,
+          "left": 16,
+          "right": 344,
+          "top": 550.953125,
+          "bottom": 599.34375
+        },
+        {
+          "text": "Buka Dashboard",
+          "width": 127.90625,
+          "height": 44,
+          "left": 40,
+          "right": 167.90625,
+          "top": 1343.515625,
+          "bottom": 1387.515625
+        }
+      ]
+    },
+    {
+      "state": "authenticated",
+      "width": 390,
+      "scroll": 390,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 16,
+        "right": 374,
+        "top": 143,
+        "bottom": 267.171875,
+        "width": 358
+      },
+      "description": {
+        "left": 16,
+        "right": 374,
+        "top": 291.171875,
+        "bottom": 417.171875,
+        "width": 358
+      },
+      "actions": {
+        "left": 16,
+        "right": 374,
+        "top": 449.171875,
+        "bottom": 557.953125,
+        "width": 358
+      },
+      "logo": {
+        "left": 105.296875,
+        "right": 284.6875,
+        "top": 589.953125,
+        "bottom": 769.34375,
+        "width": 179.390625
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 358,
+          "height": 48.390625,
+          "left": 16,
+          "right": 374,
+          "top": 449.171875,
+          "bottom": 497.5625
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 358,
+          "height": 48.390625,
+          "left": 16,
+          "right": 374,
+          "top": 509.5625,
+          "bottom": 557.953125
+        },
+        {
+          "text": "Buka Dashboard",
+          "width": 127.90625,
+          "height": 44,
+          "left": 40,
+          "right": 167.90625,
+          "top": 1316.46875,
+          "bottom": 1360.46875
+        }
+      ]
+    },
+    {
+      "state": "authenticated",
+      "width": 768,
+      "scroll": 768,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 24,
+        "right": 482.65625,
+        "top": 155,
+        "bottom": 237.78125,
+        "width": 458.65625
+      },
+      "description": {
+        "left": 24,
+        "right": 482.65625,
+        "top": 261.78125,
+        "bottom": 356.28125,
+        "width": 458.65625
+      },
+      "actions": {
+        "left": 24,
+        "right": 482.65625,
+        "top": 388.28125,
+        "bottom": 436.671875,
+        "width": 458.65625
+      },
+      "logo": {
+        "left": 514.65625,
+        "right": 743.984375,
+        "top": 181.171875,
+        "bottom": 410.5,
+        "width": 229.328125
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 147.4375,
+          "height": 48.390625,
+          "left": 24,
+          "right": 171.4375,
+          "top": 388.28125,
+          "bottom": 436.671875
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 166.921875,
+          "height": 48.390625,
+          "left": 183.4375,
+          "right": 350.359375,
+          "top": 388.28125,
+          "bottom": 436.671875
+        },
+        {
+          "text": "Buka Dashboard",
+          "width": 127.90625,
+          "height": 44,
+          "left": 364.796875,
+          "right": 492.703125,
+          "top": 904.53125,
+          "bottom": 948.53125
+        }
+      ]
+    },
+    {
+      "state": "authenticated",
+      "width": 1024,
+      "scroll": 1024,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 24,
+        "right": 653.328125,
+        "top": 164.203125,
+        "bottom": 258.390625,
+        "width": 629.328125
+      },
+      "description": {
+        "left": 24,
+        "right": 653.328125,
+        "top": 282.390625,
+        "bottom": 345.390625,
+        "width": 629.328125
+      },
+      "actions": {
+        "left": 24,
+        "right": 653.328125,
+        "top": 377.390625,
+        "bottom": 425.78125,
+        "width": 629.328125
+      },
+      "logo": {
+        "left": 702.65625,
+        "right": 982.65625,
+        "top": 155,
+        "bottom": 435,
+        "width": 280
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 147.4375,
+          "height": 48.390625,
+          "left": 24,
+          "right": 171.4375,
+          "top": 377.390625,
+          "bottom": 425.78125
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 166.921875,
+          "height": 48.390625,
+          "left": 183.4375,
+          "right": 350.359375,
+          "top": 377.390625,
+          "bottom": 425.78125
+        },
+        {
+          "text": "Buka Dashboard",
+          "width": 127.90625,
+          "height": 44,
+          "left": 467.1875,
+          "right": 595.09375,
+          "top": 850.46875,
+          "bottom": 894.46875
+        }
+      ]
+    },
+    {
+      "state": "authenticated",
+      "width": 1440,
+      "scroll": 1440,
+      "font": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "title": {
+        "left": 120,
+        "right": 877.328125,
+        "top": 179,
+        "bottom": 298.59375,
+        "width": 757.328125
+      },
+      "description": {
+        "left": 120,
+        "right": 877.328125,
+        "top": 322.59375,
+        "bottom": 385.59375,
+        "width": 757.328125
+      },
+      "actions": {
+        "left": 120,
+        "right": 877.328125,
+        "top": 417.59375,
+        "bottom": 465.984375,
+        "width": 757.328125
+      },
+      "logo": {
+        "left": 990.65625,
+        "right": 1270.65625,
+        "top": 182.484375,
+        "bottom": 462.484375,
+        "width": 280
+      },
+      "links": [
+        {
+          "text": "Mulai Belajar",
+          "width": 147.4375,
+          "height": 48.390625,
+          "left": 120,
+          "right": 267.4375,
+          "top": 417.59375,
+          "bottom": 465.984375
+        },
+        {
+          "text": "Latihan Coding",
+          "width": 166.921875,
+          "height": 48.390625,
+          "left": 279.4375,
+          "right": 446.359375,
+          "top": 417.59375,
+          "bottom": 465.984375
+        },
+        {
+          "text": "Buka Dashboard",
+          "width": 127.90625,
+          "height": 44,
+          "left": 652.796875,
+          "right": 780.703125,
+          "top": 878.921875,
+          "bottom": 922.921875
+        }
+      ]
+    }
+  ],
+  "colors": [
+    {
+      "text": "Belajar OOP Python, langsung lewat praktik.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 52,
+      "weight": 800,
+      "ratio": 11.414198856598944,
+      "minimum": 3
+    },
+    {
+      "text": "langsung lewat praktik.",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(246, 251, 249)",
+      "size": 52,
+      "weight": 800,
+      "ratio": 5.847363980299642,
+      "minimum": 3
+    },
+    {
+      "text": "Pahami konsep Object-Oriented Programming melalui materi interaktif, kuis, dan latihan coding Python yang dapat dijalankan langsung di browser.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 18,
+      "weight": 400,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "text": "Mulai Belajar",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(7, 109, 113)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "text": "Latihan Coding",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "text": "Materi dan latihan dalam satu tempat.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 28.8,
+      "weight": 700,
+      "ratio": 11.414198856598944,
+      "minimum": 3
+    },
+    {
+      "text": "Materi dan kuis per BAB",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 17,
+      "weight": 700,
+      "ratio": 11.414198856598944,
+      "minimum": 4.5
+    },
+    {
+      "text": "Pelajari class, object, pewarisan, dan konsep OOP lainnya. Jawab kuis untuk memeriksa pemahamanmu.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 18,
+      "weight": 400,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "text": "Praktik Python di browser",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 17,
+      "weight": 700,
+      "ratio": 11.414198856598944,
+      "minimum": 4.5
+    },
+    {
+      "text": "Tulis kode sendiri, jalankan program, lalu baca output dan feedback hasil latihan.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 18,
+      "weight": 400,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "text": "Simpan progres belajarmu.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "text": "Masuk untuk menyimpan hasil kuis dan kelulusan latihan pada akunmu.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(228, 249, 245)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 7.651787041877175,
+      "minimum": 4.5
+    },
+    {
+      "text": "Masuk ke akun",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(228, 249, 245)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 4.870967200433703,
+      "minimum": 4.5
+    },
+    {
+      "text": "primary normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(7, 109, 113)",
+      "outline": "rgb(255, 255, 255)",
+      "outlineWidth": "3px",
+      "focus": false,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "text": "primary hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(6, 95, 99)",
+      "outline": "rgb(255, 255, 255)",
+      "outlineWidth": "3px",
+      "focus": false,
+      "ratio": 7.434160756642327,
+      "minimum": 4.5
+    },
+    {
+      "text": "primary active",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(5, 78, 82)",
+      "outline": "rgb(255, 255, 255)",
+      "outlineWidth": "3px",
+      "focus": false,
+      "ratio": 9.467784585445441,
+      "minimum": 4.5
+    },
+    {
+      "text": "primary focus",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(6, 95, 99)",
+      "outline": "rgb(7, 109, 113)",
+      "outlineWidth": "3px",
+      "focus": true,
+      "ratio": 7.434160756642327,
+      "minimum": 4.5
+    },
+    {
+      "text": "secondary normal",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "outline": "rgb(8, 119, 123)",
+      "outlineWidth": "3px",
+      "focus": false,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "text": "secondary hover",
+      "color": "rgb(6, 95, 99)",
+      "background": "rgb(228, 249, 245)",
+      "outline": "rgb(6, 95, 99)",
+      "outlineWidth": "3px",
+      "focus": false,
+      "ratio": 6.785471191673726,
+      "minimum": 4.5
+    },
+    {
+      "text": "secondary active",
+      "color": "rgb(5, 78, 82)",
+      "background": "rgb(228, 249, 245)",
+      "outline": "rgb(5, 78, 82)",
+      "outlineWidth": "3px",
+      "focus": false,
+      "ratio": 8.641645191235876,
+      "minimum": 4.5
+    },
+    {
+      "text": "secondary focus",
+      "color": "rgb(6, 95, 99)",
+      "background": "rgb(228, 249, 245)",
+      "outline": "rgb(7, 109, 113)",
+      "outlineWidth": "3px",
+      "focus": true,
+      "ratio": 6.785471191673726,
+      "minimum": 4.5
+    },
+    {
+      "text": "Belajar OOP Python, langsung lewat praktik.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 52,
+      "weight": 800,
+      "ratio": 11.414198856598944,
+      "minimum": 3
+    },
+    {
+      "text": "langsung lewat praktik.",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(246, 251, 249)",
+      "size": 52,
+      "weight": 800,
+      "ratio": 5.847363980299642,
+      "minimum": 3
+    },
+    {
+      "text": "Pahami konsep Object-Oriented Programming melalui materi interaktif, kuis, dan latihan coding Python yang dapat dijalankan langsung di browser.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 18,
+      "weight": 400,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "text": "Mulai Belajar",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(7, 109, 113)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "text": "Latihan Coding",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "text": "Materi dan latihan dalam satu tempat.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 28.8,
+      "weight": 700,
+      "ratio": 11.414198856598944,
+      "minimum": 3
+    },
+    {
+      "text": "Materi dan kuis per BAB",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 17,
+      "weight": 700,
+      "ratio": 11.414198856598944,
+      "minimum": 4.5
+    },
+    {
+      "text": "Pelajari class, object, pewarisan, dan konsep OOP lainnya. Jawab kuis untuk memeriksa pemahamanmu.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 18,
+      "weight": 400,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "text": "Praktik Python di browser",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 17,
+      "weight": 700,
+      "ratio": 11.414198856598944,
+      "minimum": 4.5
+    },
+    {
+      "text": "Tulis kode sendiri, jalankan program, lalu baca output dan feedback hasil latihan.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 18,
+      "weight": 400,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "text": "Lihat progres belajarmu.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "text": "Progres BAB dan nilai kuis tersedia di dashboard akunmu.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(228, 249, 245)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 7.651787041877175,
+      "minimum": 4.5
+    },
+    {
+      "text": "Buka Dashboard",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(228, 249, 245)",
+      "size": 16,
+      "weight": 700,
+      "ratio": 4.870967200433703,
+      "minimum": 4.5
+    }
+  ],
+  "navigation": [
+    "Mulai Belajar -> /materi",
+    "Latihan Coding -> /coding",
+    "Masuk ke akun -> /login",
+    "OOPy -> /",
+    "Beranda -> /",
+    "Materi -> /materi",
+    "Coding -> /coding",
+    "Masuk -> /login",
+    "Daftar -> /register",
+    "guest mobile menu -> /materi",
+    "Mulai Belajar -> /materi",
+    "Latihan Coding -> /coding",
+    "Buka Dashboard -> /dashboard",
+    "authenticated mobile menu -> /dashboard",
+    "Dashboard -> /dashboard",
+    "account menu -> opens, Escape closes, Logout -> guest home"
+  ],
+  "errors": [],
+  "status": "PASS"
+}

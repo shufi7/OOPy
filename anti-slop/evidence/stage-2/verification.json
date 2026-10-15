@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-16",
+  "stage": 2,
+  "scope": "Homepage only",
+  "baseline": "1c08e17085aa03e4d4be235d0dcb99254ae6af2e",
+  "source": [
+    {
+      "file": "public/css/oopy/home.css",
+      "sha256": "60c226da3eb96e330a5ef96ee197c37b93461769cb1a2f44145e2a9d38d9f3e9"
+    },
+    {
+      "file": "resources/views/home/index.blade.php",
+      "sha256": "9df6e06ea7db1f1c2611e6d7537d43b9aa8e09fd80357eaed54256d063a8833a"
+    }
+  ],
+  "preserved": [
+    {
+      "file": "DESIGN.md",
+      "sha256": "dba1579f21121323ee3edde5c4a35d920019dc8ee5fa3fc9f58d79a5f44607cc",
+      "unchangedFromHead": true
+    },
+    {
+      "file": "public/images/oopy-logo.png",
+      "sha256": "888e667359656d37831cd22cb902e379deb56f983ff63c91d6ebdc56e109bd25",
+      "unchangedFromHead": true
+    }
+  ],
+  "tests": {
+    "php": {
+      "command": "php artisan test --compact",
+      "status": "PASS",
+      "tests": 129,
+      "assertions": 2771,
+      "seconds": 31.27
+    },
+    "javascript": {
+      "command": "node --test tests/js/runtime-manager.test.js tests/js/material-checkers.test.js tests/js/final-exam.test.js tests/js/coding-checkers.test.js",
+      "status": "PASS",
+      "tests": 21,
+      "failed": 0
+    },
+    "home": {
+      "status": "PASS",
+      "widths": [
+        360,
+        390,
+        768,
+        1024,
+        1440
+      ],
+      "layouts": 10,
+      "contrastMeasurements": 34,
+      "navigationRecords": 16,
+      "pageErrors": []
+    },
+    "foundation": {
+      "status": "PASS",
+      "layouts": 100,
+      "contrastMeasurements": 40,
+      "interactionGroups": 7,
+      "pageErrors": []
+    }
+  },
+  "browser": "Microsoft Edge headless 155",
+  "database": "Disposable temporary SQLite; project database unchanged",
+  "assets": "Cached copies of original CDN URLs",
+  "localArtifactLinksChecked": 49,
+  "deliveryGate": "PASS within tested Stage 2 scope; limitations in report"
+}

@@ -1,94 +1,201 @@
+.oopy-home {
+    flex: 1;
+    padding-bottom: var(--oopy-space-12);
+    background: var(--oopy-canvas);
+    color: var(--oopy-text);
+}
+
+.home-container {
+    width: min(1200px, calc(100% - 48px));
+    margin-inline: auto;
+}
+
+.home-hero {
+    display: grid;
+    align-items: center;
+    gap: var(--oopy-space-8);
+    padding-block: var(--oopy-space-12);
+}
+
+.home-intro {
+    min-width: 0;
+}
+
 .hero-title {
-    font-size: clamp(2.4rem, 4vw, 3.4rem);
-    letter-spacing: -0.5px;
-    line-height: 1.2;
+    max-width: 22ch;
+    margin: 0 0 var(--oopy-space-6);
+    color: var(--oopy-ink);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.15;
+    text-wrap: balance;
+}
+
+.hero-title span {
+    display: block;
+    color: var(--oopy-action);
 }
 
 .hero-description {
-    max-width: 550px;
-    font-size: clamp(1.125rem, 1.08rem + .12vw, 1.1875rem);
-    line-height: 1.7;
+    max-width: 60ch;
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.75;
 }
 
-.btn-hero-start {
-    --bs-btn-color: var(--oopy-on-primary);
-    --bs-btn-bg: var(--oopy-primary);
-    --bs-btn-border-color: var(--oopy-primary);
-    --bs-btn-hover-color: var(--oopy-ink);
-    --bs-btn-hover-bg: var(--oopy-accent);
-    --bs-btn-hover-border-color: var(--oopy-primary);
-    --bs-btn-active-color: var(--oopy-ink);
-    --bs-btn-active-bg: var(--oopy-sky);
-    --bs-btn-active-border-color: var(--oopy-sky);
-    --bs-btn-focus-shadow-rgb: 17, 153, 158;
-    border-radius: 50px;
-    padding: 12px 38px;
-    font-size: 1.1rem;
-    box-shadow: 0 6px 18px rgb(64 81 78 / 15%);
-    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+.home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--oopy-space-3);
+    margin-top: var(--oopy-space-8);
+}
+
+.home-actions .btn {
+    min-height: var(--oopy-space-12);
+    padding: var(--oopy-space-3) var(--oopy-space-6);
+    border-radius: var(--oopy-radius-control);
+    font-size: 1rem;
+    font-weight: 700;
     line-height: 1.4;
+    transition: color .15s ease, background-color .15s ease, border-color .15s ease;
 }
 
-.btn-hero-start:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgb(64 81 78 / 20%);
+.btn-home-secondary {
+    --bs-btn-color: var(--oopy-link);
+    --bs-btn-bg: var(--oopy-surface);
+    --bs-btn-border-color: var(--oopy-control-border);
+    --bs-btn-hover-color: var(--oopy-action-hover);
+    --bs-btn-hover-bg: var(--oopy-brand-mint);
+    --bs-btn-hover-border-color: var(--oopy-action-hover);
+    --bs-btn-active-color: var(--oopy-action-active);
+    --bs-btn-active-bg: var(--oopy-brand-mint);
+    --bs-btn-active-border-color: var(--oopy-action-active);
+    --bs-btn-focus-shadow-rgb: 7, 109, 113;
 }
 
-.stacked-card-wrapper {
-    width: calc(100% - 16px);
-    max-width: 390px;
-    margin-right: 16px;
-}
-
-.stacked-card-back {
-    top: -16px;
-    right: -16px;
-    width: 100%;
-    height: 100%;
-    background-color: var(--oopy-sky);
-    border: 1px solid var(--oopy-blue);
-    border-radius: 24px;
-    box-shadow: var(--oopy-shadow);
-    z-index: 1;
-    pointer-events: none;
-}
-
-.stacked-card-front {
-    background-color: var(--oopy-surface);
-    border: 1px solid var(--oopy-mist);
-    border-radius: 24px;
-    padding: 24px 24px 30px;
-    box-shadow: 0 20px 45px rgb(64 81 78 / 16%);
-    z-index: 2;
+.home-identity {
+    display: grid;
+    place-items: center;
+    min-width: 0;
 }
 
 .hero-logo {
     display: block;
-    width: 100%;
+    width: clamp(160px, 46vw, 200px);
+    max-width: 100%;
     height: auto;
     object-fit: contain;
 }
 
-.card-tagline {
-    color: var(--oopy-ink-soft);
-    font-size: .9375rem;
-    font-weight: 600;
-    line-height: 1.5;
+.home-learning {
+    display: grid;
+    align-items: start;
+    gap: var(--oopy-space-6);
+    padding-top: var(--oopy-space-8);
+    border-top: 1px solid var(--oopy-line);
+}
+
+.home-learning h2 {
+    max-width: 23ch;
+    margin: 0;
+    color: var(--oopy-ink);
+    font-size: var(--oopy-font-h2);
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -.02em;
+}
+
+.home-learning-content {
+    min-width: 0;
+}
+
+.home-learning-list {
+    margin: 0;
+}
+
+.home-learning-list > div {
+    margin-bottom: var(--oopy-space-6);
+}
+
+.home-learning-list dt {
+    margin-bottom: var(--oopy-space-2);
+    color: var(--oopy-ink);
+    font-size: 1.0625rem;
+    font-weight: 700;
+}
+
+.home-learning-list dd {
+    max-width: 65ch;
+    margin: 0;
+}
+
+.home-account-note {
+    display: grid;
+    gap: var(--oopy-space-2);
+    padding: var(--oopy-space-6);
+    border-radius: var(--oopy-radius-card);
+    background: var(--oopy-brand-mint);
+    font-size: 1rem;
+}
+
+.home-account-note strong {
+    color: var(--oopy-ink);
+    font-weight: 700;
+}
+
+.home-account-note p {
+    margin: 0;
+}
+
+.home-account-note a {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    min-height: var(--oopy-control-min);
+    color: var(--oopy-link);
+    font-weight: 700;
+    text-underline-offset: 4px;
+}
+
+.home-account-note a:hover {
+    color: var(--oopy-action-hover);
+}
+
+@media (min-width: 768px) {
+    .home-hero {
+        grid-template-columns: minmax(0, 1.6fr) minmax(180px, .8fr);
+    }
+
+    .hero-logo {
+        width: min(100%, 280px);
+    }
+
+    .home-learning {
+        grid-template-columns: minmax(0, .9fr) minmax(0, 1.35fr);
+        gap: var(--oopy-space-12);
+    }
+}
+
+@media (min-width: 1200px) {
+    .home-hero {
+        gap: calc(var(--oopy-space-12) + var(--oopy-space-4));
+        padding-block: calc(var(--oopy-space-12) + var(--oopy-space-6));
+    }
 }
 
 @media (max-width: 575.98px) {
+    .home-container {
+        width: calc(100% - 32px);
+    }
 
-    .stacked-card-front {
-        padding: 18px 18px 24px;
+    .home-actions {
+        flex-direction: column;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .btn-hero-start {
+    .home-actions .btn {
         transition: none;
-    }
-
-    .btn-hero-start:hover {
-        transform: none;
     }
 }
