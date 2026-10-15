@@ -1,0 +1,5329 @@
+{
+  "widths": [
+    360,
+    390,
+    768,
+    1024,
+    1440
+  ],
+  "layouts": [
+    {
+      "path": "/",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Pelajari BAB 1: Dasar Pemrograman Python dan OOP",
+          "width": 280,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 2: Kelas dan Objek",
+          "width": 280,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 3: Enkapsulasi",
+          "width": 280,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 4: Pewarisan",
+          "width": 280,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 5: Polimorfisme",
+          "width": 280,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 6: Kelas Abstrak (Abstract Class)",
+          "width": 280,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 7: Evaluasi Akhir",
+          "width": 280,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Pelajari BAB 1: Dasar Pemrograman Python dan OOP",
+          "width": 310,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 2: Kelas dan Objek",
+          "width": 310,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 3: Enkapsulasi",
+          "width": 310,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 4: Pewarisan",
+          "width": 310,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 5: Polimorfisme",
+          "width": 310,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 6: Kelas Abstrak (Abstract Class)",
+          "width": 310,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 7: Evaluasi Akhir",
+          "width": 310,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Pelajari BAB 1: Dasar Pemrograman Python dan OOP",
+          "width": 308,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 2: Kelas dan Objek",
+          "width": 308,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 3: Enkapsulasi",
+          "width": 308,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 4: Pewarisan",
+          "width": 308,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 5: Polimorfisme",
+          "width": 308,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 6: Kelas Abstrak (Abstract Class)",
+          "width": 308,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 7: Evaluasi Akhir",
+          "width": 308,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Pelajari BAB 1: Dasar Pemrograman Python dan OOP",
+          "width": 245.328125,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 2: Kelas dan Objek",
+          "width": 245.328125,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 3: Enkapsulasi",
+          "width": 245.328125,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 4: Pewarisan",
+          "width": 245.328125,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 5: Polimorfisme",
+          "width": 245.328125,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 6: Kelas Abstrak (Abstract Class)",
+          "width": 245.328125,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 7: Evaluasi Akhir",
+          "width": 245.328125,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Pelajari BAB 1: Dasar Pemrograman Python dan OOP",
+          "width": 384,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 2: Kelas dan Objek",
+          "width": 384,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 3: Enkapsulasi",
+          "width": 384,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 4: Pewarisan",
+          "width": 384,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 5: Polimorfisme",
+          "width": 384,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 6: Kelas Abstrak (Abstract Class)",
+          "width": 384,
+          "height": 48
+        },
+        {
+          "label": "Pelajari BAB 7: Evaluasi Akhir",
+          "width": 384,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/dasar-pemrograman-oop",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 296,
+          "panelWidth": 296,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/dasar-pemrograman-oop",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 326,
+          "panelWidth": 326,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/dasar-pemrograman-oop",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 503,
+          "panelWidth": 503,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/dasar-pemrograman-oop",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 178,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 1",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 507,
+          "panelWidth": 507,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/dasar-pemrograman-oop",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 202,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 1",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 795,
+          "panelWidth": 795,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-dan-objek",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 296,
+          "panelWidth": 296,
+          "overlap": false
+        },
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 296,
+          "panelWidth": 296,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-dan-objek",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 326,
+          "panelWidth": 326,
+          "overlap": false
+        },
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 326,
+          "panelWidth": 326,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-dan-objek",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 503,
+          "panelWidth": 503,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 503,
+          "panelWidth": 503,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-dan-objek",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 178,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 2",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 507,
+          "panelWidth": 507,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 507,
+          "panelWidth": 507,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-dan-objek",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 202,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 2",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 795,
+          "panelWidth": 795,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 795,
+          "panelWidth": 795,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/enkapsulasi",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 296,
+          "panelWidth": 296,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/enkapsulasi",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 326,
+          "panelWidth": 326,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/enkapsulasi",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 503,
+          "panelWidth": 503,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/enkapsulasi",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 178,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 3",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 507,
+          "panelWidth": 507,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/enkapsulasi",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 202,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 3",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 795,
+          "panelWidth": 795,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/pewarisan",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 296,
+          "panelWidth": 296,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/pewarisan",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 326,
+          "panelWidth": 326,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/pewarisan",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 503,
+          "panelWidth": 503,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/pewarisan",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 178,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 4",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 507,
+          "panelWidth": 507,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/pewarisan",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 202,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 4",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 795,
+          "panelWidth": 795,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/polimorfisme",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 296,
+          "panelWidth": 296,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/polimorfisme",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 326,
+          "panelWidth": 326,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/polimorfisme",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 503,
+          "panelWidth": 503,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/polimorfisme",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 178,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 5",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 507,
+          "panelWidth": 507,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/polimorfisme",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 202,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 5",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 795,
+          "panelWidth": 795,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-abstrak",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 296,
+          "panelWidth": 296,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-abstrak",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 326,
+          "panelWidth": 326,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-abstrak",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 503,
+          "panelWidth": 503,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-abstrak",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 178,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 6",
+          "width": 198,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 507,
+          "panelWidth": 507,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/materi/kelas-abstrak",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tujuan Pembelajaran",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "Apersepsi",
+          "width": 202,
+          "height": 44
+        },
+        {
+          "label": "Kuis BAB 6",
+          "width": 222,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Masuk untuk Mengerjakan Kuis",
+          "width": 254.828125,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 795,
+          "panelWidth": 795,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/coding",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/coding",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/coding",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/coding",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        },
+        {
+          "label": "Mulai Latihan",
+          "width": 146.59375,
+          "height": 44
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/coding/latihan-1",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 360,
+          "editor": 360,
+          "editorWidth": 334,
+          "panelWidth": 334,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-1",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 360,
+          "editor": 360,
+          "editorWidth": 364,
+          "panelWidth": 364,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-1",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 410,
+          "editor": 410,
+          "editorWidth": 529,
+          "panelWidth": 529,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-1",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 410,
+          "editor": 410,
+          "editorWidth": 769,
+          "panelWidth": 769,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-1",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 410,
+          "editor": 410,
+          "editorWidth": 1129,
+          "panelWidth": 1129,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-2",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 360,
+          "editor": 360,
+          "editorWidth": 334,
+          "panelWidth": 334,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-2",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 360,
+          "editor": 360,
+          "editorWidth": 364,
+          "panelWidth": 364,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-2",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 410,
+          "editor": 410,
+          "editorWidth": 529,
+          "panelWidth": 529,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-2",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 410,
+          "editor": 410,
+          "editorWidth": 769,
+          "panelWidth": 769,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/coding/latihan-2",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 410,
+          "editor": 410,
+          "editorWidth": 1129,
+          "panelWidth": 1129,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/editor",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 334,
+          "panelWidth": 334,
+          "overlap": false
+        },
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 334,
+          "panelWidth": 334,
+          "overlap": false
+        },
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 334,
+          "panelWidth": 334,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/editor",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 119.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 88.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 99.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 364,
+          "panelWidth": 364,
+          "overlap": false
+        },
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 364,
+          "panelWidth": 364,
+          "overlap": false
+        },
+        {
+          "panel": 350,
+          "editor": 350,
+          "editorWidth": 364,
+          "panelWidth": 364,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/editor",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 529,
+          "panelWidth": 529,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 529,
+          "panelWidth": 529,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 529,
+          "panelWidth": 529,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/editor",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 769,
+          "panelWidth": 769,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 769,
+          "panelWidth": 769,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 769,
+          "panelWidth": 769,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/editor",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 144,
+          "height": 44
+        },
+        {
+          "label": "ekosistem.py",
+          "width": 142.375,
+          "height": 44
+        },
+        {
+          "label": "sungai.py",
+          "width": 119.28125,
+          "height": 44
+        },
+        {
+          "label": "rawa.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "main.py",
+          "width": 103.890625,
+          "height": 44
+        },
+        {
+          "label": "Run Code",
+          "width": 123.265625,
+          "height": 44
+        },
+        {
+          "label": "Reset",
+          "width": 92.28125,
+          "height": 44
+        },
+        {
+          "label": "Submit",
+          "width": 103.5625,
+          "height": 44
+        },
+        {
+          "label": "Bersihkan output",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "editors": [
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 1129,
+          "panelWidth": 1129,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 1129,
+          "panelWidth": 1129,
+          "overlap": false
+        },
+        {
+          "panel": 365,
+          "editor": 365,
+          "editorWidth": 1129,
+          "panelWidth": 1129,
+          "overlap": false
+        }
+      ]
+    },
+    {
+      "path": "/login",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Masuk",
+          "width": 286,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/login",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Masuk",
+          "width": 316,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/login",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Masuk",
+          "width": 396.5625,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/login",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Masuk",
+          "width": 378,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/login",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Masuk",
+          "width": 378,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/register",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan konfirmasi password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Daftar",
+          "width": 286,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/register",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan konfirmasi password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Daftar",
+          "width": 316,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/register",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan konfirmasi password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Daftar",
+          "width": 396.5625,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/register",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan konfirmasi password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Daftar",
+          "width": 378,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/register",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Tampilkan konfirmasi password",
+          "width": 90.546875,
+          "height": 44
+        },
+        {
+          "label": "Daftar",
+          "width": 378,
+          "height": 48
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Mulai Evaluasi",
+          "width": 298,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Mulai Evaluasi",
+          "width": 328,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Mulai Evaluasi",
+          "width": 137.90625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Mulai Evaluasi",
+          "width": 137.90625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Mulai Evaluasi",
+          "width": 137.90625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Buka Aturan Evaluasi",
+          "width": 187.171875,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Buka Aturan Evaluasi",
+          "width": 187.171875,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Buka Aturan Evaluasi",
+          "width": 187.171875,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Buka Aturan Evaluasi",
+          "width": 187.171875,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Buka Aturan Evaluasi",
+          "width": 187.171875,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "initial",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Buka Evaluasi Akhir",
+          "width": 176.265625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "initial",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Buka Evaluasi Akhir",
+          "width": 176.265625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "initial",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Buka Evaluasi Akhir",
+          "width": 176.265625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "initial",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Buka Evaluasi Akhir",
+          "width": 176.265625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "initial",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Daftar",
+          "width": 99.71875,
+          "height": 44
+        },
+        {
+          "label": "Buka Evaluasi Akhir",
+          "width": 176.265625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/dashboard",
+      "state": "one-chapter-complete",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [],
+      "editors": []
+    },
+    {
+      "path": "/dashboard",
+      "state": "one-chapter-complete",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [],
+      "editors": []
+    },
+    {
+      "path": "/dashboard",
+      "state": "one-chapter-complete",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [],
+      "editors": []
+    },
+    {
+      "path": "/dashboard",
+      "state": "one-chapter-complete",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [],
+      "editors": []
+    },
+    {
+      "path": "/dashboard",
+      "state": "one-chapter-complete",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "active",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Navigasi Soal ⌄",
+          "width": 298,
+          "height": 44
+        },
+        {
+          "label": "Soal Sebelumnya",
+          "width": 298,
+          "height": 46
+        },
+        {
+          "label": "Tandai untuk Ditinjau",
+          "width": 298,
+          "height": 46
+        },
+        {
+          "label": "Soal Selanjutnya",
+          "width": 298,
+          "height": 46
+        },
+        {
+          "label": "Ringkasan Pengerjaan / Selesai Evaluasi",
+          "width": 336,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "active",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Navigasi Soal ⌄",
+          "width": 328,
+          "height": 44
+        },
+        {
+          "label": "Soal Sebelumnya",
+          "width": 328,
+          "height": 46
+        },
+        {
+          "label": "Tandai untuk Ditinjau",
+          "width": 328,
+          "height": 46
+        },
+        {
+          "label": "Soal Selanjutnya",
+          "width": 328,
+          "height": 46
+        },
+        {
+          "label": "Ringkasan Pengerjaan / Selesai Evaluasi",
+          "width": 366,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "active",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Navigasi Soal ⌄",
+          "width": 690,
+          "height": 44
+        },
+        {
+          "label": "Soal Sebelumnya",
+          "width": 163.25,
+          "height": 46
+        },
+        {
+          "label": "Tandai untuk Ditinjau",
+          "width": 187.390625,
+          "height": 46
+        },
+        {
+          "label": "Soal Selanjutnya",
+          "width": 157.703125,
+          "height": 46
+        },
+        {
+          "label": "Ringkasan Pengerjaan / Selesai Evaluasi",
+          "width": 324.15625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "active",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Navigasi Soal ⌄",
+          "width": 234,
+          "height": 44
+        },
+        {
+          "label": "Soal 1, Belum dijawab, sedang aktif",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 2, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 3, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 4, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 5, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 6, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 7, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 8, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 9, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 10, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 11, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 12, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 13, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 14, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 15, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 16, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 17, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 18, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 19, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal 20, Belum dijawab",
+          "width": 53.25,
+          "height": 44
+        },
+        {
+          "label": "Soal Sebelumnya",
+          "width": 163.25,
+          "height": 46
+        },
+        {
+          "label": "Tandai untuk Ditinjau",
+          "width": 187.390625,
+          "height": 46
+        },
+        {
+          "label": "Soal Selanjutnya",
+          "width": 157.703125,
+          "height": 46
+        },
+        {
+          "label": "Ringkasan Pengerjaan / Selesai Evaluasi",
+          "width": 324.15625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/ujian",
+      "state": "active",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Navigasi Soal ⌄",
+          "width": 234,
+          "height": 44
+        },
+        {
+          "label": "Soal 1, Belum dijawab, sedang aktif",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 2, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 3, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 4, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 5, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 6, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 7, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 8, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 9, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 10, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 11, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 12, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 13, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 14, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 15, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 16, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 17, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 18, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 19, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal 20, Belum dijawab",
+          "width": 53.25,
+          "height": 44.59375
+        },
+        {
+          "label": "Soal Sebelumnya",
+          "width": 163.25,
+          "height": 46
+        },
+        {
+          "label": "Tandai untuk Ditinjau",
+          "width": 187.390625,
+          "height": 46
+        },
+        {
+          "label": "Soal Selanjutnya",
+          "width": 157.703125,
+          "height": 46
+        },
+        {
+          "label": "Ringkasan Pengerjaan / Selesai Evaluasi",
+          "width": 324.15625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "completed",
+      "width": 360,
+      "scrollWidth": 360,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Kembali ke Evaluasi Akhir",
+          "width": 298,
+          "height": 46
+        },
+        {
+          "label": "Lihat Riwayat",
+          "width": 298,
+          "height": 46
+        },
+        {
+          "label": "Tinjau Jawaban",
+          "width": 298,
+          "height": 46
+        },
+        {
+          "label": "Ulangi Evaluasi",
+          "width": 298,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "completed",
+      "width": 390,
+      "scrollWidth": 390,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Kembali ke Evaluasi Akhir",
+          "width": 328,
+          "height": 46
+        },
+        {
+          "label": "Lihat Riwayat",
+          "width": 328,
+          "height": 46
+        },
+        {
+          "label": "Tinjau Jawaban",
+          "width": 328,
+          "height": 46
+        },
+        {
+          "label": "Ulangi Evaluasi",
+          "width": 328,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "completed",
+      "width": 768,
+      "scrollWidth": 768,
+      "controls": [
+        {
+          "label": "Buka menu navigasi",
+          "width": 54,
+          "height": 44
+        },
+        {
+          "label": "Kembali ke Evaluasi Akhir",
+          "width": 219.265625,
+          "height": 46
+        },
+        {
+          "label": "Lihat Riwayat",
+          "width": 134.8125,
+          "height": 46
+        },
+        {
+          "label": "Tinjau Jawaban",
+          "width": 146.765625,
+          "height": 46
+        },
+        {
+          "label": "Ulangi Evaluasi",
+          "width": 145.0625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "completed",
+      "width": 1024,
+      "scrollWidth": 1024,
+      "controls": [
+        {
+          "label": "Kembali ke Evaluasi Akhir",
+          "width": 219.265625,
+          "height": 46
+        },
+        {
+          "label": "Lihat Riwayat",
+          "width": 134.8125,
+          "height": 46
+        },
+        {
+          "label": "Tinjau Jawaban",
+          "width": 146.765625,
+          "height": 46
+        },
+        {
+          "label": "Ulangi Evaluasi",
+          "width": 145.0625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    },
+    {
+      "path": "/materi/evaluasi-akhir/hasil",
+      "state": "completed",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "controls": [
+        {
+          "label": "Kembali ke Evaluasi Akhir",
+          "width": 219.265625,
+          "height": 46
+        },
+        {
+          "label": "Lihat Riwayat",
+          "width": 134.8125,
+          "height": 46
+        },
+        {
+          "label": "Tinjau Jawaban",
+          "width": 146.765625,
+          "height": 46
+        },
+        {
+          "label": "Ulangi Evaluasi",
+          "width": 145.0625,
+          "height": 46
+        }
+      ],
+      "editors": []
+    }
+  ],
+  "colors": [
+    {
+      "name": "Coding CTA normal",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(7, 109, 113)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "name": "Coding CTA hover",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(6, 95, 99)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 7.434160756642327,
+      "minimum": 4.5
+    },
+    {
+      "name": "Coding CTA active",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(5, 78, 82)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 9.467784585445441,
+      "minimum": 4.5
+    },
+    {
+      "name": "Coding CTA focus",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(6, 95, 99)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 7.434160756642327,
+      "minimum": 4.5
+    },
+    {
+      "name": "Coding CTA focus indicator",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "name": "Coding CTA disabled",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "rgb(224, 236, 233)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.923915326793091,
+      "minimum": 4.5
+    },
+    {
+      "name": "active navbar",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "color(srgb 0.752941 0.959216 0.927059)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.085908101845002,
+      "minimum": 4.5
+    },
+    {
+      "name": "guest notice link",
+      "foreground": "rgb(8, 119, 123)",
+      "background": "rgb(228, 249, 245)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 4.870967200433703,
+      "minimum": 4.5
+    },
+    {
+      "name": "login input boundary",
+      "foreground": "rgb(99, 130, 124)",
+      "background": "rgb(255, 255, 255)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 4.1877469036506065,
+      "minimum": 3
+    },
+    {
+      "name": "registration input boundary",
+      "foreground": "rgb(99, 130, 124)",
+      "background": "rgb(255, 255, 255)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 4.1877469036506065,
+      "minimum": 3
+    },
+    {
+      "name": "BAB 6 inline code",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "rgb(228, 249, 245)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.580178714739606,
+      "minimum": 4.5
+    },
+    {
+      "name": "active file explorer",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "color(srgb 0.752941 0.959216 0.927059)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.085908101845002,
+      "minimum": 4.5
+    },
+    {
+      "name": "Run normal",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(7, 109, 113)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "name": "Run hover",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(6, 95, 99)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 7.434160756642327,
+      "minimum": 4.5
+    },
+    {
+      "name": "Run active",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(5, 78, 82)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 9.467784585445441,
+      "minimum": 4.5
+    },
+    {
+      "name": "Run focus",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(7, 109, 113)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "name": "Run focus indicator",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "name": "Run disabled",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "rgb(224, 236, 233)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.923915326793091,
+      "minimum": 4.5
+    },
+    {
+      "name": "Reset normal",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "rgb(228, 249, 245)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 7.651787041877175,
+      "minimum": 4.5
+    },
+    {
+      "name": "Reset hover",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "color(srgb 0.752941 0.959216 0.927059)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.974021388791974,
+      "minimum": 4.5
+    },
+    {
+      "name": "Reset active",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "color(srgb 0.752941 0.959216 0.927059)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.974021388791974,
+      "minimum": 4.5
+    },
+    {
+      "name": "Reset focus",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "rgb(228, 249, 245)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 7.651787041877175,
+      "minimum": 4.5
+    },
+    {
+      "name": "Reset focus indicator",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "name": "Reset disabled",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "rgb(224, 236, 233)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.923915326793091,
+      "minimum": 4.5
+    },
+    {
+      "name": "Submit normal",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(30, 117, 71)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.68996791972916,
+      "minimum": 4.5
+    },
+    {
+      "name": "Submit hover",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(24, 95, 57)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 7.678797651844909,
+      "minimum": 4.5
+    },
+    {
+      "name": "Submit active",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(18, 77, 46)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 9.874351753255317,
+      "minimum": 4.5
+    },
+    {
+      "name": "Submit focus",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(30, 117, 71)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.68996791972916,
+      "minimum": 4.5
+    },
+    {
+      "name": "Submit focus indicator",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "name": "Submit disabled",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "rgb(224, 236, 233)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.923915326793091,
+      "minimum": 4.5
+    },
+    {
+      "name": "Stop normal",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(185, 54, 46)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.785162835614379,
+      "minimum": 4.5
+    },
+    {
+      "name": "Stop hover",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(161, 46, 39)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 7.153787029683206,
+      "minimum": 4.5
+    },
+    {
+      "name": "Stop active",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(142, 40, 35)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 8.47477058764487,
+      "minimum": 4.5
+    },
+    {
+      "name": "Stop focus",
+      "foreground": "rgb(255, 255, 255)",
+      "background": "rgb(185, 54, 46)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.785162835614379,
+      "minimum": 4.5
+    },
+    {
+      "name": "Stop focus indicator",
+      "foreground": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "name": "Stop disabled",
+      "foreground": "rgb(64, 81, 78)",
+      "background": "rgb(224, 236, 233)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.923915326793091,
+      "minimum": 4.5
+    },
+    {
+      "name": "Monaco comment",
+      "foreground": "rgb(165, 188, 182)",
+      "background": "rgb(30, 30, 46)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 8.176292076305993,
+      "minimum": 4.5
+    },
+    {
+      "name": "Monaco inactive line numbers",
+      "foreground": "rgb(155, 160, 184)",
+      "background": "rgb(30, 30, 46)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 6.337393001206171,
+      "minimum": 4.5
+    },
+    {
+      "name": "dashboard footer",
+      "foreground": "rgb(82, 107, 102)",
+      "background": "rgb(243, 244, 246)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 5.222633389334101,
+      "minimum": 4.5
+    },
+    {
+      "name": "evaluation input boundary",
+      "foreground": "rgb(99, 130, 124)",
+      "background": "rgb(255, 255, 255)",
+      "opacity": "1",
+      "connected": true,
+      "ratio": 4.1877469036506065,
+      "minimum": 3
+    }
+  ],
+  "interactions": [
+    "Password toggle via Enter",
+    "Monaco automaticLayout follows container width and height changes",
+    "Stop interrupts running Python and runtime becomes ready again",
+    "Multi-file tab selection/focus via ArrowRight",
+    "Real quiz submission preserves 100/Lulus and dashboard 17%",
+    "Evaluation start, essay, Escape dialog, submit and results",
+    "Mobile navbar opens/closes with Enter"
+  ],
+  "errors": [],
+  "status": "PASS"
+}

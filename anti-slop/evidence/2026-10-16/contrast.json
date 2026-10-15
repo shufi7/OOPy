@@ -1,0 +1,74 @@
+[
+  {
+    "context": "coding CTA",
+    "foreground": "#FFFFFF",
+    "background": "#11999E",
+    "ratio": 3.4573
+  },
+  {
+    "context": "active nav/explorer rounded sRGB",
+    "foreground": "#08777B",
+    "background": "#C0F5EC",
+    "ratio": 4.4506
+  },
+  {
+    "context": "guest coding link",
+    "foreground": "#087E83",
+    "background": "#E4F4F2",
+    "ratio": 4.2849
+  },
+  {
+    "context": "BAB6 inline code",
+    "foreground": "#D63384",
+    "background": "#E4F9F5",
+    "ratio": 4.108
+  },
+  {
+    "context": "dashboard footer",
+    "foreground": "#64748B",
+    "background": "#F3F4F6",
+    "ratio": 4.3242
+  },
+  {
+    "context": "Monaco comment",
+    "foreground": "#777990",
+    "background": "#1E1E2E",
+    "ratio": 3.8443
+  },
+  {
+    "context": "Monaco line numbers",
+    "foreground": "#696781",
+    "background": "#1E1E2E",
+    "ratio": 3.013
+  },
+  {
+    "context": "auth input boundary over white",
+    "foreground": "#C6E7E8",
+    "background": "#FFFFFF",
+    "ratio": 1.3128
+  },
+  {
+    "context": "target action",
+    "foreground": "#FFFFFF",
+    "background": "#076D71",
+    "ratio": 6.1136
+  },
+  {
+    "context": "target action hover",
+    "foreground": "#FFFFFF",
+    "background": "#065F63",
+    "ratio": 7.4342
+  },
+  {
+    "context": "target body",
+    "foreground": "#40514E",
+    "background": "#FFFFFF",
+    "ratio": 8.3833
+  },
+  {
+    "context": "current black action",
+    "foreground": "#000000",
+    "background": "#11999E",
+    "ratio": 6.0741
+  }
+]

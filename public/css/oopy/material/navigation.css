@@ -9,14 +9,14 @@
 .oopy-material .material-sidebar .material-eyebrow { padding: 0 10px; margin-bottom: 6px; font-size: .8125rem; font-weight: 800; letter-spacing: .07em; }
 .oopy-material .material-sidebar-title { padding: 0 10px; margin: 0 0 16px; font-size: 1.125rem; line-height: 1.4; font-weight: 800; overflow-wrap: anywhere; }
 .oopy-material .material-toc ol { display: grid; gap: 2px; list-style: none; padding: 0; margin: 0; }
-.oopy-material .material-toc nav a { display: block; min-height: 40px; padding: 9px 10px; border-left: 3px solid transparent; border-radius: 6px; color: var(--oopy-ink-soft); font-size: .9375rem; font-weight: 600; line-height: 1.45; text-decoration: none; overflow-wrap: anywhere; }
+.oopy-material .material-toc nav a { display: block; min-height: var(--oopy-control-min); padding: 9px 10px; border-left: 3px solid transparent; border-radius: 6px; color: var(--oopy-ink-soft); font-size: .9375rem; font-weight: 600; line-height: 1.45; text-decoration: none; overflow-wrap: anywhere; }
 .oopy-material .material-toc nav a:hover { background: var(--oopy-bg); }
 .oopy-material .material-toc nav a[aria-current='location'] { border-left-color: var(--oopy-primary); background: var(--oopy-selected); color: var(--oopy-ink); }
 .oopy-material .material-toc-group, .oopy-material .material-toc-introduction { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--oopy-border); }
 .oopy-material .material-toc-group > summary, .oopy-material .material-toc-group-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 10px; margin: 0; border-radius: 6px; font-size: .9375rem; line-height: 1.45; font-weight: 700; color: var(--oopy-ink); }
 .oopy-material .material-toc-group > summary:hover { background: var(--oopy-bg); }
 .oopy-material .material-toc .material-toc-submenu { margin: 0 0 6px 12px; padding-left: 7px; border-left: 1px solid var(--oopy-border); }
-.oopy-material .material-toc .material-toc-submenu a { min-height: 36px; padding: 8px 9px; font-size: .875rem; line-height: 1.5; font-weight: 400; }
+.oopy-material .material-toc .material-toc-submenu a { min-height: var(--oopy-control-min); padding: 8px 9px; font-size: .875rem; line-height: 1.5; font-weight: 400; }
 .oopy-material .material-toc .material-toc-submenu a[aria-current='location'] { font-weight: 600; }
 .oopy-material .material-toc-quiz { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--oopy-border); }
 .oopy-material .material-toc summary:focus-visible, .oopy-material .material-toc nav a:focus-visible { outline: 3px solid var(--oopy-dark); outline-offset: -3px; }

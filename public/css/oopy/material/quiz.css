@@ -52,4 +52,4 @@
 
 .oopy-quiz .oopy-quiz-account-notice { padding: 20px; border: 1px solid var(--oopy-border); border-radius: 12px; background: var(--oopy-selected); }
 .oopy-quiz .oopy-quiz-account-notice .btn { white-space: normal; }
-.oopy-quiz form[aria-busy='true'] { opacity: .75; }
+.oopy-quiz form[aria-busy='true'] { cursor: progress; }

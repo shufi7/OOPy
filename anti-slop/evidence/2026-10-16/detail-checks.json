@@ -1,0 +1,60 @@
+{
+  "codingHover": {
+    "color": "rgb(255, 255, 255)",
+    "background": "rgb(48, 227, 202)",
+    "height": 36.390625
+  },
+  "authInput": {
+    "border": "rgba(17, 153, 158, 0.24)",
+    "background": "rgb(255, 255, 255)",
+    "outline": "rgb(17, 153, 158) solid 2px"
+  },
+  "quizResult": {
+    "score": "100",
+    "status": "Lulus",
+    "nextChapterVisible": true
+  },
+  "dashboard": {
+    "progress": "17",
+    "completed": "1 / 6",
+    "continue": "Lanjutkan BAB 2 →",
+    "checks": [
+      {
+        "width": 360,
+        "overflow": false
+      },
+      {
+        "width": 390,
+        "overflow": false
+      },
+      {
+        "width": 768,
+        "overflow": false
+      },
+      {
+        "width": 1024,
+        "overflow": false
+      },
+      {
+        "width": 1440,
+        "overflow": false
+      }
+    ]
+  },
+  "editorTabs": {
+    "selected": "true",
+    "focus": true
+  },
+  "monacoComment": [
+    {
+      "text": "# Catatan audit",
+      "color": "rgb(205, 208, 224)",
+      "background": "rgb(30, 30, 46)"
+    },
+    {
+      "text": "# Catatan audit",
+      "color": "rgb(119, 121, 144)",
+      "background": "rgb(30, 30, 46)"
+    }
+  ]
+}

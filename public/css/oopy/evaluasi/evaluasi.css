@@ -27,12 +27,13 @@
 .oopy-final-exam .exam-muted { font-size: .875rem; }
 .oopy-final-exam .exam-notice { background: var(--oopy-selected); border-left: 4px solid var(--oopy-primary); border-radius: 8px; padding: 16px 20px; font-size: .9375rem; }
 .oopy-final-exam .exam-actions, .oopy-final-exam .exam-navigation { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 22px; }
-.oopy-final-exam .exam-button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; max-width: 100%; padding: 11px 18px; border: 1px solid var(--oopy-primary); border-radius: 9px; background: var(--oopy-primary); color: var(--oopy-on-primary); font-family: inherit; font-size: .9375rem; font-weight: 650; line-height: 1.45; text-align: center; text-decoration: none; overflow-wrap: anywhere; cursor: pointer; transition: background .15s; }
-.oopy-final-exam .exam-button:hover { background: var(--oopy-accent); color: var(--oopy-text); }
-.oopy-final-exam .exam-button.secondary { background: var(--oopy-surface); color: var(--oopy-link); border-color: var(--oopy-border); }
-.oopy-final-exam .exam-button.secondary:hover { background: var(--oopy-bg); }
-.oopy-final-exam .exam-button:disabled { cursor: default; opacity: .65; }
-.oopy-final-exam button:focus-visible, .oopy-final-exam a:focus-visible, .oopy-final-exam summary:focus-visible, .oopy-final-exam input:focus-visible, .oopy-final-exam textarea:focus-visible { outline: 3px solid var(--oopy-dark); outline-offset: 3px; }
+.oopy-final-exam .exam-button { display: inline-flex; align-items: center; justify-content: center; min-width: var(--oopy-control-min); min-height: 46px; max-width: 100%; padding: 11px 18px; border: 1px solid var(--oopy-action); border-radius: var(--oopy-radius-control); background: var(--oopy-action); color: var(--oopy-on-action); font-family: inherit; font-size: .9375rem; font-weight: 650; line-height: 1.45; text-align: center; text-decoration: none; overflow-wrap: anywhere; cursor: pointer; transition: background .15s; }
+.oopy-final-exam .exam-button:not(:disabled):hover { background: var(--oopy-action-hover); color: var(--oopy-on-action); }
+.oopy-final-exam .exam-button:not(:disabled):active { background: var(--oopy-action-active); }
+.oopy-final-exam .exam-button.secondary { background: var(--oopy-surface); color: var(--oopy-link); border-color: var(--oopy-control-border); }
+.oopy-final-exam .exam-button.secondary:not(:disabled):hover, .oopy-final-exam .exam-button.secondary:not(:disabled):active { background: var(--oopy-bg); color: var(--oopy-action-hover); }
+.oopy-final-exam .exam-button:disabled { cursor: default; opacity: 1; background: var(--oopy-control-disabled-bg); color: var(--oopy-control-disabled-text); border-color: var(--oopy-control-border); }
+.oopy-final-exam button:focus-visible, .oopy-final-exam a:focus-visible, .oopy-final-exam summary:focus-visible, .oopy-final-exam input:focus-visible, .oopy-final-exam textarea:focus-visible { outline: 3px solid var(--oopy-focus); outline-offset: 3px; }
 .oopy-final-exam .exam-table-wrap { max-width: 100%; overflow: auto; }
 .oopy-final-exam table { width: 100%; border-collapse: collapse; font-size: .9375rem; }
 .oopy-final-exam caption { caption-side: top; font-size: .875rem; margin-bottom: 12px; color: var(--oopy-text); }
@@ -51,10 +52,10 @@
 .oopy-final-exam .exam-timer p { font-size: .8125rem; margin: 6px 0 0; }
 .oopy-final-exam .exam-timer[data-warning="five"] { border: 2px solid var(--oopy-primary); }
 .oopy-final-exam .exam-timer[data-warning="one"] { border: 3px double var(--oopy-dark); background: var(--oopy-selected); }
-.oopy-final-exam .exam-number-panel > summary { cursor: pointer; font-weight: 750; font-size: .9375rem; }
+.oopy-final-exam .exam-number-panel > summary { display: flex; align-items: center; justify-content: space-between; min-height: var(--oopy-control-min); cursor: pointer; font-weight: 750; font-size: .9375rem; }
 .oopy-final-exam .exam-number-panel > summary span { float: right; }
-.oopy-final-exam .exam-number-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; margin-top: 16px; }
-.oopy-final-exam .exam-number { min-width: 0; min-height: 44px; padding: 6px 2px; border: 1px solid var(--oopy-border); background: var(--oopy-surface); border-radius: 7px; color: var(--oopy-text); font-weight: 600; position: relative; }
+.oopy-final-exam .exam-number-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--oopy-control-min), 1fr)); gap: 7px; margin-top: 16px; }
+.oopy-final-exam .exam-number { min-width: var(--oopy-control-min); min-height: var(--oopy-control-min); padding: 6px 2px; border: 1px solid var(--oopy-control-border); background: var(--oopy-surface); border-radius: var(--oopy-radius-control); color: var(--oopy-text); font-weight: 600; position: relative; }
 .oopy-final-exam .exam-number.answered { background: var(--oopy-selected); border-color: var(--oopy-primary); }
 .oopy-final-exam .exam-number[aria-current="step"] { outline: 2px solid var(--oopy-dark); outline-offset: 1px; font-weight: 800; }
 .oopy-final-exam .exam-number.marked { border: 2px dashed var(--oopy-dark); }
@@ -72,12 +73,12 @@
 .oopy-final-exam .exam-question-text { font-size: 1.125rem; font-weight: 650; }
 .oopy-final-exam .exam-options { min-width: 0; margin-top: 22px; }
 .oopy-final-exam .exam-options legend { font-size: .875rem; font-weight: 650; margin-bottom: 12px; }
-.oopy-final-exam .exam-option { display: flex; gap: 12px; align-items: start; padding: 17px 18px; border: 1px solid var(--oopy-border); border-radius: 10px; margin-bottom: 12px; cursor: pointer; }
+.oopy-final-exam .exam-option { display: flex; gap: 12px; align-items: start; padding: 17px 18px; border: 1px solid var(--oopy-control-border); border-radius: 10px; margin-bottom: 12px; cursor: pointer; }
 .oopy-final-exam .exam-option:has(input:checked) { background: var(--oopy-bg); border-color: var(--oopy-primary); }
 .oopy-final-exam .exam-option input { flex-shrink: 0; width: 18px; height: 18px; margin-top: 5px; accent-color: var(--oopy-primary); }
 .oopy-final-exam .exam-option > span { min-width: 0; overflow-wrap: anywhere; }
 .oopy-final-exam .exam-answer label { display: block; font-weight: 650; margin-bottom: 10px; }
-.oopy-final-exam .exam-answer input, .oopy-final-exam .exam-answer textarea { display: block; width: 100%; min-width: 0; padding: 14px; color: var(--oopy-text); border: 1px solid var(--oopy-border); border-radius: 8px; background: var(--oopy-surface); font: inherit; }
+.oopy-final-exam .exam-answer input, .oopy-final-exam .exam-answer textarea { display: block; width: 100%; min-width: 0; min-height: var(--oopy-control-min); padding: 14px; color: var(--oopy-text); border: 1px solid var(--oopy-control-border); border-radius: var(--oopy-radius-control); background: var(--oopy-surface); font: inherit; }
 .oopy-final-exam .exam-answer input { font-family: Consolas, monospace; }
 .oopy-final-exam .exam-answer textarea { resize: vertical; min-height: 190px; }
 .oopy-final-exam .exam-answer p { font-size: .8125rem; margin-top: 10px; }

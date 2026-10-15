@@ -1,19 +1,51 @@
 :root {
-    --oopy-mint: #E4F9F5;
-    --oopy-aqua: #30E3CA;
-    --oopy-teal: #11999E;
-    --oopy-dark: #40514E;
+    --oopy-brand: #11999E;
+    --oopy-brand-mint: #E4F9F5;
+    --oopy-brand-aqua: #30E3CA;
+    --oopy-canvas: #F6FBF9;
+    --oopy-surface: #FFFFFF;
+    --oopy-line: #D2EBE6;
+    --oopy-ink: #243B39;
+    --oopy-text: #40514E;
+    --oopy-muted: #526B66;
+    --oopy-action: #076D71;
+    --oopy-action-hover: #065F63;
+    --oopy-action-active: #054E52;
+    --oopy-on-action: #FFFFFF;
+    --oopy-link: #08777B;
+    --oopy-selected-text: var(--oopy-action);
+    --oopy-control-border: #63827C;
+    --oopy-control-disabled-bg: #E0ECE9;
+    --oopy-control-disabled-text: var(--oopy-text);
+    --oopy-focus: var(--oopy-action);
+    --oopy-control-min: 44px;
+    --oopy-radius-control: 8px;
+    --oopy-radius-card: 14px;
+    --oopy-radius-feature: 20px;
+    --oopy-space-1: 4px;
+    --oopy-space-2: 8px;
+    --oopy-space-3: 12px;
+    --oopy-space-4: 16px;
+    --oopy-space-6: 24px;
+    --oopy-space-8: 32px;
+    --oopy-space-12: 48px;
+    --oopy-font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --oopy-font-mono: ui-monospace, Consolas, Menlo, monospace;
+    --oopy-font-h1: clamp(1.875rem, 3vw, 2.5rem);
+    --oopy-font-h2: clamp(1.375rem, 2vw, 1.875rem);
+    --oopy-leading-body: 1.7;
 
+    /* Keep legacy brand aliases separate from accessible action colors. */
+    --oopy-mint: var(--oopy-brand-mint);
+    --oopy-aqua: var(--oopy-brand-aqua);
+    --oopy-teal: var(--oopy-brand);
+    --oopy-dark: var(--oopy-text);
     --oopy-bg: var(--oopy-mint);
     --oopy-primary: var(--oopy-teal);
     --oopy-accent: var(--oopy-aqua);
-    --oopy-text: #000000;
-    --oopy-surface: #fff;
-    --oopy-border: rgb(17 153 158 / 24%);
+    --oopy-border: var(--oopy-line);
     --oopy-selected: color-mix(in srgb, var(--oopy-mint) 80%, var(--oopy-aqua));
-    /* Teal links retain the brand; pure black improves text contrast. */
-    --oopy-link: #08777b;
-    --oopy-on-primary: var(--oopy-text);
+    --oopy-on-primary: #000000;
     --oopy-code-bg: #2f3e3b;
 
     /* Compatibility aliases for existing OOPy components. */
@@ -21,19 +53,21 @@
     --oopy-sky: var(--oopy-accent);
     --oopy-mist: var(--oopy-border);
     --oopy-cream: var(--oopy-bg);
-    --oopy-ink: var(--oopy-text);
     --oopy-ink-soft: var(--oopy-text);
     --oopy-shadow: 0 12px 32px rgb(64 81 78 / 12%);
     --bs-primary: var(--oopy-primary);
     --bs-primary-rgb: 17, 153, 158;
     --bs-link-color: var(--oopy-link);
     --bs-link-color-rgb: 8, 119, 123;
-    --bs-link-hover-color: var(--oopy-text);
-    --bs-link-hover-color-rgb: 0, 0, 0;
+    --bs-link-hover-color: var(--oopy-action-hover);
+    --bs-link-hover-color-rgb: 6, 95, 99;
     --bs-secondary-color: var(--oopy-text);
     --bs-border-color: var(--oopy-border);
-    --bs-body-color: var(--oopy-ink);
+    --bs-body-color: var(--oopy-text);
     --bs-body-bg: var(--oopy-cream);
+    --bs-heading-color: var(--oopy-ink);
+    --bs-code-color: var(--oopy-action);
+    --bs-font-monospace: var(--oopy-font-mono);
     --oopy-font-body: clamp(1rem, .96rem + .2vw, 1.125rem);
     --oopy-font-ui: clamp(1rem, .98rem + .1vw, 1.0625rem);
     --oopy-font-small: clamp(.8125rem, .78rem + .15vw, .875rem);
@@ -42,30 +76,43 @@
 
 body {
     color: var(--oopy-text);
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--oopy-font-family);
     font-size: var(--oopy-font-body);
-    line-height: 1.7;
+    line-height: var(--oopy-leading-body);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--oopy-space-2);
+    min-width: var(--oopy-control-min);
+    min-height: var(--oopy-control-min);
 }
 
 .btn-brand {
     font-size: 1rem;
-    --bs-btn-color: var(--oopy-on-primary);
-    --bs-btn-bg: var(--oopy-blue);
-    --bs-btn-border-color: var(--oopy-blue);
-    --bs-btn-hover-color: var(--oopy-ink);
-    --bs-btn-hover-bg: var(--oopy-sky);
-    --bs-btn-hover-border-color: var(--oopy-blue);
-    --bs-btn-active-color: var(--oopy-ink);
-    --bs-btn-active-bg: var(--oopy-accent);
-    --bs-btn-active-border-color: var(--oopy-blue);
-    --bs-btn-focus-shadow-rgb: 17, 153, 158;
-    border-radius: 8px;
+    --bs-btn-color: var(--oopy-on-action);
+    --bs-btn-bg: var(--oopy-action);
+    --bs-btn-border-color: var(--oopy-action);
+    --bs-btn-hover-color: var(--oopy-on-action);
+    --bs-btn-hover-bg: var(--oopy-action-hover);
+    --bs-btn-hover-border-color: var(--oopy-action-hover);
+    --bs-btn-active-color: var(--oopy-on-action);
+    --bs-btn-active-bg: var(--oopy-action-active);
+    --bs-btn-active-border-color: var(--oopy-action-active);
+    --bs-btn-disabled-color: var(--oopy-control-disabled-text);
+    --bs-btn-disabled-bg: var(--oopy-control-disabled-bg);
+    --bs-btn-disabled-border-color: var(--oopy-control-border);
+    --bs-btn-disabled-opacity: 1;
+    --bs-btn-focus-shadow-rgb: 7, 109, 113;
+    border-radius: var(--oopy-radius-control);
     line-height: 1.4;
 }
 
 a:focus-visible,
 button:focus-visible,
 .btn:focus-visible {
-    outline: 3px solid var(--oopy-ink);
+    outline: 3px solid var(--oopy-focus);
     outline-offset: 4px;
 }

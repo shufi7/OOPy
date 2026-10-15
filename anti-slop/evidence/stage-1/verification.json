@@ -1,0 +1,42 @@
+{
+  "stage": 1,
+  "date": "2026-10-16",
+  "timezone": "Asia/Makassar",
+  "status": "PASS within stage-1 scope",
+  "design_sha256": "dba1579f21121323ee3edde5c4a35d920019dc8ee5fa3fc9f58d79a5f44607cc",
+  "baseline_commit": "b294327a9f33a6f959909eef0d698b4fa8504fbe",
+  "changed_application_files": {
+    "public/css/oopy/auth/auth.css": "b228cae281ccb4a005b676f1fba573174c8658ae359d52a4b676175c4516555b",
+    "public/css/oopy/base.css": "c9839a4fd8caab6810e115691881a578713b08d9b2b6067a7baf7c3ba1977d95",
+    "public/css/oopy/coding.css": "5b6458b36c9cedfcb7f2614dcad679345404a126d85e23f7d408acbafb95ff72",
+    "public/css/oopy/dashboard/dashboard.css": "c53b518de6f9760868362ad23c259b305763c43900338aaf18c7bb9a11d0da84",
+    "public/css/oopy/evaluasi/evaluasi.css": "b97d66f53fe3c89c341d1b268a28b5aeb8d217f712a56af3bbdf455ee8388d1f",
+    "public/css/oopy/live-code/live-code.css": "ce9dc74b42e5dd42f105f177c72eedbf279c2bb8a329a8611869e2dad8b43a34",
+    "public/css/oopy/material/navigation.css": "1e91f69bbf8dd6a9700825ff5460854509864e0b4c3fa34515bf84c7a3be3937",
+    "public/css/oopy/material/quiz.css": "6314bbfb06cf4ffbcf1a362ee47ae4cb4697a915c5388501ee17e6fb8d191b0b",
+    "public/css/oopy/navbar.css": "bf5626a1cd4a928ec174c6dbd3656c650e70f8de6cdebf3d149637ae2ccd0dab",
+    "public/js/live-code/monaco-loader.js": "e16de131f7b9d61b0a204a250f54a7b698b53a274763949f28dbbf79a359ea08"
+  },
+  "php": {
+    "passed": 129,
+    "assertions": 2771,
+    "duration_seconds": 29.02
+  },
+  "javascript": {
+    "passed": 21
+  },
+  "browser_suites": {
+    "foundation": "PASS: 18 routes, 100 layout samples, 40 contrast measurements",
+    "coding --auth": "PASS: guest/local grading and authenticated failure/acknowledgement UI contract",
+    "live-code": "PASS: multi-file editors, runtime, Stop/timeout/queue/CDN recovery and chapter exercises"
+  },
+  "screenshots_after": 42,
+  "original_database": "untouched; temporary SQLite fixtures only",
+  "not_tested": [
+    "real-device virtual keyboard",
+    "screen reader",
+    "actual browser zoom 200%",
+    "real production grader end-to-end",
+    "other browsers"
+  ]
+}

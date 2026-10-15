@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOPy: perbandingan fondasi UI Tahap 1</title>
+<style>
+    body { margin: 0; background: #f6fbf9; color: #243b39; font: 16px/1.7 system-ui, sans-serif; }
+    main { max-width: 1240px; margin: auto; padding: 24px; }
+    h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+    h2 { margin-top: 48px; }
+    p { max-width: 75ch; }
+    .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+    figure { margin: 0; background: white; border: 1px solid #63827c; border-radius: 8px; overflow: hidden; }
+    img { display: block; width: 100%; height: auto; }
+    figcaption { padding: 12px 16px; font-weight: 600; }
+    a { color: #076d71; }
+    a:focus-visible { outline: 3px solid #076d71; outline-offset: 3px; }
+    @media (max-width: 650px) { .pair { grid-template-columns: 1fr; } }
+</style>
+<main>
+    <h1>Fondasi UI OOPy, Tahap 1</h1>
+    <p>Baseline dari audit 16 Oktober 2026 dibandingkan dengan hasil implementasi pada viewport yang sama. Klik gambar untuk melihat resolusi penuh. Ini bukti pengujian, bukan halaman aplikasi.</p>
+    <h2>Editor desktop, 1440px</h2>
+    <p>Perhatikan status bar yang kini terlihat, komentar yang lebih terang, serta area tombol. Kode dan output Stop pada gambar sesudah dimasukkan oleh tes. Kedua latihan tetap membuka editor kosong.</p>
+    <div class="pair">
+        <figure><figcaption>Sebelum: editor melampaui panel</figcaption><a href="../2026-10-16/latihan-1-editor-1440.png"><img src="../2026-10-16/latihan-1-editor-1440.png" alt="Editor sebelum perbaikan, status bar tertutup" loading="lazy"></a></figure>
+        <figure><figcaption>Sesudah: panel dan editor sama tinggi</figcaption><a href="editor-after-1440.png"><img src="editor-after-1440.png" alt="Editor sesudah perbaikan dengan status bar terlihat" loading="lazy"></a></figure>
+    </div>
+    <h2>Editor mobile, 390px</h2>
+    <div class="pair">
+        <figure><figcaption>Sebelum</figcaption><a href="../2026-10-16/latihan-1-editor-390.png"><img src="../2026-10-16/latihan-1-editor-390.png" alt="Editor mobile sebelum perbaikan" loading="lazy"></a></figure>
+        <figure><figcaption>Sesudah</figcaption><a href="editor-after-390.png"><img src="editor-after-390.png" alt="Editor mobile sesudah perbaikan" loading="lazy"></a></figure>
+    </div>
+    <h2>Login mobile, 390px</h2>
+    <p>Struktur form dipertahankan. Batas input, fokus keyboard, ukuran toggle password, dan warna action diperjelas.</p>
+    <div class="pair">
+        <figure><figcaption>Sebelum</figcaption><a href="../2026-10-16/login-initial-390.png"><img src="../2026-10-16/login-initial-390.png" alt="Form login sebelum perbaikan" loading="lazy"></a></figure>
+        <figure><figcaption>Sesudah</figcaption><a href="login-initial-390.png"><img src="login-initial-390.png" alt="Form login sesudah perbaikan" loading="lazy"></a></figure>
+    </div>
+    <p><a href="foundation-results.json">Data geometri, kontras, dan interaksi yang diperiksa</a></p>
+</main>
+</html>

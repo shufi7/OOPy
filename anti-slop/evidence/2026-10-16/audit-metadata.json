@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-16",
+  "timezone": "Asia/Makassar",
+  "mode": "after",
+  "repository_head": "b294327a9f33a6f959909eef0d698b4fa8504fbe",
+  "design_source": "C:/Users/MyBook Hype AMD/Downloads/DESIGN.md",
+  "design_sha256": "dba1579f21121323ee3edde5c4a35d920019dc8ee5fa3fc9f58d79a5f44607cc",
+  "application_source_diff": "empty",
+  "php_tests": {
+    "passed": 129,
+    "assertions": 2771
+  },
+  "javascript_tests": {
+    "passed": 21
+  },
+  "browser": "Microsoft Edge headless 155.0.4283.45",
+  "routes": 18,
+  "viewport_widths": [
+    360,
+    390,
+    768,
+    1024,
+    1440
+  ],
+  "browser_page_state_samples": 22,
+  "screenshots": 50,
+  "asset_delivery": "temporary cache of original upstream URLs and versions via Playwright routing",
+  "database": "isolated temporary SQLite; original database untouched"
+}

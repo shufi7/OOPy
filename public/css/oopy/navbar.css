@@ -3,7 +3,7 @@
     border-bottom: 1px solid var(--oopy-mist);
     --bs-navbar-color: var(--oopy-ink);
     --bs-navbar-hover-color: var(--oopy-link);
-    --bs-navbar-active-color: var(--oopy-link);
+    --bs-navbar-active-color: var(--oopy-selected-text);
 }
 
 .navbar-logo {
@@ -22,7 +22,15 @@
 }
 
 .site-navbar .nav-link {
-    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    min-height: var(--oopy-control-min);
+    border-radius: var(--oopy-radius-control);
+}
+
+.site-navbar .navbar-toggler {
+    min-width: var(--oopy-control-min);
+    min-height: var(--oopy-control-min);
 }
 
 .site-navbar .nav-link.active {
@@ -32,6 +40,13 @@
 
 .site-navbar .nav-link:hover {
     background-color: var(--oopy-selected);
+    color: var(--oopy-selected-text);
+}
+
+.site-navbar .dropdown-item {
+    display: flex;
+    align-items: center;
+    min-height: var(--oopy-control-min);
 }
 
 .site-navbar .oopy-account {

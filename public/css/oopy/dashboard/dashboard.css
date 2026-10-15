@@ -4,7 +4,7 @@
     --dashboard-bg: #f3f4f6;
     --dashboard-line: #e2e7ee;
     --dashboard-ink: #344256;
-    --dashboard-muted: #64748b;
+    --dashboard-muted: var(--oopy-muted);
     --dashboard-blue: #2563eb;
     --dashboard-blue-dark: #1d4ed8;
     --dashboard-blue-soft: #eff6ff;
