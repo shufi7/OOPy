@@ -39,6 +39,7 @@ for source in payload["sources"]:
                 before = {name: dict(vars(sys.modules[name])) for name in module_names if name in sys.modules}
                 checks = dict(namespace)
                 checks.pop("results", None)
+                checks["__oopy_output__"] = stdout.getvalue()[:12000]
                 exec(compile(payload["checker"], "<pemeriksaan>", "exec"), checks)
             report["results"] = checks["results"]
             report["super_restored"] = all(

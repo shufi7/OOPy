@@ -136,20 +136,24 @@ export function createLiveCode(root, config) {
 
     function renderResults(results, official = false) {
         const passed = results.filter((result) => result.passed).length;
-        const score = results.length ? Math.round(passed / results.length * 100) : 0;
+        const rubric = config.persistence_enabled && results.every(result => typeof result.required === 'boolean' && Number.isInteger(result.weight));
+        const score = rubric ? results.reduce((total, result) => total + (result.passed ? result.weight : 0), 0)
+            : (results.length ? Math.round(passed / results.length * 100) : 0);
+        const core = results.filter(result => result.required);
+        const corePassed = core.filter(result => result.passed).length;
         byId('check-score').textContent = `${config.persistence_enabled && !official ? 'Skor lokal' : 'Skor'}: ${score}`;
         byId('check-summary').textContent = `${passed} dari ${results.length} pemeriksaan berhasil. ${score === 100 ? 'Semua pemeriksaan latihan berhasil.' : 'Ikuti petunjuk di bawah, perbaiki kode, lalu submit kembali.'}`;
         const list = byId('check-list');
         list.replaceChildren();
         results.forEach((result) => {
             const item = document.createElement('li');
-            if (!result.passed) item.classList.add('is-failed');
+            if (!result.passed) item.classList.add(rubric && !result.required ? 'is-advice' : 'is-failed');
             const icon = document.createElement('i');
-            icon.className = result.passed ? 'bi bi-check-circle-fill' : 'bi bi-x-circle-fill';
+            icon.className = result.passed ? 'bi bi-check-circle-fill' : (rubric && !result.required ? 'bi bi-info-circle' : 'bi bi-x-circle-fill');
             icon.setAttribute('aria-hidden', 'true');
             const description = document.createElement('div');
-            description.textContent = result.label;
-            if (!result.passed) {
+            description.textContent = rubric ? `${result.required ? 'Inti (wajib)' : 'Tambahan'} · ${result.label}${result.weight ? ` · ${result.passed ? result.weight : 0}/${result.weight} poin` : ''}` : result.label;
+            if (!result.passed && result.feedback) {
                 const hint = document.createElement('small');
                 hint.textContent = result.feedback;
                 description.append(hint);
@@ -159,7 +163,7 @@ export function createLiveCode(root, config) {
         });
         byId('check-results').hidden = false;
         if (config.persistence_enabled && !official) {
-            byId('check-summary').textContent = `${passed} dari ${results.length} pemeriksaan lokal berhasil. ${config.authenticated ? 'Menunggu verifikasi resmi server; progres belum disimpan.' : 'Masuk untuk menyimpan hasil latihan. Hasil lokal ini belum merupakan nilai resmi.'}`;
+            byId('check-summary').textContent = `${rubric ? `${corePassed} dari ${core.length} konsep inti berhasil. Pemeriksaan tambahan tidak menentukan kelulusan.` : `${passed} dari ${results.length} pemeriksaan lokal berhasil.`} ${config.authenticated ? 'Menunggu verifikasi resmi server; progres belum disimpan.' : 'Masuk untuk menyimpan hasil latihan. Hasil lokal ini belum merupakan nilai resmi.'}`;
         }
         setProgress(config.persistence_enabled ? (completed ? 100 : 0) : score);
         byId('check-results').scrollIntoView({ behavior: 'auto', block: 'nearest' });

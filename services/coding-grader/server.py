@@ -42,7 +42,7 @@ def run_sandbox(payload):
         if len(process.stdout) > 50000:
             raise RuntimeError('Invalid sandbox response')
         report = json.loads(process.stdout)
-        if report.get('exercise_key') != payload['exercise_key'] or report.get('version') != 1:
+        if not isinstance(report, dict) or report.get('exercise_key') != payload['exercise_key'] or report.get('version') != 2:
             raise RuntimeError('Invalid sandbox response')
         return report
     except subprocess.TimeoutExpired:
@@ -56,7 +56,9 @@ def run_sandbox(payload):
 
 
 def error_report(key, message):
-    return {'version': 1, 'exercise_key': key, 'status': 'error', 'checks': [], 'output': message}
+    return {'version': 2, 'exercise_key': key, 'status': 'error', 'checks': [
+        {'id': 'execution', 'label': 'Eksekusi program', 'required': True, 'weight': 0,
+         'passed': False, 'feedback': message}], 'output': message}
 
 
 def valid_payload(payload):

@@ -1,11 +1,25 @@
 """Generic project execution, loaded once by the browser worker (never by PHP)."""
 import builtins
+import contextlib
 import importlib
 import json
 import os
 import shutil
 import sys
 import traceback
+
+
+class CapturedOutput:
+    def __init__(self, stream):
+        self.stream = stream
+        self.text = ''
+
+    def write(self, text):
+        self.text += text[:max(0, 12000 - len(self.text))]
+        return self.stream.write(text)
+
+    def flush(self):
+        self.stream.flush()
 
 
 def unsupported_input(prompt=''):
@@ -42,7 +56,9 @@ def execute_project(files, entry_file, checker, checking, workspace):
         builtins.input = unsupported_input
         importlib.invalidate_caches()
         namespace = {'__name__': '__main__', '__file__': directory + '/' + entry_file}
-        exec(compile(files[entry_file], namespace['__file__'], 'exec'), namespace)
+        captured = CapturedOutput(sys.stdout)
+        with contextlib.redirect_stdout(captured) if checking else contextlib.nullcontext():
+            exec(compile(files[entry_file], namespace['__file__'], 'exec'), namespace)
         results = None
         if checking:
             phase = 'Checker'
@@ -50,6 +66,7 @@ def execute_project(files, entry_file, checker, checking, workspace):
             # checker, while a learner variable called results cannot fake feedback.
             checks = dict(namespace)
             checks.pop('results', None)
+            checks['__oopy_output__'] = captured.text
             try:
                 exec(compile(checker, '<pemeriksaan>', 'exec'), checks)
                 results = checks.get('results', [

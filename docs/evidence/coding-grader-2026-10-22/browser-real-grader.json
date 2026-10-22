@@ -1,0 +1,66 @@
+{
+  "database": "oopy_grader_test_633cd46e682343a09d8f49d66e4d3b58",
+  "submissions": [
+    {
+      "slug": "latihan-1",
+      "status": "passed",
+      "score": 100,
+      "submissionId": 9,
+      "userId": 6,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "status": "failed",
+      "score": 0,
+      "submissionId": 10,
+      "userId": 6,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "status": "error",
+      "score": 0,
+      "submissionId": 11,
+      "userId": 6,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "status": "passed",
+      "score": 100,
+      "submissionId": 12,
+      "userId": 6,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "status": "failed",
+      "score": 0,
+      "submissionId": 13,
+      "userId": 6,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "status": "error",
+      "score": 0,
+      "submissionId": 14,
+      "userId": 6,
+      "snapshotPreserved": true
+    }
+  ],
+  "interactions": [
+    "latihan-1: passed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-1: failed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-1: error, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-2: passed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-2: failed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-2: error, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "Both exercises remain complete after failed/error retries, refresh, logout/login; seventh submission is rate limited",
+    "Other account starts incomplete; wrong answers do not pass; forged identity/score, oversized input, path traversal and missing CSRF rejected; owner history unchanged",
+    "Real wrong gateway token produces Laravel 503, clear feedback, zero official submissions and no completion",
+    "Guest cannot submit official answers"
+  ],
+  "errors": []
+}

@@ -1,5 +1,9 @@
 <?php
 
+$checks = file_get_contents(__DIR__.'/../../services/coding-grader/checks.py');
+$checker = fn (string $key): string => "_oopy_namespace = dict(globals())\n".$checks
+    ."\nresults = run_checks(_oopy_namespace, __oopy_output__, '$key')\n";
+
 return [
     'latihan-1' => [
         'number' => 1,
@@ -21,31 +25,20 @@ return [
             'Nama class: SensorAir. Constructor menerima lokasi dan ph; atribut publik objek bernama lokasi dan ph.',
             'Method status_air() tidak menerima parameter tambahan dan harus mengembalikan string, bukan hanya mencetaknya.',
             'Jika 6.5 ≤ ph ≤ 8.5, kembalikan "Normal". Nilai 6.5 dan 8.5 termasuk Normal.',
-            'Jika ph < 6.5 atau ph > 8.5, kembalikan "Perlu pemeriksaan". Gunakan ejaan dan huruf besar sesuai ketentuan.',
+            'Jika ph < 6.5 atau ph > 8.5, kembalikan "Perlu pemeriksaan". Variasi kapitalisasi dan spasi yang tidak mengubah makna diterima.',
             'Status harus mengikuti nilai ph terbaru milik objek; jangan menetapkan hasil hanya untuk pH 7.0.',
         ],
         'criteria' => [
-            'Program berjalan tanpa error dan membuat objek SensorAir, dengan output seperti contoh.',
+            'Program berjalan tanpa error. Pembuatan contoh objek SensorAir dan penyajian output dinilai sebagai tambahan.',
             'Constructor menyimpan lokasi dan ph yang diberikan pada setiap objek secara terpisah.',
             'status_air() benar untuk nilai normal, kedua batas, nilai di luar rentang, dan setelah atribut ph diubah.',
-            'Seluruh pemeriksaan resmi server berhasil. Pemeriksaan lokal hanya memberikan feedback; progres akun tersimpan setelah server mengonfirmasi kelulusan.',
+            'Semua pemeriksaan konsep inti wajib berhasil (90 poin). Contoh object dan output merupakan tambahan (10 poin) yang tidak menentukan kelulusan. Progres tersimpan setelah server mengonfirmasi kelulusan.',
         ],
         'hint' => 'Gunakan self untuk atribut, return untuk hasil method, dan perbandingan inklusif untuk kedua batas pH.',
         'example' => "Rawa Bangkau\nStatus air: Normal",
         'files' => ['main.py' => ''],
-        // Public practice checks; the official test suite lives only in services/coding-grader.
-        'checker' => <<<'PY'
-results = []
-def check(label, callback, feedback):
-    try:
-        ok = bool(callback())
-    except Exception:
-        ok = False
-    results.append({'label': label, 'passed': ok, 'feedback': feedback if not ok else ''})
-check('Class dan atribut sensor', lambda: SensorAir('Rawa Bangkau', 7).lokasi == 'Rawa Bangkau' and SensorAir('Rawa Bangkau', 7).ph == 7, 'Simpan kedua parameter pada atribut self.lokasi dan self.ph.')
-for ph, expected in [(6.5, 'Normal'), (7.0, 'Normal'), (8.5, 'Normal'), (6.4, 'Perlu pemeriksaan'), (8.6, 'Perlu pemeriksaan')]:
-    check('Status untuk pH ' + str(ph), lambda ph=ph, expected=expected: SensorAir('Rawa Bangkau', ph).status_air() == expected, 'Periksa batas inklusif dan teks nilai kembalian status_air().')
-PY,
+        'core_checks' => ['constructor', 'attributes', 'boundaries', 'normal', 'abnormal', 'updates'],
+        'checker' => $checker('coding-latihan-1'),
     ],
     'latihan-2' => [
         'number' => 2,
@@ -72,27 +65,15 @@ PY,
             'Kedua method status() tidak menerima parameter tambahan. Kembalikan teks dengan return, kemudian cetak hasil pemanggilannya pada program utama.',
         ],
         'criteria' => [
-            'Program berjalan tanpa error, membuat objek Rawa, dan mencetak status seperti contoh.',
+            'Program berjalan tanpa error. Pembuatan contoh objek Rawa dan penyajian output dinilai sebagai tambahan.',
             'Constructor Ekosistem dan Rawa menyimpan nama dan lokasi yang berbeda sesuai data masing-masing objek.',
             'Pewarisan Rawa dari Ekosistem terbukti, dan pemanggilan status() pada induk serta subclass memberikan hasil yang berbeda sesuai ketentuan.',
-            'Seluruh pemeriksaan resmi server berhasil. Cara menulis solusi boleh berbeda selama memenuhi perilaku program yang diminta.',
+            'Semua pemeriksaan konsep inti wajib berhasil (90 poin). Contoh object dan output merupakan tambahan (10 poin) yang tidak menentukan kelulusan. Variasi kapitalisasi dan spasi diterima; cara menulis solusi boleh berbeda.',
         ],
         'hint' => 'Tuliskan nama class induk dalam tanda kurung pada deklarasi Rawa. Gunakan nama method yang sama untuk overriding.',
         'example' => 'Genangan rawa dipantau',
         'files' => ['main.py' => ''],
-        'checker' => <<<'PY'
-results = []
-def check(label, callback, feedback):
-    try:
-        ok = bool(callback())
-    except Exception:
-        ok = False
-    results.append({'label': label, 'passed': ok, 'feedback': feedback if not ok else ''})
-check('Atribut class induk', lambda: Ekosistem('Lahan Basah', 'Kalsel').nama == 'Lahan Basah' and Ekosistem('Lahan Basah', 'Kalsel').lokasi == 'Kalsel', 'Simpan nama dan lokasi pada constructor Ekosistem.')
-check('Status class induk', lambda: Ekosistem('Lahan Basah', 'Kalsel').status() == 'Status belum ditentukan', 'Periksa nilai kembalian status() pada class induk.')
-check('Pewarisan Rawa', lambda: isinstance(Rawa, type) and Rawa is not Ekosistem and issubclass(Rawa, Ekosistem), 'Rawa harus menjadi subclass Ekosistem.')
-check('Atribut subclass', lambda: Rawa('Rawa Bangkau', 'Kalimantan Selatan').nama == 'Rawa Bangkau' and Rawa('Rawa Bangkau', 'Kalimantan Selatan').lokasi == 'Kalimantan Selatan', 'Pastikan subclass memperoleh kedua atribut constructor induk.')
-check('Method overriding', lambda: 'status' in Rawa.__dict__ and Rawa('Rawa Bangkau', 'Kalimantan Selatan').status() == 'Genangan rawa dipantau', 'Definisikan status() pada Rawa dengan nilai kembalian sesuai soal.')
-PY,
+        'core_checks' => ['constructor', 'attributes', 'parent_status', 'inheritance', 'child_attributes', 'overriding'],
+        'checker' => $checker('coding-latihan-2'),
     ],
 ];

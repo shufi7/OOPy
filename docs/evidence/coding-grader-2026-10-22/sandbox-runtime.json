@@ -1,0 +1,50 @@
+{
+  "checks": {
+    "non_root": true,
+    "network_none": true,
+    "read_only": true,
+    "not_privileged": true,
+    "capabilities_dropped": true,
+    "no_new_privileges": true,
+    "memory_128m": true,
+    "no_extra_swap": true,
+    "cpu_half": true,
+    "pid_16": true,
+    "no_host_mounts": true,
+    "no_docker_socket": true
+  },
+  "limits": {
+    "Memory": 134217728,
+    "MemorySwap": 134217728,
+    "NanoCpus": 500000000,
+    "PidsLimit": 16,
+    "Ulimits": [
+      {
+        "Name": "core",
+        "Hard": 0,
+        "Soft": 0
+      },
+      {
+        "Name": "cpu",
+        "Hard": 3,
+        "Soft": 3
+      },
+      {
+        "Name": "fsize",
+        "Hard": 0,
+        "Soft": 0
+      },
+      {
+        "Name": "nofile",
+        "Hard": 32,
+        "Soft": 32
+      }
+    ],
+    "Tmpfs": {
+      "/tmp": "rw,noexec,nosuid,nodev,size=8m"
+    }
+  },
+  "infinite_loop_status": "error",
+  "cleanup_no_remaining_containers": true,
+  "image": "sha256:983bd9bf2c26b06fcd1df5a550fcf89c5dda764c44ac5ca2d50998a483c6a4d3"
+}

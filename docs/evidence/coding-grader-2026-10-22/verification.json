@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-22",
+  "timezone": "Asia/Makassar",
+  "status": "PASS for local development activation",
+  "docker": { "desktop": "4.75.0", "engine": "29.5.2", "os": "linux", "image": "oopy-coding-sandbox:1" },
+  "gateway": { "address": "127.0.0.1", "port": 8020, "privateTokenConfigured": true, "tokenPrintedOrCommitted": false },
+  "tests": {
+    "php": { "passed": 130, "assertions": 2776, "seconds": 23.00 },
+    "javascript": { "passed": 21, "failed": 0 },
+    "pythonUnitWithoutDocker": { "passed": 12, "skipped": 2 },
+    "pythonIncludingDocker": { "passed": 14, "skipped": 0, "seconds": 25.301 },
+    "existingCodingBrowser": "PASS; includes explicitly simulated UI errors/acknowledgement",
+    "realGraderBrowser": { "status": "PASS", "mockedSuccessfulResponses": 0, "ownerSubmissionsVerified": 6, "otherAccountFailedSubmissions": 2, "interactionRecords": 10, "pageErrors": 0, "storage": "Separate MariaDB 10.4.32 database via mysql driver" },
+    "runtimeSandboxInspection": "PASS; 12 isolation conditions, actual resource limits, no remaining containers",
+    "syntaxAndDiff": "PASS"
+  },
+  "originalDatabase": { "before": { "users": 3, "exercises": 9, "submissions": 0 }, "after": { "users": 3, "exercises": 9, "submissions": 0 }, "testAccountsOrSubmissionsCreated": false },
+  "changes": ["Preserve source whitespace", "Fix escaped Unicode stdin limit", "Reject non-object container response", "Private development launcher", "Real Docker/MariaDB integration tests", "Documentation"],
+  "uiOrCurriculumChanged": false,
+  "schemaOrScoringAlgorithmChanged": false,
+  "publicDeploymentOrGitPush": false,
+  "notTested": ["Production deployment and separate hardened Linux host", "gVisor, penetration tests and production load", "Physical devices, screen readers, Safari and Firefox", "Submissions on original user database", "Live public CDN availability"]
+}

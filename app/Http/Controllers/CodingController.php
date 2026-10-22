@@ -75,9 +75,10 @@ class CodingController extends Controller
             'submission_id' => $submission->id, 'status' => $report['status'], 'score' => $report['score'],
             'checks' => $report['checks'], 'completed' => $completed,
             'message' => match ($report['status']) {
-                'passed' => "Selamat! Jawaban kamu benar. Latihan {$exercise['number']} berhasil diselesaikan dan progres telah tersimpan.",
-                'failed' => 'Jawaban belum tepat. Periksa kembali kode kamu dan coba lagi.',
-                default => 'Program mengalami error atau melewati batas waktu. Perbaiki kode dan coba lagi. Latihan ini belum dinyatakan lulus.',
+                'passed' => "Semua konsep inti berhasil. Latihan {$exercise['number']} berhasil diselesaikan dan progres telah tersimpan."
+                    .($report['score'] < 100 ? ' Lihat saran tambahan untuk melengkapi output.' : ''),
+                'failed' => 'Masih ada konsep inti yang perlu diperbaiki. Ikuti feedback tiap pemeriksaan, lalu coba lagi. Skor parsial tersimpan; percobaan ini belum lulus.',
+                default => 'Program mengalami error atau melewati batas waktu. Perbaiki kode dan coba lagi. Percobaan ini belum lulus.',
             },
         ]);
     }

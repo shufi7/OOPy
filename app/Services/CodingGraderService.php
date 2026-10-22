@@ -23,7 +23,7 @@ class CodingGraderService
                 throw new RuntimeException('Respons grader tidak tersedia.');
             }
             $report = $response->json();
-            if (! is_array($report) || ($report['version'] ?? null) !== 1 || ($report['exercise_key'] ?? null) !== $exerciseKey
+            if (! is_array($report) || ($report['version'] ?? null) !== 2 || ($report['exercise_key'] ?? null) !== $exerciseKey
                 || ! in_array($report['status'] ?? null, ['graded', 'error'], true)
                 || ! is_array($report['checks'] ?? null) || ! array_is_list($report['checks'])
                 || count($report['checks']) > 50 || ! is_string($report['output'] ?? null)) {
@@ -31,20 +31,37 @@ class CodingGraderService
             }
             foreach ($report['checks'] as $check) {
                 if (! is_array($check) || ! is_bool($check['passed'] ?? null)
-                    || ! is_string($check['label'] ?? null) || ! is_string($check['feedback'] ?? null)) {
+                    || ! is_string($check['label'] ?? null) || ! is_string($check['feedback'] ?? null)
+                    || ! is_string($check['id'] ?? null) || ! is_bool($check['required'] ?? null)
+                    || ! is_int($check['weight'] ?? null)) {
                     throw new RuntimeException('Hasil pemeriksaan tidak valid.');
                 }
             }
-            if ($report['status'] === 'graded' && $report['checks'] === []) {
-                throw new RuntimeException('Pemeriksaan kosong.');
+            $catalog = require resource_path('coding/exercises.php');
+            $exercise = collect($catalog)->firstWhere('key', $exerciseKey);
+            if (! $exercise) {
+                throw new RuntimeException('Latihan tidak dikenal.');
             }
-            // Derive official status and score here, never from browser fields or a grader score.
-            $passedCount = count(array_filter($report['checks'], fn ($check) => $check['passed']));
-            $passed = $report['status'] === 'graded' && $passedCount === count($report['checks']);
+            $expected = $report['status'] === 'error' ? ['execution'] : [...$exercise['core_checks'], 'presentation'];
+            if (array_column($report['checks'], 'id') !== $expected) {
+                throw new RuntimeException('Pemeriksaan wajib tidak lengkap atau berulang.');
+            }
+            $passed = $report['status'] === 'graded';
+            $score = 0;
+            foreach ($report['checks'] as $check) {
+                $required = $check['id'] !== 'presentation';
+                $weight = $check['id'] === 'execution' ? 0 : ($required ? 15 : 10);
+                if ($check['required'] !== $required || $check['weight'] !== $weight
+                    || ($check['id'] === 'execution' && $check['passed'])) {
+                    throw new RuntimeException('Rubrik grader tidak sesuai.');
+                }
+                $passed = $passed && (! $required || $check['passed']);
+                $score += $check['passed'] ? $weight : 0;
+            }
 
             return [
                 'status' => $report['status'] === 'error' ? 'error' : ($passed ? 'passed' : 'failed'),
-                'score' => $report['status'] === 'error' ? 0 : (int) round($passedCount / count($report['checks']) * 100),
+                'score' => $score,
                 'checks' => $report['checks'],
                 'output' => mb_substr($report['output'], 0, 12000),
             ];

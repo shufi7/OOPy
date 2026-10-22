@@ -42,8 +42,12 @@ class CodingTest extends TestCase
 
     private function report(bool $passed = true, string $slug = 'latihan-1'): array
     {
-        return ['version' => 1, 'exercise_key' => 'coding-'.$slug, 'status' => 'graded', 'output' => 'Output resmi',
-            'checks' => [['label' => 'Kontrak class', 'passed' => $passed, 'feedback' => $passed ? '' : 'Perbaiki constructor.']]];
+        $catalog = require resource_path('coding/exercises.php');
+
+        return ['version' => 2, 'exercise_key' => 'coding-'.$slug, 'status' => 'graded', 'output' => 'Output resmi',
+            'checks' => array_map(fn ($id) => ['id' => $id, 'label' => $id, 'required' => $id !== 'presentation',
+                'weight' => $id === 'presentation' ? 10 : 15, 'passed' => $passed,
+                'feedback' => $passed ? 'Sudah sesuai.' : 'Perbaiki '.$id.'.'], [...$catalog[$slug]['core_checks'], 'presentation'])];
     }
 
     public function test_public_catalog_navbar_and_both_exercises_reuse_live_code(): void
@@ -120,18 +124,29 @@ class CodingTest extends TestCase
         $this->get('/coding')->assertDontSee('Kerjakan Lagi')->assertSee('Belum Dikerjakan');
     }
 
+    public function test_source_whitespace_is_preserved_in_grader_request_and_database_snapshot(): void
+    {
+        Http::fake(['grader.test/grade' => Http::response($this->report())]);
+        $source = "\n\nprint('source snapshot')\n\n";
+        $this->actingAs(User::factory()->create())->postJson('/coding/latihan-1/submit', ['files' => ['main.py' => $source]])
+            ->assertOk();
+        $this->assertSame($source, json_decode(ExerciseSubmission::sole()->code, true)['files']['main.py']);
+        Http::assertSent(fn ($request) => $request['files']['main.py'] === $source);
+    }
+
     public function test_exercise_two_can_be_completed_first_and_partial_checks_do_not_pass(): void
     {
         $partial = $this->report(false);
-        $partial['checks'][] = ['label' => 'Sebagian benar', 'passed' => true, 'feedback' => ''];
+        $partial['checks'][0]['passed'] = true;
+        $partial['checks'][1]['passed'] = true;
         Http::fake(['grader.test/grade' => Http::sequence()->push($this->report(true, 'latihan-2'))->push($partial)]);
         $this->actingAs(User::factory()->create());
         $this->postJson('/coding/latihan-2/submit', $this->payload())->assertOk()
             ->assertJsonPath('status', 'passed')->assertJsonPath('completed', true);
         $this->postJson('/coding/latihan-1/submit', $this->payload())->assertOk()
-            ->assertJsonPath('status', 'failed')->assertJsonPath('score', 50)->assertJsonPath('completed', false);
+            ->assertJsonPath('status', 'failed')->assertJsonPath('score', 30)->assertJsonPath('completed', false);
         $this->assertDatabaseHas('exercise_submissions', ['status' => 'passed', 'score' => 100]);
-        $this->assertDatabaseHas('exercise_submissions', ['status' => 'failed', 'score' => 50]);
+        $this->assertDatabaseHas('exercise_submissions', ['status' => 'failed', 'score' => 30]);
     }
 
     public function test_pass_remains_after_failed_retry_refresh_logout_login_and_is_private(): void
@@ -176,7 +191,8 @@ class CodingTest extends TestCase
     {
         $report = $this->report();
         $report['status'] = 'error';
-        // Even maliciously inconsistent success checks cannot override an error.
+        $report['checks'] = [['id' => 'execution', 'label' => 'Eksekusi program', 'required' => true,
+            'weight' => 0, 'passed' => false, 'feedback' => 'ZeroDivisionError']];
         Http::fake(['grader.test/grade' => Http::response($report)]);
         $this->actingAs(User::factory()->create())->postJson('/coding/latihan-1/submit', $this->payload())
             ->assertOk()->assertJsonPath('status', 'error')->assertJsonPath('score', 0)->assertJsonPath('completed', false);
@@ -215,6 +231,52 @@ class CodingTest extends TestCase
             }
         });
         $this->withSession(['_token' => 'real-token'])->post('/coding/latihan-2/submit', $this->payload())->assertStatus(419);
+    }
+
+    public function test_presentation_is_optional_but_each_core_competency_is_required(): void
+    {
+        $currentReport = [];
+        Http::fake(function () use (&$currentReport) {
+            return Http::response($currentReport);
+        });
+        foreach (['latihan-1', 'latihan-2'] as $slug) {
+            $user = User::factory()->create();
+            $optional = $this->report(true, $slug);
+            $optional['checks'][6]['passed'] = false;
+            $currentReport = $optional;
+            $this->actingAs($user)->postJson('/coding/'.$slug.'/submit', $this->payload())->assertOk()
+                ->assertJsonPath('status', 'passed')->assertJsonPath('score', 90)->assertJsonPath('completed', true);
+            foreach (range(0, 5) as $index) {
+                $core = $this->report(true, $slug);
+                $core['checks'][$index]['passed'] = false;
+                $core['score'] = 100;
+                $core['passed'] = true;
+                $currentReport = $core;
+                $this->actingAs(User::factory()->create())->postJson('/coding/'.$slug.'/submit', $this->payload())->assertOk()
+                    ->assertJsonPath('status', 'failed')->assertJsonPath('score', 85)->assertJsonPath('completed', false);
+            }
+        }
+    }
+
+    public function test_incomplete_duplicate_downgraded_and_old_rubrics_are_rejected(): void
+    {
+        $valid = $this->report();
+        $missing = $duplicate = $downgraded = $wrongWeight = $old = $fakeError = $valid;
+        array_shift($missing['checks']);
+        $duplicate['checks'][1] = $duplicate['checks'][0];
+        $downgraded['checks'][0]['required'] = false;
+        $wrongWeight['checks'][0]['weight'] = 0;
+        $old['version'] = 1;
+        $fakeError['status'] = 'error';
+        $currentReport = [];
+        Http::fake(function () use (&$currentReport) {
+            return Http::response($currentReport);
+        });
+        foreach ([$missing, $duplicate, $downgraded, $wrongWeight, $old, $fakeError] as $report) {
+            $currentReport = $report;
+            $this->actingAs(User::factory()->create())->postJson('/coding/latihan-1/submit', $this->payload())->assertStatus(503);
+        }
+        $this->assertDatabaseCount('exercise_submissions', 0);
     }
 
     public function test_idempotent_seed_preserves_existing_exercises_and_submissions(): void

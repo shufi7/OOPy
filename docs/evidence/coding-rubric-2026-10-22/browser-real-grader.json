@@ -1,0 +1,186 @@
+{
+  "database": "oopy_grader_test_633cd46e682343a09d8f49d66e4d3b58",
+  "submissions": [
+    {
+      "slug": "latihan-1",
+      "status": "passed",
+      "score": 100,
+      "submissionId": 37,
+      "userId": 15,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "status": "failed",
+      "score": 0,
+      "submissionId": 38,
+      "userId": 15,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "status": "error",
+      "score": 0,
+      "submissionId": 39,
+      "userId": 15,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "status": "passed",
+      "score": 100,
+      "submissionId": 40,
+      "userId": 15,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "status": "failed",
+      "score": 0,
+      "submissionId": 41,
+      "userId": 15,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "status": "error",
+      "score": 0,
+      "submissionId": 42,
+      "userId": 15,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "case": "core-error",
+      "status": "failed",
+      "score": 70,
+      "submissionId": 45,
+      "userId": 17,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "case": "syntax-error",
+      "status": "error",
+      "score": 0,
+      "submissionId": 46,
+      "userId": 17,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "case": "format-variation",
+      "status": "passed",
+      "score": 100,
+      "submissionId": 47,
+      "userId": 17,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "case": "missing-output",
+      "status": "passed",
+      "score": 90,
+      "submissionId": 48,
+      "userId": 17,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "case": "classes-only",
+      "status": "passed",
+      "score": 90,
+      "submissionId": 49,
+      "userId": 17,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-1",
+      "case": "forged-results",
+      "status": "failed",
+      "score": 0,
+      "submissionId": 50,
+      "userId": 17,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "case": "core-error",
+      "status": "failed",
+      "score": 75,
+      "submissionId": 51,
+      "userId": 18,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "case": "syntax-error",
+      "status": "error",
+      "score": 0,
+      "submissionId": 52,
+      "userId": 18,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "case": "format-variation",
+      "status": "passed",
+      "score": 100,
+      "submissionId": 53,
+      "userId": 18,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "case": "missing-output",
+      "status": "passed",
+      "score": 90,
+      "submissionId": 54,
+      "userId": 18,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "case": "classes-only",
+      "status": "passed",
+      "score": 90,
+      "submissionId": 55,
+      "userId": 18,
+      "snapshotPreserved": true
+    },
+    {
+      "slug": "latihan-2",
+      "case": "forged-results",
+      "status": "failed",
+      "score": 0,
+      "submissionId": 56,
+      "userId": 18,
+      "snapshotPreserved": true
+    }
+  ],
+  "interactions": [
+    "latihan-1: passed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-1: failed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-1: error, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-2: passed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-2: failed, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "latihan-2: error, real Docker result saved to isolated MariaDB, exact source/output/owner/time, no duplicate Submit",
+    "Both exercises remain complete after failed/error retries, refresh, logout/login; seventh submission is rate limited",
+    "Other account starts incomplete; wrong answers do not pass; forged identity/score, oversized input, path traversal and missing CSRF rejected; owner history unchanged",
+    "latihan-1: core-error, local and Docker scores 70, official failed, completion false, snapshot saved",
+    "latihan-1: syntax-error, local and Docker scores 0, official error, completion false, snapshot saved",
+    "latihan-1: format-variation, local and Docker scores 100, official passed, completion true, snapshot saved",
+    "latihan-1: missing-output, local and Docker scores 90, official passed, completion true, snapshot saved",
+    "latihan-1: classes-only, local and Docker scores 90, official passed, completion true, snapshot saved",
+    "latihan-1: forged-results, local and Docker scores 0, official failed, completion true, snapshot saved",
+    "latihan-2: core-error, local and Docker scores 75, official failed, completion false, snapshot saved",
+    "latihan-2: syntax-error, local and Docker scores 0, official error, completion false, snapshot saved",
+    "latihan-2: format-variation, local and Docker scores 100, official passed, completion true, snapshot saved",
+    "latihan-2: missing-output, local and Docker scores 90, official passed, completion true, snapshot saved",
+    "latihan-2: classes-only, local and Docker scores 90, official passed, completion true, snapshot saved",
+    "latihan-2: forged-results, local and Docker scores 0, official failed, completion true, snapshot saved",
+    "Real wrong gateway token produces Laravel 503, clear feedback, zero official submissions and no completion",
+    "Guest cannot submit official answers"
+  ],
+  "errors": []
+}
