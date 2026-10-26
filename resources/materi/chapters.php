@@ -5,6 +5,7 @@ return [
     'dasar-pemrograman-oop' => [
         'bab' => 'BAB 1',
         'judul' => 'Dasar Pemrograman Python dan OOP',
+        'thumbnail' => 'images/materi/bab1.jpeg',
         'content' => 'dasar-pemrograman-oop.php',
         'poin' => [
             'Nilai, tipe data, variabel, dan penugasan',
@@ -13,9 +14,11 @@ return [
             'Dari prosedural ke OOP',
         ],
     ],
+
     'kelas-dan-objek' => [
         'bab' => 'BAB 2',
         'judul' => 'Kelas dan Objek',
+        'thumbnail' => 'images/materi/bab2.jpeg',
         'content' => 'kelas-dan-objek.php',
         'poin' => [
             'Hubungan class dan object',
@@ -24,9 +27,11 @@ return [
             'Membuat beberapa object dari satu class',
         ],
     ],
+
     'enkapsulasi' => [
         'bab' => 'BAB 3',
         'judul' => 'Enkapsulasi',
+        'thumbnail' => 'images/materi/bab3.jpeg',
         'content' => 'enkapsulasi.php',
         'poin' => [
             'Data, perilaku, dan interface object',
@@ -35,9 +40,11 @@ return [
             'Getter, setter, dan @property',
         ],
     ],
+
     'pewarisan' => [
         'bab' => 'BAB 4',
         'judul' => 'Pewarisan',
+        'thumbnail' => 'images/materi/bab4.jpeg',
         'content' => 'pewarisan.php',
         'poin' => [
             'Superclass dan subclass',
@@ -46,9 +53,11 @@ return [
             'Inheritance (is-a) vs composition (has-a)',
         ],
     ],
+
     'polimorfisme' => [
         'bab' => 'BAB 5',
         'judul' => 'Polimorfisme',
+        'thumbnail' => 'images/materi/bab5.jpeg',
         'content' => 'polimorfisme.php',
         'poin' => [
             'Polimorfisme melalui inheritance',
@@ -57,9 +66,11 @@ return [
             'Mengurangi pemeriksaan tipe object',
         ],
     ],
+
     'kelas-abstrak' => [
         'bab' => 'BAB 6',
         'judul' => 'Kelas Abstrak (Abstract Class)',
+        'thumbnail' => 'images/materi/bab6.jpeg',
         'content' => 'kelas-abstrak.php',
         'poin' => [
             'Abstract Base Class (ABC)',
@@ -69,6 +80,7 @@ return [
             'Kapan menggunakan ABC dibandingkan duck typing',
         ],
     ],
+
     'evaluasi-akhir' => [
         'bab' => 'BAB 7',
         'judul' => 'Evaluasi Akhir',

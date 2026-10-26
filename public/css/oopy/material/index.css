@@ -1,14 +1,24 @@
+
+/* ================================
+   KARTU MATERI OOPY
+================================ */
+
 .materi-card {
     --bs-card-bg: var(--oopy-surface);
     --bs-card-color: var(--oopy-ink);
+
     border-radius: 22px;
+    overflow: hidden;
     box-shadow: var(--oopy-shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .materi-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 36px rgb(64 81 78 / 10%);
+    box-shadow: 0 16px 36px rgb(64 81 78 / 18%);
 }
 
 .materi-card .card-body {
@@ -17,58 +27,59 @@
     align-items: flex-start;
 }
 
-.materi-card-footer {
-    display: flex;
-    align-items: center;
+
+/* ================================
+   THUMBNAIL MATERI
+================================ */
+
+
+/* Thumbnail Materi */
+.materi-card-cover {
     width: 100%;
-    min-height: 72px;
-    margin-top: auto;
-    padding-top: 24px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    background-color: #e8f5f3;
 }
 
-.materi-card .materi-card-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+.materi-card-cover img {
+    display: block;
     width: 100%;
-    min-height: 48px;
-    padding: 9px 16px;
-    border-radius: 12px;
-    font-weight: 700;
-    box-shadow: 0 6px 14px rgb(64 81 78 / 8%);
-    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
-    line-height: 1.4;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.25s ease;
 }
 
-.materi-card-link > .bi {
-    display: inline-grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: rgb(228 249 245 / 28%);
-    transition: transform .2s ease;
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .materi-card:hover .materi-card-cover img {
+        transform: scale(1.025);
+    }
 }
 
-.materi-card-link:hover {
-    box-shadow: 0 8px 18px rgb(64 81 78 / 12%);
-}
 
-.materi-card-link:hover > .bi {
-    transform: translateX(3px);
-}
+/* ================================
+   LABEL BAB
+================================ */
 
 .materi-bab {
     display: inline-block;
     padding: 4px 10px;
-    background-color: var(--oopy-brand-mint);
+
+    background-color: var(--oopy-bg);
     border-radius: 8px;
+
     color: var(--oopy-link);
     font-size: 1.05rem;
     letter-spacing: 0.3px;
 }
+
+
+/* ================================
+   JUDUL DAN POIN MATERI
+================================ */
 
 .materi-title {
     font-size: 1.375rem;
@@ -88,10 +99,82 @@
     color: var(--oopy-ink-soft);
 }
 
+
+/* ================================
+   FOOTER KARTU
+================================ */
+
+.materi-card-footer {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 72px;
+
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+
+/* ================================
+   TOMBOL PELAJARI BAB
+================================ */
+
+.materi-card .materi-card-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+    width: 100%;
+    min-height: 48px;
+
+    padding: 9px 16px;
+    border-radius: 12px;
+
+    font-weight: 700;
+    line-height: 1.4;
+
+    box-shadow: 0 6px 14px rgb(17 153 158 / 16%);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.materi-card-link > .bi {
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+    background: rgb(228 249 245 / 28%);
+
+    transition: transform 0.2s ease;
+}
+
+.materi-card-link:hover {
+    box-shadow: 0 8px 18px rgb(17 153 158 / 22%);
+}
+
+.materi-card-link:hover > .bi {
+    transform: translateX(3px);
+}
+
+
+/* ================================
+   AKSESIBILITAS ANIMASI
+================================ */
+
 @media (prefers-reduced-motion: reduce) {
     .materi-card,
     .materi-card .materi-card-link,
-    .materi-card-link > .bi {
+    .materi-card-link > .bi,
+    .materi-card-cover img {
         transition: none;
     }
 
