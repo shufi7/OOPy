@@ -84,6 +84,7 @@ return [
     'evaluasi-akhir' => [
         'bab' => 'BAB 7',
         'judul' => 'Evaluasi Akhir',
+        'thumbnail' => 'images/materi/bab7.jpeg',
         'content' => 'evaluasi-akhir.php',
         'poin' => [
             'Evaluasi konsep OOP Python',
