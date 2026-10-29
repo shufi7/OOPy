@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Quiz;
 use App\Services\ChapterQuizService;
+use App\Services\Admin\MaterialContentService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class MateriController extends Controller
 {
-    public function index(): View
+    public function index(MaterialContentService $contents): View
     {
         return view('materi.index', [
-            'materiList' => require resource_path('materi/chapters.php'),
+            'materiList' => $contents->publishedRegistry(require resource_path('materi/chapters.php')),
         ]);
     }
 
-    public function show(Request $request, string $slug, ChapterQuizService $quizzes)
+    public function show(Request $request, string $slug, ChapterQuizService $quizzes, MaterialContentService $contents)
     {
         $chapters = require resource_path('materi/chapters.php');
 
@@ -33,6 +36,10 @@ class MateriController extends Controller
         $content = require resource_path(
             'materi/'.$chapter['content']
         );
+        [$content, $publishedTitle] = $contents->published($slug, $content);
+        if ($publishedTitle !== null) {
+            $chapter['judul'] = $publishedTitle;
+        }
 
         $slugs = array_keys($chapters);
 
@@ -66,7 +73,7 @@ class MateriController extends Controller
             }
         }
 
-        // Guests can read material without querying account data. Never serialize answer keys.
+        // Never serialize answer keys. Original content remains available if the database is unavailable.
         $quizQuestions = collect($content['quiz'] ?? [])->map(fn ($question, $index) => [
             'question_id' => null,
             'question_order' => $index + 1,
@@ -78,9 +85,19 @@ class MateriController extends Controller
         $quizProgress = ['passed' => false, 'next_unlocked' => false];
         if ($request->user() && $quizQuestions) {
             $quiz = $quizzes->quiz($slug);
-            $quizQuestions = $quizzes->publicQuestions($quiz);
+            $quizQuestions = $quizzes->publicQuestions($quiz, $request->user());
             $quizProgress = $quizzes->progress($quiz, $request->user());
             $nextChapter = $quizzes->nextChapter($quiz);
+        } elseif ($quizQuestions) {
+            try {
+                $quiz = Quiz::with('questions')->where('type', 'chapter_quiz')
+                    ->whereHas('chapter', fn ($query) => $query->where('slug', $slug))->first();
+                if ($quiz && $quiz->questions->isNotEmpty()) {
+                    $quizQuestions = $quizzes->publicQuestions($quiz);
+                }
+            } catch (QueryException) {
+                // Guests may still read the file-backed material before database setup.
+            }
         }
         $quizConfig = [
             'authenticated' => $request->user() !== null,

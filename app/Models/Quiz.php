@@ -38,7 +38,13 @@ class Quiz extends LearningModel
 
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class)->orderBy('question_order');
+        return $this->hasMany(Question::class)->where('publication_status', 'published')
+            ->orderByRaw('COALESCE(display_order, question_order)')->orderBy('id');
+    }
+
+    public function allQuestions(): HasMany
+    {
+        return $this->hasMany(Question::class)->orderByRaw('COALESCE(display_order, question_order)')->orderBy('id');
     }
 
     public function attempts(): HasMany

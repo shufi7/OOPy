@@ -22,7 +22,7 @@ class OopyContentSeeder extends Seeder
                 if (empty($metadata['content'])) {
                     continue;
                 }
-                // Existing PHP files remain authoritative; loading data never runs Python.
+                // PHP files bootstrap content; authored database revisions are never overwritten.
                 $content = require resource_path('materi/'.$metadata['content']);
                 $chapter = Chapter::updateOrCreate(['slug' => $slug], [
                     'title' => $metadata['judul'],
@@ -53,7 +53,7 @@ class OopyContentSeeder extends Seeder
                     }
                 }
 
-                $quiz = Quiz::updateOrCreate(['slug' => $final ? $slug : 'kuis-'.$slug], [
+                $quiz = Quiz::firstOrCreate(['slug' => $final ? $slug : 'kuis-'.$slug], [
                     'chapter_id' => $chapter->id,
                     'title' => $final ? 'Evaluasi Akhir OOPy' : 'Kuis '.$metadata['bab'],
                     'type' => $final ? 'final_exam' : 'chapter_quiz',
@@ -62,7 +62,7 @@ class OopyContentSeeder extends Seeder
                 ]);
                 foreach (($final ? $content['questions'] : $content['quiz']) as $index => $question) {
                     $type = $question['type'] ?? 'multiple_choice';
-                    Question::updateOrCreate(['quiz_id' => $quiz->id, 'question_order' => $index + 1], [
+                    Question::firstOrCreate(['quiz_id' => $quiz->id, 'question_order' => $index + 1], [
                         'question_type' => $type,
                         'question_text' => $question['question'],
                         'code_snippet' => $question['code'] ?? null,

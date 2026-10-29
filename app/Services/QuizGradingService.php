@@ -20,7 +20,7 @@ class QuizGradingService
             $attempt = QuizAttempt::whereKey($attempt->id)->lockForUpdate()->firstOrFail();
             Gate::forUser($user)->authorize('submit', $attempt);
             abort_unless($attempt->quiz_id === $quiz->id, 404);
-            $questions = $quiz->questions()->lockForUpdate()->get()->keyBy('id');
+            $questions = $this->quizzes->attemptQuestions($quiz, $attempt)->keyBy('id');
             $graded = [];
             foreach ($answers as $index => $entry) {
                 $question = $questions->get($entry['question_id']);

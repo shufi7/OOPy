@@ -1,14 +1,18 @@
-import { createAttempt, finishAttempt, formatSeconds, hasAnswer, isCorrect, remainingSeconds } from './exam-model.js';
-import { ExamStorage } from './exam-storage.js';
+import { formatSeconds, hasAnswer, remainingSeconds } from './exam-model.js';
 import { ExamTicker } from './exam-timer.js';
 
 const root = document.querySelector('.oopy-final-exam');
-if (root) initialize();
+if (root) initialize().catch((error) => {
+    const warning = root.querySelector('[data-exam="storage-warning"]');
+    warning.hidden = false;
+    warning.textContent = error.message || 'Evaluasi belum dapat dimuat. Muat ulang untuk mencoba lagi.';
+});
 
-function initialize() {
+async function initialize() {
     const find = (role) => root.querySelector(`[data-exam="${role}"]`);
     const config = JSON.parse(find('config').textContent);
-    const { questions, settings, urls } = config;
+    let { questions } = config;
+    const { settings, urls } = config;
     const page = root.dataset.examPage;
     const node = (tag, text, className) => {
         const element = document.createElement(tag);
@@ -20,49 +24,101 @@ function initialize() {
         find('storage-warning').hidden = false;
         find('storage-warning').textContent = message;
     };
-    // Access through a driver so even a denied localStorage getter is caught.
-    const storage = new ExamStorage({
-        getItem: (key) => window.localStorage.getItem(key),
-        setItem: (key, value) => window.localStorage.setItem(key, value),
-    }, questions, settings, warning);
-    let state = storage.state;
+    const api = async (url, method = 'GET', body) => {
+        const response = await fetch(url, {
+            method, credentials: 'same-origin', cache: 'no-store',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.message || 'Penyimpanan server belum tersedia. Jawaban tetap berada pada browser; coba lagi.');
+        return data;
+    };
+    const initial = await api(urls.state);
+    let state = { active: initial.active, history: initial.history };
+    let serverOffset = initial.serverNow - Date.now();
+    const serverTime = () => Date.now() + serverOffset;
+    const cacheKey = (id) => `${settings.storage_key}.draft.${id}`;
+    const restoreDraft = () => {
+        if (!state.active) return;
+        questions = state.active.questions;
+        try {
+            const draft = JSON.parse(localStorage.getItem(cacheKey(state.active.id)) || 'null');
+            if (!draft) return;
+            if (remainingSeconds(state.active, serverTime()) > 0 && draft.answers && typeof draft.answers === 'object') {
+                for (const q of questions) {
+                    const value = draft.answers[q.id];
+                    if (value === null || (q.type === 'multiple_choice' ? Number.isInteger(value) && value >= 0 && value < q.options.length : typeof value === 'string' && value.length <= (q.type === 'essay' ? 10000 : 500))) state.active.answers[q.id] = value;
+                }
+            }
+            state.active.current = Number.isInteger(draft.current) && draft.current >= 0 && draft.current < questions.length ? draft.current : 0;
+            state.active.review = Array.isArray(draft.review) ? draft.review.filter((id) => questions.some((q) => q.id === id)) : [];
+        } catch { warning('Draf browser tidak dapat dibaca. Jawaban yang sudah tersimpan pada server tetap tersedia.'); }
+    };
+    restoreDraft();
     let completing = false;
     let localResult = null;
     const ticker = new ExamTicker();
-    const scoreText = (score) => score.toLocaleString('id-ID', { maximumFractionDigits: 2 });
+    const scoreText = (score) => Number(score).toLocaleString('id-ID', { maximumFractionDigits: 2 });
     const objectiveStatus = (record) => record.result.metThreshold ? 'Memenuhi ambang objektif' : 'Belum memenuhi ambang objektif';
     const resultUrl = (id) => {
         const target = new URL(urls.results, location.href);
         target.searchParams.set('attempt', id);
         return target.href;
     };
+    let saveTimer;
+    let saveChain = Promise.resolve();
+    const persistAnswers = () => {
+        if (!state.active) return Promise.resolve();
+        const id = state.active.id;
+        const answers = { ...state.active.answers };
+        saveChain = saveChain.catch(() => {}).then(() => api(`${urls.start}/${encodeURIComponent(id)}/answers`, 'PUT', { answers }));
+        return saveChain.then(() => {
+            if (find('save-status')) find('save-status').textContent = 'Jawaban tersimpan pada server.';
+        }).catch((error) => {
+            if (find('save-status')) find('save-status').textContent = 'Perubahan belum tersimpan pada server.';
+            warning(error.message);
+        });
+    };
     const save = () => {
-        const success = storage.save(state);
-        state = storage.state;
-        if (find('save-status')) find('save-status').textContent = success ? 'Jawaban disimpan otomatis.' : 'Perubahan terbaru belum tersimpan.';
-        return success;
+        if (!state.active) return true;
+        try { localStorage.setItem(cacheKey(state.active.id), JSON.stringify({ answers: state.active.answers, current: state.active.current, review: state.active.review })); }
+        catch { warning('Draf browser belum tersimpan. Tetap di halaman ini sampai jawaban tersimpan pada server.'); }
+        if (find('save-status')) find('save-status').textContent = 'Menyimpan jawaban…';
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(persistAnswers, 500);
+        return true;
     };
 
-    function complete() {
+    async function complete() {
         if (completing || !state.active) return;
         completing = true;
         const id = state.active.id;
         ticker.stop();
         find('finish-dialog')?.close();
-        state = finishAttempt(state, questions, Date.now());
-        const saved = save();
-        localResult = state.history.find((record) => record.id === id);
-        if (page === 'exam') {
-            if (saved) location.assign(resultUrl(id));
-            else {
+        clearTimeout(saveTimer);
+        try {
+            await saveChain.catch(() => {});
+            const data = await api(`${urls.start}/${encodeURIComponent(id)}/submit`, 'POST', { answers: state.active.answers });
+            localResult = data.attempt;
+            state.history = [localResult, ...state.history.filter((record) => record.id !== id)];
+            state.active = null;
+            try { localStorage.removeItem(cacheKey(id)); } catch {}
+        } catch (error) {
+            completing = false;
+            warning(error.message);
+            if (page === 'exam') {
                 find('workspace').hidden = true;
                 find('local-results').hidden = false;
-                const r = localResult.result;
-                find('local-summary').textContent = `Nilai objektif ${scoreText(r.score)}; ${r.correct} dari ${r.objectiveTotal} benar. ${objectiveStatus(localResult)}. Uraian ${r.essaysFilled} dari ${r.essayTotal} terisi — Belum dinilai.`;
+                find('local-summary').textContent = 'Evaluasi belum dikumpulkan. Nilai belum diterbitkan.';
                 find('retry-save').focus();
             }
+            return;
+        }
+        if (page === 'exam') {
+            location.assign(resultUrl(id));
         } else {
-            warning(saved ? 'Sesi yang melewati deadline telah diselesaikan otomatis. Hasil tersedia di riwayat.' : 'Sesi telah selesai, tetapi hasil terbaru belum tersimpan. Pertahankan halaman ini tetap terbuka.');
+            warning('Sesi yang melewati deadline telah diselesaikan otomatis. Hasil tersedia di riwayat.');
             completing = false;
             renderPage();
             ticker.start(tick);
@@ -71,7 +127,7 @@ function initialize() {
 
     function ensureActive() {
         if (!state.active) return false;
-        if (remainingSeconds(state.active, Date.now()) === 0) { complete(); return false; }
+        if (remainingSeconds(state.active, serverTime()) === 0) { complete(); return false; }
         return true;
     }
 
@@ -91,27 +147,22 @@ function initialize() {
     }
 
     function openStart() {
-        state = storage.state;
         if (state.active) { location.assign(urls.exam); return; }
         find('start-dialog').showModal();
     }
     find('start')?.addEventListener('click', openStart);
     find('start-cancel').addEventListener('click', () => { find('start-dialog').close(); find('start')?.focus(); });
-    find('start-confirm').addEventListener('click', () => {
-        // Recheck after the dialog: another tab may have started/completed a session.
-        state = storage.read();
-        if (state.active) { location.assign(urls.exam); return; }
-        const previous = state;
-        state = { ...state, active: createAttempt(questions, settings, Date.now(), `session-${crypto.randomUUID()}`) };
-        if (save()) location.assign(urls.exam);
-        else {
-            // Starting requires persistent handoff to the exam URL.
-            storage.state = previous;
-            state = previous;
+    find('start-confirm').addEventListener('click', async () => {
+        find('start-confirm').disabled = true;
+        try {
+            const data = await api(urls.start, 'POST', {});
+            state.active = data.attempt;
+            serverOffset = data.serverNow - Date.now();
+            location.assign(urls.exam);
+        } catch (error) {
             find('start-dialog').close();
-            warning('Evaluasi belum dimulai karena sesi tidak dapat disimpan. Izinkan penyimpanan browser, kosongkan ruang jika penuh, lalu coba lagi.');
-            availability();
-        }
+            warning(error.message);
+        } finally { find('start-confirm').disabled = false; }
     });
 
     function history() {
@@ -126,13 +177,34 @@ function initialize() {
             link.href = resultUrl(record.id);
             date.append(link);
             row.append(date, node('td', String(record.result.correct)), node('td', String(record.result.incorrect)),
-                node('td', scoreText(record.result.score)), node('td', `${record.result.essaysFilled} / ${record.result.essayTotal} — Belum dinilai`));
+                node('td', scoreText(record.result.score)), node('td', `${record.result.essaysFilled} / ${record.result.essayTotal} — ${record.result.essayPoints === null ? 'Belum dinilai' : `${scoreText(record.result.essayPoints)} / 25 poin`}`));
             const status = document.createElement('td');
             status.append(node('span', record.timedOut ? 'Waktu habis' : objectiveStatus(record), 'exam-tag'));
             if (record.timedOut) status.append(node('p', objectiveStatus(record), 'exam-muted'));
+            status.append(node('p', record.result.totalScore === null ? 'Total: menunggu penilaian uraian' : `Total: ${scoreText(record.result.totalScore)} — ${record.result.passed ? 'Lulus' : 'Belum lulus'}`, 'exam-muted'));
             row.append(status);
             find('history').append(row);
         }
+        // Preserve access to previous browser-only practice without promoting
+        // its untrusted scores into the official account history.
+        const legacy = find('legacy-history');
+        const legacyRows = find('legacy-rows');
+        legacyRows.replaceChildren();
+        try {
+            const oldState = JSON.parse(localStorage.getItem(settings.storage_key) || 'null');
+            if (Array.isArray(oldState?.history)) {
+                for (const record of oldState.history.slice(0, 100)) {
+                    const score = record?.result?.score;
+                    if (!Number.isFinite(record?.finishedAt) || !Number.isFinite(score) || score < 0 || score > 100) continue;
+                    const date = new Date(record.finishedAt);
+                    if (!Number.isFinite(date.getTime())) continue;
+                    const row = document.createElement('tr');
+                    row.append(node('td', date.toLocaleString('id-ID')), node('td', scoreText(score)), node('td', 'Latihan lokal · belum diverifikasi'));
+                    legacyRows.append(row);
+                }
+            }
+        } catch { /* An unreadable legacy practice record never blocks the account exam. */ }
+        legacy.hidden = legacyRows.children.length === 0;
     }
 
     function progress() {
@@ -230,7 +302,7 @@ function initialize() {
     function openFinish() {
         if (!ensureActive()) return;
         const answered = questions.filter((q) => hasAnswer(q, state.active.answers[q.id])).length;
-        find('finish-summary').textContent = `${answered} soal terjawab, ${questions.length - answered} soal belum dijawab. Sisa waktu ${formatSeconds(remainingSeconds(state.active, Date.now()))}. Yakin ingin mengumpulkan?`;
+        find('finish-summary').textContent = `${answered} soal terjawab, ${questions.length - answered} soal belum dijawab. Sisa waktu ${formatSeconds(remainingSeconds(state.active, serverTime()))}. Yakin ingin mengumpulkan?`;
         find('finish-dialog').showModal();
     }
 
@@ -266,7 +338,7 @@ function initialize() {
         find('finish').addEventListener('click', openFinish);
         find('finish-confirm').addEventListener('click', complete);
         find('finish-cancel').addEventListener('click', () => { find('finish-dialog').close(); find('finish').focus(); });
-        find('retry-save').addEventListener('click', () => { if (save()) location.assign(resultUrl(localResult.id)); });
+        find('retry-save').addEventListener('click', complete);
         const desktop = matchMedia('(min-width: 992px)');
         desktop.addEventListener('change', () => { find('number-panel').open = desktop.matches; });
     }
@@ -283,19 +355,25 @@ function initialize() {
         find('objective-status').textContent = objectiveStatus(record);
         find('correct').textContent = `${r.correct} dari ${r.objectiveTotal}`;
         find('incorrect').textContent = `${r.incorrect} dari ${r.objectiveTotal}`;
-        find('essays').textContent = `${r.essaysFilled} dari ${r.essayTotal} — Belum dinilai`;
+        find('essays').textContent = `${r.essaysFilled} dari ${r.essayTotal} — ${r.essayPoints === null ? 'Belum dinilai' : `${scoreText(r.essayPoints)} / 25 poin`}`;
         find('duration').textContent = formatSeconds(r.durationMs / 1000);
+        find('final-score').textContent = r.totalScore === null
+            ? 'Uraian: Belum dinilai. Nilai objektif ini belum merupakan penilaian keseluruhan Evaluasi Akhir.'
+            : `Nilai total: ${scoreText(r.totalScore)} / 100. ${r.passed ? 'Lulus' : 'Belum lulus'}. Objektif ${scoreText(r.objectivePoints)} / 75 poin + uraian ${scoreText(r.essayPoints)} / 25 poin.`;
         const review = find('review-list'); review.replaceChildren();
-        for (const [index, q] of questions.entries()) {
+        for (const [index, q] of record.questions.entries()) {
             const item = node('section', '', 'exam-review-item');
             item.append(node('h3', `Soal ${index + 1}`), node('p', q.question));
             const value = record.answers[q.id];
             const text = q.type === 'multiple_choice' ? q.options[value] : value;
             item.append(node('p', `Jawaban kamu: ${hasAnswer(q, value) ? text : 'Belum diisi'}`));
-            if (q.type === 'essay') item.append(node('span', 'Belum dinilai', 'exam-tag'));
+            const feedback = record.feedback[q.id];
+            if (q.type === 'essay') {
+                item.append(node('span', feedback.essayScore === null ? 'Belum dinilai' : `${scoreText(feedback.essayScore)} / 5 poin`, 'exam-tag'));
+                if (feedback.feedback) item.append(node('p', feedback.feedback));
+            }
             else {
-                item.append(node('span', isCorrect(q, value) ? 'Benar' : 'Tidak benar / belum dijawab', 'exam-tag'));
-                item.append(node('p', `Jawaban benar: ${q.type === 'multiple_choice' ? q.options[q.correct] : q.answer}`));
+                item.append(node('span', feedback.correct ? 'Benar' : 'Tidak benar / belum dijawab', 'exam-tag'));
             }
             review.append(item);
         }
@@ -314,9 +392,9 @@ function initialize() {
     }
 
     function tick() {
-        if (state.active && remainingSeconds(state.active, Date.now()) === 0) { complete(); return; }
+        if (state.active && remainingSeconds(state.active, serverTime()) === 0) { complete(); return; }
         if (page === 'exam' && state.active) {
-            const seconds = remainingSeconds(state.active, Date.now());
+            const seconds = remainingSeconds(state.active, serverTime());
             find('timer').textContent = formatSeconds(seconds);
             find('timer').setAttribute('aria-label', `Sisa waktu ${formatSeconds(seconds)}`);
             const level = seconds <= 60 ? 'one' : seconds <= 300 ? 'five' : '';
@@ -328,16 +406,14 @@ function initialize() {
     }
 
     window.addEventListener('storage', (event) => {
-        if (event.key !== settings.storage_key) return;
-        const prior = state.active?.id;
-        state = storage.read(); storage.state = state;
-        if (page === 'exam' && prior && state.history.some((record) => record.id === prior)) { location.assign(resultUrl(prior)); return; }
-        renderPage(); tick();
+        if (!state.active || event.key !== cacheKey(state.active.id)) return;
+        restoreDraft();
+        if (page === 'exam') question(false);
     });
-    window.addEventListener('pagehide', () => ticker.stop());
-    window.addEventListener('pageshow', (event) => { if (event.persisted) { state = storage.read(); storage.state = state; renderPage(); ticker.start(tick); } });
+    window.addEventListener('pagehide', () => { clearTimeout(saveTimer); ticker.stop(); });
+    window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });
     root.querySelectorAll('.exam-code code.language-python').forEach((code) => window.OopySyntax?.highlight(code));
-    if (state.active && remainingSeconds(state.active, Date.now()) === 0) complete();
+    if (state.active && remainingSeconds(state.active, serverTime()) === 0) complete();
     renderPage();
     ticker.start(tick);
 }

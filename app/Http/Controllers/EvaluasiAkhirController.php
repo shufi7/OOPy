@@ -28,11 +28,15 @@ class EvaluasiAkhirController extends Controller
         $counts = array_count_values(array_column($content['questions'], 'type'));
         $config = [
             'settings' => $settings,
-            'questions' => $content['questions'],
+            // Only public fields cross into HTML; reusable bank keys stay on the server.
+            'questions' => array_map(fn ($q) => array_intersect_key($q, array_flip(['id', 'type', 'question', 'options', 'code'])), $content['questions']),
+            'official' => (bool) auth()->user(),
             'urls' => [
                 'intro' => route('evaluasi.index'),
                 'exam' => route('evaluasi.exam'),
                 'results' => route('evaluasi.results'),
+                'state' => route('evaluasi.attempts.state'),
+                'start' => route('evaluasi.attempts.start'),
             ],
         ];
 

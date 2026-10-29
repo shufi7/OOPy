@@ -19,7 +19,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         find('loading').hidden = true;
         return;
     }
-    const questions = JSON.parse(find('questions').textContent);
+    let questions = JSON.parse(find('questions').textContent);
     if (questions.length !== TOTAL_QUESTIONS) {
         find('loading').textContent = 'Kuis belum tersedia. Silakan coba lagi nanti.';
         return;
@@ -80,6 +80,14 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         if (starting) return starting;
         starting = request(config.start_url, {}).then((data) => {
             attempt = data;
+            if (Array.isArray(data.questions)
+                && data.questions.map((question) => question.question_id).join(',') !== questions.map((question) => question.question_id).join(',')) {
+                questions = data.questions;
+                answers = Array(questions.length).fill(null);
+                current = 0;
+                renderQuestion();
+                find('validation').textContent = 'Paket soal diperbarui. Jawab soal pada versi percobaan ini.';
+            }
             return data;
         }).finally(() => { starting = null; });
         return starting;
@@ -178,6 +186,9 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         find('validation').textContent = 'Menyimpan jawaban dan hasil kuis…';
         try {
             const active = await startAttempt();
+            if (answers.some((answer, index) => !hasAnswer(questions[index], answer))) {
+                throw new Error('Paket soal telah diperbarui. Jawab seluruh soal sebelum mengumpulkan.');
+            }
             const data = await request(active.submit_url, {
                 answers: questions.map((question, index) => ({ question_id: question.question_id, answer: answers[index] })),
             });

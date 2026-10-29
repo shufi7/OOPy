@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Chapter;
 use App\Models\Material;
+use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\User;
@@ -40,11 +41,14 @@ class ChapterQuizService
         return $material;
     }
 
-    public function publicQuestions(Quiz $quiz): array
+    public function publicQuestions(Quiz $quiz, ?User $user = null): array
     {
-        return $quiz->questions->map(fn ($question) => [
+        $attempt = $user?->quizAttempts()->where('quiz_id', $quiz->id)->where('status', 'in_progress')->first();
+        $questions = $attempt ? $this->attemptQuestions($quiz, $attempt) : $quiz->questions;
+
+        return $questions->map(fn ($question) => [
             'question_id' => $question->id,
-            'question_order' => $question->question_order,
+            'question_order' => $question->display_order ?? $question->question_order,
             'type' => $question->question_type,
             'question' => $question->question_text,
             'options' => $question->options,
@@ -80,13 +84,46 @@ class ChapterQuizService
         return DB::transaction(function () use ($quiz, $user) {
             // All starts/submits for one account share this lock, including an absent progress row.
             User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+            $quiz = Quiz::whereKey($quiz->id)->lockForUpdate()->firstOrFail();
             $attempt = $user->quizAttempts()->where('quiz_id', $quiz->id)->where('status', 'in_progress')
                 ->lockForUpdate()->first();
             if ($attempt) {
+                $this->pinQuestions($quiz, $attempt);
+
                 return $attempt;
             }
 
-            return $user->quizAttempts()->create(['quiz_id' => $quiz->id, 'started_at' => now()]);
+            $attempt = $user->quizAttempts()->create(['quiz_id' => $quiz->id, 'started_at' => now()]);
+            $this->pinQuestions($quiz, $attempt);
+
+            return $attempt;
         }, 3);
+    }
+
+    public function attemptQuestions(Quiz $quiz, QuizAttempt $attempt)
+    {
+        $questions = Question::query()->select('questions.*', 'quiz_attempt_questions.position as pinned_position')
+            ->join('quiz_attempt_questions', 'questions.id', '=', 'quiz_attempt_questions.question_id')
+            ->where('quiz_attempt_questions.attempt_id', $attempt->id)->where('questions.quiz_id', $quiz->id)
+            ->orderBy('quiz_attempt_questions.position')->get();
+
+        // Legacy/imported attempts without a set can still use the current published questions.
+        return $questions->isEmpty() ? $quiz->questions : $questions->map(function ($question) {
+            $question->display_order = $question->pinned_position;
+
+            return $question;
+        });
+    }
+
+    private function pinQuestions(Quiz $quiz, QuizAttempt $attempt): void
+    {
+        if (DB::table('quiz_attempt_questions')->where('attempt_id', $attempt->id)->exists()) {
+            return;
+        }
+        foreach ($quiz->questions()->get() as $index => $question) {
+            DB::table('quiz_attempt_questions')->insert([
+                'attempt_id' => $attempt->id, 'question_id' => $question->id, 'position' => $index + 1,
+            ]);
+        }
     }
 }

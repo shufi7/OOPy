@@ -18,11 +18,13 @@ class QuizController extends Controller
     public function start(StartQuizRequest $request, string $slug): JsonResponse
     {
         return $this->respond(function () use ($request, $slug) {
-            $attempt = $this->quizzes->start($this->quizzes->quiz($slug), $request->user());
+            $quiz = $this->quizzes->quiz($slug);
+            $attempt = $this->quizzes->start($quiz, $request->user());
 
             return [
                 'attempt_id' => $attempt->id,
                 'submit_url' => route('quiz.submit', [$slug, $attempt->id]),
+                'questions' => $this->quizzes->publicQuestions($quiz, $request->user()),
             ];
         });
     }

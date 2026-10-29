@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -11,11 +12,13 @@ class Question extends LearningModel
 {
     public const TYPES = ['multiple_choice', 'code_fill', 'essay'];
 
-    protected $fillable = ['quiz_id', 'question_type', 'question_text', 'code_snippet', 'options', 'correct_answer', 'explanation', 'question_order'];
+    protected $fillable = ['quiz_id', 'question_type', 'question_text', 'code_snippet', 'options', 'correct_answer', 'explanation', 'question_order', 'publication_status', 'display_order', 'revision_of_id', 'essay_rubric'];
+
+    protected $attributes = ['publication_status' => 'published'];
 
     protected function casts(): array
     {
-        return ['quiz_id' => 'integer', 'options' => 'array', 'correct_answer' => 'string', 'question_order' => 'integer'];
+        return ['quiz_id' => 'integer', 'options' => 'array', 'correct_answer' => 'string', 'question_order' => 'integer', 'display_order' => 'integer', 'revision_of_id' => 'integer'];
     }
 
     protected function validationRules(): array
@@ -32,6 +35,10 @@ class Question extends LearningModel
             'correct_answer' => ['nullable', 'string', Rule::requiredIf($this->question_type !== 'essay')],
             'explanation' => ['nullable', 'string'],
             'question_order' => ['required', 'integer', 'min:1'],
+            'publication_status' => ['required', Rule::in(['draft', 'published', 'archived'])],
+            'display_order' => ['nullable', 'integer', 'min:1'],
+            'revision_of_id' => ['nullable', 'integer', $this->existsIn('questions')],
+            'essay_rubric' => ['nullable', 'string'],
         ];
     }
 
@@ -48,8 +55,9 @@ class Question extends LearningModel
         }
 
         // Reseeding may refresh unused questions, but never silently rewrite graded history.
-        $gradingFields = ['quiz_id', 'question_type', 'question_text', 'code_snippet', 'options', 'correct_answer'];
-        if ($this->exists && $this->isDirty($gradingFields) && $this->answers()->exists()) {
+        $gradingFields = ['quiz_id', 'question_type', 'question_text', 'code_snippet', 'options', 'correct_answer', 'essay_rubric'];
+        if ($this->exists && $this->isDirty($gradingFields) && ($this->answers()->exists()
+            || DB::table('quiz_attempt_questions')->where('question_id', $this->id)->exists())) {
             throw ValidationException::withMessages(['question_text' => 'Version answered questions before changing their content or grading contract.']);
         }
     }

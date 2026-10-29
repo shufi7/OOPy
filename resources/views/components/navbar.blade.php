@@ -48,6 +48,9 @@
                         <ul class="dropdown-menu dropdown-menu-lg-end oopy-account-menu" aria-labelledby="oopyAccountMenu">
                             <li><span class="dropdown-item-text fw-bold">{{ auth('web')->user()->name }}</span></li>
                             <li><span class="dropdown-item-text">Role akun: {{ auth('web')->user()->role === 'admin' ? 'Admin' : 'User' }}</span></li>
+                            @if(auth('web')->user()->role === 'admin')
+                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Panel Admin</a></li>
+                            @endif
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">

@@ -39,3 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/materi/{slug}/kuis/attempts/{attempt}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
     Route::get('/materi/{slug}/kuis/progress', [QuizController::class, 'progress'])->name('quiz.progress');
 });
+
+require __DIR__.'/admin.php';
+require __DIR__.'/final-evaluation.php';

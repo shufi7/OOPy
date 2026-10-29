@@ -23,6 +23,7 @@
             <h1>@yield('heading', 'Evaluasi Akhir OOPy')</h1>
             <p>@yield('description', $content['description'])</p>
         </header>
+        <p class="exam-notice">{{ auth()->check() ? 'Evaluasi akun: hasil disimpan untuk rekap Admin. Uraian menunggu penilaian manual.' : 'Mode latihan tamu: hasil tidak masuk rekap resmi. Login sebelum memulai evaluasi akun.' }}</p>
         <p class="exam-notice" data-exam="storage-warning" role="status" aria-live="polite" hidden></p>
         <noscript><p class="exam-notice">Aktifkan JavaScript untuk mengerjakan evaluasi dan membaca riwayat browser. Aturan evaluasi tetap dapat dibaca.</p></noscript>
         @yield('evaluation-content')
