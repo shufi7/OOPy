@@ -1,0 +1,22 @@
+﻿php : PHP Warning:  Module "openssl" is already loaded in Unknown on line 0
+At line:2 char:1
++ php vendor/phpunit/phpunit/phpunit --configuration storage/framework/ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PHP Warning:  M...known on line 0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+Warning: Module "openssl" is already loaded in Unknown on line 0
+PHPUnit 11.5.56 by Sebastian Bergmann and contributors.
+Runtime:       PHP 8.2.12
+Configuration: D:\xampp\htdocs\OOPy\storage\framework\testing\coding-dashboard-baseline\phpunit.xml
+F
+F                                                                  2 / 2 (100%)
+Time: 00:24.707, Memory: 50.00 MB
+There were 2 failures:
+1) Tests\Feature\LearningDatabaseTest::test_empty_schema_rollback_and_reapply_preserve_existing_users
+Failed asserting that true is false.
+D:\xampp\htdocs\OOPy\storage\framework\testing\coding-dashboard-baseline\tests\Feature\LearningDatabaseTest.php:276
+2) Tests\Feature\MateriTest::test_material_list_links_only_to_the_available_chapters
+Failed asserting that 0 is identical to 7.
+D:\xampp\htdocs\OOPy\storage\framework\testing\coding-dashboard-baseline\tests\Feature\MateriTest.php:23
+FAILURES!
+Tests: 2, Assertions: 21, Failures: 2.

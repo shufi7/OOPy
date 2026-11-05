@@ -2,11 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\Exercise;
+use App\Models\ExerciseSubmission;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\User;
 use App\Services\ChapterQuizService;
+use App\Services\DashboardProgressService;
 use App\Services\QuizGradingService;
+use Database\Seeders\CodingExerciseSeeder;
 use Database\Seeders\OopyContentSeeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,6 +42,18 @@ class DashboardTest extends TestCase
         app(QuizGradingService::class)->submit($quiz, $attempt, $user, $answers);
     }
 
+    private function submitCoding(User $user, string $key, string $status, ?float $score, ?string $time = null): ExerciseSubmission
+    {
+        return $user->exerciseSubmissions()->create([
+            'exercise_id' => Exercise::where('exercise_key', $key)->sole()->id,
+            'code' => 'private-source-for-'.$user->id,
+            'output' => 'private-output-for-'.$user->id,
+            'status' => $status,
+            'score' => $score,
+            'submitted_at' => $time ?? now(),
+        ]);
+    }
+
     public function test_guest_is_redirected_to_login_and_login_preserves_intended_dashboard(): void
     {
         $this->get('/dashboard')->assertRedirect('/login')->assertSessionHas('url.intended', route('dashboard'));
@@ -60,6 +76,20 @@ class DashboardTest extends TestCase
         $this->assertSame(0, $data['completed_attempts']);
         $this->assertNull($data['average_score']);
         $this->assertCount(6, $data['chapters']);
+        $this->assertSame(0, $data['coding']['progress_percent']);
+        $this->assertSame(0, $data['coding']['completed_exercises']);
+        $this->assertSame(2, $data['coding']['total_exercises']);
+        $this->assertSame([], $data['coding']['recent_activity']);
+        $response->assertSee('Progres Latihan Coding')->assertSee('Riwayat Latihan Coding')
+            ->assertSee('Belum ada riwayat latihan coding.')->assertSee('Buka Latihan Coding');
+        foreach ($data['coding']['exercises'] as $exercise) {
+            $this->assertSame('not_started', $exercise['status']);
+            $this->assertSame('Belum Dimulai', $exercise['status_label']);
+            $this->assertNull($exercise['best_score']);
+            $this->assertSame('—', $exercise['best_score_label']);
+            $this->assertSame('Mulai Latihan', $exercise['action']);
+            $response->assertSee($exercise['url']);
+        }
         $this->assertSame(route('materi.show', $this->slugs()[0]), $data['recommendation']['url']);
         $this->assertSame('Mulai Belajar BAB 1', $data['recommendation']['action']);
         foreach ($data['chapters'] as $chapter) {
@@ -73,9 +103,12 @@ class DashboardTest extends TestCase
     public function test_unseeded_catalog_still_renders_the_registry_and_empty_state(): void
     {
         $this->actingAs(User::factory()->create())->get('/dashboard')->assertOk()
-            ->assertViewHas('dashboard', fn ($data) => count($data['chapters']) === 6 && $data['average_score'] === null && $data['progress_percent'] === 0);
+            ->assertViewHas('dashboard', fn ($data) => count($data['chapters']) === 6 && $data['average_score'] === null && $data['progress_percent'] === 0
+                && count($data['coding']['exercises']) === 2 && $data['coding']['progress_percent'] === 0 && $data['coding']['recent_activity'] === []);
         $this->assertDatabaseCount('quiz_attempts', 0);
         $this->assertDatabaseCount('user_progress', 0);
+        $this->assertDatabaseCount('exercises', 0);
+        $this->assertDatabaseCount('exercise_submissions', 0);
     }
 
     public static function completionPercentages(): array
@@ -193,29 +226,176 @@ class DashboardTest extends TestCase
 
     public function test_dashboard_is_read_only_and_does_not_fetch_questions_or_all_attempts(): void
     {
-        $this->seed(OopyContentSeeder::class);
+        $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
         $user = User::factory()->create();
         foreach ([0, 1, 2, 3, 4, 5] as $chapter) {
             $this->grade($user, $chapter, 4);
+        }
+        for ($index = 0; $index < 12; $index++) {
+            $this->submitCoding($user, 'coding-latihan-1', $index === 0 ? 'passed' : 'failed', $index === 0 ? 90 : 0);
         }
         $attemptsBefore = QuizAttempt::count();
         DB::flushQueryLog();
         DB::enableQueryLog();
         Model::preventLazyLoading();
         try {
-            $this->actingAs($user)->get('/dashboard')->assertOk();
+            $this->actingAs($user)->get('/dashboard')->assertOk()
+                ->assertViewHas('dashboard', fn ($data) => count($data['coding']['recent_activity']) === 5 && $data['coding']['progress_percent'] === 50);
             $queries = DB::getQueryLog();
         } finally {
             Model::preventLazyLoading(false);
             DB::disableQueryLog();
         }
-        $this->assertCount(6, $queries);
+        $this->assertCount(8, $queries);
         foreach ($queries as $query) {
             $this->assertStringStartsWith('select ', strtolower($query['query']));
             $this->assertStringNotContainsString('quiz_answers', $query['query']);
             $this->assertStringNotContainsString('questions', $query['query']);
+            $this->assertStringNotContainsString('"code"', $query['query']);
+            $this->assertStringNotContainsString('"output"', $query['query']);
         }
         $this->assertSame($attemptsBefore, QuizAttempt::count());
+        $this->assertDatabaseCount('exercise_submissions', 12);
+    }
+
+    public static function codingCompletionPercentages(): array
+    {
+        return [
+            'none' => [[], 0],
+            'exercise one' => [['coding-latihan-1'], 50],
+            'exercise two' => [['coding-latihan-2'], 50],
+            'both' => [['coding-latihan-1', 'coding-latihan-2'], 100],
+        ];
+    }
+
+    #[DataProvider('codingCompletionPercentages')]
+    public function test_coding_completion_is_separate_from_chapter_and_quiz_progress(array $passed, int $percent): void
+    {
+        $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
+        $user = User::factory()->create();
+        $this->grade($user, 0, 4);
+        foreach ($passed as $key) {
+            $this->submitCoding($user, $key, 'passed', 90);
+        }
+        $this->submitCoding($user, Exercise::whereNotIn('exercise_key', ['coding-latihan-1', 'coding-latihan-2'])->firstOrFail()->exercise_key, 'passed', 100);
+        $response = $this->actingAs($user)->get('/dashboard')->assertOk();
+        $data = $response->viewData('dashboard');
+        $coding = $data['coding'];
+        $this->assertSame($percent, $coding['progress_percent']);
+        $this->assertSame(count($passed), $coding['completed_exercises']);
+        $this->assertSame(2, $coding['total_exercises']);
+        $this->assertCount(count($passed), $coding['recent_activity']);
+        foreach ($coding['exercises'] as $index => $exercise) {
+            $done = in_array($exercise['key'], $passed, true);
+            $this->assertSame($done ? 'Selesai' : 'Belum Dimulai', $exercise['status_label']);
+            $this->assertSame($done ? 'Kerjakan Kembali' : 'Mulai Latihan', $exercise['action']);
+            $this->assertSame(route('coding.show', 'latihan-'.($index + 1)), $exercise['url']);
+            $this->get($exercise['url'])->assertOk();
+        }
+        $response->assertSee('aria-labelledby="coding-progress-title" aria-valuenow="'.$percent.'"', false);
+        $this->assertSame(1, $data['completed_chapters']);
+        $this->assertSame(17, $data['progress_percent']);
+        $this->assertSame(80.0, $data['average_score']);
+        $this->assertSame(1, $data['completed_attempts']);
+        $this->assertCount(1, $data['recent_activity']);
+    }
+
+    public function test_coding_best_score_and_completion_survive_lower_failed_retries(): void
+    {
+        $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
+        $user = User::factory()->create();
+        foreach ([['failed', 60], ['failed', 75], ['passed', 90], ['failed', 70]] as [$status, $score]) {
+            $this->submitCoding($user, 'coding-latihan-1', $status, $score);
+        }
+        $data = $this->actingAs($user)->get('/dashboard')->assertOk()->viewData('dashboard')['coding'];
+        $this->assertSame(50, $data['progress_percent']);
+        $this->assertSame(90.0, $data['exercises'][0]['best_score']);
+        $this->assertSame('90', $data['exercises'][0]['best_score_label']);
+        $this->assertSame('Selesai', $data['exercises'][0]['status_label']);
+        $this->assertSame('Kerjakan Kembali', $data['exercises'][0]['action']);
+        $this->assertSame('Belum Lulus', $data['recent_activity'][0]['status_label']);
+        $this->assertSame('70', $data['recent_activity'][0]['score']);
+    }
+
+    public function test_coding_uses_official_status_even_with_a_high_score_and_keeps_valid_zero(): void
+    {
+        $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
+        $user = User::factory()->create();
+        $this->submitCoding($user, 'coding-latihan-1', 'failed', 100);
+        $this->submitCoding($user, 'coding-latihan-2', 'failed', 0);
+        $data = $this->actingAs($user)->get('/dashboard')->assertOk()->viewData('dashboard')['coding'];
+        $this->assertSame(0, $data['progress_percent']);
+        foreach ($data['exercises'] as $exercise) {
+            $this->assertSame('Belum Lulus', $exercise['status_label']);
+            $this->assertSame('Lanjutkan Latihan', $exercise['action']);
+        }
+        $this->assertSame(100.0, $data['exercises'][0]['best_score']);
+        $this->assertSame(0.0, $data['exercises'][1]['best_score']);
+        $this->assertSame('0', $data['exercises'][1]['best_score_label']);
+        $this->assertSame('0', $data['recent_activity'][0]['score']);
+    }
+
+    public function test_coding_without_a_valid_graded_score_shows_no_score(): void
+    {
+        $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
+        $user = User::factory()->create();
+        $this->submitCoding($user, 'coding-latihan-1', 'failed', null);
+        $this->submitCoding($user, 'coding-latihan-2', 'submitted', 100);
+        $data = $this->actingAs($user)->get('/dashboard')->assertOk()->viewData('dashboard')['coding'];
+        $this->assertSame(0, $data['progress_percent']);
+        foreach ($data['exercises'] as $exercise) {
+            $this->assertSame('Belum Lulus', $exercise['status_label']);
+            $this->assertNull($exercise['best_score']);
+            $this->assertSame('—', $exercise['best_score_label']);
+        }
+        $this->assertSame(['—', '—'], array_column($data['recent_activity'], 'score'));
+    }
+
+    public function test_coding_history_has_five_latest_submissions_with_time_and_id_order_in_wita(): void
+    {
+        $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
+        $user = User::factory()->create();
+        foreach ([7, 1, 6, 2, 5, 3, 4] as $minute) {
+            $this->submitCoding($user, 'coding-latihan-1', 'failed', $minute, '2026-11-05 00:0'.$minute.':00');
+        }
+        $this->submitCoding($user, 'coding-latihan-2', 'error', 0, '2026-11-05 00:07:00');
+        $this->submitCoding($user, 'coding-latihan-2', 'passed', 90, '2026-11-05 00:07:00');
+        $response = $this->actingAs($user)->get('/dashboard')->assertOk();
+        $recent = $response->viewData('dashboard')['coding']['recent_activity'];
+        $this->assertCount(5, $recent);
+        $this->assertSame(['90', '0', '7', '6', '5'], array_column($recent, 'score'));
+        $this->assertSame(['Lulus', 'Error', 'Belum Lulus', 'Belum Lulus', 'Belum Lulus'], array_column($recent, 'status_label'));
+        $this->assertSame('5 Nov 2026, 08:07 WITA', $recent[0]['date_label']);
+        $this->assertSame('2026-11-05T08:07:00+08:00', $recent[0]['datetime']);
+        $response->assertSee('5 Nov 2026, 08:07 WITA')->assertSee('Error')
+            ->assertDontSee('private-source-for-')->assertDontSee('private-output-for-');
+    }
+
+    public function test_coding_is_scoped_to_the_requested_user_including_admin_service_calls(): void
+    {
+        $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
+        $student = User::factory()->create();
+        $other = User::factory()->create();
+        $admin = User::factory()->create();
+        $admin->role = 'admin';
+        $admin->save();
+        $this->submitCoding($student, 'coding-latihan-1', 'passed', 90);
+        $this->submitCoding($other, 'coding-latihan-2', 'error', 0);
+        $this->actingAs($other)->get('/dashboard?user_id='.$student->id)->assertOk()
+            ->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 0
+                && $data['coding']['exercises'][0]['status'] === 'not_started'
+                && count($data['coding']['recent_activity']) === 1 && $data['coding']['recent_activity'][0]['status'] === 'error');
+        $this->actingAs($student)->get('/dashboard?user_id='.$other->id)->assertOk()
+            ->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 50
+                && $data['coding']['exercises'][1]['status'] === 'not_started'
+                && count($data['coding']['recent_activity']) === 1 && $data['coding']['recent_activity'][0]['status'] === 'passed');
+        $this->actingAs($admin);
+        $service = app(DashboardProgressService::class);
+        $studentCoding = $service->forUser($student)['coding'];
+        $this->assertSame(50, $studentCoding['progress_percent']);
+        $this->assertSame('Selesai', $studentCoding['exercises'][0]['status_label']);
+        $this->assertSame(0, $service->forUser($admin)['coding']['progress_percent']);
+        $this->assertSame([], $service->forUser($admin)['coding']['recent_activity']);
     }
 
     public function test_names_are_escaped_and_navbar_dashboard_is_only_visible_when_logged_in(): void

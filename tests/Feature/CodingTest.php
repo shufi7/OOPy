@@ -111,6 +111,8 @@ class CodingTest extends TestCase
         $this->assertSame('coding-latihan-1', $submission->exercise->exercise_key);
         $this->assertSame($this->payload()['files'], json_decode($submission->code, true)['files']);
         $this->assertNotNull($submission->submitted_at);
+        $this->get('/dashboard')->assertOk()->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 50
+            && $data['coding']['exercises'][0]['best_score'] === 100.0 && $data['coding']['recent_activity'][0]['status'] === 'passed');
         Http::assertSent(fn ($request) => $request->hasHeader('Authorization', 'Bearer '.config('coding.grader_token'))
             && $request['exercise_key'] === 'coding-latihan-1' && $request['files'] === $this->payload()['files']);
     }
@@ -162,6 +164,9 @@ class CodingTest extends TestCase
         $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect('/materi');
         $this->get('/coding')->assertSee('Kerjakan Lagi');
         $this->get('/coding/latihan-1')->assertSee('✓ Selesai');
+        $this->get('/dashboard')->assertOk()->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 50
+            && $data['coding']['exercises'][0]['status_label'] === 'Selesai' && $data['coding']['exercises'][0]['best_score'] === 100.0
+            && $data['coding']['recent_activity'][0]['status'] === 'failed');
         $this->actingAs($other)->get('/coding')->assertDontSee('Kerjakan Lagi');
         $this->get('/coding/latihan-1')->assertDontSee('✓ Selesai')->assertDontSee('contoh snapshot');
         $this->get('/coding/submissions/1')->assertNotFound();
@@ -197,6 +202,8 @@ class CodingTest extends TestCase
         $this->actingAs(User::factory()->create())->postJson('/coding/latihan-1/submit', $this->payload())
             ->assertOk()->assertJsonPath('status', 'error')->assertJsonPath('score', 0)->assertJsonPath('completed', false);
         $this->assertDatabaseHas('exercise_submissions', ['status' => 'error', 'score' => 0]);
+        $this->get('/dashboard')->assertOk()->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 0
+            && $data['coding']['exercises'][0]['best_score'] === 0.0 && $data['coding']['recent_activity'][0]['status_label'] === 'Error');
     }
 
     public function test_missing_unavailable_or_malformed_grader_never_saves_a_pass(): void
@@ -213,6 +220,8 @@ class CodingTest extends TestCase
             $this->postJson('/coding/latihan-1/submit', $this->payload())->assertStatus(503);
         }
         $this->assertDatabaseCount('exercise_submissions', 0);
+        $this->get('/dashboard')->assertOk()->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 0
+            && $data['coding']['exercises'][0]['status_label'] === 'Belum Dimulai' && $data['coding']['recent_activity'] === []);
     }
 
     public function test_submit_is_rate_limited_and_csrf_protected(): void
@@ -277,6 +286,8 @@ class CodingTest extends TestCase
             $this->actingAs(User::factory()->create())->postJson('/coding/latihan-1/submit', $this->payload())->assertStatus(503);
         }
         $this->assertDatabaseCount('exercise_submissions', 0);
+        $this->get('/dashboard')->assertOk()->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 0
+            && $data['coding']['recent_activity'] === []);
     }
 
     public function test_idempotent_seed_preserves_existing_exercises_and_submissions(): void

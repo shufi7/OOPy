@@ -212,7 +212,7 @@ try {
     assert.equal(await page.locator('[data-quiz="status"]').textContent(), 'Lulus');
     await visit('/dashboard');
     await layout('/dashboard', 'one-chapter-complete');
-    assert.equal(await page.getByRole('progressbar').getAttribute('aria-valuenow'), '17');
+    assert.equal(await page.getByRole('progressbar', { name: 'Progres enam BAB inti' }).getAttribute('aria-valuenow'), '17');
     await checkColor(page.locator('.site-footer .container'), 'dashboard footer');
     results.interactions.push('Real quiz submission preserves 100/Lulus and dashboard 17%');
 

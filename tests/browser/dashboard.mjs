@@ -22,7 +22,7 @@ const assertStats = async (done, average, attempts, percent) => {
     assert.equal((await stat('completed').innerText()).replace(/\s+/g, ' ').trim(), `${done} / 6`);
     assert.equal(await stat('average').textContent(), String(average));
     assert.equal(await stat('attempts').textContent(), String(attempts));
-    assert.equal(await page.getByRole('progressbar').getAttribute('aria-valuenow'), String(percent));
+    assert.equal(await page.getByRole('progressbar', { name: 'Progres enam BAB inti' }).getAttribute('aria-valuenow'), String(percent));
 };
 const layout = async state => {
     for (const width of [320, 390, 768, 1024, 1440]) {
@@ -61,7 +61,7 @@ try {
     const account = await registerAccount(page, base);
     await dashboard();
     await assertStats(0, '—', 0, 0);
-    assert.equal(await page.locator('.oopy-dashboard-empty').count(), 1);
+    assert.equal(await page.locator('.oopy-dashboard-activity .oopy-dashboard-empty').count(), 1);
     assert.equal(await stat('continue').getAttribute('href'), `${base}/materi/${chapters[0].slug}`);
     assert.equal((await page.locator('#oopyDashboardSidebar a[aria-current="page"]').textContent()).trim(), 'Dashboard');
     await layout('empty');

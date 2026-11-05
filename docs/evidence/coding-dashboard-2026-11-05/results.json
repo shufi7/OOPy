@@ -1,0 +1,1946 @@
+{
+  "layouts": [
+    {
+      "state": "empty",
+      "width": 320,
+      "scroll": 320,
+      "controls": [
+        {
+          "text": "Mulai Latihan Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Buka Latihan Coding",
+          "left": 51.390625,
+          "right": 190.359375,
+          "width": 138.96875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "empty",
+      "width": 360,
+      "scroll": 360,
+      "controls": [
+        {
+          "text": "Mulai Latihan Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Buka Latihan Coding",
+          "left": 51.390625,
+          "right": 190.359375,
+          "width": 138.96875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "empty",
+      "width": 390,
+      "scroll": 390,
+      "controls": [
+        {
+          "text": "Mulai Latihan Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Buka Latihan Coding",
+          "left": 51.390625,
+          "right": 190.359375,
+          "width": 138.96875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "empty",
+      "width": 768,
+      "scroll": 768,
+      "controls": [
+        {
+          "text": "Mulai Latihan Latihan 1 — Class dan Object",
+          "left": 618.421875,
+          "right": 723,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 618.421875,
+          "right": 723,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Buka Latihan Coding",
+          "left": 61,
+          "right": 199.96875,
+          "width": 138.96875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "empty",
+      "width": 1024,
+      "scroll": 1024,
+      "controls": [
+        {
+          "text": "Mulai Latihan Latihan 1 — Class dan Object",
+          "left": 864.828125,
+          "right": 969.40625,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 864.828125,
+          "right": 969.40625,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Buka Latihan Coding",
+          "left": 362.59375,
+          "right": 501.5625,
+          "width": 138.96875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "empty",
+      "width": 1440,
+      "scroll": 1440,
+      "controls": [
+        {
+          "text": "Mulai Latihan Latihan 1 — Class dan Object",
+          "left": 1270.421875,
+          "right": 1375,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 1270.421875,
+          "right": 1375,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Buka Latihan Coding",
+          "left": 373,
+          "right": 511.96875,
+          "width": 138.96875,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "half",
+      "width": 320,
+      "scroll": 320,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "half",
+      "width": 360,
+      "scroll": 360,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "half",
+      "width": 390,
+      "scroll": 390,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 139.96875,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "half",
+      "width": 768,
+      "scroll": 768,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 591.578125,
+          "right": 723,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 618.421875,
+          "right": 723,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 45,
+          "right": 237.3125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 45,
+          "right": 237.3125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 45,
+          "right": 237.3125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "half",
+      "width": 1024,
+      "scroll": 1024,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 837.984375,
+          "right": 969.40625,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 864.828125,
+          "right": 969.40625,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 346.59375,
+          "right": 538.90625,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 346.59375,
+          "right": 538.90625,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 346.59375,
+          "right": 538.90625,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "half",
+      "width": 1440,
+      "scroll": 1440,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 1243.578125,
+          "right": 1375,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Mulai Latihan Latihan 2 — Inheritance",
+          "left": 1270.421875,
+          "right": 1375,
+          "width": 104.578125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 357,
+          "right": 549.3125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 357,
+          "right": 549.3125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 357,
+          "right": 549.3125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "complete",
+      "width": 320,
+      "scroll": 320,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Kerjakan Kembali Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "complete",
+      "width": 360,
+      "scroll": 360,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Kerjakan Kembali Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "complete",
+      "width": 390,
+      "scroll": 390,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Kerjakan Kembali Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 166.8125,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 35.390625,
+          "right": 191.734375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 35.390625,
+          "right": 227.703125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "complete",
+      "width": 768,
+      "scroll": 768,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 591.578125,
+          "right": 723,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Kerjakan Kembali Latihan 2 — Inheritance",
+          "left": 591.578125,
+          "right": 723,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 45,
+          "right": 201.34375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 45,
+          "right": 201.34375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 45,
+          "right": 201.34375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 45,
+          "right": 237.3125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 45,
+          "right": 237.3125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "complete",
+      "width": 1024,
+      "scroll": 1024,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 837.984375,
+          "right": 969.40625,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Kerjakan Kembali Latihan 2 — Inheritance",
+          "left": 837.984375,
+          "right": 969.40625,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 346.59375,
+          "right": 502.9375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 346.59375,
+          "right": 502.9375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 346.59375,
+          "right": 502.9375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 346.59375,
+          "right": 538.90625,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 346.59375,
+          "right": 538.90625,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    },
+    {
+      "state": "complete",
+      "width": 1440,
+      "scroll": 1440,
+      "controls": [
+        {
+          "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+          "left": 1243.578125,
+          "right": 1375,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Kerjakan Kembali Latihan 2 — Inheritance",
+          "left": 1243.578125,
+          "right": 1375,
+          "width": 131.421875,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 357,
+          "right": 513.34375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 357,
+          "right": 513.34375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 2 — Inheritance",
+          "left": 357,
+          "right": 513.34375,
+          "width": 156.34375,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 357,
+          "right": 549.3125,
+          "width": 192.3125,
+          "height": 44
+        },
+        {
+          "text": "Latihan 1 — Class dan Object",
+          "left": 357,
+          "right": 549.3125,
+          "width": 192.3125,
+          "height": 44
+        }
+      ]
+    }
+  ],
+  "colors": [
+    {
+      "state": "empty",
+      "text": "Progres Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "empty",
+      "text": "0%",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 21.6,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "state": "empty",
+      "text": "0 dari 2 latihan selesai.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Belum Dimulai",
+      "color": "rgb(71, 85, 105)",
+      "background": "rgb(241, 245, 249)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.916973995632248,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Nilai terbaik: —",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "—",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Mulai Latihan Latihan 1 — Class dan Object",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Belum Dimulai",
+      "color": "rgb(71, 85, 105)",
+      "background": "rgb(241, 245, 249)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.916973995632248,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Nilai terbaik: —",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "—",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Mulai Latihan Latihan 2 — Inheritance",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Riwayat Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "empty",
+      "text": "Belum ada riwayat latihan coding. Pilih latihan, lalu Submit untuk menyimpan hasil penilaian resmi.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.414198856598944,
+      "minimum": 4.5
+    },
+    {
+      "state": "empty",
+      "text": "Buka Latihan Coding",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(246, 251, 249)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.104194616886229,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Progres Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "failed",
+      "text": "0%",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 21.6,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "state": "failed",
+      "text": "0 dari 2 latihan selesai.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Nilai terbaik: 0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Lanjutkan Latihan Latihan 1 — Class dan Object",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Belum Dimulai",
+      "color": "rgb(71, 85, 105)",
+      "background": "rgb(241, 245, 249)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.916973995632248,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Nilai terbaik: —",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "—",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Mulai Latihan Latihan 2 — Inheritance",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Riwayat Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "failed",
+      "text": "Lima pengerjaan terbaru dari latihan mandiri.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "5 Nov 2026, 08:01 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Skor: 0Belum Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "failed",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Progres Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "half",
+      "text": "50%",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 21.6,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "state": "half",
+      "text": "1 dari 2 latihan selesai.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Selesai",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Nilai terbaik: 90",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "90",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Belum Dimulai",
+      "color": "rgb(71, 85, 105)",
+      "background": "rgb(241, 245, 249)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.916973995632248,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Nilai terbaik: —",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "—",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Mulai Latihan Latihan 2 — Inheritance",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Riwayat Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "half",
+      "text": "Lima pengerjaan terbaru dari latihan mandiri.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "5 Nov 2026, 08:03 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Skor: 70Belum Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "70",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "5 Nov 2026, 08:02 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Skor: 90Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "90",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Lulus",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "5 Nov 2026, 08:01 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Skor: 0Belum Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "half",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Progres Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "complete",
+      "text": "100%",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 21.6,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 3
+    },
+    {
+      "state": "complete",
+      "text": "2 dari 2 latihan selesai.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Selesai",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Nilai terbaik: 90",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "90",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Kerjakan Kembali Latihan 1 — Class dan Object",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 17.6,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Selesai",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Nilai terbaik: 100",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "100",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 18,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Kerjakan Kembali Latihan 2 — Inheritance",
+      "color": "rgb(7, 109, 113)",
+      "background": "rgb(255, 255, 255)",
+      "size": 13,
+      "weight": 700,
+      "ratio": 6.113642581973064,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Riwayat Latihan Coding",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 20,
+      "weight": 800,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "state": "complete",
+      "text": "Lima pengerjaan terbaru dari latihan mandiri.",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "5 Nov 2026, 08:06 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Skor: 0Error",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Error",
+      "color": "rgb(160, 38, 38)",
+      "background": "rgb(252, 239, 237)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.681753202371306,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "5 Nov 2026, 08:05 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Skor: 10Belum Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "10",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "5 Nov 2026, 08:04 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Skor: 100Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "100",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Lulus",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "5 Nov 2026, 08:03 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Skor: 70Belum Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "70",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(8, 119, 123)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 5.336630601687679,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "5 Nov 2026, 08:02 WITA",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 12,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Skor: 90Lulus",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 400,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "90",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 4.5
+    },
+    {
+      "state": "complete",
+      "text": "Lulus",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 12,
+      "weight": 700,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    }
+  ],
+  "interactions": [
+    "Empty state opens existing Coding catalog",
+    "Mulai Latihan, Latihan 2: keyboard focus and Enter open existing route",
+    "Mulai Latihan, Latihan 1: keyboard focus and Enter open existing route",
+    "Real Pyodide Run succeeds; unavailable official grader returns 503; refreshed dashboard remains empty at 0%",
+    "Lanjutkan Latihan, Latihan 1: keyboard focus and Enter open existing route",
+    "Kerjakan Kembali, Latihan 1: keyboard focus and Enter open existing route",
+    "Kerjakan Kembali, Latihan 2: keyboard focus and Enter open existing route",
+    "Newest history link opens Latihan 2; latest five, WITA time, Error and source privacy verified",
+    "Actual chapter quiz remains 17% and score 80 independently; new Coding sections reflow at 200% root text; logout/login preserves Coding results",
+    "Account B cannot select Account A via query string; two exercise rows render without JavaScript"
+  ],
+  "errors": [],
+  "textResize": {
+    "width": 1440,
+    "scroll": 1499,
+    "codingSections": [
+      {
+        "width": 1050,
+        "scroll": 1050
+      },
+      {
+        "width": 1050,
+        "scroll": 1050
+      }
+    ],
+    "overflowing": [
+      {
+        "tag": "TABLE",
+        "className": "oopy-dashboard-grade-table",
+        "right": 1499.25
+      },
+      {
+        "tag": "THEAD",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TR",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TH",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TBODY",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TR",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TD",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "A",
+        "className": "oopy-dashboard-row-action is-completed",
+        "right": 1478.453125
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "right": 1456.65625
+      },
+      {
+        "tag": "TR",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TD",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TR",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TD",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TR",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TD",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TR",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TD",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TR",
+        "className": "",
+        "right": 1499.25
+      },
+      {
+        "tag": "TD",
+        "className": "",
+        "right": 1499.25
+      }
+    ]
+  }
+}

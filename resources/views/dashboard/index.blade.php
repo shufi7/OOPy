@@ -72,6 +72,44 @@
             </section>
         </div>
 
+        <section class="oopy-dashboard-coding oopy-dashboard-panel" aria-labelledby="coding-progress-title">
+            <div class="oopy-dashboard-section-heading">
+                <h2 id="coding-progress-title">Progres Latihan Coding</h2>
+                <strong class="oopy-dashboard-percentage">{{ $dashboard['coding']['progress_percent'] }}%</strong>
+            </div>
+            <p>{{ $dashboard['coding']['completed_exercises'] }} dari {{ $dashboard['coding']['total_exercises'] }} latihan selesai.</p>
+            <div class="oopy-dashboard-progress-track" role="progressbar" aria-labelledby="coding-progress-title" aria-valuenow="{{ $dashboard['coding']['progress_percent'] }}" aria-valuemin="0" aria-valuemax="100" aria-valuetext="{{ $dashboard['coding']['completed_exercises'] }} dari {{ $dashboard['coding']['total_exercises'] }} latihan selesai"><span style="width: {{ $dashboard['coding']['progress_percent'] }}%"></span></div>
+            <ul class="oopy-dashboard-coding-list">
+                @foreach ($dashboard['coding']['exercises'] as $exercise)
+                    <li data-dashboard-coding="{{ $exercise['key'] }}">
+                        <div>
+                            <h3>{{ $exercise['title'] }}</h3>
+                            <span class="oopy-dashboard-status is-{{ $exercise['status'] }}">{{ $exercise['status_label'] }}</span>
+                        </div>
+                        <p>Nilai terbaik: <strong class="oopy-dashboard-grade-value">{{ $exercise['best_score_label'] }}</strong></p>
+                        <a class="oopy-dashboard-row-action" href="{{ $exercise['url'] }}">{{ $exercise['action'] }}<span class="visually-hidden"> {{ $exercise['title'] }}</span></a>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
+
+        <section class="oopy-dashboard-coding-history oopy-dashboard-panel" aria-labelledby="coding-history-title">
+            <h2 id="coding-history-title">Riwayat Latihan Coding</h2>
+            @if ($dashboard['coding']['recent_activity'])
+                <p>Lima pengerjaan terbaru dari latihan mandiri.</p>
+                <ol class="oopy-dashboard-activity-list">
+                    @foreach ($dashboard['coding']['recent_activity'] as $activity)
+                        <li>
+                            <div><a href="{{ $activity['url'] }}">{{ $activity['title'] }}</a><time datetime="{{ $activity['datetime'] }}">{{ $activity['date_label'] }}</time></div>
+                            <p>Skor: <strong>{{ $activity['score'] }}</strong><span class="oopy-dashboard-status {{ match ($activity['status']) { 'passed' => 'is-completed', 'error' => 'is-error', default => 'is-in_progress' } }}">{{ $activity['status_label'] }}</span></p>
+                        </li>
+                    @endforeach
+                </ol>
+            @else
+                <div class="oopy-dashboard-empty"><p>Belum ada riwayat latihan coding. Pilih latihan, lalu Submit untuk menyimpan hasil penilaian resmi.</p><a href="{{ route('coding.index') }}">Buka Latihan Coding</a></div>
+            @endif
+        </section>
+
         <details class="oopy-dashboard-additional" id="informasi">
             <summary><x-dashboard-icon name="info" /><span>Aktivitas &amp; Informasi Belajar</span><span class="oopy-dashboard-disclosure" aria-hidden="true">⌄</span></summary>
             <div class="oopy-dashboard-bottom-grid">
