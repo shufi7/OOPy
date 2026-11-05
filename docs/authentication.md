@@ -1,5 +1,7 @@
 # Authentication OOPy
 
+> Cakupan historis: dokumen fondasi autentikasi. Angka tes/route dan rencana integrasi di bawah mencatat keadaan saat tahap ini dibuat. Perkembangan berikutnya ada di [integrasi Dashboard](coding-dashboard-2026-11-05.md), [integrasi Admin](admin-coding-2026-11-05.md), dan [indeks dokumentasi](README.md).
+
 Authentication menggunakan guard session `web` Laravel 12 dan model `User`
 existing. Tidak ada starter kit baru, tabel users kedua, migration tambahan,
 atau perubahan `.env`. Cast password `hashed`, default role `user`, validasi

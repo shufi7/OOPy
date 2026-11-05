@@ -167,7 +167,7 @@ Skill Anti-Slop tidak tersedia pada katalog skill sesi. Prinsip yang tertulis da
 
 ### Membuat akun Admin langsung setelah Git pull
 
-`AdminSeeder` tersedia sebagai seeder terpisah untuk pengembangan lokal. Seeder ini membuat `admin@gmail.com` dengan password `admin123` dan role `admin` sejak awal, sehingga tidak membutuhkan registrasi atau promosi.
+`AdminSeeder` tersedia sebagai seeder terpisah untuk pengembangan lokal. Seeder ini membuat akun dengan role `admin` sejak awal, sehingga tidak membutuhkan registrasi atau promosi. Detail akun development tersedia pada [AdminSeeder](../database/seeders/AdminSeeder.php); gunakan source lokal tersebut saat menyiapkan lingkungan pengembangan.
 
 Setelah perubahan kode di-push dan teman melakukan pull:
 
@@ -180,7 +180,7 @@ Setelah perubahan kode di-push dan teman melakukan pull:
    php artisan db:seed --class=AdminSeeder
    ```
 
-3. Login melalui `/login` menggunakan email `admin@gmail.com` dan password `admin123`, lalu buka `/admin`.
+3. Login melalui `/login` menggunakan akun development yang ditetapkan pada seeder lokal, lalu buka `/admin`.
 
 `AdminSeeder` tidak dipanggil otomatis oleh `DatabaseSeeder`. Seeder dapat dijalankan ulang: Admin yang sudah ada tetap menggunakan password, nama, dan data sebelumnya. Jika email tersebut sudah dipakai akun biasa, seeder menolak tanpa mengubah akun itu. Seeder ini hanya berjalan pada lingkungan `local` atau `testing`; kredensial bawaan tidak dibuat pada server produksi.
 

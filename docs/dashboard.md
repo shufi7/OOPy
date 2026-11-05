@@ -1,5 +1,7 @@
 # Dashboard Pengguna OOPy
 
+> Cakupan historis: dokumen Dashboard sebelum integrasi Coding dan Panel Admin. Pernyataan fitur yang belum terintegrasi serta angka tes berlaku pada tahap ini. Perkembangan berikutnya ada di [integrasi Dashboard](coding-dashboard-2026-11-05.md), [integrasi Admin](admin-coding-2026-11-05.md), dan [indeks dokumentasi](README.md).
+
 Dashboard pembelajaran berada di **GET /dashboard**, route name `dashboard`,
 dengan middleware `web`/`auth`. Guest diarahkan ke Login dan intended URL
 tetap digunakan oleh login existing. User maupun admin melihat data akun

@@ -1,0 +1,208 @@
+{
+  "date": "2026-11-05",
+  "timezone": "Asia/Makassar",
+  "baseline_commit": "94d85fe",
+  "status": "cleanup verified; two pre-existing PHP test failures remain",
+  "scope": {
+    "application_source_changed": false,
+    "active_tests_changed": false,
+    "ui_changed": false,
+    "routes_changed": false,
+    "grading_changed": false,
+    "existing_database_files_changed": false,
+    "local_env_changed": false,
+    "staged": false,
+    "committed": false,
+    "pushed": false,
+    "merged": false
+  },
+  "files": {
+    "baseline_tracked_count": 544,
+    "baseline_tracked_bytes": 36902622,
+    "git_index_count": 544,
+    "present_tracked_count": 506,
+    "present_tracked_bytes": 31560858,
+    "new_document_count": 6,
+    "new_document_bytes": 67682,
+    "proposed_count": 512,
+    "proposed_bytes": 31628540,
+    "net_bytes_reduction": 5274082,
+    "deleted_png_count": 38,
+    "deleted_png_bytes": 5345861,
+    "tracked_modified_count": 8,
+    "tracked_deleted_count": 38,
+    "untracked_document_paths": [
+      "anti-slop/evidence/stage-2/foundation-regression/README.md",
+      "docs/README.md",
+      "docs/maintenance/cleanup-2026-11-05-audit.md",
+      "docs/maintenance/cleanup-2026-11-05.md",
+      "docs/maintenance/duplicates-2026-11-05.json",
+      "docs/maintenance/verification-2026-11-05.json"
+    ],
+    "git_diff_shortstat": {
+      "files": 46,
+      "insertions": 99,
+      "deletions": 49
+    },
+    "git_history_size_reduction_claimed": false
+  },
+  "integrity": {
+    "unchanged_tracked_outside_allowlist": 498,
+    "unexpected_tracked_changes": [],
+    "duplicate_canonical_hash_errors": [],
+    "local_env_unchanged": true,
+    "pre_existing_database_files_checked": 10,
+    "pre_existing_database_files_changed": [],
+    "mariadb_integration_retested": false
+  },
+  "documentation": {
+    "before_local_targets": 250,
+    "after_local_targets": 353,
+    "broken_targets": [],
+    "anchor_and_external_service_availability_verified": false
+  },
+  "routes": {
+    "before": 44,
+    "after": 44,
+    "definitions_identical": true,
+    "normalized_sha256": "778efabc74c5013768edd533f94014c3c1b72b19199a402efa903458d4705a09",
+    "command": "php artisan route:list --except-vendor --json"
+  },
+  "tests": {
+    "php": {
+      "command": "php artisan test --compact",
+      "before": {
+        "passed": 193,
+        "failed": 2,
+        "assertions": 3854,
+        "seconds": 154.7
+      },
+      "after": {
+        "passed": 193,
+        "failed": 2,
+        "assertions": 3854,
+        "seconds": 183.86
+      },
+      "new_failures": 0,
+      "existing_failures": [
+        {
+          "test": "LearningDatabaseTest",
+          "line": 276,
+          "reason": "Fixed rollback step count leaves users.role on current migration baseline"
+        },
+        {
+          "test": "MateriTest",
+          "line": 23,
+          "reason": "Literal markup count does not match existing whitespace"
+        }
+      ]
+    },
+    "javascript": {
+      "command": "node --test tests/js/*.test.js",
+      "before": {
+        "passed": 21,
+        "failed": 0
+      },
+      "after": {
+        "passed": 21,
+        "failed": 0
+      }
+    },
+    "composer": {
+      "command": "composer validate",
+      "before": "valid",
+      "after": "valid",
+      "environment_warning": "PHP OpenSSL module loaded twice"
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "before": "clean",
+      "after": "clean"
+    }
+  },
+  "browser": {
+    "isolated_sqlite_databases": true,
+    "existing_tests_unchanged": true,
+    "admin": {
+      "before": {
+        "status": "PASS",
+        "layouts": 25,
+        "contrast_samples": 209,
+        "interaction_groups": 5,
+        "page_errors": 0
+      },
+      "after": {
+        "status": "PASS",
+        "layouts": 25,
+        "contrast_samples": 209,
+        "interaction_groups": 5,
+        "page_errors": 0
+      },
+      "coverage": [
+        "unique student aggregates",
+        "latest ten submissions including zero/Error",
+        "best score and completion after retries",
+        "independent pagination",
+        "combined quiz/Coding/search filters",
+        "CSV filters/BOM/zero/formula protection",
+        "empty state",
+        "student/Admin consistency",
+        "guest redirect and user 403"
+      ]
+    },
+    "dashboard": {
+      "before": {
+        "status": "PASS",
+        "layouts": 18,
+        "contrast_samples": 106,
+        "interactions": 10,
+        "page_errors": 0
+      },
+      "after": {
+        "status": "PASS",
+        "layouts": 18,
+        "contrast_samples": 106,
+        "interactions": 10,
+        "page_errors": 0
+      },
+      "existing_font_200_percent_overflow": {
+        "before": {
+          "viewport": 1440,
+          "scroll": 1499
+        },
+        "after": {
+          "viewport": 1440,
+          "scroll": 1499
+        },
+        "source": "existing quiz table; Coding sections fit"
+      }
+    },
+    "coding": {
+      "before": "PASS",
+      "after": "PASS",
+      "real_monaco_and_pyodide": true,
+      "local_cdn_cache": true,
+      "real_unavailable_grader": true,
+      "selected_error_and_success_responses_simulated": true,
+      "docker_success_path_retested": false
+    },
+    "own_qa_servers_stopped": true,
+    "qa_database_files_retained": true
+  },
+  "sensitive_audit": {
+    "scope": "Working tree tracked/proposed file names and UTF-8 files up to 2 MB; private-key/OpenAI/GitHub/AWS high-confidence patterns",
+    "sensitive_paths_found": [],
+    "pattern_matches": [],
+    "git_history_scanned": false,
+    "default_development_credentials_removed_from_admin_guide": true,
+    "active_seeder_and_test_fixtures_unchanged": true
+  },
+  "artifacts": {
+    "duplicate_manifest": "duplicates-2026-11-05.json",
+    "report": "cleanup-2026-11-05.md",
+    "audit": "cleanup-2026-11-05-audit.md",
+    "local_php_js_routes_composer_logs": "storage/logs/cleanup-{before,after}-*",
+    "local_browser_evidence": "storage/framework/testing/cleanup-2026-11-05/{before,after}/",
+    "private_inventory_published": false
+  }
+}

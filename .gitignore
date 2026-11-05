@@ -7,8 +7,10 @@
 /storage/pail
 /vendor
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
 .phpactor.json
 .phpunit.result.cache
 Homestead.json

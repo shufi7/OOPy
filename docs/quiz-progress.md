@@ -1,5 +1,7 @@
 # Progres kuis BAB 1–6
 
+> Cakupan historis: dokumen tahap progres kuis. Batas pekerjaan dan angka tes di bawah mencatat keadaan saat tahap ini dibuat. Perkembangan berikutnya ada di [integrasi Dashboard](coding-dashboard-2026-11-05.md), [integrasi Admin](admin-coding-2026-11-05.md), dan [indeks dokumentasi](README.md).
+
 Kuis resmi memakai authentication session Laravel, penilaian server dan database
 existing. Tidak ada tabel/model duplikat, best_score column, perubahan
 `.env`, akun default, atau perubahan BAB 7/Live Coding.

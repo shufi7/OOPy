@@ -1,0 +1,716 @@
+[
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "anti-slop/evidence/2026-10-16/materi-kelas-dan-objek-authenticated-390.png",
+        "size": 139749,
+        "sha256": "0537090356df20425bf795a265dbffd7c3c02dddecf94f501b1572e89bf5eb7a",
+        "tracked": true
+      },
+      {
+        "path": "anti-slop/evidence/2026-10-16/materi-kelas-dan-objek-initial-390.png",
+        "size": 139749,
+        "sha256": "0537090356df20425bf795a265dbffd7c3c02dddecf94f501b1572e89bf5eb7a",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/coding-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/coding-initial-1440.png",
+    "size": 95324,
+    "sha256": "caa2e972175e0d352ce2cb0b51a647020d1d122ac535c269f899f1d6f99338a4",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/coding-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/coding-initial-390.png",
+    "size": 64879,
+    "sha256": "c3730e132ea8cb751dba4d9bad0163c0d1cef6c3deafed020f56bcd69fb24d48",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/coding-latihan-1-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/coding-latihan-1-initial-1440.png",
+    "size": 133732,
+    "sha256": "87ffeaff25ca11a52ae0ab59150cea283b4d2a76de17e5bddf670b72d65caabc",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/coding-latihan-1-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/coding-latihan-1-initial-390.png",
+    "size": 84138,
+    "sha256": "ee8a97db1320888a94d93f3ca0d79ba1af107016e76908caa100859e89334e1e",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/coding-latihan-2-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/coding-latihan-2-initial-1440.png",
+    "size": 131910,
+    "sha256": "3f6f85ae39456c2ab3713f31437aba93ffb348e0e49b463abfaf1216c16d8cd1",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/coding-latihan-2-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/coding-latihan-2-initial-390.png",
+    "size": 86094,
+    "sha256": "824c423a2e5b165cf37d44e114138f02fca9a3dd3ce2adee00412e8a573db2e4",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/editor-after-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/editor-after-1440.png",
+    "size": 63246,
+    "sha256": "ee4c2312daf2c5f7a9b8a961e5feebb8ea41c781b00d4195a13c44babb3efc30",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/editor-after-390.png",
+    "canonical": "anti-slop/evidence/stage-1/editor-after-390.png",
+    "size": 37638,
+    "sha256": "1b351f51cdf0f099343c58a0f1518d0037b83c737c50e872001d8d2be19415d4",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/editor-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/editor-initial-1440.png",
+    "size": 129666,
+    "sha256": "d000fc8e3359c91afa5cf718e962995aa4b9438c99d1dc4113c4c8d1a7f6e3b9",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/editor-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/editor-initial-390.png",
+    "size": 74624,
+    "sha256": "e921d251f0c477806fca0b39d13592e256e9865d569615da9dfbea831807c631",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "anti-slop/evidence/stage-1/home-initial-1440.png",
+        "size": 430629,
+        "sha256": "9e6b16ccaa8b62cafcd5f86a756a865a2dac53c5f9c51f00c286f0f47aef0455",
+        "tracked": true
+      },
+      {
+        "path": "anti-slop/evidence/stage-2/before-guest-1440.png",
+        "size": 430629,
+        "sha256": "9e6b16ccaa8b62cafcd5f86a756a865a2dac53c5f9c51f00c286f0f47aef0455",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "anti-slop/evidence/stage-1/home-initial-390.png",
+        "size": 194368,
+        "sha256": "feb5b4fa62290d2a705b2acbc22425ad591b09cb713abf80b602c95d5b22afec",
+        "tracked": true
+      },
+      {
+        "path": "anti-slop/evidence/stage-2/before-guest-390.png",
+        "size": 194368,
+        "sha256": "feb5b4fa62290d2a705b2acbc22425ad591b09cb713abf80b602c95d5b22afec",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/login-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/login-initial-1440.png",
+    "size": 61035,
+    "sha256": "420ef15ec17416c7e3023cdaf3ee7154cfd6c09a53a33220df13b190936ff83f",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/login-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/login-initial-390.png",
+    "size": 45100,
+    "sha256": "ab9fc460cd09dee14470b4edc93476d4b06b2b0a402486d85a62e6527030f3d0",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-dasar-pemrograman-oop-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-dasar-pemrograman-oop-initial-1440.png",
+    "size": 249566,
+    "sha256": "4180781b8586443fc1f04e79b628610a50372afdaf16cd5951a0f8c1b26f8a89",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-dasar-pemrograman-oop-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-dasar-pemrograman-oop-initial-390.png",
+    "size": 127563,
+    "sha256": "2e9220e6130358f78813c80e0744eda7649db3e058ba03880f6777d943af2759",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-enkapsulasi-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-enkapsulasi-initial-1440.png",
+    "size": 265598,
+    "sha256": "4c710c12fa734dbcb4ff7e68665ad4c8f9e644c82b9fac74975bcb848197a19c",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-enkapsulasi-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-enkapsulasi-initial-390.png",
+    "size": 146667,
+    "sha256": "02ac047c57a04f2179fd27d8d7eedadf775b832fb4835294e11c36e0374e6ab8",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-hasil-completed-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-hasil-completed-1440.png",
+    "size": 193598,
+    "sha256": "d563ce8241e8f0c629cb104382e366e32604dffec97dc93ecedace0a7466ea35",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-hasil-completed-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-hasil-completed-390.png",
+    "size": 88609,
+    "sha256": "28b0a5a0f2063bcdaa4b3338ac2164607853ceb40c5e61d5471d9f67172ca07c",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-hasil-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-hasil-initial-1440.png",
+    "size": 192743,
+    "sha256": "9fc5cdb785de545ff9befd28c81f773ea470d7a32a2c6df5930032c600ca2d30",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-hasil-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-hasil-initial-390.png",
+    "size": 102077,
+    "sha256": "e37f3d9a31b760ef786473bba1ee33dd4dc7641de22d6131d71fed214fbc6ae6",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-initial-1440.png",
+    "size": 228593,
+    "sha256": "aee8f7728a6ed7690de7f10c638c67af9611631a1221fbc30d5826a4b4c63a2c",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-initial-390.png",
+    "size": 109120,
+    "sha256": "a9a6acbd2682ea269bc2e3aa7f88240cc2f00f77d49a4a4be34f8964923681e8",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-ujian-active-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-ujian-active-1440.png",
+    "size": 210556,
+    "sha256": "13859ea1718e8a39c109afedfff4d4f43f494a710a657160c3402cb2fac428e7",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-ujian-active-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-ujian-active-390.png",
+    "size": 89910,
+    "sha256": "dbeeafe3f23149a609697c4fcbe252a2ee0079e0e316039aaa145a0cc7f8ec06",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-ujian-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-ujian-initial-1440.png",
+    "size": 183240,
+    "sha256": "51ae5761ce7a9e12746fdd9ab691904c010326802b480b7497de4dda77f81d48",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-evaluasi-akhir-ujian-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-evaluasi-akhir-ujian-initial-390.png",
+    "size": 97928,
+    "sha256": "f484b3d0cd08577c05415f240d84e50e113d61ea9cce24e41a1f9e4141142e84",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-initial-1440.png",
+    "size": 256341,
+    "sha256": "b10925843ca55bb469113e6835846773b143f47a7368a752a5d82bd93eb757e4",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-initial-390.png",
+    "size": 87619,
+    "sha256": "2c7732c3ec25d82b81809b18bafc6c290ae7bc5de7b16959e17ae07d927cc193",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-kelas-abstrak-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-kelas-abstrak-initial-1440.png",
+    "size": 246720,
+    "sha256": "5c4293830089f469a796b83c55c29a38bd2d54ebdbe2a3cd39af21c6af3b2f37",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-kelas-abstrak-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-kelas-abstrak-initial-390.png",
+    "size": 129708,
+    "sha256": "ef03ba532330f7166a9d737f2b195c6f4947042637002fa108c57b3dbd810447",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-kelas-dan-objek-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-kelas-dan-objek-initial-1440.png",
+    "size": 250853,
+    "sha256": "0d1b20ce1d4fe7adf3f8a8375b5e2791ba8ad5b629c612c561ef4d26ca89a545",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-kelas-dan-objek-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-kelas-dan-objek-initial-390.png",
+    "size": 142601,
+    "sha256": "d976cb590277a761f8d57ab7c0a2cddc61946bd8ddfaea5ebd6b1514acea8d48",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-pewarisan-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-pewarisan-initial-1440.png",
+    "size": 256557,
+    "sha256": "b724f39e15dd4483aa7583b28c8540841bdf4add2d727f16f768c0797fdd0f69",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-pewarisan-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-pewarisan-initial-390.png",
+    "size": 144031,
+    "sha256": "0794e8b666f3e25fbcc39317bccc921587f6eb3a06e633b24c33348c21e6d55d",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-polimorfisme-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-polimorfisme-initial-1440.png",
+    "size": 274234,
+    "sha256": "773f7df9d4e4ede98a90ca7497d18f700a1f652bb5ae7beac975a48531c7729b",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/materi-polimorfisme-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/materi-polimorfisme-initial-390.png",
+    "size": 145286,
+    "sha256": "33e1c8b7e2de8b0f5015cab8df3754f417f111aa9a69af4ab64768b6835a4419",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/register-initial-1440.png",
+    "canonical": "anti-slop/evidence/stage-1/register-initial-1440.png",
+    "size": 64663,
+    "sha256": "856347da27505efdbf1f9426c0b7e274a3ce32a8575d5928d64ab7cb254cf087",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "SAFE",
+    "risk": "LOW",
+    "action": "deduplicate_verified_regression_copy",
+    "path": "anti-slop/evidence/stage-2/foundation-regression/register-initial-390.png",
+    "canonical": "anti-slop/evidence/stage-1/register-initial-390.png",
+    "size": 54094,
+    "sha256": "f969b2c6fde0d03b137b534f0855201983ca4c0a3484c329eee65bbf47ba2101",
+    "incoming_links": [],
+    "reason": "Identical SHA-256 and size; keep stage-1 bytes and regression metadata; add a provenance/link manifest."
+  },
+  {
+    "category": "KEEP",
+    "risk": "HIGH",
+    "action": "retain",
+    "files": [
+      {
+        "path": "bootstrap/cache/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      },
+      {
+        "path": "storage/app/private/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      },
+      {
+        "path": "storage/app/public/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      },
+      {
+        "path": "storage/framework/cache/data/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      },
+      {
+        "path": "storage/framework/sessions/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      },
+      {
+        "path": "storage/framework/testing/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      },
+      {
+        "path": "storage/framework/views/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      },
+      {
+        "path": "storage/logs/.gitignore",
+        "size": 14,
+        "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+        "tracked": true
+      }
+    ],
+    "reason": "Directory-specific ignore boundaries must remain."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-grader-2026-10-22/completed-after-login-1440.png",
+        "size": 91278,
+        "sha256": "bf1174f8e89cba70f46a8da8f67840ea00f96993e38b9bf6a21d24caf104d844",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/completed-after-login-1440.png",
+        "size": 91278,
+        "sha256": "bf1174f8e89cba70f46a8da8f67840ea00f96993e38b9bf6a21d24caf104d844",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-classes-only-1440.png",
+        "size": 94790,
+        "sha256": "b97e7dd0fcf9619d91a07c185278bb330748e6932874d70be1bb43d08a1e4024",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-missing-output-1440.png",
+        "size": 94790,
+        "sha256": "b97e7dd0fcf9619d91a07c185278bb330748e6932874d70be1bb43d08a1e4024",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-classes-only-390.png",
+        "size": 70405,
+        "sha256": "493798be716d9316af432d0e8421b0f45042b7b67bc755728e6fd0fdc1da325d",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-missing-output-390.png",
+        "size": 70405,
+        "sha256": "493798be716d9316af432d0e8421b0f45042b7b67bc755728e6fd0fdc1da325d",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-failed-1440.png",
+        "size": 129218,
+        "sha256": "70f619b7a74450256c82573f2c13946ce1195c904b2c02a5eca7b60dbe57c3a8",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-forged-results-1440.png",
+        "size": 129218,
+        "sha256": "70f619b7a74450256c82573f2c13946ce1195c904b2c02a5eca7b60dbe57c3a8",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-failed-390.png",
+        "size": 102016,
+        "sha256": "c0491c3051bb4a7256696dfb6f198cb2d6f458b8bacabbb81cc1464dd7e6172a",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-1-forged-results-390.png",
+        "size": 102016,
+        "sha256": "c0491c3051bb4a7256696dfb6f198cb2d6f458b8bacabbb81cc1464dd7e6172a",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-classes-only-1440.png",
+        "size": 95894,
+        "sha256": "ea0fb035676a1d28bb191a2773825adcf12831d2a11e1695170104a4e7d0b18d",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-missing-output-1440.png",
+        "size": 95894,
+        "sha256": "ea0fb035676a1d28bb191a2773825adcf12831d2a11e1695170104a4e7d0b18d",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-classes-only-390.png",
+        "size": 70713,
+        "sha256": "a560ec5ab521ae164b65f26ff4d6ae7a126cc6f54346bf6bed04867b7211ac2d",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-missing-output-390.png",
+        "size": 70713,
+        "sha256": "a560ec5ab521ae164b65f26ff4d6ae7a126cc6f54346bf6bed04867b7211ac2d",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-failed-1440.png",
+        "size": 128288,
+        "sha256": "39980d8bea6fcea0b0f74e1395fa274926676eae369083dcd1c1c072d235086b",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-forged-results-1440.png",
+        "size": 128288,
+        "sha256": "39980d8bea6fcea0b0f74e1395fa274926676eae369083dcd1c1c072d235086b",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  },
+  {
+    "category": "REVIEW",
+    "risk": "MEDIUM",
+    "action": "retain",
+    "files": [
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-failed-390.png",
+        "size": 102424,
+        "sha256": "a6a608a7d7b94f3ee6f6b37960706e4a6e3ebfe26363503c6f3f30adfc32b004",
+        "tracked": true
+      },
+      {
+        "path": "docs/evidence/coding-rubric-2026-10-22/latihan-2-forged-results-390.png",
+        "size": 102424,
+        "sha256": "a6a608a7d7b94f3ee6f6b37960706e4a6e3ebfe26363503c6f3f30adfc32b004",
+        "tracked": true
+      }
+    ],
+    "reason": "Distinct historical capture/scenario names; exact pixels do not prove that a named historical artifact should be removed."
+  }
+]

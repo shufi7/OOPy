@@ -1,5 +1,7 @@
 # Database OOPy
 
+> Cakupan historis: dokumen fondasi database. Angka migration/tes dan pekerjaan lanjutan di bawah mencatat keadaan saat tahap ini dibuat. Perkembangan berikutnya ada di [integrasi Dashboard](coding-dashboard-2026-11-05.md), [integrasi Admin](admin-coding-2026-11-05.md), dan [indeks dokumentasi](README.md).
+
 ## Tujuan dan cakupan
 
 Lapisan database menyediakan katalog pembelajaran, progres pengguna, riwayat
