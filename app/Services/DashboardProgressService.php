@@ -7,6 +7,8 @@ use App\Models\User;
 
 class DashboardProgressService
 {
+    public function __construct(private CodingProgressService $coding) {}
+
     public function forUser(User $user): array
     {
         $registry = require resource_path('materi/chapters.php');
@@ -96,75 +98,7 @@ class DashboardProgressService
             'completed_attempts' => (int) $scores->sum('attempts_count'),
             'recommendation' => $recommendation,
             'recent_activity' => $recent,
-            'coding' => $this->codingProgress($user),
-        ];
-    }
-
-    private function codingProgress(User $user): array
-    {
-        $exercises = collect([
-            ['key' => 'coding-latihan-1', 'slug' => 'latihan-1', 'title' => 'Latihan 1 — Class dan Object'],
-            ['key' => 'coding-latihan-2', 'slug' => 'latihan-2', 'title' => 'Latihan 2 — Inheritance'],
-        ])->keyBy('key');
-        $submissions = $user->exerciseSubmissions()->getQuery()
-            ->join('exercises', 'exercises.id', '=', 'exercise_submissions.exercise_id')
-            ->whereIn('exercises.exercise_key', $exercises->keys());
-        $summaries = (clone $submissions)->selectRaw("exercises.exercise_key,
-            MAX(CASE WHEN exercise_submissions.status = 'passed' THEN 1 ELSE 0 END) AS has_passed,
-            MAX(CASE WHEN exercise_submissions.status IN ('passed', 'failed', 'error')
-                AND exercise_submissions.score BETWEEN 0 AND 100 THEN exercise_submissions.score END) AS best_score")
-            ->groupBy('exercises.exercise_key')->get()->keyBy('exercise_key');
-
-        $cards = $exercises->map(function ($exercise, $key) use ($summaries) {
-            $summary = $summaries->get($key);
-            $status = $summary && (int) $summary->has_passed === 1 ? 'completed' : ($summary ? 'in_progress' : 'not_started');
-            $score = $summary?->best_score !== null ? (float) $summary->best_score : null;
-
-            return [
-                'key' => $key,
-                'title' => $exercise['title'],
-                'status' => $status,
-                'status_label' => match ($status) {
-                    'completed' => 'Selesai', 'in_progress' => 'Belum Lulus', default => 'Belum Dimulai',
-                },
-                'best_score' => $score,
-                'best_score_label' => $this->formatScore($score),
-                'url' => route('coding.show', $exercise['slug']),
-                'action' => match ($status) {
-                    'completed' => 'Kerjakan Kembali', 'in_progress' => 'Lanjutkan Latihan', default => 'Mulai Latihan',
-                },
-            ];
-        })->values();
-
-        $recent = (clone $submissions)->orderByDesc('exercise_submissions.submitted_at')->orderByDesc('exercise_submissions.id')->limit(5)
-            ->get(['exercise_submissions.id', 'exercise_submissions.status', 'exercise_submissions.score', 'exercise_submissions.submitted_at', 'exercises.exercise_key'])
-            ->map(function ($submission) use ($exercises) {
-                $exercise = $exercises[$submission->exercise_key];
-                $time = $submission->submitted_at->copy()->timezone('Asia/Makassar')->locale('id');
-                $score = in_array($submission->status, ['passed', 'failed', 'error'], true)
-                    && $submission->score !== null && (float) $submission->score >= 0 && (float) $submission->score <= 100
-                    ? (float) $submission->score : null;
-
-                return [
-                    'title' => $exercise['title'],
-                    'url' => route('coding.show', $exercise['slug']),
-                    'score' => $this->formatScore($score),
-                    'status' => $submission->status,
-                    'status_label' => match ($submission->status) {
-                        'passed' => 'Lulus', 'error' => 'Error', default => 'Belum Lulus',
-                    },
-                    'datetime' => $time->toIso8601String(),
-                    'date_label' => $time->translatedFormat('j M Y, H:i').' WITA',
-                ];
-            })->all();
-        $done = $cards->where('status', 'completed')->count();
-
-        return [
-            'exercises' => $cards->all(),
-            'completed_exercises' => $done,
-            'total_exercises' => $cards->count(),
-            'progress_percent' => (int) ($done / $cards->count() * 100),
-            'recent_activity' => $recent,
+            'coding' => $this->coding->forUser($user),
         ];
     }
 

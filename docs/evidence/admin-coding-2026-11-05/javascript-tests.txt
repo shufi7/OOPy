@@ -1,0 +1,29 @@
+﻿✔ Coding latihan-1: blank catalog, incorrect solution, and different valid implementations (551.554ms)
+✔ Coding latihan-2: blank catalog, incorrect solution, and different valid implementations (539.0365ms)
+✔ objective scores use exactly 15 questions and the unrounded threshold; essays remain ungraded (3.7573ms)
+✔ code fill normalization preserves token boundaries and case, rejecting substrings and extra code (0.7065ms)
+✔ deadline persists across serialization; expired attempts finish once with elapsed time capped (3.4254ms)
+✔ legacy retry delays are discarded without losing failed history or active answers (0.9352ms)
+✔ malformed storage fails safely, invalid records are removed and stored totals are recalculated (1.6705ms)
+✔ storage keeps unrelated quiz keys and merges immutable history without duplicates (2.2788ms)
+✔ denied storage reads and writes notify clearly while preserving in-memory answers (0.6596ms)
+✔ timer owns one interval and clears it on restart, stop and immediate expiry (0.7599ms)
+✔ default browser timers are called with the global receiver (0.694ms)
+✔ pewarisan: starter, incorrect behavior, real execution and alternative solutions (1057.5154ms)
+✔ polimorfisme: starter, incorrect behavior, real execution and alternative solutions (586.4651ms)
+✔ kelas-abstrak: starter, incorrect behavior, real execution and alternative solutions (591.8888ms)
+✔ BAB 6: every teaching example executes with the documented output (167.3339ms)
+✔ one worker queues jobs and routes output/results only to their owner (6.9601ms)
+✔ worker crash releases both active and queued editors (1.3436ms)
+✔ cancelling a queued job does not interrupt the active worker (1.2676ms)
+✔ stopping active work restarts one runtime and preserves queued jobs (2.1233ms)
+✔ load failure settles all queued jobs and a single retry recovers (1.1726ms)
+✔ timeout starts at execution, restarts runtime, and keeps the queue (3.3254ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2559.3295

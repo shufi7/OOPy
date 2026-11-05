@@ -1,0 +1,29 @@
+﻿php : PHP Warning:  Module "openssl" is already loaded in Unknown on line 0
+At line:2 char:1
++ php artisan route:list --path=admin *> storage/logs/admin-coding-rout ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PHP Warning:  M...known on line 0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+Warning: Module "openssl" is already loaded in Unknown on line 0
+  GET|HEAD  admin .................................................. admin.dashboard › Admin\DashboardController@index
+  GET|HEAD  admin/evaluations/{evaluation} ................... admin.evaluations.show › Admin\FinalExamController@show
+  PUT       admin/evaluations/{evaluation} ............... admin.evaluations.update › Admin\FinalExamController@update
+  GET|HEAD  admin/materials ................................... admin.materials.index › Admin\MaterialController@index
+  PUT       admin/materials/{material} ...................... admin.materials.update › Admin\MaterialController@update
+  GET|HEAD  admin/materials/{material}/edit ..................... admin.materials.edit › Admin\MaterialController@edit
+  POST      admin/materials/{material}/preview ............ admin.materials.preview › Admin\MaterialController@preview
+  GET|HEAD  admin/materials/{material}/preview .. admin.materials.preview-saved › Admin\MaterialController@showPreview
+  POST      admin/materials/{material}/publish ............ admin.materials.publish › Admin\MaterialController@publish
+  GET|HEAD  admin/questions ................................... admin.questions.index › Admin\QuestionController@index
+  POST      admin/questions ................................... admin.questions.store › Admin\QuestionController@store
+  GET|HEAD  admin/questions/create .......................... admin.questions.create › Admin\QuestionController@create
+  POST      admin/questions/quizzes/{quiz}/publish ........ admin.questions.publish › Admin\QuestionController@publish
+  GET|HEAD  admin/questions/{question} .......................... admin.questions.show › Admin\QuestionController@show
+  PUT       admin/questions/{question} ...................... admin.questions.update › Admin\QuestionController@update
+  PATCH     admin/questions/{question}/archive ............ admin.questions.archive › Admin\QuestionController@archive
+  GET|HEAD  admin/questions/{question}/edit ..................... admin.questions.edit › Admin\QuestionController@edit
+  GET|HEAD  admin/scores ............................................ admin.scores.index › Admin\ScoreController@index
+  GET|HEAD  admin/scores/export ................................... admin.scores.export › Admin\ScoreController@export
+  GET|HEAD  admin/users ............................................... admin.users.index › Admin\UserController@index
+  GET|HEAD  admin/users/{user} .......................................... admin.users.show › Admin\UserController@show
+                                                                                                   Showing [21] routes

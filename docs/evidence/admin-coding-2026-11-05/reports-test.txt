@@ -1,0 +1,40 @@
+﻿php : PHP Warning:  Module "openssl" is already loaded in Unknown on line 0
+At line:2 char:1
++ php artisan test --filter=ReportsTest *> storage/logs/admin-coding-re ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PHP Warning:  M...known on line 0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+Warning: Module "openssl" is already loaded in Unknown on line 0
+Warning: Module "openssl" is already loaded in Unknown on line 0
+PHP Warning:  Module "openssl" is already loaded in Unknown on line 0
+   PASS  Tests\Feature\Admin\CodingReportsTest
+  ✓ coding reports remain private and read only                                                                  4.95s  
+  ✓ admin summary matches the student dashboard with data set "empty"                                            1.62s  
+  ✓ admin summary matches the student dashboard with data set "failed high score and zero"                       1.45s  
+  ✓ admin summary matches the student dashboard with data set "one passed then failed"                           1.45s  
+  ✓ admin summary matches the student dashboard with data set "two passed first"                                 1.56s  
+  ✓ admin summary matches the student dashboard with data set "both passed then error"                           1.48s  
+  ✓ admin summary matches the student dashboard with data set "null and ungraded score"                          1.45s  
+  ✓ dashboard counts unique students and shows only ten latest standalone submissions                            1.54s  
+  ✓ history is user scoped paginated and independent of quiz and final pages                                     2.17s  
+  ✓ exercise and completion filters run before pagination with data set #0                                       1.33s  
+  ✓ exercise and completion filters run before pagination with data set #1                                       1.43s  
+  ✓ exercise and completion filters run before pagination with data set #2                                       1.53s  
+  ✓ exercise and completion filters run before pagination with data set #3                                       1.48s  
+  ✓ exercise and completion filters run before pagination with data set #4                                       1.39s  
+  ✓ exercise and completion filters run before pagination with data set #5                                       1.40s  
+  ✓ exercise and completion filters run before pagination with data set #6                                       1.56s  
+  ✓ exercise and completion filters run before pagination with data set #7                                       1.49s  
+  ✓ coding and quiz filters search and csv are combined with and                                                 1.92s  
+  ✓ coding sorting places zero before null and uses stable id ties                                               2.19s  
+  ✓ csv preserves original columns quoting formula defense and valid zero                                        1.38s  
+  ✓ coding filter inputs are validated                                                                           1.54s  
+  ✓ bulk report and csv do not query per user or read source code                                                2.39s  
+   PASS  Tests\Feature\Admin\ReportsTest
+  ✓ every admin endpoint enforces backend authorization including writes                                         0.88s  
+  ✓ admin pages render real empty states and never expose credentials                                            0.51s  
+  ✓ best completed scores filters zero and absent scores are distinct                                            1.74s  
+  ✓ search pagination and filtered formula safe csv                                                              1.67s  
+  ✓ pending essays are reported without a fabricated final total                                                 1.53s  
+  Tests:    27 passed (472 assertions)
+  Duration: 45.84s

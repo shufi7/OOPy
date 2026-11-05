@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\ReportRequest;
 use App\Models\FinalExamAttempt;
 use App\Models\User;
 use App\Services\Admin\LearningReportService;
+use App\Services\CodingProgressService;
 use App\Services\DashboardProgressService;
 
 class UserController extends Controller
@@ -18,7 +19,7 @@ class UserController extends Controller
         return response()->view('admin.users.index', compact('users', 'reports'))->header('Cache-Control', 'no-store, private');
     }
 
-    public function show(User $user, LearningReportService $reports, DashboardProgressService $progress)
+    public function show(User $user, LearningReportService $reports, DashboardProgressService $progress, CodingProgressService $coding)
     {
         abort_unless($user->role === 'user', 404);
         $dashboard = $progress->forUser($user);
@@ -26,7 +27,8 @@ class UserController extends Controller
             ->orderByDesc('completed_at')->paginate(20, ['*'], 'history_page')->withQueryString();
         $finals = FinalExamAttempt::where('user_id', $user->id)->whereNotNull('submitted_at')->orderByDesc('submitted_at')
             ->paginate(10, ['*'], 'final_page')->withQueryString();
+        $codingHistory = $coding->history($user)->paginate(10, ['*'], 'coding_page')->withQueryString();
 
-        return response()->view('admin.users.show', compact('user', 'dashboard', 'history', 'finals'))->header('Cache-Control', 'no-store, private');
+        return response()->view('admin.users.show', compact('user', 'dashboard', 'history', 'finals', 'codingHistory', 'coding'))->header('Cache-Control', 'no-store, private');
     }
 }

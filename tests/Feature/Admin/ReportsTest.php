@@ -59,6 +59,9 @@ class ReportsTest extends TestCase
         $this->assertSame(1, $stats['users']);
         $this->assertSame(0, $stats['attempts']);
         $this->assertNull($stats['average']);
+        $this->assertSame(['attempted_users' => 0, 'exercise_1_completed' => 0, 'exercise_2_completed' => 0, 'both_completed' => 0, 'none_passed' => 0], $stats['coding']);
+        $this->assertCount(0, $stats['recent_coding']);
+        $this->get('/admin')->assertSee('Belum ada submission latihan Coding dari pengguna.');
         $this->actingAs($admin)->get('/admin/users/'.$admin->id)->assertNotFound();
     }
 

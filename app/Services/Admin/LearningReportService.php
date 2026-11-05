@@ -7,6 +7,7 @@ use App\Models\FinalExamAttempt;
 use App\Models\Question;
 use App\Models\QuizAttempt;
 use App\Models\User;
+use App\Services\CodingProgressService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
@@ -15,13 +16,21 @@ class LearningReportService
 {
     private ?Collection $chapterCache = null;
 
+    public function __construct(private CodingProgressService $coding) {}
+
     public function chapters()
     {
         if ($this->chapterCache !== null) {
             return $this->chapterCache;
         }
-        $registry = require resource_path('materi/chapters.php');
-        $slugs = array_keys(array_filter($registry, fn ($item) => isset((require resource_path('materi/'.$item['content']))['quiz'])));
+        // Data files can have whitespace before PHP; it must not precede the CSV BOM.
+        ob_start();
+        try {
+            $registry = require resource_path('materi/chapters.php');
+            $slugs = array_keys(array_filter($registry, fn ($item) => isset((require resource_path('materi/'.$item['content']))['quiz'])));
+        } finally {
+            ob_end_clean();
+        }
 
         return $this->chapterCache = Chapter::whereIn('slug', $slugs)->orderBy('chapter_order')->get();
     }
@@ -51,7 +60,13 @@ class LearningReportService
     public function users(array $filters = []): Builder
     {
         $chapters = $this->chapters();
-        $query = User::query()->select(['users.id', 'users.name', 'users.email', 'users.created_at'])->where('role', 'user');
+        $query = User::query()->select(['users.id', 'users.name', 'users.email', 'users.created_at'])->where('users.role', 'user')
+            ->leftJoinSub($this->coding->summaries(), 'coding', 'coding.user_id', '=', 'users.id')
+            ->addSelect(['coding.coding_attempts', 'coding.coding_last_at', 'coding.coding_best_score']);
+        foreach (CodingProgressService::EXERCISES as $number => $exercise) {
+            $query->addSelect(["coding.coding_{$number}_attempts", "coding.coding_{$number}_passed",
+                "coding.coding_{$number}_best_score", "coding.coding_{$number}_last_at"]);
+        }
         if ($search = $filters['q'] ?? null) {
             $query->where(fn ($query) => $query->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%'));
         }
@@ -107,7 +122,31 @@ class LearningReportService
                 break;
         }
 
+        $codingNumber = array_search($filters['coding_exercise'] ?? '', array_column(CodingProgressService::EXERCISES, 'key'), true);
+        $codingPrefix = $codingNumber === false ? 'coding' : 'coding_'.($codingNumber + 1);
+        if (! empty($filters['coding_exercise']) && $codingNumber === false) {
+            $query->whereRaw('1 = 0');
+        }
+        $codingAttempts = "COALESCE(coding.{$codingPrefix}_attempts, 0)";
+        $codingPassed = $codingNumber === false
+            ? 'COALESCE(coding.coding_1_passed, 0) + COALESCE(coding.coding_2_passed, 0)'
+            : "COALESCE(coding.{$codingPrefix}_passed, 0)";
+        $codingTotal = $codingNumber === false ? 2 : 1;
+        switch ($filters['coding_status'] ?? '') {
+            case 'not_started':
+                $query->whereRaw($codingAttempts.' = 0');
+                break;
+            case 'in_progress':
+                $query->whereRaw($codingAttempts.' > 0')->whereRaw('('.$codingPassed.') < ?', [$codingTotal]);
+                break;
+            case 'completed':
+                $query->whereRaw('('.$codingPassed.') = ?', [$codingTotal]);
+                break;
+        }
+
         return match ($filters['sort'] ?? 'name') {
+            'coding_latest' => $query->orderByDesc('coding.'.$codingPrefix.'_last_at')->orderBy('users.id'),
+            'coding_best' => $query->orderByDesc('coding.'.$codingPrefix.'_best_score')->orderBy('users.id'),
             'latest' => $query->orderByDesc('last_attempt_at')->orderBy('users.id'),
             'best' => $query->orderByDesc('best_score')->orderBy('users.id'),
             default => $query->orderBy('users.name')->orderBy('users.id'),
@@ -125,6 +164,7 @@ class LearningReportService
             'average' => $available->isEmpty() ? null : round($available->avg(), 1),
             'status' => $available->count() === 0 ? 'Belum mengerjakan' : ($available->count() === 6 && $available->min() >= $this->passingScore() ? 'Lulus semua BAB' : 'Belum lulus semua BAB'),
             'last_at' => $last,
+            'coding' => $this->coding->summary($user, 'Belum Dikerjakan'),
         ];
     }
 
@@ -149,7 +189,28 @@ class LearningReportService
             'final_average' => (clone $finals)->where('status', 'completed')->avg('total_score'),
             'recent' => (clone $attempts)->with(['user:id,name', 'quiz:id,title,passing_score'])->orderByDesc('completed_at')->limit(10)->get(),
             'recent_finals' => (clone $finals)->with('user:id,name')->orderByDesc('submitted_at')->limit(5)->get(),
+            'coding' => $this->codingStatistics(),
+            'recent_coding' => $this->coding->history()->whereHas('user', fn ($query) => $query->where('role', 'user'))
+                ->with('user:id,name')->limit(10)->get()->map(fn ($submission) => $this->coding->activity($submission) + [
+                    'user_name' => $submission->user->name,
+                    'user_url' => route('admin.users.show', $submission->user_id),
+                ]),
         ];
+    }
+
+    private function codingStatistics(): array
+    {
+        $totals = User::query()->joinSub($this->coding->summaries(), 'coding', 'coding.user_id', '=', 'users.id')
+            ->where('users.role', 'user')
+            ->selectRaw('COUNT(*) AS attempted_users,
+                COALESCE(SUM(coding.coding_1_passed), 0) AS exercise_1_completed,
+                COALESCE(SUM(coding.coding_2_passed), 0) AS exercise_2_completed,
+                COALESCE(SUM(CASE WHEN coding.coding_1_passed + coding.coding_2_passed = 2 THEN 1 ELSE 0 END), 0) AS both_completed,
+                COALESCE(SUM(CASE WHEN coding.coding_1_passed + coding.coding_2_passed = 0 THEN 1 ELSE 0 END), 0) AS none_passed')
+            ->first();
+
+        return collect(['attempted_users', 'exercise_1_completed', 'exercise_2_completed', 'both_completed', 'none_passed'])
+            ->mapWithKeys(fn ($key) => [$key => (int) $totals->$key])->all();
     }
 
     public static function score(mixed $score): string

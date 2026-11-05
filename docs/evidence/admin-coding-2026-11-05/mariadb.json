@@ -1,0 +1,16 @@
+﻿{
+    "status":  "PASS",
+    "version":  "10.4.32-MariaDB",
+    "database":  "oopy_admin_coding_test_4304ec8abffef0906715a66e628c944c",
+    "checks":  [
+                   "migrations",
+                   "seeding",
+                   "shared summary",
+                   "Admin/student consistency",
+                   "Coding filter",
+                   "Coding sorting",
+                   "dashboard aggregates",
+                   "paginated history"
+               ],
+    "temporary_database_removed":  true
+}

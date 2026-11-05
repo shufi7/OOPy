@@ -35,7 +35,16 @@
 .oopy-admin th, .oopy-admin td { padding: 14px 16px; vertical-align: middle; }
 .oopy-admin td { font-size: .9375rem; }
 .oopy-admin td a:not(.btn) { display: inline-flex; align-items: center; min-height: 44px; }
-.admin-scores-table { min-width: 1160px; }
+.admin-scores-table { min-width: 1500px; }
+.admin-coding-history { min-width: 700px; }
+.admin-coding-history thead th { white-space: nowrap; }
+.admin-coding-score { display: block; font-weight: 700; margin-bottom: 8px; }
+.admin-coding-status { display: inline-block; padding: 4px 8px; border-radius: 6px; background: var(--oopy-canvas); color: var(--oopy-text); font-size: .8125rem; font-weight: 600; }
+.admin-coding-status.is-completed, .admin-coding-status.is-passed { background: #047857; color: #fff; }
+.admin-coding-status.is-in_progress, .admin-coding-status.is-failed { background: var(--oopy-warning-soft); color: var(--oopy-warning); }
+.admin-coding-status.is-error { background: var(--oopy-danger-soft); color: var(--oopy-danger); }
+.admin-coding-progress { height: 12px; margin: 0 0 24px; border-radius: 8px; overflow: hidden; background: var(--oopy-line); }
+.admin-coding-progress > span { display: block; height: 100%; background: var(--oopy-action); }
 .admin-users-table { min-width: 850px; }
 .admin-empty { padding: 32px 16px !important; text-align: center; color: var(--oopy-muted); }
 .admin-code, .oopy-admin pre, .oopy-admin textarea[name*="code"], .oopy-admin textarea[name*="output"] { font-family: var(--oopy-font-mono); tab-size: 4; }

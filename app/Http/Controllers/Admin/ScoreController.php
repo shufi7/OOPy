@@ -24,12 +24,16 @@ class ScoreController extends Controller
         return response()->streamDownload(function () use ($query, $reports) {
             $stream = fopen('php://output', 'w');
             fwrite($stream, "\xEF\xBB\xBF");
-            fputcsv($stream, ['Nama Pengguna', 'Email', 'BAB 1', 'BAB 2', 'BAB 3', 'BAB 4', 'BAB 5', 'BAB 6', 'Evaluasi Akhir', 'Status Evaluasi', 'Kuis Selesai', 'Percobaan Selesai', 'Rata-rata Kuis Terbaik', 'Status Kuis', 'Pengerjaan Terakhir'], ';', '"', '');
+            fputcsv($stream, ['Nama Pengguna', 'Email', 'BAB 1', 'BAB 2', 'BAB 3', 'BAB 4', 'BAB 5', 'BAB 6', 'Evaluasi Akhir', 'Status Evaluasi', 'Kuis Selesai', 'Percobaan Selesai', 'Rata-rata Kuis Terbaik', 'Status Kuis', 'Pengerjaan Terakhir',
+                'Coding Latihan 1 — Nilai Terbaik', 'Coding Latihan 1 — Status', 'Coding Latihan 2 — Nilai Terbaik', 'Coding Latihan 2 — Status', 'Coding — Latihan Selesai', 'Coding — Persentase Progres'], ';', '"', '');
             foreach ($query->cursor() as $user) {
                 $row = $reports->row($user);
                 $cells = [$user->name, $user->email, ...$row['scores']->map(fn ($score) => $reports::score($score))->values(),
                     $reports::score($user->final_score), $user->final_pending > 0 ? 'Menunggu penilaian uraian' : ($user->final_score === null ? 'Belum mengerjakan' : 'Dinilai'),
-                    $row['completed_quizzes'], $user->completed_attempts, $reports::score($row['average']), $row['status'], $reports::date($row['last_at'])];
+                    $row['completed_quizzes'], $user->completed_attempts, $reports::score($row['average']), $row['status'], $reports::date($row['last_at']),
+                    $row['coding']['exercises'][0]['best_score_label'], $row['coding']['exercises'][0]['status_label'],
+                    $row['coding']['exercises'][1]['best_score_label'], $row['coding']['exercises'][1]['status_label'],
+                    $row['coding']['completed_exercises'], $row['coding']['progress_percent']];
                 fputcsv($stream, array_map([$reports, 'csvCell'], $cells), ';', '"', '');
             }
             fclose($stream);

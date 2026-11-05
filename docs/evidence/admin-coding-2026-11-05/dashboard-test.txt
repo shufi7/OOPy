@@ -1,0 +1,39 @@
+﻿php : PHP Warning:  Module "openssl" is already loaded in Unknown on line 0
+At line:2 char:1
++ php artisan test --filter=DashboardTest *> storage/logs/admin-coding- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (PHP Warning:  M...known on line 0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+Warning: Module "openssl" is already loaded in Unknown on line 0
+Warning: Module "openssl" is already loaded in Unknown on line 0
+PHP Warning:  Module "openssl" is already loaded in Unknown on line 0
+   PASS  Tests\Feature\DashboardTest
+  ✓ guest is redirected to login and login preserves intended dashboard                                          1.17s  
+  ✓ new account has real empty state six chapters and scoped styles                                              1.36s  
+  ✓ unseeded catalog still renders the registry and empty state                                                  0.13s  
+  ✓ completed chapters progress and next recommendation with data set #0                                         1.08s  
+  ✓ completed chapters progress and next recommendation with data set #1                                         1.25s  
+  ✓ completed chapters progress and next recommendation with data set #2                                         1.35s  
+  ✓ completed chapters progress and next recommendation with data set #3                                         1.47s  
+  ✓ completed chapters progress and next recommendation with data set #4                                         1.65s  
+  ✓ completed chapters progress and next recommendation with data set #5                                         1.73s  
+  ✓ completed chapters progress and next recommendation with data set #6                                         1.82s  
+  ✓ statistics average the best per chapter excluding unfinished final and invalid results                       1.65s  
+  ✓ zero is a real score and failed attempt is real in progress                                                  1.24s  
+  ✓ recommendation chooses first unfinished chapter and failed retries do not revoke completion                  1.45s  
+  ✓ accounts are isolated and request parameters cannot select another account or raise role                     2.17s  
+  ✓ admin can view only their own learning dashboard                                                             1.33s  
+  ✓ activity is limited to five latest completed attempts and displays actual times                              2.01s  
+  ✓ dashboard is read only and does not fetch questions or all attempts                                          2.02s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "none"                            1.34s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise one"                    1.41s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise two"                    1.34s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "both"                            1.32s  
+  ✓ coding best score and completion survive lower failed retries                                                1.17s  
+  ✓ coding uses official status even with a high score and keeps valid zero                                      1.14s  
+  ✓ coding without a valid graded score shows no score                                                           1.12s  
+  ✓ coding history has five latest submissions with time and id order in wita                                    1.22s  
+  ✓ coding is scoped to the requested user including admin service calls                                         1.42s  
+  ✓ names are escaped and navbar dashboard is only visible when logged in                                        0.14s  
+  Tests:    27 passed (314 assertions)
+  Duration: 37.22s

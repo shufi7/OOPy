@@ -193,3 +193,79 @@ Komponen materi kompleks hanya dapat dilihat/dipertahankan; editor berfokus pada
 Penilaian uraian membutuhkan keputusan manusia. Tidak ada nilai uraian buatan. API pengguna menampilkan paling banyak 100 riwayat evaluasi terbaru, sementara seluruh hasil resmi tetap tersimpan dan detail Admin memakai pagination. Praktik tamu dibatasi sepuluh percobaan per sesi.
 
 Belum dilakukan uji beban banyak pengguna atau pengujian pada mesin produksi. Uji browser memakai data terisolasi; kueri laporan serta migration juga sudah diverifikasi pada MySQL lokal.
+
+## I. Integrasi Coding Admin, 5 November 2026
+
+Dashboard Admin kini menampilkan **Ringkasan Latihan Coding** dan **Aktivitas Coding Terbaru**. Statistik hanya menghitung akun `role=user`: pengguna unik yang pernah mencoba, selesai Latihan 1, selesai Latihan 2, selesai keduanya, serta sudah mencoba tetapi belum lulus latihan mana pun. Aktivitas berisi maksimal sepuluh submission, diurutkan menurut `submitted_at DESC, id DESC`, dengan tautan detail pemilik dan waktu Asia/Makassar (WITA).
+
+Sumber data resmi adalah `exercise_submissions` untuk `coding-latihan-1` dan `coding-latihan-2`; latihan dari halaman materi tidak termasuk. Status **Belum Dikerjakan** berarti belum ada submission, **Belum Lulus** berarti sudah mencoba tetapi belum pernah `passed`, dan **Selesai** berarti pernah `passed`. Retry gagal/error tidak mencabut penyelesaian. Nilai terbaik adalah maksimum skor sah 0–100 pada hasil `passed`, `failed`, atau `error`; `null` dan submission awal `submitted` belum menjadi nilai resmi. Nol tetap ditampilkan sebagai 0. Nilai tinggi tanpa status `passed` tidak menyelesaikan latihan.
+
+`CodingProgressService` menyediakan query agregat, ringkasan, dan riwayat untuk Dashboard Pengguna maupun Admin. Progres tetap `(jumlah latihan selesai / 2) × 100%`. Label awal Dashboard Pengguna tetap **Belum Dimulai**, sedangkan Admin memakai **Belum Dikerjakan**; definisi datanya sama. Rubrik, controller submit, Docker Grader, Monaco, dan Pyodide tidak diubah.
+
+Detail `/admin/users/{user}` menampilkan dua latihan, nilai terbaik, status, total percobaan, waktu terakhir, jumlah selesai, serta progress bar berlabel. **Riwayat Pengerjaan Coding** memakai sepuluh submission per halaman dengan parameter `coding_page`; kuis tetap memakai `history_page`, dan evaluasi memakai `final_page`. Parameter tersebut saling dipertahankan pada tautan pagination. Status mentah `passed`, `failed`, `error`, atau `submitted` pada riwayat adalah hasil satu submission, bukan status penyelesaian latihan secara keseluruhan. Source code dan output lengkap tidak dibaca untuk rekap/riwayat ini.
+
+Pada `/admin/scores`, nilai/status Coding dikelompokkan dalam satu kolom per latihan, lalu kolom Progres Coding. Kolom BAB 1–6, Evaluasi Akhir, rata-rata kuis, dan status kuis tetap tersedia. Tabel mempunyai scroll horizontal lokal yang dapat difokuskan dan digeser dengan keyboard; halaman tidak perlu melebar mengikuti tabel.
+
+### Filter dan pengurutan
+
+| Parameter | Nilai | Perilaku |
+| --- | --- | --- |
+| `coding_exercise` | kosong, `coding-latihan-1`, `coding-latihan-2` | Memilih cakupan filter/sort Coding |
+| `coding_status` | kosong, `not_started`, `in_progress`, `completed` | Semua status, Belum Dikerjakan, Belum Lulus, Selesai |
+| `sort` | `coding_latest`, `coding_best` | Aktivitas terbaru atau nilai terbaik pada latihan terpilih; jika semua latihan, waktu terbaru atau nilai maksimum dari keduanya |
+
+Jika **Semua latihan** dipilih, Belum Dikerjakan berarti belum pernah mencoba latihan mana pun, Selesai berarti kedua latihan selesai, dan Belum Lulus berarti sudah mencoba tetapi belum menyelesaikan keduanya. Untuk status satu latihan saja, pilih Latihan 1 atau Latihan 2. Ringkasan Dashboard **belum lulus latihan mana pun** lebih spesifik: pernah mencoba tetapi jumlah latihan selesai masih nol.
+
+Parameter kuis `chapter` dan `status` mempertahankan maknanya. Filter kuis, Coding, dan pencarian `q` digabung dengan **AND** pada query database sebelum pagination. Opsi lama `sort=name`, `latest`, dan `best` tetap tersedia. Nilai/waktu kosong berada setelah hasil bernilai pada pengurutan menurun; ID pengguna menaik menjadi tie-breaker yang stabil.
+
+Contoh: `/admin/scores?chapter=1&status=passed&coding_exercise=coding-latihan-1&coding_status=completed` menampilkan pengguna yang lulus kuis BAB 1 **dan** pernah lulus Coding Latihan 1.
+
+### Ekspor CSV
+
+Gunakan **Export CSV** setelah menerapkan filter. Ekspor mengikuti pencarian, kedua jenis filter, dan urutan yang sama. Lima belas kolom lama beserta urutannya dipertahankan, kemudian ditambahkan:
+
+1. Coding Latihan 1 — Nilai Terbaik
+2. Coding Latihan 1 — Status
+3. Coding Latihan 2 — Nilai Terbaik
+4. Coding Latihan 2 — Status
+5. Coding — Latihan Selesai
+6. Coding — Persentase Progres
+
+Encoding tetap UTF-8 dengan BOM, delimiter `;`, quoting `fputcsv`, serta perlindungan formula injection. Nilai 0 tidak menjadi kosong. Pembacaan array konten oleh `LearningReportService::chapters()` kini menahan output whitespace dari file data supaya tidak ada byte sebelum BOM. Konten materi tidak diubah. Perbaikan ini ditemukan melalui unduhan CSV sungguhan pada browser, di luar cakupan assertion `streamedContent()` lama.
+
+### Akses dan performa
+
+Semua halaman dan ekspor tetap berada dalam grup route `auth`, `role:admin`, dan middleware no-store/nosniff. Tidak ada endpoint publik, perubahan role, atau form untuk mengubah nilai Coding. Input latihan/status/sort memakai allowlist dan parameter binding; output Blade di-escape. Pemilik detail dipilih dari route yang hanya dapat dibuka Admin, sedangkan Dashboard Pengguna selalu memakai akun sesi.
+
+Agregat Coding dikelompokkan per `user_id` lalu di-join ke daftar pengguna. Pembentukan baris dan streaming CSV memakai hasil query tersebut tanpa query per pengguna. Tes mencatat satu query untuk cursor 25 pengguna, dua query untuk ekspor termasuk pembacaan katalog BAB, dan empat query Coding pada detail dengan riwayat panjang (agregat, lima terbaru Dashboard, count pagination, halaman riwayat). Aktivitas lintas pengguna memakai eager loading nama pemilik. Tidak diperlukan migration atau indeks baru pada tahap ini.
+
+### Pengujian dan verifikasi manual
+
+Perintah utama:
+
+```bash
+php artisan test --filter=ReportsTest
+php artisan test --filter=DashboardTest
+php artisan test --compact
+php artisan route:list --path=admin
+git diff --check
+```
+
+Tes baru `tests/Feature/Admin/CodingReportsTest.php` mencakup status/nilai/progres, kesesuaian Admin dan pengguna, akun Admin yang dikecualikan, urutan/pagination, filter gabungan, pencarian, CSV, validasi input, dan query tetap. Dua kegagalan baseline yang dijelaskan pada bagian E masih dicatat terpisah; lihat [laporan Tahap 3](admin-coding-2026-11-05.md) untuk hasil run terbaru.
+
+QA browser terarah tersedia di `tests/browser/admin-coding.mjs`. Gunakan database fixture baru, bukan database proyek. Contoh PowerShell, dengan nama database yang sama di kedua terminal:
+
+```powershell
+$env:OOPY_ADMIN_TEST_DATABASE = 'admin-coding-' + [guid]::NewGuid().ToString('N') + '.sqlite'
+$env:OOPY_BASE_URL = 'http://127.0.0.1:8041'
+php tests/browser/admin-sandbox.php
+php -d display_errors=0 -S 127.0.0.1:8041 -t public tests/browser/admin-sandbox.php
+# Terminal kedua: salin OOPY_ADMIN_TEST_DATABASE dan OOPY_BASE_URL di atas.
+node tests/browser/admin-coding.mjs
+```
+
+Suite terarah memerlukan Playwright yang tersedia dan Edge terpasang. `OOPY_ASSET_MANIFEST` opsional menyediakan peta URL CDN ke cache lokal; `OOPY_SCREENSHOT_DIR` menyimpan screenshot/hasil. Fixture hanya menerima nama database uji yang sesuai pola, dan tidak mengosongkan file yang sudah ada. Akun, submission, dan nama formula merupakan fixture pengujian, tidak dimasukkan ke database aplikasi. Suite CDP lama tetap dapat dijalankan dengan `python tests/browser/admin-cdp.py --browser <path-chrome> --base http://127.0.0.1:8041`.
+
+Untuk pemeriksaan manual: login sebagai Admin → buka Dashboard dan cocokkan lima statistik → buka detail pengguna dari aktivitas → periksa nilai terbaik/status/progres dan halaman riwayat → buka Rekap Nilai → gabungkan pencarian, kuis, dan Coding → Export CSV → periksa 21 kolom dan hasil filter. Login sebagai mahasiswa yang sama dan cocokkan progres pada `/dashboard`. Pengguna biasa harus mendapat 403 untuk URL Admin; guest diarahkan ke login.
+
+Batas verifikasi tetap berlaku: belum ada uji beban produksi, browser fisik, atau audit screen reader menyeluruh. Nilai lokal Pyodide dan hasil praktik tamu tidak dihitung. Docker Grader tidak diubah atau diuji ulang dalam tahap laporan ini; hasil Coding pada QA browser menggunakan fixture database yang dinyatakan secara eksplisit.
