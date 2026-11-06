@@ -271,12 +271,24 @@ class LearningDatabaseTest extends TestCase
     {
         $user = User::factory()->create();
         $password = $user->getRawOriginal('password');
-        $this->artisan('migrate:rollback', ['--database' => 'sqlite', '--step' => 12, '--force' => true])->assertExitCode(0);
+        $roleMigration = '2026_10_09_000001_add_role_to_users_table';
+        $this->assertDatabaseHas('migrations', ['migration' => $roleMigration]);
+        $steps = DB::table('migrations')->where('migration', '>=', $roleMigration)->count();
+        $this->assertGreaterThan(0, $steps);
+        $this->assertTrue(Schema::hasColumn('users', 'role'));
+        $this->artisan('migrate:rollback', ['--database' => 'sqlite', '--step' => $steps, '--force' => true])->assertExitCode(0);
         $this->assertTrue(Schema::hasTable('users'));
         $this->assertFalse(Schema::hasColumn('users', 'role'));
         $this->assertFalse(Schema::hasTable('chapters'));
+        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
         $this->assertSame($password, DB::table('users')->where('id', $user->id)->value('password'));
         $this->artisan('migrate', ['--database' => 'sqlite', '--force' => true])->assertExitCode(0);
+        $this->assertTrue(Schema::hasColumn('users', 'role'));
+        $this->assertTrue(Schema::hasTable('chapters'));
+        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
+        $this->assertSame($password, DB::table('users')->where('id', $user->id)->value('password'));
         $this->assertSame('user', $user->fresh()->role);
     }
 

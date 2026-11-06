@@ -11,17 +11,22 @@ class MateriTest extends TestCase
     public function test_material_list_links_only_to_the_available_chapters(): void
     {
         $response = $this->get('/materi')->assertOk();
-        $response->assertSee(route('materi.show', 'dasar-pemrograman-oop'));
-        $response->assertSee(route('materi.show', 'kelas-dan-objek'));
-        $response->assertSee(route('materi.show', 'enkapsulasi'))->assertSee('Pelajari BAB 3');
-        $this->get('/materi/kelas-dan-objek')->assertOk();
-        $this->get('/materi/enkapsulasi')->assertOk();
-        foreach (['pewarisan', 'polimorfisme', 'kelas-abstrak', 'evaluasi-akhir'] as $slug) {
-            $response->assertSee(route('materi.show', $slug));
-            $this->get('/materi/'.$slug)->assertOk();
+        $dom = new DOMDocument;
+        @$dom->loadHTML('<?xml encoding="UTF-8">'.$response->getContent());
+        $xpath = new DOMXPath($dom);
+        $cards = $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " materi-card ")]');
+        $this->assertSame(7, $cards->length);
+
+        $slugs = ['dasar-pemrograman-oop', 'kelas-dan-objek', 'enkapsulasi', 'pewarisan', 'polimorfisme', 'kelas-abstrak', 'evaluasi-akhir'];
+        foreach ($slugs as $index => $slug) {
+            $links = $xpath->query('.//a', $cards->item($index));
+            $this->assertSame(1, $links->length);
+            $link = $links->item(0);
+            $this->assertSame(route('materi.show', $slug), $link->getAttribute('href'));
+            $this->assertSame('Pelajari BAB '.($index + 1), preg_replace('/\s+/u', ' ', trim($link->textContent)));
+            $this->get(route('materi.show', $slug))->assertOk();
         }
-        $this->assertSame(7, substr_count($response->getContent(), '<span>Pelajari BAB'));
-        $this->assertSame(0, substr_count($response->getContent(), 'Segera hadir'));
+        $response->assertDontSee('Segera hadir');
     }
 
     public function test_chapter_has_breadcrumb_sections_and_safe_navigation(): void
