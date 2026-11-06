@@ -8,6 +8,8 @@ Route::get('questions/create', [QuestionController::class, 'create'])->name('que
 Route::post('questions', [QuestionController::class, 'store'])->name('questions.store');
 Route::post('questions/quizzes/{quiz}/publish', [QuestionController::class, 'publish'])->name('questions.publish');
 Route::get('questions/{question}', [QuestionController::class, 'show'])->name('questions.show');
+Route::get('questions/{question}/delete', [QuestionController::class, 'confirmDelete'])->name('questions.confirm-delete');
+Route::delete('questions/{question}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])->name('questions.edit');
 Route::put('questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
 Route::patch('questions/{question}/archive', [QuestionController::class, 'archive'])->name('questions.archive');

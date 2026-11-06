@@ -8,6 +8,13 @@
 .admin-nav-link:hover, .admin-nav-link.is-active { background: var(--oopy-brand-mint); color: var(--oopy-action); }
 .admin-nav-link.is-active { font-weight: 700; box-shadow: inset 3px 0 var(--oopy-action); }
 .admin-sidebar-footer { margin-top: auto; padding-top: 32px; }
+.admin-logout, .admin-danger { background: var(--oopy-danger); border: 1px solid var(--oopy-danger); color: var(--oopy-on-action); }
+.admin-logout:hover, .admin-logout:active, .admin-danger:hover, .admin-danger:active { background: #7f1d1d; border-color: #7f1d1d; color: var(--oopy-on-action); }
+.admin-row-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.admin-row-actions > a { min-height: 44px; display: inline-flex; align-items: center; }
+.admin-delete-form { display: grid; gap: 16px; max-width: 600px; }
+.admin-delete-form .form-check-label { display: flex; align-items: center; min-height: 44px; }
+.admin-delete-form .form-check-input { margin-top: .9rem; }
 .admin-main { min-width: 0; width: 100%; max-width: 1480px; padding: 24px 32px 48px; overflow-wrap: anywhere; }
 .admin-context { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-bottom: 20px; margin-bottom: 32px; border-bottom: 1px solid var(--oopy-line); color: var(--oopy-muted); font-size: .875rem; overflow-wrap: anywhere; }
 .admin-main h1 { font-size: var(--oopy-font-h1); font-weight: 800; margin-bottom: 12px; }

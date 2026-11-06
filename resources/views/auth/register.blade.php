@@ -23,6 +23,7 @@
                 <x-auth-field name="password_confirmation" label="Konfirmasi Password" type="password" autocomplete="new-password" />
                 <button type="submit" class="oopy-auth-button btn btn-brand">Daftar</button>
             </form>
+            @include('auth.google-button')
             <p class="oopy-auth-switch">Sudah punya akun? <a href="{{ route('login') }}">Masuk</a></p>
         </div>
     </section>

@@ -131,3 +131,9 @@
 .oopy-auth-switch a {
     font-weight: 700;
 }
+
+.oopy-auth-alternative { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.oopy-auth-separator { display: flex; align-items: center; gap: 1rem; margin: 0; color: var(--oopy-text); font-size: .875rem; }
+.oopy-auth-separator::before, .oopy-auth-separator::after { content: ''; flex: 1; height: 1px; background: var(--oopy-line); }
+.oopy-auth-google { width: 100%; min-height: 48px; padding: .75rem 1rem; border: 1px solid var(--oopy-control-border); border-radius: var(--oopy-radius-control); background: var(--oopy-surface); color: var(--oopy-ink); font-size: 1rem; font-weight: 600; }
+.oopy-auth-google:hover, .oopy-auth-google:active { border-color: var(--oopy-action); background: var(--oopy-brand-mint); color: var(--oopy-ink); }

@@ -32,7 +32,7 @@
                         <td><a href="{{ route('admin.questions.show', $question) }}">{{ Str::limit($question->question_text, 120) }}</a>@if($question->revision_of_id)<small class="d-block">Revisi soal #{{ $question->revision_of_id }}</small>@endif</td>
                         <td>{{ ['multiple_choice' => 'Pilihan ganda', 'code_fill' => 'Isian kode', 'essay' => 'Uraian'][$question->question_type] }}</td>
                         <td>{{ ['published' => 'Aktif', 'draft' => 'Draft', 'archived' => 'Diarsipkan'][$question->publication_status] }}</td>
-                        <td><a href="{{ route('admin.questions.edit', $question) }}">{{ $question->publication_status === 'draft' ? 'Edit' : 'Buat revisi' }}</a></td>
+                        <td><div class="admin-row-actions"><a href="{{ route('admin.questions.edit', $question) }}">{{ $question->publication_status === 'draft' ? 'Edit' : 'Buat revisi' }}</a><a class="btn admin-danger" href="{{ route('admin.questions.confirm-delete', $question) }}" aria-label="Hapus soal {{ $question->id }}">Hapus</a></div></td>
                     </tr>
                 @empty<tr><td colspan="6">Belum ada soal. Jalankan seeder konten awal atau tambahkan draft.</td></tr>@endforelse
                 </tbody>

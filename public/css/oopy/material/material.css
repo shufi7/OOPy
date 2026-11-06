@@ -5,12 +5,12 @@
     padding: 28px 0 64px;
 }
 
-.oopy-material .material-container { width: min(1320px, calc(100% - 64px)); margin: 0 auto; }
+.oopy-material .material-container { width: calc(100% - 48px); margin: 0 auto; }
 .oopy-material .material-breadcrumb { margin-bottom: 28px; font-size: .875rem; }
 .oopy-material .material-breadcrumb ol { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; }
 .oopy-material .material-breadcrumb li + li::before { content: '/'; color: var(--oopy-ink-soft); margin-right: 10px; }
 .oopy-material .material-breadcrumb a { color: var(--oopy-link); text-underline-offset: 4px; }
-.oopy-material .material-layout { display: grid; grid-template-columns: 252px minmax(0, 1fr); align-items: start; gap: 32px; }
+.oopy-material .material-layout { display: grid; grid-template-columns: 252px minmax(0, 1fr); align-items: start; gap: 24px; }
 .oopy-material .material-eyebrow { display: block; margin-bottom: 10px; font-size: var(--oopy-font-small); font-weight: 800; letter-spacing: .09em; color: var(--oopy-link); line-height: 1.5; }
 .oopy-material .material-article { min-width: 0; font-size: var(--oopy-font-body); line-height: 1.7; }
 .oopy-material .material-header { padding: 36px; margin-bottom: 24px; background: linear-gradient(125deg, var(--oopy-selected), var(--oopy-surface)); border: 1px solid var(--oopy-mist); border-radius: 20px; }

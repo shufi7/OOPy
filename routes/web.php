@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\GoogleLoginController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CodingController;
 use App\Http\Controllers\DashboardController;
@@ -24,6 +25,8 @@ Route::post('/coding/{slug}/submit', [CodingController::class, 'submit'])
     ->where('slug', 'latihan-[12]')->middleware(['auth', 'throttle:6,1'])->name('coding.submit');
 
 Route::middleware('guest')->group(function () {
+    Route::get('/auth/google', [GoogleLoginController::class, 'redirect'])->middleware('throttle:10,1')->name('auth.google.redirect');
+    Route::get('/auth/google/callback', [GoogleLoginController::class, 'callback'])->middleware('throttle:20,1')->name('auth.google.callback');
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

@@ -11,6 +11,24 @@ use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
+    public function confirmDelete(Question $question, QuestionBankService $bank)
+    {
+        $deletionError = $bank->deletionError($question);
+
+        return view('admin.questions.delete', compact('question', 'deletionError'));
+    }
+
+    public function destroy(Request $request, Question $question, QuestionBankService $bank)
+    {
+        $request->validate(['confirmation' => ['accepted']], [
+            'confirmation.accepted' => 'Centang konfirmasi penghapusan terlebih dahulu.',
+        ]);
+        $quizId = $question->quiz_id;
+        $bank->delete($question);
+
+        return redirect()->route('admin.questions.index', ['quiz_id' => $quizId])->with('success', 'Soal telah dihapus dari Bank Soal.');
+    }
+
     public function index(Request $request)
     {
         $quizzes = Quiz::with('chapter')->orderBy('chapter_id')->get();

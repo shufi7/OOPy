@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin', PreventAdminCaching::class])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}/delete', [UserController::class, 'confirmDelete'])->name('users.confirm-delete');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::get('/scores/export', [ScoreController::class, 'export'])->name('scores.export');
     Route::get('/scores', [ScoreController::class, 'index'])->name('scores.index');

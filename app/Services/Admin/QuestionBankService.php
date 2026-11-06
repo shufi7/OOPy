@@ -9,6 +9,33 @@ use Illuminate\Validation\ValidationException;
 
 class QuestionBankService
 {
+    public function deletionError(Question $question): ?string
+    {
+        if ($question->publication_status === 'published') {
+            return 'Soal aktif tidak dapat dihapus. Terbitkan paket pengganti yang lengkap terlebih dahulu.';
+        }
+        if ($question->answers()->exists() || DB::table('quiz_attempt_questions')->where('question_id', $question->id)->exists()) {
+            return 'Soal ini digunakan dalam riwayat atau percobaan kuis. Simpan sebagai arsip agar riwayat tetap utuh.';
+        }
+        if (Question::where('revision_of_id', $question->id)->exists()) {
+            return 'Soal ini masih menjadi acuan revisi lain. Hapus revisi yang tidak digunakan terlebih dahulu.';
+        }
+
+        return null;
+    }
+
+    public function delete(Question $question): void
+    {
+        DB::transaction(function () use ($question) {
+            Quiz::whereKey($question->quiz_id)->lockForUpdate()->firstOrFail();
+            $question = Question::whereKey($question->id)->lockForUpdate()->firstOrFail();
+            if ($error = $this->deletionError($question)) {
+                throw ValidationException::withMessages(['deletion' => $error]);
+            }
+            $question->delete();
+        }, 3);
+    }
+
     public function save(array $data, ?Question $question = null): Question
     {
         return DB::transaction(function () use ($data, $question) {

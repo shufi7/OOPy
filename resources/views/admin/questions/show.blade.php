@@ -9,7 +9,7 @@
     @if($question->options)<ol start="0">@foreach($question->options as $option)<li>{{ $option }}</li>@endforeach</ol>@endif
     @if($question->question_type !== 'essay')<h3>Kunci jawaban</h3><pre><code>{{ $question->correct_answer }}</code></pre>@else<h3>Penilaian manual</h3><p>0–5 poin. Jawaban uraian belum dinilai sampai Admin memberikan skor.</p><p class="admin-preserve">{{ $question->essay_rubric ?: 'Rubrik khusus belum ditambahkan.' }}</p>@endif
     @if($question->explanation)<h3>Penjelasan</h3><p class="admin-preserve">{{ $question->explanation }}</p>@endif
-    <div class="admin-actions"><a class="btn btn-primary" href="{{ route('admin.questions.edit', $question) }}">{{ $question->publication_status === 'draft' ? 'Edit draft' : 'Buat revisi' }}</a></div>
+    <div class="admin-actions"><a class="btn btn-primary" href="{{ route('admin.questions.edit', $question) }}">{{ $question->publication_status === 'draft' ? 'Edit draft' : 'Buat revisi' }}</a><a class="btn admin-danger" href="{{ route('admin.questions.confirm-delete', $question) }}">Hapus soal</a></div>
     @if($question->publication_status === 'draft')
     <form class="mt-3" action="{{ route('admin.questions.archive', $question) }}" method="post">@csrf @method('patch')<button class="btn btn-outline-secondary" type="submit">Arsipkan draft</button></form>
     @endif

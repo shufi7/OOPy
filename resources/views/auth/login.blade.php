@@ -21,6 +21,7 @@
                 <x-auth-field name="password" label="Password" type="password" autocomplete="current-password" />
                 <button type="submit" class="oopy-auth-button btn btn-brand">Masuk</button>
             </form>
+            @include('auth.google-button')
             <p class="oopy-auth-switch">Belum punya akun? <a href="{{ route('register') }}">Daftar</a></p>
         </div>
     </section>
