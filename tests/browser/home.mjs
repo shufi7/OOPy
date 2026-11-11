@@ -163,6 +163,8 @@ try {
         assert.equal(await account.getAttribute('aria-expanded'), 'false');
         await page.keyboard.press('Enter');
         await page.getByRole('button', { name: 'Logout', exact: true }).click();
+        await page.getByRole('dialog', { name: 'Yakin ingin keluar dari OOPy?' }).waitFor();
+        await page.getByRole('button', { name: 'Ya, Logout', exact: true }).click();
         await page.waitForURL(url => url.pathname === '/');
         await page.getByRole('link', { name: 'Masuk', exact: true }).waitFor();
         results.navigation.push('account menu -> opens, Escape closes, Logout -> guest home');

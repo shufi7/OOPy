@@ -144,6 +144,8 @@ try {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.locator('.admin-logout').focus();
     await page.keyboard.press('Enter');
+    await page.getByRole('dialog', { name: 'Yakin ingin keluar dari OOPy?' }).waitFor();
+    await page.getByRole('button', { name: 'Ya, Logout', exact: true }).click();
     await page.waitForURL(base + '/');
     assert.equal((await context.request.get(base + '/admin', { maxRedirects: 0 })).status(), 302);
     record('Red Logout submits successfully with keyboard and revokes Admin access');

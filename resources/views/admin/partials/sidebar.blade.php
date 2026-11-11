@@ -15,6 +15,6 @@
     </nav>
     <div class="admin-sidebar-footer">
         <a href="{{ route('home') }}" class="admin-nav-link">Kembali ke OOPy</a>
-        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="admin-nav-link admin-logout">Logout</button></form>
+        <form method="POST" action="{{ route('logout') }}" data-logout-confirmation>@csrf<button type="submit" class="admin-nav-link admin-logout">Logout</button></form>
     </div>
 </aside>

@@ -1,0 +1,152 @@
+{
+  "layouts": [
+    {
+      "name": "material",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "material",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "material",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "material",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "name": "material",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "material",
+      "width": 1920,
+      "scroll": 1920
+    },
+    {
+      "name": "login",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "name": "login",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "login",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "login",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "users",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "users",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "users",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "name": "users",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "questions",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "questions",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "name": "questions",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "name": "questions",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "name": "delete-question",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "name": "delete-user",
+      "width": 390,
+      "scroll": 390
+    }
+  ],
+  "colors": [
+    {
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    }
+  ],
+  "interactions": [
+    "Material uses a wider article and left sidebar; six viewport widths have no page overflow",
+    "Google link works with keyboard; missing credentials show an error and retain password login",
+    "Admin delete controls reflow and tables scroll locally; red Logout has visible focus and passing contrast",
+    "Active questions remain protected; creating, cancelling and permanently deleting an unused draft works",
+    "User deletion requires the correct email, removes the selected account and denies its old session; other users survive",
+    "Red Logout submits successfully with keyboard and revokes Admin access"
+  ],
+  "errors": [],
+  "googleLive": "NOT TESTED: OAuth credentials required",
+  "status": "PASS"
+}

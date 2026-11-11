@@ -1,0 +1,700 @@
+{
+  "interactions": [
+    "navbar: 320/390/768/1024/1440px, cancel, Escape, Enter, focus restoration, keyboard, contrast, session and refresh",
+    "navbar: rapid opening and confirmation sends exactly one POST and denies protected access",
+    "dashboard: 320/390/768/1024/1440px, cancel, Escape, Enter, focus restoration, keyboard, contrast, session and refresh",
+    "dashboard: resizing while modal is open restores focus to the visible menu when the sidebar closes",
+    "dashboard: rapid opening and confirmation sends exactly one POST and denies protected access",
+    "admin: 320/390/768/1024/1440px, cancel, Escape, Enter, focus restoration, keyboard, contrast, session and refresh",
+    "admin: resizing while modal is open restores focus to the visible menu when the sidebar closes",
+    "admin: rapid opening and confirmation sends exactly one POST and denies protected access",
+    "disabled: original POST fallback logs out",
+    "missing-script: original POST fallback logs out",
+    "unsupported-dialog: original POST fallback logs out",
+    "User /: logout remains reachable without JavaScript at 320px",
+    "User /dashboard: logout remains reachable without JavaScript at 320px",
+    "200% text at 320px and reduced motion remain usable",
+    "Invalid CSRF retains authentication; stale document after session invalidation receives 419"
+  ],
+  "layouts": [
+    {
+      "kind": "navbar",
+      "width": 320,
+      "scroll": 320,
+      "left": 16,
+      "right": 304,
+      "content": 286,
+      "client": 286
+    },
+    {
+      "kind": "navbar",
+      "width": 390,
+      "scroll": 390,
+      "left": 16,
+      "right": 374,
+      "content": 356,
+      "client": 356
+    },
+    {
+      "kind": "navbar",
+      "width": 768,
+      "scroll": 768,
+      "left": 144,
+      "right": 624,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "navbar",
+      "width": 1024,
+      "scroll": 1024,
+      "left": 272,
+      "right": 752,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "navbar",
+      "width": 1440,
+      "scroll": 1440,
+      "left": 480,
+      "right": 960,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "dashboard",
+      "width": 320,
+      "scroll": 320,
+      "left": 16,
+      "right": 304,
+      "content": 286,
+      "client": 286
+    },
+    {
+      "kind": "dashboard",
+      "width": 390,
+      "scroll": 390,
+      "left": 16,
+      "right": 374,
+      "content": 356,
+      "client": 356
+    },
+    {
+      "kind": "dashboard",
+      "width": 768,
+      "scroll": 768,
+      "left": 144,
+      "right": 624,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "dashboard",
+      "width": 1024,
+      "scroll": 1024,
+      "left": 272,
+      "right": 752,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "dashboard",
+      "width": 1440,
+      "scroll": 1440,
+      "left": 480,
+      "right": 960,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "admin",
+      "width": 320,
+      "scroll": 320,
+      "left": 16,
+      "right": 304,
+      "content": 286,
+      "client": 286
+    },
+    {
+      "kind": "admin",
+      "width": 390,
+      "scroll": 390,
+      "left": 16,
+      "right": 374,
+      "content": 356,
+      "client": 356
+    },
+    {
+      "kind": "admin",
+      "width": 768,
+      "scroll": 768,
+      "left": 144,
+      "right": 624,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "admin",
+      "width": 1024,
+      "scroll": 1024,
+      "left": 272,
+      "right": 752,
+      "content": 478,
+      "client": 478
+    },
+    {
+      "kind": "admin",
+      "width": 1440,
+      "scroll": 1440,
+      "left": 480,
+      "right": 960,
+      "content": 478,
+      "client": 478
+    }
+  ],
+  "contrast": [
+    {
+      "state": "navbar-320-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-320-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "navbar-320-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "navbar-320-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "navbar-320-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "navbar-320-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-390-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-390-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "navbar-390-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "navbar-390-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "navbar-390-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "navbar-390-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-768-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-768-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "navbar-768-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "navbar-768-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "navbar-768-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "navbar-768-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-1024-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-1024-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "navbar-1024-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "navbar-1024-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "navbar-1024-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "navbar-1024-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-1440-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "navbar-1440-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "navbar-1440-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "navbar-1440-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "navbar-1440-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "navbar-1440-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-320-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-320-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "dashboard-320-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "dashboard-320-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "dashboard-320-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "dashboard-320-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-390-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-390-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "dashboard-390-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "dashboard-390-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "dashboard-390-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "dashboard-390-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-768-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-768-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "dashboard-768-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "dashboard-768-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "dashboard-768-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "dashboard-768-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-1024-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-1024-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "dashboard-1024-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "dashboard-1024-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "dashboard-1024-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "dashboard-1024-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-1440-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "dashboard-1440-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "dashboard-1440-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "dashboard-1440-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "dashboard-1440-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "dashboard-1440-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-320-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-320-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "admin-320-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "admin-320-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "admin-320-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "admin-320-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-390-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-390-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "admin-390-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "admin-390-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "admin-390-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "admin-390-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-768-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-768-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "admin-768-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "admin-768-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "admin-768-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "admin-768-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-1024-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-1024-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "admin-1024-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "admin-1024-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "admin-1024-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "admin-1024-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-1440-normal",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    },
+    {
+      "state": "admin-1440-hover",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "ratio": 8.01816325620747
+    },
+    {
+      "state": "admin-1440-normal",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(160, 38, 38)",
+      "ratio": 7.500133841426752
+    },
+    {
+      "state": "admin-1440-hover",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(127, 29, 29)",
+      "ratio": 10.019596426078444
+    },
+    {
+      "state": "admin-1440-title",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 11.933981261285473
+    },
+    {
+      "state": "admin-1440-description",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "ratio": 8.383296213048432
+    }
+  ],
+  "errors": [],
+  "status": "PASS"
+}

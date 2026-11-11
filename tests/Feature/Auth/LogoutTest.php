@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use Database\Seeders\OopyContentSeeder;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -72,5 +73,37 @@ class LogoutTest extends TestCase
         $this->post('/login', [])->assertStatus(419);
         $this->assertDatabaseCount('users', 0);
         $this->assertGuest();
+    }
+
+    public function test_all_logout_navigations_render_one_shared_dialog_and_original_csrf_form(): void
+    {
+        $this->seed(OopyContentSeeder::class);
+        foreach (['user', 'admin'] as $role) {
+            $user = User::factory()->create(['role' => $role]);
+            $this->actingAs($user);
+            foreach (['/', '/dashboard', '/materi/dasar-pemrograman-oop', ...($role === 'admin' ? ['/admin'] : [])] as $path) {
+                $response = $this->get($path)->assertOk();
+                $this->assertSame(1, substr_count($response->getContent(), 'id="oopy-logout-dialog"'));
+                $response->assertSee('Yakin ingin keluar dari OOPy?')
+                    ->assertSee('aria-describedby="oopy-logout-description"', false)
+                    ->assertSee('js/oopy-logout.js', false)
+                    ->assertSee('css/oopy/logout-confirmation.css', false);
+                if ($path !== '/materi/dasar-pemrograman-oop') {
+                    $response->assertSee('method="POST" action="'.route('logout').'"', false)
+                        ->assertSee('data-logout-confirmation', false)
+                        ->assertSee('name="_token"', false);
+                }
+                $this->assertAuthenticatedAs($user);
+            }
+        }
+    }
+
+    public function test_admin_can_logout_directly_and_cannot_reopen_protected_pages(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'admin']))
+            ->post('/logout')->assertRedirect('/');
+        $this->assertGuest();
+        $this->get('/dashboard')->assertRedirect('/login');
+        $this->get('/admin')->assertRedirect('/login');
     }
 }

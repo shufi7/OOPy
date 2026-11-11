@@ -43,12 +43,14 @@ export async function loginAccount(page, base, account) {
 export async function logoutAccount(page, base) {
     if (await page.locator('[data-dashboard-logout]').count()) {
         if (await page.locator('.oopy-dashboard-menu-toggle').getAttribute('aria-expanded') === 'false') await page.locator('.oopy-dashboard-menu-toggle').click();
-        await Promise.all([page.waitForURL(`${base}/`), page.locator('[data-dashboard-logout] button').click()]);
+        await page.locator('[data-dashboard-logout] button').click();
+        await Promise.all([page.waitForURL(`${base}/`), page.getByRole('button', { name: 'Ya, Logout', exact: true }).click()]);
         return;
     }
     if (!await page.locator('#oopyAccountMenu').isVisible()) await page.getByRole('button', { name: 'Buka menu navigasi' }).click();
     await page.locator('#oopyAccountMenu').click();
-    await Promise.all([page.waitForURL(`${base}/`), page.getByRole('button', { name: 'Logout', exact: true }).click()]);
+    await page.getByRole('button', { name: 'Logout', exact: true }).click();
+    await Promise.all([page.waitForURL(`${base}/`), page.getByRole('button', { name: 'Ya, Logout', exact: true }).click()]);
 }
 
 export async function answerQuiz(page, slug, correctIndices = [0, 1, 2, 3, 4]) {

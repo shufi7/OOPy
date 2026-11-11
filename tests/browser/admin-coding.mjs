@@ -184,7 +184,8 @@ try {
     assert.equal(await page.getByText('Belum Dikerjakan', { exact: true }).count(), 2);
     assert.match(await page.locator('main').innerText(), /Pengguna ini belum mengerjakan latihan Coding/);
     await layout('empty-student');
-    await Promise.all([page.waitForURL(`${base}/`), page.locator('.admin-sidebar-footer button').click()]);
+    await page.locator('.admin-sidebar-footer button').click();
+    await Promise.all([page.waitForURL(`${base}/`), page.getByRole('button', { name: 'Ya, Logout', exact: true }).click()]);
     await login('student.browser@example.test');
     await visit('/dashboard');
     assert.equal(await page.getByRole('progressbar', { name: 'Progres Latihan Coding' }).getAttribute('aria-valuenow'), '50');

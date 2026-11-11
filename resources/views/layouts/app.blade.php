@@ -25,6 +25,16 @@
     <link rel="stylesheet" href="{{ asset('css/oopy/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/oopy/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/oopy/navbar.css') }}">
+    @auth('web')
+        <link rel="stylesheet" href="{{ asset('css/oopy/logout-confirmation.css') }}">
+        <noscript>
+            <style>
+                .site-navbar .navbar-collapse, .site-navbar .oopy-account-menu { display: block; }
+                .site-navbar .oopy-account-menu { position: static; }
+                .site-navbar .navbar-toggler, .site-navbar .oopy-account-toggle { display: none; }
+            </style>
+        </noscript>
+    @endauth
 
     @stack('styles')
 </head>
@@ -61,6 +71,9 @@
     <!-- Bootstrap 5 JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
+    @auth('web')
+        <x-logout-confirmation />
+    @endauth
     @stack('scripts')
 </body>
 </html>

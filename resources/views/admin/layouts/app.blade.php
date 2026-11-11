@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/oopy/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/oopy/admin/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/oopy/logout-confirmation.css') }}">
     @stack('styles')
 </head>
 <body class="oopy-admin">
@@ -34,6 +35,7 @@
         </main>
     </div>
     <script src="{{ asset('js/admin/admin.js') }}" defer></script>
+    <x-logout-confirmation />
     @stack('scripts')
 </body>
 </html>

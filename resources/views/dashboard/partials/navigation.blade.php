@@ -23,7 +23,7 @@
         <a class="oopy-dashboard-menu-link" href="#informasi"><x-dashboard-icon name="info" /><span>Informasi</span></a>
     </nav>
     <div class="oopy-dashboard-sidebar-bottom">
-        <form method="POST" action="{{ route('logout') }}" data-dashboard-logout>
+        <form method="POST" action="{{ route('logout') }}" data-dashboard-logout data-logout-confirmation>
             @csrf
             <button class="oopy-dashboard-logout" type="submit"><x-dashboard-icon name="logout" /><span>Keluar</span></button>
         </form>

@@ -1,0 +1,61 @@
+.oopy-logout-dialog {
+    box-sizing: border-box;
+    width: min(30rem, calc(100% - 2rem));
+    max-width: calc(100% - 2rem);
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: var(--oopy-space-6);
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    border: 1px solid var(--oopy-line);
+    border-top: 4px solid var(--oopy-brand);
+    border-radius: var(--oopy-radius-card);
+    background: var(--oopy-surface);
+    color: var(--oopy-text);
+    box-shadow: var(--oopy-shadow);
+    font: 1rem/1.7 var(--oopy-font-family);
+}
+
+.oopy-logout-dialog:not([open]) { display: none; }
+.oopy-logout-dialog::backdrop { background: rgb(36 59 57 / 55%); }
+.oopy-logout-dialog h2 {
+    margin: 0 0 var(--oopy-space-3);
+    color: var(--oopy-ink);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+.oopy-logout-dialog p { margin: 0; }
+.oopy-logout-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--oopy-space-3);
+    margin-top: var(--oopy-space-6);
+}
+.oopy-logout-button {
+    flex: 1 1 auto;
+    min-height: var(--oopy-control-min);
+    padding: var(--oopy-space-2) var(--oopy-space-4);
+    border: 1px solid var(--oopy-control-border);
+    border-radius: var(--oopy-radius-control);
+    background: var(--oopy-surface);
+    color: var(--oopy-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+.oopy-logout-button:hover { background: var(--oopy-canvas); }
+.oopy-logout-button:focus-visible { outline: 3px solid var(--oopy-focus); outline-offset: 3px; }
+.oopy-logout-confirm {
+    background: var(--oopy-danger);
+    border-color: var(--oopy-danger);
+    color: var(--oopy-on-action);
+}
+.oopy-logout-confirm:hover, .oopy-logout-confirm:active { background: #7f1d1d; border-color: #7f1d1d; }
+.oopy-logout-button:disabled { cursor: wait; }
+
+@media (min-width: 480px) {
+    .oopy-logout-dialog { padding: var(--oopy-space-8); }
+    .oopy-logout-button { flex: 0 1 auto; }
+}
