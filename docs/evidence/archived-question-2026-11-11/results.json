@@ -1,0 +1,19 @@
+{
+  "interactions": [
+    "Question 6 becomes archived and remains selectable; the open student attempt still contains six questions",
+    "Admin checks archived question 6 with Space; preview changes to six and publication reactivates it",
+    "Student completes the original six-question attempt after archival/reactivation and receives 83,33 for five correct answers"
+  ],
+  "layouts": [
+    {
+      "width": 390,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "status": "PASS"
+}

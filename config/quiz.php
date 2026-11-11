@@ -1,9 +1,8 @@
 <?php
 
 return [
-    'total_questions' => 5,
-    'minimum_correct' => 4,
-    'multiple_choice' => 3,
-    'code_fill' => 2,
+    'passing_score' => 80,
+    'minimum_questions' => 1,
+    'maximum_questions' => 30,
     'maximum_answer_length' => 1000,
 ];

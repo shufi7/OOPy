@@ -1,0 +1,21 @@
+{
+    "status":  "PASS",
+    "version":  "10.4.32-MariaDB",
+    "checks":  [
+                   "Test database isolation",
+                   "Drafts leave the active five-question package intact",
+                   "Stale draft edit cannot overwrite the first Admin changes",
+                   "Open attempt retains five pinned questions after publishing ten",
+                   "Old attempt grades 4/5 as 80 and unlocks the next chapter",
+                   "Repeated submission keeps the stored score and five answers",
+                   "New attempt receives ten questions",
+                   "Ten-question package grades 8/10 as 80",
+                   "Stale Admin publication is rejected without changing ten active questions",
+                   "Six-question package grades 5/6 as 83.33",
+                   "Historical score and attempt timestamps remain intact",
+                   "Dashboard best score and chapter progress remain consistent",
+                   "Admin search, status filter, sort and two-decimal score formatting",
+                   "Final Exam twenty-question and essay contract is unchanged"
+               ],
+    "temporary_database_removed":  true
+}

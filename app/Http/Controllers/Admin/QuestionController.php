@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Services\Admin\QuestionBankService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class QuestionController extends Controller
 {
@@ -29,13 +30,14 @@ class QuestionController extends Controller
         return redirect()->route('admin.questions.index', ['quiz_id' => $quizId])->with('success', 'Soal telah dihapus dari Bank Soal.');
     }
 
-    public function index(Request $request)
+    public function index(Request $request, QuestionBankService $bank)
     {
         $quizzes = Quiz::with('chapter')->orderBy('chapter_id')->get();
         $quiz = $quizzes->firstWhere('id', (int) $request->query('quiz_id')) ?? $quizzes->first();
         $questions = $quiz?->allQuestions()->get() ?? collect();
+        $packageVersion = $bank->packageVersion($questions);
 
-        return view('admin.questions.index', compact('quizzes', 'quiz', 'questions'));
+        return view('admin.questions.index', compact('quizzes', 'quiz', 'questions', 'packageVersion'));
     }
 
     public function create(Request $request)
@@ -48,7 +50,7 @@ class QuestionController extends Controller
 
     public function store(QuestionRequest $request, QuestionBankService $bank)
     {
-        $question = $bank->save($request->validated());
+        $question = $bank->save($request->safe()->except('question_version'));
 
         return redirect()->route('admin.questions.show', $question)->with('success', 'Draft soal tersimpan. Terbitkan paket soal lengkap untuk menggunakannya.');
     }
@@ -65,7 +67,7 @@ class QuestionController extends Controller
 
     public function update(QuestionRequest $request, Question $question, QuestionBankService $bank)
     {
-        $draft = $bank->save($request->validated(), $question);
+        $draft = $bank->save($request->safe()->except('question_version'), $question, $request->validated('question_version'));
 
         return redirect()->route('admin.questions.show', $draft)->with('success', 'Revisi disimpan sebagai draft. Versi aktif dan riwayat jawaban tetap tersedia.');
     }
@@ -80,10 +82,17 @@ class QuestionController extends Controller
     public function publish(Request $request, Quiz $quiz, QuestionBankService $bank)
     {
         $data = $request->validate([
-            'question_ids' => ['required', 'array', 'min:1', 'max:20'],
+            'package_version' => [Rule::requiredIf($quiz->type === 'chapter_quiz'), 'nullable', 'string', 'size:64'],
+            'question_ids' => ['required', 'array', 'list', 'min:'.($quiz->type === 'final_exam' ? 20 : config('quiz.minimum_questions')), 'max:'.($quiz->type === 'final_exam' ? 20 : config('quiz.maximum_questions'))],
             'question_ids.*' => ['required', 'integer', 'distinct'],
+        ], [
+            'question_ids.required' => 'Pilih soal untuk paket yang akan diterbitkan. Paket kosong tidak diperbolehkan.',
+            'question_ids.min' => $quiz->type === 'final_exam' ? 'Evaluasi Akhir harus berisi 20 soal.' : 'Pilih minimal '.config('quiz.minimum_questions').' soal.',
+            'question_ids.max' => $quiz->type === 'final_exam' ? 'Evaluasi Akhir harus berisi 20 soal.' : 'Pilih maksimal '.config('quiz.maximum_questions').' soal.',
+            'question_ids.*.distinct' => 'Setiap soal hanya boleh dipilih sekali.',
+            'package_version.required' => 'Muat ulang Bank Soal untuk memeriksa paket aktif sebelum menerbitkan.',
         ]);
-        $bank->publish($quiz, $data['question_ids']);
+        $bank->publish($quiz, $data['question_ids'], $data['package_version'] ?? null);
 
         return redirect()->route('admin.questions.index', ['quiz_id' => $quiz->id])->with('success', 'Paket soal diterbitkan. Percobaan yang sedang berlangsung tetap menggunakan versi sebelumnya.');
     }

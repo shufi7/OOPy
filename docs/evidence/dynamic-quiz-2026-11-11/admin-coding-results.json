@@ -1,0 +1,2606 @@
+{
+  "layouts": [
+    {
+      "name": "dashboard",
+      "width": 360,
+      "scroll": 360,
+      "tables": [
+        {
+          "width": 326,
+          "scroll": 700
+        },
+        {
+          "width": 326,
+          "scroll": 326
+        },
+        {
+          "width": 326,
+          "scroll": 326
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "scroll": 390,
+      "tables": [
+        {
+          "width": 356,
+          "scroll": 700
+        },
+        {
+          "width": 356,
+          "scroll": 356
+        },
+        {
+          "width": 356,
+          "scroll": 356
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "dashboard",
+      "width": 768,
+      "scroll": 768,
+      "tables": [
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "dashboard",
+      "width": 1024,
+      "scroll": 1024,
+      "tables": [
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "dashboard",
+      "width": 1440,
+      "scroll": 1440,
+      "tables": [
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "users",
+      "width": 360,
+      "scroll": 360,
+      "tables": [
+        {
+          "width": 326,
+          "scroll": 850
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "users",
+      "width": 390,
+      "scroll": 390,
+      "tables": [
+        {
+          "width": 356,
+          "scroll": 850
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "users",
+      "width": 768,
+      "scroll": 768,
+      "tables": [
+        {
+          "width": 734,
+          "scroll": 850
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "users",
+      "width": 1024,
+      "scroll": 1024,
+      "tables": [
+        {
+          "width": 722,
+          "scroll": 850
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "users",
+      "width": 1440,
+      "scroll": 1440,
+      "tables": [
+        {
+          "width": 1122,
+          "scroll": 1122
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "student",
+      "width": 360,
+      "scroll": 360,
+      "tables": [
+        {
+          "width": 326,
+          "scroll": 326
+        },
+        {
+          "width": 326,
+          "scroll": 700
+        },
+        {
+          "width": 326,
+          "scroll": 700
+        },
+        {
+          "width": 326,
+          "scroll": 326
+        },
+        {
+          "width": 326,
+          "scroll": 326
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "student",
+      "width": 390,
+      "scroll": 390,
+      "tables": [
+        {
+          "width": 356,
+          "scroll": 356
+        },
+        {
+          "width": 356,
+          "scroll": 700
+        },
+        {
+          "width": 356,
+          "scroll": 700
+        },
+        {
+          "width": 356,
+          "scroll": 356
+        },
+        {
+          "width": 356,
+          "scroll": 356
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "student",
+      "width": 768,
+      "scroll": 768,
+      "tables": [
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "student",
+      "width": 1024,
+      "scroll": 1024,
+      "tables": [
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "student",
+      "width": 1440,
+      "scroll": 1440,
+      "tables": [
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "scores",
+      "width": 360,
+      "scroll": 360,
+      "tables": [
+        {
+          "width": 326,
+          "scroll": 1500
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "scores",
+      "width": 390,
+      "scroll": 390,
+      "tables": [
+        {
+          "width": 356,
+          "scroll": 1500
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "scores",
+      "width": 768,
+      "scroll": 768,
+      "tables": [
+        {
+          "width": 734,
+          "scroll": 1500
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "scores",
+      "width": 1024,
+      "scroll": 1024,
+      "tables": [
+        {
+          "width": 722,
+          "scroll": 1500
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "scores",
+      "width": 1440,
+      "scroll": 1440,
+      "tables": [
+        {
+          "width": 1122,
+          "scroll": 1500
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "empty-student",
+      "width": 360,
+      "scroll": 360,
+      "tables": [
+        {
+          "width": 326,
+          "scroll": 326
+        },
+        {
+          "width": 326,
+          "scroll": 700
+        },
+        {
+          "width": 326,
+          "scroll": 700
+        },
+        {
+          "width": 326,
+          "scroll": 326
+        },
+        {
+          "width": 326,
+          "scroll": 326
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "empty-student",
+      "width": 390,
+      "scroll": 390,
+      "tables": [
+        {
+          "width": 356,
+          "scroll": 356
+        },
+        {
+          "width": 356,
+          "scroll": 700
+        },
+        {
+          "width": 356,
+          "scroll": 700
+        },
+        {
+          "width": 356,
+          "scroll": 356
+        },
+        {
+          "width": 356,
+          "scroll": 356
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "empty-student",
+      "width": 768,
+      "scroll": 768,
+      "tables": [
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        },
+        {
+          "width": 734,
+          "scroll": 734
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "empty-student",
+      "width": 1024,
+      "scroll": 1024,
+      "tables": [
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        },
+        {
+          "width": 722,
+          "scroll": 722
+        }
+      ],
+      "unlabeled": []
+    },
+    {
+      "name": "empty-student",
+      "width": 1440,
+      "scroll": 1440,
+      "tables": [
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        },
+        {
+          "width": 1122,
+          "scroll": 1122
+        }
+      ],
+      "unlabeled": []
+    }
+  ],
+  "colors": [
+    {
+      "selector": ".admin-coding-status",
+      "text": "error",
+      "color": "rgb(160, 38, 38)",
+      "background": "rgb(252, 239, 237)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.681753202371306,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Pengguna terdaftar",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Pernah memulai kuis",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Aktif belajar",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "BAB tersedia",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Soal dipublikasikan",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Percobaan kuis selesai",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Rata-rata percobaan kuis",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Evaluasi dikumpulkan",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Pernah mencoba Coding",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Selesai Latihan 1",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Selesai Latihan 2",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Selesai kedua latihan",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dt",
+      "text": "Sudah mencoba, belum lulus latihan mana pun",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "3",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "1",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "2",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "6",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "50",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "1",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "100",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "2",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "1",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "0",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-metrics dd",
+      "text": "1",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473,
+      "minimum": 3
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "=SUM(1;2)",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "0",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "error",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:24 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:23 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:22 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:21 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:20 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:19 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:18 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:17 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:16 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pelajar Uji",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:15 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Pengguna",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Skor",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Status submission",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Dikerjakan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-filters label",
+      "text": "Cari nama atau email",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Selesai",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "failed",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "90",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Selesai",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "22",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "05/11/2026 08:22 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Belum Lulus",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "1",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "05/11/2026 08:23 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#23",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:23 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#22",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:22 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#21",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:21 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#20",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:20 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#19",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:19 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#18",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:18 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#17",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:17 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#16",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:16 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#15",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:15 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "#14",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "70",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "failed",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "5 Nov 2026, 08:14 WITA",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Nilai terbaik",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Status",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Total percobaan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Terakhir dikerjakan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "ID percobaan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Skor",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Status submission",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Waktu submit",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Dikerjakan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Dikerjakan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Dikerjakan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Selesai",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(4, 120, 87)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 5.483924052498799,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Lulus",
+      "color": "rgb(146, 64, 14)",
+      "background": "rgb(255, 247, 229)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 6.646999382435517,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-filters label",
+      "text": "Nama atau email",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-filters label",
+      "text": "BAB untuk filter status",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-filters label",
+      "text": "Status kuis",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-filters label",
+      "text": "Latihan Coding",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-filters label",
+      "text": "Status Coding",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-filters label",
+      "text": "Urutkan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 16,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Dikerjakan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-status",
+      "text": "Belum Dikerjakan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(246, 251, 249)",
+      "size": 13,
+      "weight": 600,
+      "ratio": 8.01816325620747,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "—",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Belum Dikerjakan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "0",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "—",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "—",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Belum Dikerjakan",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "0",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "—",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history td",
+      "text": "Pengguna ini belum mengerjakan latihan Coding.",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 15,
+      "weight": 400,
+      "ratio": 8.383296213048432,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Nilai terbaik",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Status",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Total percobaan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Terakhir dikerjakan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan 1 — Class dan Object",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan 2 — Inheritance",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "ID percobaan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Latihan",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Skor",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Status submission",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    },
+    {
+      "selector": ".admin-coding-history th",
+      "text": "Waktu submit",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 14,
+      "weight": 700,
+      "ratio": 10.89264662162089,
+      "minimum": 4.5
+    }
+  ],
+  "interactions": [
+    "Unique student statistics and latest ten, including valid zero/Error; activity opens the correct student",
+    "Student detail preserves best score and completion after failed retries; Coding pagination is independent",
+    "Coding and quiz filters combine with AND; search and downloaded CSV preserve filters, BOM, zero and formula protection",
+    "Search accepts zero, treats percent/underscore literally, submits with Enter and resets cleanly",
+    "Filter reset and keyboard scrolling reach the wide score table without page overflow",
+    "Empty state, student/Admin consistency, ordinary-user 403 and guest redirect verified"
+  ],
+  "errors": [],
+  "status": "PASS"
+}

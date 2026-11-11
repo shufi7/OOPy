@@ -20,15 +20,8 @@ class ChapterQuizService
         $quiz = Quiz::with(['chapter.materials', 'questions'])
             ->where('type', 'chapter_quiz')->whereHas('chapter', fn ($query) => $query->where('slug', $slug))->first();
         abort_unless($quiz, 503, 'Kuis belum tersedia. Silakan coba lagi nanti.');
-        $types = $quiz->questions->countBy('question_type');
-        $passingScore = round(config('quiz.minimum_correct') / config('quiz.total_questions') * 100);
-        abort_unless(
-            $quiz->questions->count() === config('quiz.total_questions')
-            && $types->get('multiple_choice', 0) === config('quiz.multiple_choice')
-            && $types->get('code_fill', 0) === config('quiz.code_fill')
-            && (float) $quiz->passing_score === (float) $passingScore,
-            503, 'Konfigurasi kuis belum sesuai. Hubungi pengelola OOPy.'
-        );
+        abort_unless((float) $quiz->passing_score === ChapterQuizScoring::passingScore(),
+            503, 'Konfigurasi kuis belum sesuai. Hubungi pengelola OOPy.');
 
         return $quiz;
     }
@@ -41,10 +34,13 @@ class ChapterQuizService
         return $material;
     }
 
-    public function publicQuestions(Quiz $quiz, ?User $user = null): array
+    public function publicQuestions(Quiz $quiz, ?User $user = null, ?QuizAttempt $attempt = null): array
     {
-        $attempt = $user?->quizAttempts()->where('quiz_id', $quiz->id)->where('status', 'in_progress')->first();
+        $attempt ??= $user?->quizAttempts()->where('quiz_id', $quiz->id)->where('status', 'in_progress')->first();
         $questions = $attempt ? $this->attemptQuestions($quiz, $attempt) : $quiz->questions;
+        if (! $attempt) {
+            $this->validatePackage($quiz);
+        }
 
         return $questions->map(fn ($question) => [
             'question_id' => $question->id,
@@ -93,6 +89,7 @@ class ChapterQuizService
                 return $attempt;
             }
 
+            $this->validatePackage($quiz);
             $attempt = $user->quizAttempts()->create(['quiz_id' => $quiz->id, 'started_at' => now()]);
             $this->pinQuestions($quiz, $attempt);
 
@@ -102,17 +99,53 @@ class ChapterQuizService
 
     public function attemptQuestions(Quiz $quiz, QuizAttempt $attempt)
     {
+        if ($attempt->status === 'in_progress' && ! DB::table('quiz_attempt_questions')->where('attempt_id', $attempt->id)->exists()) {
+            DB::transaction(function () use ($quiz, $attempt) {
+                $quiz = Quiz::whereKey($quiz->id)->lockForUpdate()->firstOrFail();
+                $attempt = QuizAttempt::whereKey($attempt->id)->lockForUpdate()->firstOrFail();
+                if ($attempt->status === 'in_progress') {
+                    $this->pinQuestions($quiz, $attempt);
+                }
+            }, 3);
+        }
         $questions = Question::query()->select('questions.*', 'quiz_attempt_questions.position as pinned_position')
             ->join('quiz_attempt_questions', 'questions.id', '=', 'quiz_attempt_questions.question_id')
             ->where('quiz_attempt_questions.attempt_id', $attempt->id)->where('questions.quiz_id', $quiz->id)
             ->orderBy('quiz_attempt_questions.position')->get();
 
-        // Legacy/imported attempts without a set can still use the current published questions.
-        return $questions->isEmpty() ? $quiz->questions : $questions->map(function ($question) {
+        // Completed legacy attempts are reconstructed only from their own answers.
+        if ($questions->isEmpty() && $attempt->status === 'completed') {
+            return Question::where('quiz_id', $quiz->id)->whereIn('id', $attempt->answers()->select('question_id'))
+                ->orderBy('question_order')->get();
+        }
+
+        return $questions->map(function ($question) {
             $question->display_order = $question->pinned_position;
 
             return $question;
         });
+    }
+
+    public function pinLegacyAttempts(Quiz $quiz): void
+    {
+        $quiz->attempts()->where('status', 'in_progress')
+            ->whereNotExists(fn ($query) => $query->selectRaw('1')->from('quiz_attempt_questions')
+                ->whereColumn('quiz_attempt_questions.attempt_id', 'quiz_attempts.id'))
+            ->lockForUpdate()->chunkById(100, function ($attempts) use ($quiz) {
+                foreach ($attempts as $attempt) {
+                    $this->pinQuestions($quiz, $attempt);
+                }
+            });
+    }
+
+    private function validatePackage(Quiz $quiz): void
+    {
+        abort_unless($quiz->type === 'chapter_quiz'
+            && $quiz->questions->count() >= config('quiz.minimum_questions')
+            && $quiz->questions->count() <= config('quiz.maximum_questions')
+            && $quiz->questions->every(fn ($question) => in_array($question->question_type, ['multiple_choice', 'code_fill'], true))
+            && (float) $quiz->passing_score === ChapterQuizScoring::passingScore(),
+            503, 'Konfigurasi kuis belum sesuai. Hubungi pengelola OOPy.');
     }
 
     private function pinQuestions(Quiz $quiz, QuizAttempt $attempt): void

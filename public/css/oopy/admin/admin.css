@@ -31,6 +31,9 @@
 .admin-filters > div { flex: 1 1 150px; min-width: 0; }
 .admin-filters > .admin-search { flex: 2 1 220px; }
 .admin-filters label { display: block; font-weight: 600; margin-bottom: 8px; }
+.admin-question-select { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; cursor: pointer; }
+.admin-question-select .form-check-input { margin: 0; }
+.admin-question-select:has(input:focus-visible) { outline: 2px solid var(--oopy-focus); outline-offset: 2px; border-radius: 4px; }
 .oopy-admin .form-control, .oopy-admin .form-select { min-height: 44px; border-color: var(--oopy-control-border); border-radius: var(--oopy-radius-control); background-color: var(--oopy-surface); color: var(--oopy-text); }
 .oopy-admin .form-control:focus, .oopy-admin .form-select:focus { border-color: var(--oopy-focus); box-shadow: 0 0 0 3px var(--oopy-brand-mint); outline: 2px solid var(--oopy-focus); outline-offset: 2px; }
 .oopy-admin .btn { border-radius: var(--oopy-radius-control); white-space: normal; }
@@ -53,6 +56,7 @@
 .admin-coding-progress { height: 12px; margin: 0 0 24px; border-radius: 8px; overflow: hidden; background: var(--oopy-line); }
 .admin-coding-progress > span { display: block; height: 100%; background: var(--oopy-action); }
 .admin-users-table { min-width: 850px; }
+.admin-question-bank-table { min-width: 850px; }
 .admin-empty { padding: 32px 16px !important; text-align: center; color: var(--oopy-muted); }
 .admin-code, .oopy-admin pre, .oopy-admin textarea[name*="code"], .oopy-admin textarea[name*="output"] { font-family: var(--oopy-font-mono); tab-size: 4; }
 .oopy-admin pre { white-space: pre; overflow-x: auto; max-width: 100%; padding: 16px; background: var(--oopy-canvas); border: 1px solid var(--oopy-line); border-radius: 8px; }

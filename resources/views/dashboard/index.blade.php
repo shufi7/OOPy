@@ -63,7 +63,7 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="oopy-dashboard-table-note">Nilai terbaik dari kuis yang telah kamu selesaikan. Minimal {{ config('quiz.minimum_correct') }} dari {{ config('quiz.total_questions') }} jawaban benar untuk lulus.</p>
+                <p class="oopy-dashboard-table-note">Nilai terbaik dari kuis yang telah kamu selesaikan. Nilai minimum kelulusan {{ \App\Services\ChapterQuizScoring::format(\App\Services\ChapterQuizScoring::passingScore()) }} dari 100. Jumlah jawaban benar yang diperlukan mengikuti jumlah soal pada percobaan.</p>
                 <dl class="oopy-dashboard-stats" aria-label="Ringkasan pembelajaran">
                     <div><dt>BAB Selesai</dt><dd data-dashboard="completed">{{ $dashboard['completed_chapters'] }} <span>/ {{ $dashboard['total_chapters'] }}</span></dd></div>
                     <div><dt>Rata-rata Nilai Kuis</dt><dd data-dashboard="average">{{ $dashboard['average_score_label'] }}</dd>@if ($dashboard['average_score'] === null)<span class="oopy-dashboard-stat-note">Belum ada nilai kuis</span>@endif</div>

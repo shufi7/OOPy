@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
-use App\Services\ChapterQuizService;
 use App\Services\Admin\MaterialContentService;
+use App\Services\ChapterQuizScoring;
+use App\Services\ChapterQuizService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -101,8 +102,7 @@ class MateriController extends Controller
         }
         $quizConfig = [
             'authenticated' => $request->user() !== null,
-            'total_questions' => config('quiz.total_questions'),
-            'minimum_correct' => config('quiz.minimum_correct'),
+            ...ChapterQuizScoring::summary(count($quizQuestions)),
             'start_url' => route('quiz.start', $slug),
             'progress_url' => route('quiz.progress', $slug),
             'progress' => $quizProgress,

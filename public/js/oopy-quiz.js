@@ -3,8 +3,7 @@
 document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     const find = (name) => root.querySelector(`[data-quiz="${name}"]`);
     const config = JSON.parse(find('config').textContent);
-    const TOTAL_QUESTIONS = config.total_questions;
-    const MIN_CORRECT_TO_PASS = config.minimum_correct;
+    let minimumCorrect = config.minimum_correct;
     const navigation = root.closest('.material-article')?.querySelector('.material-navigation');
     const nextLink = navigation?.querySelector('[data-quiz-next-link]');
     const nextLocked = navigation?.querySelector('[data-quiz-next-locked]');
@@ -20,7 +19,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         return;
     }
     let questions = JSON.parse(find('questions').textContent);
-    if (questions.length !== TOTAL_QUESTIONS) {
+    if (questions.length === 0) {
         find('loading').textContent = 'Kuis belum tersedia. Silakan coba lagi nanti.';
         return;
     }
@@ -36,6 +35,11 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     const hasAnswer = (question, answer) => isCodeFill(question)
         ? typeof answer === 'string' && answer.trim() !== ''
         : answer !== null;
+    const lockedReason = navigation?.querySelector('[data-quiz-next-reason]');
+    const passingMessage = () => `Kamu harus menjawab minimal ${minimumCorrect} dari ${questions.length} soal dengan benar untuk melanjutkan.`;
+    function updatePassingMessage() {
+        if (lockedReason) lockedReason.textContent = passingMessage();
+    }
     const element = (tag, text, className) => {
         const node = document.createElement(tag);
         node.textContent = text;
@@ -79,7 +83,11 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         if (attempt) return Promise.resolve(attempt);
         if (starting) return starting;
         starting = request(config.start_url, {}).then((data) => {
+            if (!Array.isArray(data.questions) || data.questions.length === 0 || !Number.isInteger(data.scoring?.minimum_correct)) {
+                throw new Error('Paket percobaan belum dapat dibaca. Silakan coba lagi.');
+            }
             attempt = data;
+            minimumCorrect = data.scoring.minimum_correct;
             if (Array.isArray(data.questions)
                 && data.questions.map((question) => question.question_id).join(',') !== questions.map((question) => question.question_id).join(',')) {
                 questions = data.questions;
@@ -88,6 +96,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
                 renderQuestion();
                 find('validation').textContent = 'Paket soal diperbarui. Jawab soal pada versi percobaan ini.';
             }
+            updatePassingMessage();
             return data;
         }).finally(() => { starting = null; });
         return starting;
@@ -199,7 +208,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
             }
             completed = true;
             submittedOnThisPage = true;
-            find('score').textContent = String(result.score);
+            find('score').textContent = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 }).format(result.score);
             find('correct').textContent = String(result.correct_count);
             find('incorrect').textContent = String(result.incorrect_count);
             find('status').textContent = result.passed ? 'Lulus' : 'Belum Lulus';
@@ -207,7 +216,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
             updateNavigation();
             find('message').textContent = result.passed
                 ? 'Selamat, kamu dapat melanjutkan ke BAB berikutnya.'
-                : `Kamu harus menjawab minimal ${MIN_CORRECT_TO_PASS} dari ${TOTAL_QUESTIONS} soal dengan benar untuk melanjutkan.`;
+                : passingMessage();
             if (continueLink) continueLink.hidden = !previouslyPassed;
             find('form').hidden = true;
             find('results').hidden = false;
@@ -257,8 +266,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
         instructions.hidden = !instructions.hidden;
         find('instructions-toggle').setAttribute('aria-expanded', String(!instructions.hidden));
     });
-    const lockedReason = navigation?.querySelector('[data-quiz-next-reason]');
-    if (lockedReason) lockedReason.textContent = `Kamu harus menjawab minimal ${MIN_CORRECT_TO_PASS} dari ${TOTAL_QUESTIONS} soal dengan benar untuk melanjutkan.`;
+    updatePassingMessage();
     updateNavigation();
     clearResults();
     renderQuestion(false);

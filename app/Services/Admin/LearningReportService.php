@@ -7,6 +7,7 @@ use App\Models\FinalExamAttempt;
 use App\Models\Question;
 use App\Models\QuizAttempt;
 use App\Models\User;
+use App\Services\ChapterQuizScoring;
 use App\Services\CodingProgressService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,7 +38,7 @@ class LearningReportService
 
     public function passingScore(): float
     {
-        return round(config('quiz.minimum_correct') / config('quiz.total_questions') * 100);
+        return ChapterQuizScoring::passingScore();
     }
 
     public function completedAttempts(): Builder
@@ -221,7 +222,7 @@ class LearningReportService
 
     public static function score(mixed $score): string
     {
-        return $score === null ? '—' : number_format((float) $score, (float) $score === round((float) $score) ? 0 : 1, ',', '.');
+        return ChapterQuizScoring::format($score === null ? null : (float) $score);
     }
 
     public static function date(mixed $value): string

@@ -7,6 +7,7 @@ use App\Models\Exercise;
 use App\Models\Material;
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Services\ChapterQuizScoring;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -57,7 +58,7 @@ class OopyContentSeeder extends Seeder
                     'chapter_id' => $chapter->id,
                     'title' => $final ? 'Evaluasi Akhir OOPy' : 'Kuis '.$metadata['bab'],
                     'type' => $final ? 'final_exam' : 'chapter_quiz',
-                    'passing_score' => $final ? config('evaluasi.pass_threshold') : round(config('quiz.minimum_correct') / config('quiz.total_questions') * 100),
+                    'passing_score' => $final ? config('evaluasi.pass_threshold') : ChapterQuizScoring::passingScore(),
                     'duration_seconds' => $final ? config('evaluasi.duration_seconds') : null,
                 ]);
                 foreach (($final ? $content['questions'] : $content['quiz']) as $index => $question) {

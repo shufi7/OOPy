@@ -1,0 +1,420 @@
+{
+  "interactions": [
+    "Admin creates five drafts; active package stays five until publication; preview, keyboard selection and empty-package guard work",
+    "A stale Admin tab cannot replace the newly published ten-question package",
+    "Open five- and ten-question attempts retain their own counts and grade as 80 after a six-question package is published",
+    "Retry accepts a different API package, clears old answers, updates the passing message and displays 5/6 as 83,33",
+    "Admin status filter, best score, user detail and filtered CSV preserve two decimal places",
+    "Final Exam retains its separate twenty-question publication form"
+  ],
+  "layouts": [
+    {
+      "name": "bank-before-publication",
+      "width": 360
+    },
+    {
+      "name": "bank-before-publication",
+      "width": 390
+    },
+    {
+      "name": "bank-before-publication",
+      "width": 768
+    },
+    {
+      "name": "bank-before-publication",
+      "width": 1024
+    },
+    {
+      "name": "bank-before-publication",
+      "width": 1440
+    },
+    {
+      "name": "bank-ten-active",
+      "width": 360
+    },
+    {
+      "name": "bank-ten-active",
+      "width": 390
+    },
+    {
+      "name": "bank-ten-active",
+      "width": 768
+    },
+    {
+      "name": "bank-ten-active",
+      "width": 1024
+    },
+    {
+      "name": "bank-ten-active",
+      "width": 1440
+    },
+    {
+      "name": "quiz-six-result",
+      "width": 360
+    },
+    {
+      "name": "quiz-six-result",
+      "width": 390
+    },
+    {
+      "name": "quiz-six-result",
+      "width": 768
+    },
+    {
+      "name": "quiz-six-result",
+      "width": 1024
+    },
+    {
+      "name": "quiz-six-result",
+      "width": 1440
+    }
+  ],
+  "contrast": [
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-before-publication",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 8.383296213048432
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(82, 107, 102)",
+      "background": "rgb(255, 255, 255)",
+      "size": 14,
+      "weight": 500,
+      "ratio": 5.747586483118487
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(255, 255, 255)",
+      "size": 30,
+      "weight": 700,
+      "ratio": 11.933981261285473
+    },
+    {
+      "name": "bank-ten-active",
+      "color": "rgb(64, 81, 78)",
+      "background": "rgb(255, 255, 255)",
+      "size": 16,
+      "weight": 400,
+      "ratio": 8.383296213048432
+    },
+    {
+      "name": "quiz-six-result",
+      "color": "rgb(36, 59, 57)",
+      "background": "rgb(228, 249, 245)",
+      "size": 44,
+      "weight": 700,
+      "ratio": 10.89264662162089
+    }
+  ],
+  "errors": [],
+  "status": "PASS"
+}

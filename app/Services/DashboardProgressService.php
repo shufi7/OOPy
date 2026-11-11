@@ -82,7 +82,7 @@ class DashboardProgressService
                     'title' => 'Kuis '.$core[$slug]['bab'],
                     'url' => route('materi.show', $slug).'#kuis',
                     'score' => $this->formatScore((float) $attempt->score),
-                    'passed' => (float) $attempt->score >= round(config('quiz.minimum_correct') / config('quiz.total_questions') * 100),
+                    'passed' => (float) $attempt->score >= ChapterQuizScoring::passingScore(),
                     'datetime' => $time->toIso8601String(),
                     'date_label' => $time->translatedFormat('j M Y, H:i').' WITA',
                 ];
@@ -104,6 +104,6 @@ class DashboardProgressService
 
     private function formatScore(?float $score): string
     {
-        return $score === null ? '—' : number_format($score, $score === round($score) ? 0 : 1, ',', '.');
+        return ChapterQuizScoring::format($score);
     }
 }

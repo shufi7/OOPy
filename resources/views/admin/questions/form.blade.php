@@ -4,6 +4,7 @@
 <div class="admin-heading"><div><h1>{{ $question->exists ? 'Revisi Soal' : 'Tambah Soal' }}</h1><p>Simpan sebagai draft. Soal aktif hanya berubah setelah paket diterbitkan.</p></div><a href="{{ route('admin.questions.index', ['quiz_id' => $question->quiz_id]) }}">Kembali ke bank soal</a></div>
 <form class="admin-panel admin-form" method="post" action="{{ $question->exists ? route('admin.questions.update', $question) : route('admin.questions.store') }}">
     @csrf
+    @if($question->exists)<input type="hidden" name="question_version" value="{{ app(\App\Services\Admin\QuestionBankService::class)->questionVersion($question) }}">@endif
     @if($question->exists)@method('put')@endif
     <div class="mb-3"><label class="form-label" for="quiz_id">Kuis</label><select class="form-select" id="quiz_id" name="quiz_id" required>
         @foreach($quizzes as $quiz)<option value="{{ $quiz->id }}" @selected((int) old('quiz_id', $question->quiz_id) === $quiz->id)>{{ $quiz->title }}</option>@endforeach

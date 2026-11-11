@@ -19,7 +19,7 @@
         <h3>Petunjuk Pengerjaan</h3>
         <ol>
             <li>Bacalah setiap pertanyaan dengan teliti.</li>
-            @if (collect($content['quiz'])->contains(fn ($question) => ($question['type'] ?? 'multiple_choice') === 'code_fill'))
+            @if (collect($quizQuestions)->contains(fn ($question) => $question['type'] === 'code_fill'))
             <li>Pilih satu jawaban untuk soal pilihan ganda; untuk isian kode, ketik jawaban langsung di kotak kosong dalam potongan kode. Huruf besar/kecil mengikuti sintaks Python.</li>
             @else
             <li>Pilih satu jawaban yang menurutmu paling tepat.</li>

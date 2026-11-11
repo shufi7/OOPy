@@ -17,15 +17,22 @@ class QuizGradingService
     {
         return DB::transaction(function () use ($quiz, $attempt, $user, $answers) {
             User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+            $quiz = Quiz::whereKey($quiz->id)->lockForUpdate()->firstOrFail();
             $attempt = QuizAttempt::whereKey($attempt->id)->lockForUpdate()->firstOrFail();
             Gate::forUser($user)->authorize('submit', $attempt);
             abort_unless($attempt->quiz_id === $quiz->id, 404);
             $questions = $this->quizzes->attemptQuestions($quiz, $attempt)->keyBy('id');
+            if ($questions->isEmpty() || count($answers) !== $questions->count()) {
+                throw ValidationException::withMessages(['answers' => 'Jawab seluruh soal tepat satu kali.']);
+            }
             $graded = [];
             foreach ($answers as $index => $entry) {
                 $question = $questions->get($entry['question_id']);
                 if (! $question) {
                     throw ValidationException::withMessages(["answers.$index.question_id" => 'Soal tidak termasuk kuis ini.']);
+                }
+                if (isset($graded[$question->id])) {
+                    throw ValidationException::withMessages(["answers.$index.question_id" => 'Setiap soal hanya boleh dijawab sekali.']);
                 }
                 $answer = $entry['answer'];
                 if ($question->question_type === 'multiple_choice') {
@@ -42,7 +49,7 @@ class QuizGradingService
                 }
                 $graded[$question->id] = ['answer_text' => $text, 'is_correct' => $text === $question->correct_answer];
             }
-            if (count($graded) !== config('quiz.total_questions') || $questions->count() !== count($graded)) {
+            if ($questions->count() !== count($graded)) {
                 throw ValidationException::withMessages(['answers' => 'Jawab seluruh soal tepat satu kali.']);
             }
 
@@ -59,13 +66,13 @@ class QuizGradingService
             $completedAt = now();
             $attempt->update([
                 'status' => 'completed',
-                'score' => round($correct / config('quiz.total_questions') * 100),
+                'score' => ChapterQuizScoring::score($correct, $questions->count()),
                 'completed_at' => $completedAt,
             ]);
 
             $progress = $user->progress()->firstOrNew(['material_id' => $this->quizzes->material($quiz)->id]);
             if ($progress->status !== 'completed') {
-                $passed = $correct >= config('quiz.minimum_correct');
+                $passed = ChapterQuizScoring::passed($correct, $questions->count());
                 $progress->status = $passed ? 'completed' : 'in_progress';
                 $progress->completed_at = $passed ? $completedAt : null;
                 $progress->save();
@@ -84,14 +91,17 @@ class QuizGradingService
     private function result(Quiz $quiz, QuizAttempt $attempt, User $user): array
     {
         $correct = $attempt->answers()->where('is_correct', true)->count();
+        $total = $this->quizzes->attemptQuestions($quiz, $attempt)->count();
 
         return [
             'result' => [
                 'attempt_id' => $attempt->id,
                 'score' => (float) $attempt->score,
                 'correct_count' => $correct,
-                'incorrect_count' => config('quiz.total_questions') - $correct,
-                'passed' => $correct >= config('quiz.minimum_correct'),
+                'incorrect_count' => max(0, $total - $correct),
+                'total_questions' => $total,
+                'minimum_correct' => ChapterQuizScoring::minimumCorrect($total),
+                'passed' => $total > 0 ? ChapterQuizScoring::passed($correct, $total) : (float) $attempt->score >= ChapterQuizScoring::passingScore(),
             ],
             'progress' => $this->quizzes->progress($quiz, $user),
         ];

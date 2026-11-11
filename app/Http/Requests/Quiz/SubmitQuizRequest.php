@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Quiz;
 
+use App\Services\ChapterQuizService;
 use Illuminate\Support\Facades\Gate;
 
 class SubmitQuizRequest extends StartQuizRequest
@@ -13,8 +14,11 @@ class SubmitQuizRequest extends StartQuizRequest
 
     public function rules(): array
     {
+        $attempt = $this->route('attempt');
+        $total = app(ChapterQuizService::class)->attemptQuestions($attempt->quiz, $attempt)->count();
+
         return array_merge(parent::rules(), [
-            'answers' => ['required', 'array', 'list', 'size:'.config('quiz.total_questions')],
+            'answers' => ['required', 'array', 'list', 'size:'.$total],
             'answers.*' => ['required', 'array:question_id,answer'],
             'answers.*.question_id' => ['required', 'integer', 'distinct'],
             'answers.*.answer' => ['required'],

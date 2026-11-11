@@ -31,6 +31,7 @@ class QuestionRequest extends FormRequest
         $essay = $this->input('question_type') === 'essay';
 
         return [
+            'question_version' => [Rule::requiredIf($this->route('question') !== null), 'nullable', 'string', 'size:64'],
             'quiz_id' => ['required', 'integer', Rule::exists('quizzes', 'id')],
             'question_type' => ['required', Rule::in(['multiple_choice', 'code_fill', 'essay'])],
             'question_text' => ['required', 'string', 'max:12000'],
@@ -42,6 +43,11 @@ class QuestionRequest extends FormRequest
             'essay_rubric' => ['nullable', 'string', 'max:12000'],
             'display_order' => ['required', 'integer', 'min:1', 'max:1000'],
         ];
+    }
+
+    public function messages(): array
+    {
+        return ['question_version.required' => 'Muat ulang formulir soal sebelum menyimpan perubahan.'];
     }
 
     public function after(): array

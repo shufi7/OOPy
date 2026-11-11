@@ -72,7 +72,7 @@ class QuestionBankTest extends QuizTestCase
         $this->assertDatabaseCount('questions', 50);
     }
 
-    public function test_draft_creation_does_not_change_active_quiz_and_incomplete_publication_is_rejected(): void
+    public function test_draft_creation_does_not_change_active_quiz_and_empty_publication_is_rejected(): void
     {
         $this->actingAs($this->admin());
         $quiz = $this->quiz();
@@ -83,7 +83,9 @@ class QuestionBankTest extends QuizTestCase
         $draft = Question::where('publication_status', 'draft')->firstOrFail();
         $this->assertSame('Pertanyaan tambahan', $draft->question_text);
         $this->assertCount(5, $quiz->fresh()->questions);
-        $this->post('/admin/questions/quizzes/'.$quiz->id.'/publish', ['question_ids' => [$draft->id]])
+        $this->post('/admin/questions/quizzes/'.$quiz->id.'/publish', [
+            'question_ids' => [], 'package_version' => app(QuestionBankService::class)->packageVersion($quiz->questions),
+        ])
             ->assertSessionHasErrors('question_ids');
         $this->get('/materi/'.$quiz->chapter->slug)->assertOk();
         $this->assertCount(5, $quiz->fresh()->questions);
@@ -139,6 +141,25 @@ class QuestionBankTest extends QuizTestCase
         $this->get('/materi/'.$quiz->chapter->slug)->assertOk()->assertSee('Soal versi revisi Admin');
     }
 
+    public function test_stale_draft_edits_cannot_overwrite_another_admins_changes(): void
+    {
+        $this->actingAs($this->admin());
+        $bank = app(QuestionBankService::class);
+        $draft = $bank->save($this->data($this->quiz()->questions->first()));
+        $version = $bank->questionVersion($draft);
+        $data = $this->data($draft);
+        $data['options_text'] = implode("\n", $data['options']);
+        $data['question_text'] = 'Perubahan Admin pertama';
+        $data['question_version'] = $version;
+        $this->get('/admin/questions/'.$draft->id.'/edit')->assertOk()->assertSee($version);
+        $this->putJson('/admin/questions/'.$draft->id, $data)->assertRedirect();
+        $data['question_text'] = 'Perubahan dari formulir lama';
+        $this->putJson('/admin/questions/'.$draft->id, $data)->assertUnprocessable()->assertJsonValidationErrors('question_text');
+        $this->assertSame('Perubahan Admin pertama', $draft->fresh()->question_text);
+        unset($data['question_version']);
+        $this->putJson('/admin/questions/'.$draft->id, $data)->assertUnprocessable()->assertJsonValidationErrors('question_version');
+    }
+
     public function test_question_model_still_rejects_mutating_question_in_open_attempt(): void
     {
         $quiz = $this->quiz();
@@ -174,5 +195,11 @@ class QuestionBankTest extends QuizTestCase
         $this->assertSame(5, $quiz->fresh()->questions->where('question_type', 'essay')->count());
         $this->assertNull($draft->fresh()->correct_answer);
         $this->assertSame($data['essay_rubric'], $draft->fresh()->essay_rubric);
+        $restoreArchived = array_map(fn ($id) => $id === $draft->id ? $essay->id : $id, $selected);
+        $this->actingAs($this->admin())->postJson('/admin/questions/quizzes/'.$quiz->id.'/publish', [
+            'question_ids' => $restoreArchived,
+            'package_version' => app(QuestionBankService::class)->packageVersion($quiz->questions()->get()),
+        ])->assertUnprocessable()->assertJsonValidationErrors('question_ids');
+        $this->assertCount(20, $quiz->fresh()->questions);
     }
 }

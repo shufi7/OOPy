@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -59,6 +60,21 @@ class Question extends LearningModel
         if ($this->exists && $this->isDirty($gradingFields) && ($this->answers()->exists()
             || DB::table('quiz_attempt_questions')->where('question_id', $this->id)->exists())) {
             throw ValidationException::withMessages(['question_text' => 'Version answered questions before changing their content or grading contract.']);
+        }
+    }
+
+    public function validateForPublication(): void
+    {
+        Validator::make($this->attributesToArray(), array_replace($this->validationRules(), [
+            'options' => ['nullable', 'array', 'min:2', 'max:8', Rule::requiredIf($this->question_type === 'multiple_choice')],
+            'correct_answer' => ['nullable', 'string', 'max:'.config('quiz.maximum_answer_length'), Rule::requiredIf($this->question_type !== 'essay')],
+        ]))->validate();
+        $this->validateRelationships();
+        if ($this->question_type === 'code_fill') {
+            $normalized = preg_replace('/\A[\x09-\x0D\p{Zs}\x{2028}\x{2029}\x{FEFF}]+|[\x09-\x0D\p{Zs}\x{2028}\x{2029}\x{FEFF}]+\z/u', '', $this->correct_answer);
+            if ($normalized !== $this->correct_answer) {
+                throw ValidationException::withMessages(['correct_answer' => 'Kunci isian kode tidak boleh diawali atau diakhiri spasi/baris kosong.']);
+            }
         }
     }
 

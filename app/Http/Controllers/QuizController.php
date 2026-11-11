@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Quiz\StartQuizRequest;
 use App\Http\Requests\Quiz\SubmitQuizRequest;
 use App\Models\QuizAttempt;
+use App\Services\ChapterQuizScoring;
 use App\Services\ChapterQuizService;
 use App\Services\QuizGradingService;
 use Illuminate\Database\QueryException;
@@ -24,7 +25,8 @@ class QuizController extends Controller
             return [
                 'attempt_id' => $attempt->id,
                 'submit_url' => route('quiz.submit', [$slug, $attempt->id]),
-                'questions' => $this->quizzes->publicQuestions($quiz, $request->user()),
+                'questions' => $this->quizzes->publicQuestions($quiz, $request->user(), $attempt),
+                'scoring' => ChapterQuizScoring::summary($this->quizzes->attemptQuestions($quiz, $attempt)->count()),
             ];
         });
     }

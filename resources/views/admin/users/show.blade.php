@@ -6,7 +6,7 @@
 <p class="admin-note">{{ $dashboard['completed_chapters'] }} dari {{ $dashboard['total_chapters'] }} BAB selesai · {{ $dashboard['completed_attempts'] }} percobaan kuis selesai · Rata-rata nilai terbaik {{ $dashboard['average_score_label'] }}.</p>
 <h2 class="mb-3">Progres setiap BAB</h2>
 <div class="table-responsive" role="region" aria-label="Progres BAB pengguna" tabindex="0"><table class="table"><thead><tr><th scope="col">BAB</th><th scope="col">Materi</th><th scope="col">Progres</th><th scope="col">Nilai terbaik</th><th scope="col">Kelulusan kuis</th></tr></thead><tbody>
-@foreach($dashboard['chapters'] as $chapter)<tr><th scope="row">{{ $chapter['bab'] }}</th><td>{{ $chapter['title'] }}</td><td>{{ $chapter['status_label'] }}</td><td>{{ $chapter['best_score_label'] }}</td><td>{{ $chapter['best_score'] === null ? 'Belum mengerjakan' : ($chapter['best_score'] >= round(config('quiz.minimum_correct') / config('quiz.total_questions') * 100) ? 'Lulus' : 'Belum lulus') }}</td></tr>@endforeach
+@foreach($dashboard['chapters'] as $chapter)<tr><th scope="row">{{ $chapter['bab'] }}</th><td>{{ $chapter['title'] }}</td><td>{{ $chapter['status_label'] }}</td><td>{{ $chapter['best_score_label'] }}</td><td>{{ $chapter['best_score'] === null ? 'Belum mengerjakan' : ($chapter['best_score'] >= \App\Services\ChapterQuizScoring::passingScore() ? 'Lulus' : 'Belum lulus') }}</td></tr>@endforeach
 </tbody></table></div>
 <section aria-labelledby="user-coding-title">
     <div class="admin-heading"><div><h2 id="user-coding-title">Progres Latihan Coding</h2><p>{{ $dashboard['coding']['completed_exercises'] }} dari {{ $dashboard['coding']['total_exercises'] }} latihan selesai · {{ $dashboard['coding']['progress_percent'] }}%</p></div></div>
