@@ -160,6 +160,17 @@ try {
     await page.getByRole('link', { name: 'Reset', exact: true }).click();
     assert.equal(await page.locator('[data-score-user]').count(), 3);
     assert.equal(await page.locator('#coding_status').inputValue(), '');
+    for (const term of ['0', '%', '_']) {
+        await page.locator('#q').fill(term);
+        await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.locator('#q').press('Enter')]);
+        assert.equal(await page.locator('[data-score-user]').count(), 0, `Literal search: ${term}`);
+        assert.equal(await page.locator('#q').inputValue(), term);
+        assert.match(await page.locator('main').innerText(), /Tidak ada pengguna yang sesuai filter/);
+    }
+    await page.getByRole('link', { name: 'Reset', exact: true }).click();
+    assert.equal(await page.locator('#q').inputValue(), '');
+    assert.equal(await page.locator('[data-score-user]').count(), 3);
+    record('Search accepts zero, treats percent/underscore literally, submits with Enter and resets cleanly');
     await page.setViewportSize({ width: 390, height: 1000 });
     const region = page.getByRole('region', { name: 'Rekap nilai BAB, Evaluasi Akhir, dan Coding', exact: true });
     await region.focus();

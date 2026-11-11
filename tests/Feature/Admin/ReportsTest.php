@@ -122,6 +122,62 @@ class ReportsTest extends TestCase
         $this->get('/admin/scores?sort=score%20desc')->assertSessionHasErrors('sort');
     }
 
+    public function test_search_treats_zero_and_like_wildcards_as_literal_text(): void
+    {
+        $admin = $this->admin();
+        $zero = User::factory()->create(['name' => 'Pelajar 0', 'email' => 'zero@example.test']);
+        $percent = User::factory()->create(['name' => 'Progres 100%', 'email' => 'percent@example.test']);
+        $underscore = User::factory()->create(['name' => 'Nama_Pelajar', 'email' => 'underscore@example.test']);
+        $escape = User::factory()->create(['name' => 'Pelajar!', 'email' => 'escape@example.test']);
+        User::factory()->create(['name' => 'Nama Pelajar', 'email' => 'other@example.test']);
+
+        foreach (['0' => [$zero->id, $percent->id], '%' => [$percent->id], '_' => [$underscore->id], '!' => [$escape->id]] as $term => $ids) {
+            $response = $this->actingAs($admin)->get('/admin/scores?'.http_build_query(['q' => $term]))->assertOk();
+            $this->assertEqualsCanonicalizing($ids, $response->viewData('users')->pluck('id')->all());
+            $csv = $this->get('/admin/scores/export?'.http_build_query(['q' => $term]))->assertOk()->streamedContent();
+            $this->assertCount(count($ids) + 2, explode("\n", $csv));
+        }
+    }
+
+    public function test_quiz_sorting_uses_the_selected_chapter_and_keeps_zero_before_missing_scores(): void
+    {
+        $this->seed(OopyContentSeeder::class);
+        $admin = $this->admin();
+        $first = User::factory()->create(['name' => 'First']);
+        $second = User::factory()->create(['name' => 'Second']);
+        $zero = User::factory()->create(['name' => 'Zero']);
+        $empty = User::factory()->create(['name' => 'Empty']);
+        $quizzes = Quiz::where('type', 'chapter_quiz')->get()->keyBy('chapter_id');
+        $chapters = app(LearningReportService::class)->chapters()->keyBy('chapter_order');
+        $one = $quizzes[$chapters[1]->id];
+        $two = $quizzes[$chapters[2]->id];
+        $this->attempt($first, $one, 100);
+        $this->attempt($first, $two, 40)->update(['started_at' => now()->subHours(3), 'completed_at' => now()->subHours(2)]);
+        $this->attempt($second, $one, 20);
+        $this->attempt($second, $two, 80)->update(['started_at' => now()->subHours(2), 'completed_at' => now()->subHour()]);
+        $this->attempt($zero, $two, 0)->update(['started_at' => now()->subHours(4), 'completed_at' => now()->subHours(3)]);
+
+        foreach (['best', 'latest'] as $sort) {
+            $filters = ['chapter' => 2, 'sort' => $sort];
+            $response = $this->actingAs($admin)->get('/admin/scores?'.http_build_query($filters))->assertOk();
+            $this->assertSame([$second->id, $first->id, $zero->id, $empty->id], $response->viewData('users')->pluck('id')->all());
+            $csv = $this->get('/admin/scores/export?'.http_build_query($filters))->assertOk()->streamedContent();
+            $this->assertStringContainsString($second->email, $csv);
+            $this->assertLessThan(strpos($csv, $first->email), strpos($csv, $second->email));
+        }
+        $this->get('/admin/scores?sort=best')->assertOk()
+            ->assertViewHas('users', fn ($users) => $users->first()->id === $first->id);
+    }
+
+    public function test_failed_quiz_filter_without_chapters_returns_no_students(): void
+    {
+        $admin = $this->admin();
+        User::factory()->create();
+        $this->actingAs($admin)->get('/admin/scores?status=not_passed')->assertOk()
+            ->assertViewHas('users', fn ($users) => $users->total() === 0)
+            ->assertSee('Tidak ada pengguna yang sesuai filter.');
+    }
+
     public function test_pending_essays_are_reported_without_a_fabricated_final_total(): void
     {
         $this->seed(OopyContentSeeder::class);

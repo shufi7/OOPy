@@ -67,8 +67,11 @@ class LearningReportService
             $query->addSelect(["coding.coding_{$number}_attempts", "coding.coding_{$number}_passed",
                 "coding.coding_{$number}_best_score", "coding.coding_{$number}_last_at"]);
         }
-        if ($search = $filters['q'] ?? null) {
-            $query->where(fn ($query) => $query->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%'));
+        $search = $filters['q'] ?? null;
+        if ($search !== null && $search !== '') {
+            $pattern = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $search).'%';
+            $query->where(fn ($query) => $query->whereRaw("users.name LIKE ? ESCAPE '!'", [$pattern])
+                ->orWhereRaw("users.email LIKE ? ESCAPE '!'", [$pattern]));
         }
         $query->addSelect([
             'completed_attempts' => $this->userAttempts()->selectRaw('COUNT(*)'),
@@ -114,6 +117,9 @@ class LearningReportService
                     $query->where((clone $attempts)->selectRaw('CAST(MAX(score) AS DECIMAL(5,2))'), '<', $this->passingScore());
                 } else {
                     $query->where(function ($query) use ($chapters) {
+                        if ($chapters->isEmpty()) {
+                            $query->whereRaw('1 = 0');
+                        }
                         foreach ($chapters as $chapter) {
                             $query->orWhere($this->chapterAttempts($chapter->id)->selectRaw('CAST(MAX(score) AS DECIMAL(5,2))'), '<', $this->passingScore());
                         }
@@ -147,8 +153,8 @@ class LearningReportService
         return match ($filters['sort'] ?? 'name') {
             'coding_latest' => $query->orderByDesc('coding.'.$codingPrefix.'_last_at')->orderBy('users.id'),
             'coding_best' => $query->orderByDesc('coding.'.$codingPrefix.'_best_score')->orderBy('users.id'),
-            'latest' => $query->orderByDesc('last_attempt_at')->orderBy('users.id'),
-            'best' => $query->orderByDesc('best_score')->orderBy('users.id'),
+            'latest' => $query->orderByDesc($selected ? (clone $attempts)->selectRaw('MAX(completed_at)') : 'last_attempt_at')->orderBy('users.id'),
+            'best' => $query->orderByDesc($selected ? 'chapter_'.$selected->chapter_order : 'best_score')->orderBy('users.id'),
             default => $query->orderBy('users.name')->orderBy('users.id'),
         };
     }

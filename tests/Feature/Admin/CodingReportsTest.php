@@ -243,6 +243,39 @@ class CodingReportsTest extends TestCase
         $this->get('/admin/users?q='.urlencode($c->email))->assertOk()->assertViewHas('users', fn ($users) => $users->total() === 1 && $users->first()->id === $c->id);
     }
 
+    public function test_score_pagination_and_export_keep_all_active_filters(): void
+    {
+        $students = collect(range(1, 23))->map(fn ($number) => User::factory()->create([
+            'name' => 'Filter '.str_pad((string) $number, 2, '0', STR_PAD_LEFT),
+        ]));
+        foreach ($students as $student) {
+            $this->quiz($student, 80);
+            $this->submit($student, 1, 'passed', 90);
+        }
+        $quizOnly = User::factory()->create(['name' => 'Filter Quiz Only']);
+        $this->quiz($quizOnly, 80);
+        $codingOnly = User::factory()->create(['name' => 'Filter Coding Only']);
+        $this->submit($codingOnly, 1, 'passed', 90);
+        $filters = ['q' => 'Filter', 'chapter' => 1, 'status' => 'passed',
+            'coding_exercise' => 'coding-latihan-1', 'coding_status' => 'completed', 'sort' => 'name'];
+        $url = '/admin/scores?'.http_build_query($filters);
+        $response = $this->actingAs($this->admin)->get($url.'&page=2')->assertOk();
+        $users = $response->viewData('users');
+        $this->assertSame(23, $users->total());
+        $this->assertSame(2, $users->currentPage());
+        $this->assertSame($students->slice(20)->pluck('id')->values()->all(), $users->pluck('id')->all());
+        parse_str(parse_url($users->previousPageUrl(), PHP_URL_QUERY), $previousFilters);
+        foreach ($filters as $key => $value) {
+            $this->assertEquals($value, $previousFilters[$key]);
+        }
+        $response->assertSee(route('admin.scores.export', $filters));
+        $rows = $this->csv('?'.http_build_query($filters).'&page=2');
+        $this->assertCount(24, $rows);
+        $this->assertSame($students->pluck('email')->all(), array_column(array_slice($rows, 1), 1));
+        $this->get('/admin/scores')->assertOk()
+            ->assertViewHas('users', fn ($users) => $users->total() === 25 && $users->currentPage() === 1);
+    }
+
     public function test_coding_sorting_places_zero_before_null_and_uses_stable_id_ties(): void
     {
         [$zero, $null, $high, $tie, $empty] = User::factory()->count(5)->create()->all();
