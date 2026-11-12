@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { emptyState, createAttempt, codeTokens, decodeState, finishAttempt, gradeAttempt, isCorrect, hasAnswer, remainingSeconds, mergeStates } from '../../public/js/evaluasi/exam-model.js';
 import { ExamStorage } from '../../public/js/evaluasi/exam-storage.js';
 import { ExamTicker } from '../../public/js/evaluasi/exam-timer.js';
@@ -12,6 +13,7 @@ assert.equal(source.status, 0, source.stderr);
 const { questions, settings } = JSON.parse(source.stdout);
 const now = 1_000_000;
 const attempt = () => createAttempt(questions, settings, now, 'attempt-1');
+const cases = JSON.parse(readFileSync(new URL('../Fixtures/final-exam-cases.json', import.meta.url), 'utf8'));
 const answers = (session, correct) => {
     questions.filter((q) => q.type !== 'essay').forEach((q, index) => {
         session.answers[q.id] = index < correct ? q.type === 'multiple_choice' ? q.correct : q.answer
@@ -50,9 +52,20 @@ test('code fill normalization preserves token boundaries and case, rejecting sub
     assert.equal(isCorrect(questions[10], 's e l f.nilai = nilai'), false);
     assert.equal(isCorrect(questions[11], 'return\nself._ph'), false);
     assert.equal(isCorrect(questions[12], 'super ( ).__init__( nama , lokasi )'), true);
-    assert.equal(codeTokens('baca_data + anything'), null);
+    assert.equal(isCorrect({ type: 'code_fill', code: 'item.__________()', answer: 'baca_data' }, '(baca_data)'), false);
+    assert.equal(codeTokens('baca_data + ;anything'), null);
+    assert.equal(isCorrect(questions[16], ' self . nilai+kenaikan '), true);
+    assert.equal(isCorrect(questions[11], 'return (self._ph)'), true);
+    assert.equal(isCorrect(questions[12], '(super()).__init__((nama), lokasi,)'), true);
     assert.equal(hasAnswer(questions[15], '  '), false);
     assert.equal(hasAnswer(questions[0], 0), true);
+});
+
+test('code matching agrees with the Python-verified fixture corpus', () => {
+    for (const q of questions.filter(q => q.type === 'code_fill')) {
+        for (const answer of cases[q.id].valid) assert.equal(isCorrect(q, answer), true, `${q.id}: ${answer}`);
+        for (const answer of cases[q.id].invalid) assert.equal(isCorrect(q, answer), false, `${q.id}: ${answer}`);
+    }
 });
 
 test('deadline persists across serialization; expired attempts finish once with elapsed time capped', () => {

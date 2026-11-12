@@ -69,12 +69,23 @@ const answerAll = async correct => {
         await navigate(index + 1);
         assert.equal(await part('essay-group').isVisible(), false);
         if (q.type === 'multiple_choice') {
+            assert.equal(await part('code-answer').isVisible(), false);
+            assert.equal(await part('options').locator('input').count(), 4);
+            if (q.code) assert.equal(await part('code-caption').textContent(), 'Potongan kode Python');
+            if (q.code) {
+                const shown = await part('code-before').textContent() + await part('code-after').textContent();
+                assert.equal(shown, q.code);
+            }
             await part('options').locator('input').nth(index < correct ? q.correct : (q.correct + 1) % q.options.length).check();
         } else {
             const blank = /_{3,}/.exec(q.code);
             assert.equal(await part('code-before').textContent(), q.code.slice(0, blank.index));
             assert.equal(await part('code-after').textContent(), q.code.slice(blank.index + blank[0].length));
             await part('code-answer').fill(index < correct ? q.answer : '<script>alert(1)</script>');
+        }
+        for (const width of [320, 1440]) {
+            await page.setViewportSize({ width, height: 1000 });
+            assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `question ${index + 1} overflow at ${width}`);
         }
     }
     assert.equal(await part('progress-text').textContent(), '20 dari 20 soal terjawab');
@@ -108,7 +119,8 @@ try {
     await page.waitForFunction(() => document.querySelector('[data-exam=save-status]').textContent.includes('belum tersimpan'));
     await context.unroute('**/evaluasi/attempts/*/answers');
     await part('code-answer').fill('self.nilai = nilai');
-    await page.waitForFunction(() => document.querySelector('[data-exam=save-status]').textContent.includes('tersimpan pada server'));
+    await page.waitForFunction(() => document.querySelector('[data-exam=save-status]').textContent === 'Jawaban tersimpan pada server.');
+    assert.equal(await part('storage-warning').isVisible(), false);
     await layout('code');
     await page.reload();
     await ready();

@@ -1,4 +1,5 @@
 // Pure browser practice rules. No learner answer is executed as code.
+import { matchesCode, normalizeCode } from './code-answer.js';
 export const emptyState = () => ({ version: 1, active: null, history: [] });
 
 export function hasAnswer(question, answer) {
@@ -8,24 +9,13 @@ export function hasAnswer(question, answer) {
 }
 
 export function codeTokens(source) {
-    if (typeof source !== 'string') return null;
-    const tokens = [];
-    let rest = source.trim();
-    if (/[\r\n]/.test(rest)) return null;
-    while (rest) {
-        const match = rest.match(/^(?:[A-Za-z_]\w*|[.@=(),])/);
-        if (!match) return null;
-        tokens.push(match[0]);
-        rest = rest.slice(match[0].length).trimStart();
-    }
-    return tokens.length ? JSON.stringify(tokens) : null;
+    return normalizeCode(source);
 }
 
 export function isCorrect(question, answer) {
     if (!hasAnswer(question, answer) || question.type === 'essay') return false;
     if (question.type === 'multiple_choice') return answer === question.correct;
-    const actual = codeTokens(answer);
-    return actual !== null && actual === codeTokens(question.answer);
+    return matchesCode(question, answer);
 }
 
 export function createAttempt(questions, settings, now, id) {

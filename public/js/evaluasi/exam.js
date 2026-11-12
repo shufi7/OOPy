@@ -70,6 +70,7 @@ async function initialize() {
     };
     let saveTimer;
     let saveChain = Promise.resolve();
+    let answerSaveError = null;
     const persistAnswers = () => {
         if (!state.active) return Promise.resolve();
         const id = state.active.id;
@@ -77,9 +78,15 @@ async function initialize() {
         saveChain = saveChain.catch(() => {}).then(() => api(`${urls.start}/${encodeURIComponent(id)}/answers`, 'PUT', { answers }));
         return saveChain.then(() => {
             if (find('save-status')) find('save-status').textContent = 'Jawaban tersimpan pada server.';
+            if (answerSaveError && find('storage-warning').textContent === answerSaveError) {
+                find('storage-warning').hidden = true;
+                find('storage-warning').textContent = '';
+            }
+            answerSaveError = null;
         }).catch((error) => {
             if (find('save-status')) find('save-status').textContent = 'Perubahan belum tersimpan pada server.';
-            warning(error.message);
+            answerSaveError = error.message;
+            warning(answerSaveError);
         });
     };
     const save = () => {
@@ -253,8 +260,9 @@ async function initialize() {
         find('type').textContent = { multiple_choice: 'Pilihan Ganda', code_fill: 'Isian Kode', essay: 'Uraian Singkat' }[q.type];
         find('question').textContent = q.question;
         find('code-card').hidden = !q.code;
+        find('code-caption').textContent = q.type === 'code_fill' ? 'Potongan kode Python: lengkapi bagian kosong' : 'Potongan kode Python';
         const source = q.code || '';
-        const blank = /_{3,}/.exec(source);
+        const blank = q.type === 'code_fill' ? /_{3,}/.exec(source) : null;
         const before = blank ? source.slice(0, blank.index) : source;
         const after = blank ? source.slice(blank.index + blank[0].length) : '';
         find('code-before').textContent = before;
@@ -267,6 +275,7 @@ async function initialize() {
         find('code-group').hidden = q.type !== 'code_fill';
         find('essay-group').hidden = q.type !== 'essay';
         find('code-answer').disabled = q.type !== 'code_fill';
+        find('code-answer').hidden = q.type !== 'code_fill';
         find('essay-answer').disabled = q.type !== 'essay';
         find('code-answer').value = q.type === 'code_fill' ? attempt.answers[q.id] || '' : '';
         sizeCodeAnswer();

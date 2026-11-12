@@ -214,6 +214,16 @@ class FinalExamService
         $counts = array_count_values(array_column($questions, 'type'));
         abort_unless(count($questions) === 20 && ($counts['multiple_choice'] ?? 0) === 10
             && ($counts['code_fill'] ?? 0) === 10, 503, 'Paket Evaluasi Akhir harus berisi 10 pilihan ganda dan 10 isian kode. Hubungi Admin untuk menerbitkan paket baru.');
+        foreach ($questions as $question) {
+            if ($question['type'] === 'multiple_choice') {
+                $options = $question['options'] ?? [];
+                abort_unless(array_is_list($options) && count($options) === 4 && count(array_unique($options)) === 4
+                    && is_int($question['correct']) && array_key_exists($question['correct'], $options),
+                    503, 'Setiap pilihan ganda Evaluasi Akhir harus memiliki empat opsi berbeda dan satu kunci yang valid.');
+            }
+        }
+
+        $questions = array_map(fn ($q) => $q + ['grading_version' => 2], $questions);
 
         return [$questions, $quiz];
     }
@@ -253,32 +263,32 @@ class FinalExamService
         if ($q['type'] !== 'code_fill' || ! is_string($answer)) {
             return false;
         }
-        // Admin-authored expressions outside the tolerant token grammar must still
-        // accept their exact answer; Python is never executed by this service.
+        if (($q['grading_version'] ?? 1) >= 2) {
+            return app(FinalExamCodeAnswer::class)->matches($q, $answer);
+        }
+        // Old snapshots retain the original comparison policy, including feedback.
         if (trim($answer) !== '' && trim($answer) === trim($q['answer'])) {
             return true;
         }
-        $expected = $this->codeTokens($q['answer']);
-
-        return $expected !== null && $this->codeTokens($answer) === $expected;
-    }
-
-    private function codeTokens(string $source): ?array
-    {
-        $rest = trim($source);
-        if (str_contains($rest, "\n") || str_contains($rest, "\r")) {
-            return null;
-        }
-        $tokens = [];
-        while ($rest !== '') {
-            if (! preg_match('/^(?:[A-Za-z_]\w*|[.@=(),])/', $rest, $matches)) {
+        $tokens = static function (string $source): ?array {
+            $rest = trim($source);
+            if (str_contains($rest, "\n") || str_contains($rest, "\r")) {
                 return null;
             }
-            $tokens[] = $matches[0];
-            $rest = ltrim(substr($rest, strlen($matches[0])));
-        }
+            $result = [];
+            while ($rest !== '') {
+                if (! preg_match('/^(?:[A-Za-z_]\w*|[.@=(),])/', $rest, $matches)) {
+                    return null;
+                }
+                $result[] = $matches[0];
+                $rest = ltrim(substr($rest, strlen($matches[0])));
+            }
 
-        return $tokens ?: null;
+            return $result ?: null;
+        };
+        $expected = $tokens($q['answer']);
+
+        return $expected !== null && $tokens($answer) === $expected;
     }
 
     private function storePractice(Request $request, FinalExamAttempt $attempt): void

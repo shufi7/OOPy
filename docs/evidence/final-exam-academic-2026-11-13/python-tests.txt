@@ -1,0 +1,8 @@
+test_answers_generalize_beyond_the_displayed_example (__main__.FinalExamPythonTest.test_answers_generalize_beyond_the_displayed_example) ... ok
+test_bank_shape_and_all_reference_code_solutions (__main__.FinalExamPythonTest.test_bank_shape_and_all_reference_code_solutions) ... ok
+test_multiple_choice_code_and_single_correct_option (__main__.FinalExamPythonTest.test_multiple_choice_code_and_single_correct_option) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.011s
+
+OK

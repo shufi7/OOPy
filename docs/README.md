@@ -11,6 +11,7 @@ Petunjuk instalasi, teknologi, dan menjalankan aplikasi ada di [README proyek](.
 | Aktivasi grader development | [Laporan aktivasi, 22 Oktober 2026](coding-grader-activation-2026-10-22.md) |
 | Dashboard Pengguna dan agregasi Coding, Tahap 2 | [Integrasi Dashboard, 5 November 2026](coding-dashboard-2026-11-05.md) |
 | Panel Admin, promosi role, dan rekap | [Panduan Admin](ADMIN_PANEL.md) |
+| Audit akademis, revisi soal, dan penilaian Evaluasi Akhir | [Evaluasi Akhir, 13 November 2026](final-exam-academic-2026-11-13.md) |
 | Coding pada detail siswa, filter rekap, dan CSV, Tahap 3 | [Integrasi Admin, 5 November 2026](admin-coding-2026-11-05.md) |
 | Materi BAB 1–7 | [Materi](materials.md) |
 | Editor Python | [Editor](editor.md) |

@@ -1,0 +1,2 @@
+PASS guest: composition, keyboard, navigation, flags, autosave, refresh, deadline, score 65, review, immutable history, layouts
+PASS official: score 70 and 100, submission retry after network failure, dashboard, Admin automatic result, CSV

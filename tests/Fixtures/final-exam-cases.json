@@ -1,0 +1,12 @@
+{
+  "q11": {"output":"70 90\n", "valid":["self . nilai=nilai", "(self).nilai = (nilai)"], "invalid":["nilai = nilai", "self.nilai == nilai", "self.nilai = 70", "s e l f.nilai = nilai", "self.nilai = nilai; print(1)"]},
+  "q12": {"output":"7.2\n", "valid":["return(self._ph)", "return ((self) . _ph)"], "invalid":["return self.ph", "return\nself._ph", "returnself._ph", "return self.._ph"]},
+  "q13": {"output":"Barito Kalimantan Selatan 5\n", "valid":["super ( ).__init__( nama , lokasi )", "(super()).__init__((nama), lokasi,)"], "invalid":["super().__init__(self, nama, lokasi)", "super().__init__(lokasi, nama)", "super().__init__((nama,), lokasi)", "super().__init__(nama lokasi)"]},
+  "q14": {"output":"7.2\n29.5\n", "valid":["item . baca_data ( )", "((item).baca_data())"], "invalid":["item.baca_data", "item.baca_data(self)", "SensorPH().baca_data()"]},
+  "q15": {"output":"7.2\n", "valid":[" SensorLingkungan ", "(SensorLingkungan)"], "invalid":["ABC", "SensorLingkungan()", "sensorlingkungan", "(SensorLingkungan,)"]},
+  "q16": {"output":"85\n", "valid":["self.sensor=sensor", "(self).sensor = (sensor)"], "invalid":["sensor = sensor", "self.sensor = Sensor()", "self.sensor == sensor"]},
+  "q17": {"output":"75 70\n", "valid":[" self . nilai+ kenaikan ", "(self.nilai + kenaikan)", "(self.nilai) + (kenaikan)"], "invalid":["self.nilai - kenaikan", "self.nilai + 5", "self.nilai+ +kenaikan", "self.nilai + kenaikan; print(1)"]},
+  "q18": {"output":"7.2\n", "valid":["super ( ).baca_data ( )+self.koreksi", "(super().baca_data()) + (self.koreksi)"], "invalid":["self.baca_data() + self.koreksi", "super().baca_data", "super().baca_data()", "super().baca_data() + 0.2"]},
+  "q19": {"output":"6.8\n", "valid":["self . _ph= nilai", "(self)._ph = (nilai)"], "invalid":["self.ph = nilai", "self._ph == nilai", "self._ph = 6.8"]},
+  "q20": {"output":"OOPy\n", "valid":["sensor . sumber ( )", "(sensor.sumber())"], "invalid":["sensor.baca()", "sensor.sumber", "AlatPantau()", "sensor.sumber(,)" ]}
+}

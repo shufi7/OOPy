@@ -88,7 +88,7 @@ return [
         'content' => 'evaluasi-akhir.php',
         'poin' => [
             'Evaluasi konsep OOP Python',
-            '20 soal pilihan ganda, isian kode, dan uraian',
+            '10 pilihan ganda dan 10 isian kode Python',
             'Hasil dan riwayat evaluasi',
         ],
     ],

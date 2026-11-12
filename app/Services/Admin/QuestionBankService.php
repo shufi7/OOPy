@@ -120,6 +120,10 @@ class QuestionBankService
                 throw ValidationException::withMessages(['question_ids' => 'Pilih '.config('quiz.minimum_questions').' sampai '.config('quiz.maximum_questions').' soal pilihan ganda atau isian kode dari kuis ini. Uraian hanya untuk Evaluasi Akhir.']);
             }
             foreach ($questions as $question) {
+                if ($quiz->type === 'final_exam' && $question->question_type === 'multiple_choice'
+                    && (count($question->options ?? []) !== 4 || count(array_unique($question->options)) !== 4)) {
+                    throw ValidationException::withMessages(['question_ids' => 'Soal #'.$question->id.' harus memiliki empat opsi berbeda untuk Evaluasi Akhir.']);
+                }
                 try {
                     $question->validateForPublication();
                 } catch (ValidationException $exception) {
