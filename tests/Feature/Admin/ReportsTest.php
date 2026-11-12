@@ -224,6 +224,10 @@ class ReportsTest extends TestCase
         $admin = $this->admin();
         $student = User::factory()->create();
         $id = $this->actingAs($student)->postJson('/evaluasi/attempts')->assertOk()->json('attempt.id');
+        $snapshot = require base_path('tests/Fixtures/legacy-final-exam.php');
+        \App\Models\FinalExamAttempt::findOrFail($id)->update([
+            'snapshot' => $snapshot, 'answers' => array_fill_keys(array_column($snapshot, 'id'), null),
+        ]);
         $this->postJson('/evaluasi/attempts/'.$id.'/submit', ['answers' => [], 'score' => 100])->assertOk();
         $reports = app(LearningReportService::class);
         $record = $reports->users()->whereKey($student->id)->firstOrFail();

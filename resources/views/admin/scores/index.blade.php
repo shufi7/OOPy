@@ -12,7 +12,7 @@
     <button type="submit" class="btn btn-brand">Terapkan</button><a href="{{ route('admin.scores.index') }}" class="btn btn-outline-secondary">Reset</a>
 </form>
 <p id="coding-filter-help">Untuk Semua latihan, Selesai berarti kedua latihan selesai. Belum Lulus berarti sudah mencoba tetapi belum menyelesaikan keduanya. Pilih satu latihan untuk memfilter status atau mengurutkan hasil latihan tersebut.</p>
-<p>{{ $users->total() }} pengguna. Rata-rata dihitung dari nilai terbaik BAB yang tersedia. Total evaluasi tersedia setelah uraian dinilai.</p>
+<p>{{ $users->total() }} pengguna. Rata-rata dihitung dari nilai terbaik BAB yang tersedia. Evaluasi baru dinilai otomatis; uraian pada riwayat lama tetap memerlukan penilaian Admin.</p>
 <div class="table-responsive" role="region" aria-label="Rekap nilai BAB, Evaluasi Akhir, dan Coding" tabindex="0"><table class="table admin-scores-table"><thead><tr><th scope="col">Nama Pengguna</th>@for($number = 1; $number <= 6; $number++)<th scope="col">BAB {{ $number }}</th>@endfor<th scope="col">Evaluasi Akhir</th><th scope="col">Kuis selesai</th><th scope="col">Rata-rata</th><th scope="col">Status kuis</th><th scope="col">Pengerjaan terakhir</th><th scope="col">Coding Latihan 1</th><th scope="col">Coding Latihan 2</th><th scope="col">Progres Coding</th></tr></thead><tbody>
 @forelse($users as $user)
 @php($row = $reports->row($user))

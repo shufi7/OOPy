@@ -5,6 +5,8 @@ namespace Tests\Feature\Admin;
 use App\Models\FinalExamAttempt;
 use App\Models\Quiz;
 use App\Models\User;
+use App\Services\Admin\LearningReportService;
+use App\Services\DashboardProgressService;
 use Database\Seeders\OopyContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -33,6 +35,15 @@ class FinalEvaluationTest extends TestCase
         }])->all();
     }
 
+    private function legacyAttempt(User $user): FinalExamAttempt
+    {
+        $attempt = $this->start($user);
+        $snapshot = require base_path('tests/Fixtures/legacy-final-exam.php');
+        $attempt->update(['snapshot' => $snapshot, 'answers' => array_fill_keys(array_column($snapshot, 'id'), null)]);
+
+        return $attempt;
+    }
+
     public function test_page_and_active_payload_never_expose_bank_keys(): void
     {
         $response = $this->get(route('evaluasi.exam'))->assertOk();
@@ -53,17 +64,18 @@ class FinalEvaluationTest extends TestCase
         $this->assertArrayNotHasKey('result', $response->json('attempt'));
     }
 
-    public function test_server_grades_objective_answers_ignores_client_score_and_waits_for_manual_essays(): void
+    public function test_server_grades_all_twenty_answers_and_completes_without_manual_grading(): void
     {
         $attempt = $this->start(User::factory()->create());
         $response = $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt), 'total_score' => 100, 'essay_points' => 25])->assertOk();
-        $response->assertJsonPath('attempt.result.score', 100)->assertJsonPath('attempt.result.objectivePoints', 75)
-            ->assertJsonPath('attempt.result.totalScore', null)->assertJsonPath('attempt.result.essayPoints', null);
+        $response->assertJsonPath('attempt.result.score', 100)->assertJsonPath('attempt.result.objectivePoints', 100)
+            ->assertJsonPath('attempt.result.totalScore', 100)->assertJsonPath('attempt.result.essayPoints', null)
+            ->assertJsonPath('attempt.result.essayTotal', 0)->assertJsonPath('attempt.result.passed', true);
         $attempt->refresh();
-        $this->assertSame('pending_review', $attempt->status);
-        $this->assertNull($attempt->total_score);
+        $this->assertSame('completed', $attempt->status);
+        $this->assertSame('100.00', $attempt->total_score);
         $this->assertCount(20, $attempt->answers);
-        $this->assertSame('75.00', $attempt->objective_points);
+        $this->assertSame('100.00', $attempt->objective_points);
         $this->assertNotNull($attempt->submitted_at);
     }
 
@@ -106,8 +118,9 @@ class FinalEvaluationTest extends TestCase
     public function test_manual_essay_grading_is_bounded_admin_only_and_publishes_valid_total(): void
     {
         $user = User::factory()->create();
-        $attempt = $this->start($user);
+        $attempt = $this->legacyAttempt($user);
         $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt)])->assertOk();
+        $this->assertSame('pending_review', $attempt->fresh()->status);
         $scores = collect($attempt->snapshot)->where('type', 'essay')->mapWithKeys(fn ($q) => [$q['id'] => 4])->all();
         $this->get(route('admin.evaluations.show', $attempt))->assertForbidden();
         $this->put(route('admin.evaluations.update', $attempt), ['scores' => $scores])->assertForbidden();
@@ -131,7 +144,7 @@ class FinalEvaluationTest extends TestCase
         $quiz = Quiz::where('type', 'final_exam')->firstOrFail();
         $question = $quiz->questions->first();
         $question->update(['correct_answer' => (string) (((int) $question->correct_answer + 1) % 4)]);
-        $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt)])->assertOk()->assertJsonPath('attempt.result.correct', 15);
+        $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt)])->assertOk()->assertJsonPath('attempt.result.correct', 20);
     }
 
     public function test_admin_authored_numeric_string_and_operator_code_keys_are_gradeable_without_execution(): void
@@ -141,7 +154,7 @@ class FinalEvaluationTest extends TestCase
             $questions[$index]->update(['correct_answer' => $key]);
         }
         $attempt = $this->start(User::factory()->create());
-        $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt)])->assertOk()->assertJsonPath('attempt.result.correct', 15);
+        $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt)])->assertOk()->assertJsonPath('attempt.result.correct', 20);
     }
 
     public function test_guest_can_start_a_new_practice_after_the_existing_deadline(): void
@@ -162,5 +175,85 @@ class FinalEvaluationTest extends TestCase
         $this->getJson(route('evaluasi.attempts.state'))->assertOk()->assertJsonCount(1, 'history');
         $this->flushSession();
         $this->postJson(route('evaluasi.attempts.submit', $id), ['answers' => []])->assertNotFound();
+    }
+
+    public function test_scores_thresholds_and_official_reports_use_server_totals(): void
+    {
+        $user = User::factory()->create();
+        foreach ([20, 18, 16, 14, 13, 10, 0] as $correct) {
+            $this->travel(61)->seconds();
+            $attempt = $this->start($user);
+            $this->assertSame(2400, $attempt->duration_seconds);
+            $this->assertSame('70.00', $attempt->passing_score);
+            $answers = $this->answers($attempt);
+            foreach (array_slice($attempt->snapshot, $correct) as $q) {
+                $answers[$q['id']] = $q['type'] === 'multiple_choice' ? ($q['correct'] + 1) % count($q['options']) : 'salah';
+            }
+            $response = $this->postJson(route('evaluasi.attempts.submit', $attempt->id), [
+                'answers' => $answers, 'total_score' => 99, 'status' => 'pending_review', 'objective_points' => 99,
+            ])->assertOk()->assertJsonPath('attempt.result.correct', $correct)
+                ->assertJsonPath('attempt.result.incorrect', 20 - $correct)
+                ->assertJsonPath('attempt.result.totalScore', $correct * 5)
+                ->assertJsonPath('attempt.result.passed', $correct >= 14);
+            $this->assertSame('completed', $attempt->fresh()->status);
+            foreach ($response->json('attempt.questions') as $q) {
+                $this->assertArrayNotHasKey('answer', $q);
+                $this->assertArrayNotHasKey('correct', $q);
+            }
+            $before = $attempt->fresh()->getAttributes();
+            $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt)])->assertOk();
+            $this->assertSame($before, $attempt->fresh()->getAttributes());
+        }
+        $reports = app(LearningReportService::class);
+        $reported = $reports->users()->whereKey($user->id)->firstOrFail();
+        $this->assertEquals(100, $reported->final_score);
+        $this->assertEquals(0, $reported->final_pending);
+        $dashboard = app(DashboardProgressService::class)->forUser($user);
+        $this->assertSame('100', $dashboard['final_exam']['best_score_label']);
+        $this->assertSame(7, $dashboard['final_exam']['submitted']);
+        $this->get('/dashboard')->assertOk()->assertSee('data-dashboard="final-exam"', false)->assertSee('100');
+        $admin = User::factory()->create(['role' => 'admin']);
+        $stats = $this->actingAs($admin)->get('/admin')->assertOk()->viewData('stats');
+        $this->assertSame(7, $stats['finals']);
+        $this->assertSame(0, $stats['pending']);
+        $this->assertEqualsWithDelta(455 / 7, $stats['final_average'], 0.01);
+        $this->get('/admin/scores?q='.$user->email)->assertOk()->assertSee('100');
+        $this->get('/admin/users/'.$user->id)->assertOk()->assertDontSee('Menunggu penilaian uraian');
+        $this->get('/admin/evaluations/'.$attempt->id)->assertOk()->assertDontSee('Simpan penilaian uraian')->assertSee('dinilai otomatis');
+        $this->putJson('/admin/evaluations/'.$attempt->id, ['scores' => []])->assertStatus(409);
+        $csv = $this->get('/admin/scores/export?q='.$user->email)->assertOk()->streamedContent();
+        $rows = array_map(fn ($line) => str_getcsv($line, ';', '"', ''), explode("\n", trim($csv)));
+        $this->assertSame('100', $rows[1][8]);
+        $this->assertSame('Dinilai', $rows[1][9]);
+    }
+
+    public function test_saved_answers_resume_with_identical_deadline_and_code_tokens_are_tolerated(): void
+    {
+        $attempt = $this->start(User::factory()->create());
+        $answers = $this->answers($attempt);
+        $code = collect($attempt->snapshot)->firstWhere('type', 'code_fill');
+        $answers[$code['id']] = ' self . nilai= nilai ';
+        $this->putJson(route('evaluasi.attempts.save', $attempt->id), ['answers' => $answers])->assertOk();
+        $this->travel(10)->minutes();
+        $this->getJson(route('evaluasi.attempts.state'))->assertOk()
+            ->assertJsonPath('active.deadline', $attempt->deadline_at->getTimestampMs())
+            ->assertJsonPath('active.answers.'.$code['id'], 'self . nilai= nilai');
+        $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => []])->assertOk()
+            ->assertJsonPath('attempt.result.totalScore', 100);
+    }
+
+    public function test_completed_historical_scores_are_not_recalculated_on_read_or_submit(): void
+    {
+        $user = User::factory()->create();
+        $attempt = $this->legacyAttempt($user);
+        $attempt->update([
+            'status' => 'completed', 'submitted_at' => now(), 'objective_score' => 80,
+            'objective_points' => 60, 'essay_points' => 17, 'essay_score' => 68, 'total_score' => 77,
+        ]);
+        $before = $attempt->fresh()->getAttributes();
+        $this->getJson(route('evaluasi.attempts.state'))->assertOk()->assertJsonPath('history.0.result.totalScore', 77);
+        $this->postJson(route('evaluasi.attempts.submit', $attempt->id), ['answers' => $this->answers($attempt)])->assertOk()
+            ->assertJsonPath('attempt.result.totalScore', 77);
+        $this->assertSame($before, $attempt->fresh()->getAttributes());
     }
 }

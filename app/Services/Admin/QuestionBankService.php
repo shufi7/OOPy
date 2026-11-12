@@ -110,10 +110,10 @@ class QuestionBankService
                     : 'Pilih hanya soal draft atau aktif dari kuis ini. Soal arsip dan soal kuis lain tidak dapat diterbitkan.']);
             }
             if ($quiz->type === 'final_exam') {
-                $expected = collect(['multiple_choice' => 10, 'code_fill' => 5, 'essay' => 5]);
+                $expected = collect(['multiple_choice' => 10, 'code_fill' => 10]);
                 $actual = $questions->countBy('question_type');
                 if (count($ids) !== 20 || $expected->contains(fn ($count, $type) => $actual->get($type, 0) !== $count)) {
-                    throw ValidationException::withMessages(['question_ids' => 'Pilih tepat 10 pilihan ganda, 5 isian kode, dan 5 uraian dari kuis ini.']);
+                    throw ValidationException::withMessages(['question_ids' => 'Pilih tepat 10 pilihan ganda dan 10 isian kode dari kuis ini.']);
                 }
             } elseif ($questions->count() < config('quiz.minimum_questions') || $questions->count() > config('quiz.maximum_questions')
                 || $questions->contains(fn ($question) => ! in_array($question->question_type, ['multiple_choice', 'code_fill'], true))) {

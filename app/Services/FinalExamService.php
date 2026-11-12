@@ -119,7 +119,12 @@ class FinalExamService
         $attempt->objective_points = $correct * 5;
         $attempt->submitted_at = now()->min($attempt->deadline_at);
         $attempt->timed_out = now()->gte($attempt->deadline_at);
-        $attempt->status = 'pending_review';
+        if ($questions->contains('type', 'essay')) {
+            $attempt->status = 'pending_review';
+        } else {
+            $attempt->total_score = $attempt->objective_points;
+            $attempt->status = 'completed';
+        }
     }
 
     public function grade(FinalExamAttempt $attempt, User $admin, array $scores, array $feedback): void
@@ -128,8 +133,9 @@ class FinalExamService
             $locked = FinalExamAttempt::whereKey($attempt->id)->lockForUpdate()->firstOrFail();
             abort_if($locked->submitted_at === null, 409, 'Evaluasi belum dikumpulkan.');
             $ids = collect($locked->snapshot)->where('type', 'essay')->pluck('id')->all();
+            abort_if($ids === [], 409, 'Evaluasi ini sudah dinilai otomatis dan tidak memerlukan penilaian uraian.');
             if (count($scores) !== count($ids) || array_diff(array_keys($scores), $ids) || array_diff($ids, array_keys($scores))) {
-                throw ValidationException::withMessages(['scores' => 'Berikan skor untuk seluruh lima uraian.']);
+                throw ValidationException::withMessages(['scores' => 'Berikan skor untuk seluruh uraian dalam percobaan ini.']);
             }
             foreach ($scores as $id => $score) {
                 if (! is_numeric($score) || $score < 0 || $score > self::ESSAY_MAX_POINTS) {
@@ -139,7 +145,7 @@ class FinalExamService
             $points = array_sum($scores);
             $locked->update([
                 'essay_scores' => $scores, 'essay_feedback' => array_intersect_key($feedback, $scores),
-                'essay_points' => $points, 'essay_score' => $points / 25 * 100,
+                'essay_points' => $points, 'essay_score' => $points / (count($ids) * self::ESSAY_MAX_POINTS) * 100,
                 'total_score' => (float) $locked->objective_points + $points,
                 'status' => 'completed', 'graded_at' => now(), 'graded_by' => $admin->id,
             ]);
@@ -169,7 +175,8 @@ class FinalExamService
                     'metThreshold' => $correct / $objective->count() * 100 >= (float) $attempt->passing_score,
                     'essaysFilled' => collect($attempt->snapshot)->where('type', 'essay')
                         ->filter(fn ($q) => trim($attempt->answers[$q['id']] ?? '') !== '')->count(),
-                    'essayTotal' => 5, 'durationMs' => $attempt->submitted_at->diffInMilliseconds($attempt->started_at, true),
+                    'essayTotal' => collect($attempt->snapshot)->where('type', 'essay')->count(),
+                    'durationMs' => $attempt->submitted_at->diffInMilliseconds($attempt->started_at, true),
                     'objectivePoints' => (float) $attempt->objective_points,
                     'essayPoints' => $attempt->essay_points === null ? null : (float) $attempt->essay_points,
                     'totalScore' => $attempt->total_score === null ? null : (float) $attempt->total_score,
@@ -206,19 +213,19 @@ class FinalExamService
         }
         $counts = array_count_values(array_column($questions, 'type'));
         abort_unless(count($questions) === 20 && ($counts['multiple_choice'] ?? 0) === 10
-            && ($counts['code_fill'] ?? 0) === 5 && ($counts['essay'] ?? 0) === 5, 503, 'Susunan evaluasi belum valid.');
+            && ($counts['code_fill'] ?? 0) === 10, 503, 'Paket Evaluasi Akhir harus berisi 10 pilihan ganda dan 10 isian kode. Hubungi Admin untuk menerbitkan paket baru.');
 
         return [$questions, $quiz];
     }
 
     private function newAttributes(array $questions, ?Quiz $quiz): array
     {
-        $duration = $quiz?->duration_seconds ?? config('evaluasi.duration_seconds');
+        $duration = config('evaluasi.duration_seconds');
 
         return [
             'quiz_id' => $quiz?->id, 'snapshot' => $questions,
             'answers' => array_fill_keys(array_column($questions, 'id'), null),
-            'status' => 'in_progress', 'passing_score' => $quiz?->passing_score ?? config('evaluasi.pass_threshold'),
+            'status' => 'in_progress', 'passing_score' => config('evaluasi.pass_threshold'),
             'duration_seconds' => $duration, 'started_at' => now(), 'deadline_at' => now()->addSeconds($duration),
         ];
     }

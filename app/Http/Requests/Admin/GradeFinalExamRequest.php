@@ -14,7 +14,7 @@ class GradeFinalExamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'scores' => ['required', 'array', 'size:5'],
+            'scores' => ['present', 'array', 'size:'.collect($this->route('evaluation')->snapshot)->where('type', 'essay')->count()],
             'scores.*' => ['required', 'numeric', 'between:0,5'],
             'feedback' => ['nullable', 'array', 'max:5'],
             'feedback.*' => ['nullable', 'string', 'max:2000'],

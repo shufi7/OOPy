@@ -20,31 +20,28 @@ const answers = (session, correct) => {
     return session;
 };
 
-test('objective scores use exactly 15 questions and the unrounded threshold; essays remain ungraded', () => {
+test('practice model scores twenty objective questions at five points each', () => {
     assert.equal(questions.length, 20);
-    for (const [correct, passed] of [[0, false], [10, false], [11, true], [15, true]]) {
+    assert.equal(questions.filter(q => q.type === 'multiple_choice').length, 10);
+    assert.equal(questions.filter(q => q.type === 'code_fill').length, 10);
+    for (const [correct, passed] of [[0, false], [10, false], [13, false], [14, true], [16, true], [18, true], [20, true]]) {
         const session = answers(attempt(), correct);
-        session.answers.q16 = 'x'; // A short essay counts as filled, never as correct.
-        session.answers.q17 = '   ';
         const result = gradeAttempt(session, questions, now + 1000);
         assert.equal(result.correct, correct);
-        assert.equal(result.incorrect, 15 - correct);
-        assert.equal(result.objectiveTotal, 15);
-        assert.equal(result.score, correct / 15 * 100);
+        assert.equal(result.incorrect, 20 - correct);
+        assert.equal(result.objectiveTotal, 20);
+        assert.equal(result.score, correct * 5);
         assert.equal(result.metThreshold, passed);
-        assert.equal(result.essaysFilled, 1);
-        assert.equal(result.essayTotal, 5);
+        assert.equal(result.essaysFilled, 0);
+        assert.equal(result.essayTotal, 0);
     }
-    const session = answers(attempt(), 10);
-    session.policy.passThreshold = 66.67;
-    assert.equal(Number(gradeAttempt(session, questions, now).score.toFixed(2)), 66.67);
-    assert.equal(gradeAttempt(session, questions, now).metThreshold, false);
 });
 
 test('code fill normalization preserves token boundaries and case, rejecting substrings and extra code', () => {
     for (const q of questions.filter((q) => q.type === 'code_fill')) {
         assert.equal(isCorrect(q, `  ${q.answer}  `), true);
-        assert.equal(isCorrect(q, q.answer.toUpperCase()), false);
+        const wrongCase = q.answer === q.answer.toUpperCase() ? q.answer.toLowerCase() : q.answer.toUpperCase();
+        assert.equal(isCorrect(q, wrongCase), false);
         assert.equal(isCorrect(q, `${q.answer}; print(1)`), false);
         assert.equal(isCorrect(q, `prefix ${q.answer}`), false);
         assert.equal(isCorrect(q, ''), false);
@@ -105,7 +102,7 @@ test('malformed storage fails safely, invalid records are removed and stored tot
     ended.history[0].result = { score: 0, metThreshold: false };
     const recovered = decodeState(JSON.stringify(ended), questions, settings);
     assert.equal(recovered.state.history[0].result.correct, 11);
-    assert.equal(recovered.state.history[0].result.metThreshold, true);
+    assert.equal(recovered.state.history[0].result.metThreshold, false);
     ended.history.push({ id: 'invalid' });
     assert.equal(decodeState(JSON.stringify(ended), questions, settings).state.history.length, 1);
     const active = attempt(); active.deadline += 1;

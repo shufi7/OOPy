@@ -182,24 +182,33 @@ class QuestionBankTest extends QuizTestCase
         $this->get('/admin/questions/'.$draft->id.'/edit')->assertOk();
     }
 
-    public function test_final_bank_requires_twenty_questions_and_supports_manual_essay_rubric(): void
+    public function test_final_bank_accepts_only_ten_multiple_choice_and_ten_code_fill_questions(): void
     {
         $quiz = Quiz::with('questions')->where('type', 'final_exam')->firstOrFail();
-        $essay = $quiz->questions->firstWhere('question_type', 'essay');
-        $data = $this->data($essay);
-        $data['essay_rubric'] = '0: tidak menjawab; 1–4: konsep sebagian; 5: konsep dan contoh tepat.';
-        $draft = app(QuestionBankService::class)->save($data, $essay);
-        $selected = $quiz->questions->pluck('id')->map(fn ($id) => $id === $essay->id ? $draft->id : $id)->all();
+        $original = $quiz->questions->last();
+        $data = $this->data($original);
+        $data['question_text'] = 'Revisi isian kode abstract base class.';
+        $draft = app(QuestionBankService::class)->save($data, $original);
+        $selected = $quiz->questions->pluck('id')->map(fn ($id) => $id === $original->id ? $draft->id : $id)->all();
         app(QuestionBankService::class)->publish($quiz, $selected);
         $this->assertCount(20, $quiz->fresh()->questions);
-        $this->assertSame(5, $quiz->fresh()->questions->where('question_type', 'essay')->count());
-        $this->assertNull($draft->fresh()->correct_answer);
-        $this->assertSame($data['essay_rubric'], $draft->fresh()->essay_rubric);
-        $restoreArchived = array_map(fn ($id) => $id === $draft->id ? $essay->id : $id, $selected);
+        $this->assertSame(10, $quiz->fresh()->questions->where('question_type', 'code_fill')->count());
+        $this->assertSame(0, $quiz->fresh()->questions->where('question_type', 'essay')->count());
+        $restoreArchived = array_map(fn ($id) => $id === $draft->id ? $original->id : $id, $selected);
         $this->actingAs($this->admin())->postJson('/admin/questions/quizzes/'.$quiz->id.'/publish', [
             'question_ids' => $restoreArchived,
             'package_version' => app(QuestionBankService::class)->packageVersion($quiz->questions()->get()),
         ])->assertUnprocessable()->assertJsonValidationErrors('question_ids');
+        $data['question_type'] = 'essay';
+        $data['correct_answer'] = null;
+        $data['code_snippet'] = null;
+        $essay = app(QuestionBankService::class)->save($data);
+        foreach ([array_slice($selected, 0, 19), array_map(fn ($id) => $id === $draft->id ? $essay->id : $id, $selected)] as $invalid) {
+            $this->postJson('/admin/questions/quizzes/'.$quiz->id.'/publish', [
+                'question_ids' => $invalid,
+                'package_version' => app(QuestionBankService::class)->packageVersion($quiz->questions()->get()),
+            ])->assertUnprocessable()->assertJsonValidationErrors('question_ids');
+        }
         $this->assertCount(20, $quiz->fresh()->questions);
     }
 }

@@ -1,45 +1,27 @@
+// Run only against a fresh tests/browser/admin-sandbox.php database.
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { mkdir } from 'node:fs/promises';
+import { cacheAssets, loginAccount } from './quiz-helpers.mjs';
 
+assert.match(process.env.OOPY_ADMIN_TEST_DATABASE || '', /^admin-coding-[a-f0-9]{32}\.sqlite$/);
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const url = `${base}/materi/evaluasi-akhir`;
-const key = 'oopy.finalExam.v1';
+const directory = process.env.OOPY_SCREENSHOT_DIR;
+if (directory) await mkdir(directory, { recursive: true });
+const bank = JSON.parse(execFileSync('php', ['-r', "echo json_encode((require 'resources/materi/evaluasi-akhir.php')['questions']);"], { encoding: 'utf8' }));
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
-const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
-const page = await context.newPage();
 const errors = [];
-page.on('pageerror', (error) => errors.push(error.message));
-page.on('dialog', (dialog) => dialog.accept());
-await page.addInitScript(() => {
-    window.__testNow = Number(sessionStorage.getItem('oopy.test.clock') || Date.now());
-    sessionStorage.setItem('oopy.test.clock', String(window.__testNow));
-    Date.now = () => window.__testNow;
-    const schedule = window.setInterval.bind(window), cancel = window.clearInterval.bind(window);
-    window.__examIntervals = new Set();
-    window.setInterval = (fn, delay, ...args) => {
-        const id = schedule(fn, delay, ...args);
-        if (delay === 1000) window.__examIntervals.add(id);
-        return id;
-    };
-    window.clearInterval = (id) => { window.__examIntervals.delete(id); return cancel(id); };
-});
-const part = (role) => page.locator(`[data-exam="${role}"]`);
-const inlineAnswer = async (question) => {
-    const blank = /_{3,}/.exec(question.code);
-    assert.equal(await part('code-answer').evaluate((input) => input.parentElement === document.querySelector('[data-exam="code"]') && input.closest('pre') !== null), true);
-    assert.equal(await part('code-before').textContent(), question.code.slice(0, blank.index));
-    assert.equal(await part('code-after').textContent(), question.code.slice(blank.index + blank[0].length));
-    assert.equal(await part('code-card').locator('input').count(), 1);
-    assert.doesNotMatch(await part('code').textContent(), /_{3,}/);
-};
-const stored = () => page.evaluate((key) => JSON.parse(localStorage.getItem(key)), key);
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+await cacheAssets(context);
+const page = await context.newPage();
+page.on('pageerror', error => errors.push(error.message));
+const part = role => page.locator(`[data-exam="${role}"]`);
 const ready = () => part('counter').waitFor({ state: 'visible' });
-const advance = async (ms) => {
-    await page.evaluate((ms) => { window.__testNow += ms; sessionStorage.setItem('oopy.test.clock', String(window.__testNow)); }, ms);
-};
-const navigate = async (number) => {
-    const panel = part('number-panel');
-    if (!await panel.evaluate((el) => el.open)) await panel.locator('summary').click();
+const state = () => page.evaluate(async () => (await fetch('/evaluasi/attempts', { headers: { Accept: 'application/json' } })).json());
+const navigate = async number => {
+    if (!await part('number-panel').evaluate(el => el.open)) await part('number-panel').locator('summary').click();
     await part('numbers').locator('button').nth(number - 1).click();
     assert.equal(await part('counter').textContent(), `Soal ${number} dari 20`);
 };
@@ -49,262 +31,155 @@ const start = async () => {
     await part('start-confirm').click();
     await page.waitForURL(`${url}/ujian`);
     await ready();
+    const attempt = (await state()).active;
+    assert.equal(attempt.questions.length, 20);
+    assert.equal(attempt.questions.filter(q => q.type === 'code_fill').length, 10);
+    assert.equal(attempt.questions.filter(q => q.type === 'essay').length, 0);
+    assert.equal(attempt.deadline - attempt.startedAt, 2400_000);
+    for (const q of attempt.questions) {
+        assert.equal(Object.hasOwn(q, 'correct'), false);
+        assert.equal(Object.hasOwn(q, 'answer'), false);
+    }
+    // Page loading can consume a second; the server deadline is authoritative.
+    const [minutes, seconds] = (await part('timer').textContent()).split(':').map(Number);
+    assert.ok(minutes * 60 + seconds <= 2400 && minutes * 60 + seconds >= 2385);
+    return attempt;
 };
 const finish = async () => {
     await part('finish').click();
     await part('finish-dialog').waitFor({ state: 'visible' });
-    await part('finish-confirm').evaluate((button) => { button.click(); button.click(); });
-    await page.waitForURL((target) => target.pathname.endsWith('/hasil'));
+    await part('finish-confirm').evaluate(button => { button.click(); button.click(); });
+    await page.waitForURL(target => target.pathname.endsWith('/hasil'));
     await part('results').waitFor({ state: 'visible' });
 };
-const layout = async (label) => {
+const layout = async label => {
     for (const width of [320, 390, 768, 1024, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
-        await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${label}: overflow at ${width}px`);
-        for (const button of await page.locator('.oopy-final-exam button:visible, .oopy-final-exam a.exam-button:visible').all()) {
-            assert.ok(await button.evaluate((el) => el.getBoundingClientRect().right <= innerWidth + 1), `${label}: clipped button at ${width}px`);
-        }
-        if (label === 'code-fill') {
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${label}: overflow at ${width}`);
+        if (label === 'code') {
             await part('code-answer').scrollIntoViewIfNeeded();
-            assert.ok(await part('code-answer').evaluate((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.left >= 0 && rect.right <= innerWidth + 1;
-            }), `Inline code input clipped at ${width}px`);
+            assert.ok(await part('code-answer').evaluate(el => el.getBoundingClientRect().left >= 0 && el.getBoundingClientRect().right <= innerWidth + 1));
         }
-        if (label === 'exam') {
-            const columns = await page.locator('.exam-layout').evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
-            assert.equal(columns, width >= 992 ? 2 : 1);
-        }
-        if (process.env.OOPY_SCREENSHOT_DIR && width === 390 && ['intro', 'exam'].includes(label)) {
-            await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/evaluasi-${label}-390.png`, fullPage: true });
-        }
+        if (directory && [390, 1440].includes(width)) await page.screenshot({ path: `${directory}/${label}-${width}.png`, fullPage: true });
     }
 };
-const fillObjective = async (questions, correct) => {
-    for (const [index, question] of questions.slice(0, 15).entries()) {
+const answerAll = async correct => {
+    for (const [index, q] of bank.entries()) {
         await navigate(index + 1);
-        if (question.type === 'multiple_choice') await part('options').locator('input').nth(index < correct ? question.correct : (question.correct + 1) % 4).check();
-        else {
-            await inlineAnswer(question);
-            await part('code-answer').fill(index < correct ? ` ${question.answer} ` : question.answer.toUpperCase());
+        assert.equal(await part('essay-group').isVisible(), false);
+        if (q.type === 'multiple_choice') {
+            await part('options').locator('input').nth(index < correct ? q.correct : (q.correct + 1) % q.options.length).check();
+        } else {
+            const blank = /_{3,}/.exec(q.code);
+            assert.equal(await part('code-before').textContent(), q.code.slice(0, blank.index));
+            assert.equal(await part('code-after').textContent(), q.code.slice(blank.index + blank[0].length));
+            await part('code-answer').fill(index < correct ? q.answer : '<script>alert(1)</script>');
         }
     }
+    assert.equal(await part('progress-text').textContent(), '20 dari 20 soal terjawab');
 };
 
 try {
-    assert.equal((await page.goto(url, { waitUntil: 'networkidle' })).status(), 200);
-    assert.equal(await part('history-empty').isVisible(), true);
-    assert.equal(await part('history-table').isVisible(), false);
-    assert.doesNotMatch(await page.locator('.oopy-final-exam').innerText(), /Mini Project|60 menit|1 jam/);
-    assert.equal(await stored(), null);
+    await page.goto(url);
+    await page.waitForFunction(() => !document.querySelector('[data-exam=start]').disabled);
+    assert.match(await page.locator('.oopy-final-exam').innerText(), /10 pilihan ganda dan 10 isian kode Python/);
     await layout('intro');
-    if (process.env.OOPY_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/evaluasi-intro-1440.png`, fullPage: true });
     await part('start').click();
-    assert.equal(await stored(), null, 'Timer must not start before confirmation');
-    await part('start-cancel').click();
-    assert.equal(await stored(), null);
-    const quizProgress = '{"kelas-abstrak":{"passed":true,"bestCorrect":4,"bestScore":80}}';
-    await page.evaluate((value) => localStorage.setItem('oopy.quiz.progress', value), quizProgress);
-    await start();
-    assert.equal(await part('timer').textContent(), '40:00');
-    assert.equal(await part('numbers').locator('button').count(), 20);
-    assert.equal(await page.evaluate(() => window.__examIntervals.size), 1);
-    assert.equal(await part('numbers').locator('[aria-current="step"]').count(), 1);
-    await layout('exam');
-    if (process.env.OOPY_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/evaluasi-exam-1440.png`, fullPage: true });
-    const questions = JSON.parse(await part('config').textContent()).questions;
-    const first = (await stored()).active;
-
+    await page.keyboard.press('Escape');
+    assert.equal((await state()).active, null);
+    const first = await start();
+    assert.equal(first.official, false);
+    await page.evaluate(() => { window.__realNow = Date.now; Date.now = () => window.__realNow() + 35 * 60_000; });
+    await page.waitForFunction(() => document.querySelector('.exam-timer').dataset.warning === 'five');
+    await page.evaluate(() => { Date.now = () => window.__realNow() + 39 * 60_000; });
+    await page.waitForFunction(() => document.querySelector('.exam-timer').dataset.warning === 'one');
+    await page.evaluate(() => { Date.now = window.__realNow; });
     await part('options').locator('input').first().focus();
     await page.keyboard.press('Space');
-    await page.keyboard.press('ArrowDown');
-    assert.equal(await part('options').locator('input').nth(1).isChecked(), true);
     await part('mark').click();
-    await navigate(10);
+    await part('next').click();
     await part('previous').click();
-    assert.equal(await part('counter').textContent(), 'Soal 9 dari 20');
-    await navigate(20);
-    const essay = '<script>alert(1)</script> ABC menyatakan kontrak minimum.';
-    await part('essay-answer').fill(essay);
-    await part('mark').click();
-    await layout('essay');
+    assert.equal(await part('mark').getAttribute('aria-pressed'), 'true');
+    await layout('exam');
     await navigate(11);
-    assert.equal(await part('code-group').isVisible(), true);
-    await inlineAnswer(questions[10]);
-    assert.ok(await part('code').locator('.token.keyword').count() > 0);
+    await context.route('**/evaluasi/attempts/*/answers', route => route.abort('failed'));
     await part('code-answer').fill('self.nilai=nilai');
-    await layout('code-fill');
-    await page.reload({ waitUntil: 'networkidle' });
-    await ready();
-    assert.equal(await part('code-answer').inputValue(), 'self.nilai=nilai');
-    await inlineAnswer(questions[10]);
+    await page.waitForFunction(() => document.querySelector('[data-exam=save-status]').textContent.includes('belum tersimpan'));
+    await context.unroute('**/evaluasi/attempts/*/answers');
     await part('code-answer').fill('self.nilai = nilai');
-    assert.equal((await stored()).active.answers.q11, 'self.nilai = nilai');
-    if (process.env.OOPY_SCREENSHOT_DIR) await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/evaluasi-inline-code-1440.png`, fullPage: true });
-    await navigate(14);
-    await inlineAnswer(questions[13]);
-    await part('code-answer').fill('baca_data');
-    await layout('code-fill');
-    for (let number = 11; number <= 15; number++) {
-        await navigate(number);
-        await inlineAnswer(questions[number - 1]);
-        await part('code-answer').fill(questions[number - 1].answer);
-        await layout('code-fill');
-    }
-    await navigate(20);
-    await advance(105_000);
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.waitForFunction(() => document.querySelector('[data-exam=save-status]').textContent.includes('tersimpan pada server'));
+    await layout('code');
+    await page.reload();
     await ready();
-    assert.equal(await part('counter').textContent(), 'Soal 20 dari 20');
-    assert.equal(await part('essay-answer').inputValue(), essay);
-    assert.equal(await part('mark').getAttribute('aria-pressed'), 'true');
-    assert.equal((await stored()).active.deadline, first.deadline);
-    assert.equal((await stored()).active.startedAt, first.startedAt);
-    assert.equal(await part('timer').textContent(), '38:15');
-    assert.equal(await page.evaluate(() => window.__examIntervals.size), 1);
+    assert.equal(await part('code-answer').inputValue(), 'self.nilai = nilai');
+    assert.equal((await state()).active.deadline, first.deadline);
     await navigate(1);
-    assert.equal(await part('options').locator('input').nth(1).isChecked(), true);
     assert.equal(await part('mark').getAttribute('aria-pressed'), 'true');
-    assert.equal(await part('counter').evaluate((el) => el === document.activeElement), true);
-    assert.doesNotMatch(await page.locator('.oopy-final-exam').innerText(), /Jawaban benar:|Tidak benar \/ belum dijawab|Lulus Evaluasi Akhir/);
-    // Leaving for another page does not reset the deadline or answers.
-    await page.goto(`${base}/materi/kelas-abstrak`, { waitUntil: 'domcontentloaded' });
-    await page.goto(url, { waitUntil: 'networkidle' });
-    assert.equal(await part('resume').isVisible(), true);
-    assert.equal(await part('start').isVisible(), false);
-    await part('resume').click(); await ready();
-    assert.equal((await stored()).active.deadline, first.deadline);
-    await fillObjective(questions, 10);
-    for (let number = 16; number <= 20; number++) {
-        await navigate(number);
-        await part('essay-answer').fill(number === 20 ? essay : `Jawaban uraian ${number}.`);
-    }
-    assert.equal(await part('progress-text').textContent(), '20 dari 20 soal terjawab');
-    assert.equal(await part('progress').getAttribute('value'), '20');
+    await page.goto(url);
+    await part('resume').click();
+    await ready();
+    await answerAll(13);
     await part('finish').click();
-    assert.match(await part('finish-summary').textContent(), /20 soal terjawab, 0 soal belum dijawab/);
     await part('finish-cancel').click();
-    assert.equal((await stored()).active.status, 'active');
+    assert.equal((await state()).active.id, first.id);
     await finish();
-    assert.equal(await part('score').textContent(), '66,67');
-    assert.equal(await part('correct').textContent(), '10 dari 15');
-    assert.equal(await part('incorrect').textContent(), '5 dari 15');
-    assert.equal(await part('essays').textContent(), '5 dari 5 — Belum dinilai');
-    assert.equal(await part('objective-status').textContent(), 'Belum memenuhi ambang objektif');
-    assert.equal(await part('start').isEnabled(), true);
-    assert.equal((await stored()).history.length, 1);
-    assert.doesNotMatch(await page.locator('.oopy-final-exam').innerText(), /Mini Project|Mulai Lagi dalam/);
+    assert.equal(await part('score').textContent(), '65');
+    assert.equal(await part('objective-status').textContent(), 'Belum Lulus');
+    assert.equal(await part('correct').textContent(), '13 dari 20');
+    assert.equal(await part('incorrect').textContent(), '7 dari 20');
+    assert.equal(await part('essay-result').isVisible(), false);
     await part('review-open').click();
-    assert.match(await part('review-list').innerText(), /Jawaban benar:/);
-    assert.match(await part('review-list').innerText(), /<script>alert\(1\)<\/script>/);
-    assert.equal(await part('review-list').locator('script, img').count(), 0);
-    assert.equal(await part('review-list').locator('.exam-review-item').count(), 20);
+    assert.equal(await part('review-list').locator('section').count(), 20);
+    assert.equal(await part('review-list').locator('script').count(), 0);
+    assert.doesNotMatch(await part('review-list').innerText(), /Jawaban benar:/);
     await layout('results');
-    await page.reload({ waitUntil: 'networkidle' });
-    assert.equal((await stored()).history.length, 1);
-    // Existing failed results must not retain the retired one-hour restriction.
-    await page.evaluate((key) => {
-        const state = JSON.parse(localStorage.getItem(key));
-        state.history[0].policy.cooldownSeconds = 3600;
-        localStorage.setItem(key, JSON.stringify(state));
-    }, key);
-    await page.reload({ waitUntil: 'networkidle' });
-    assert.equal(await part('start').isEnabled(), true);
-    await page.waitForFunction(() => !document.querySelector('[data-exam="start"]').disabled);
-    await start();
-    await fillObjective(questions, 11);
-    await advance(1000);
-    await finish();
-    assert.equal(await part('score').textContent(), '73,33');
-    assert.equal(await part('objective-status').textContent(), 'Memenuhi ambang objektif');
-    assert.equal(await part('essays').textContent(), '0 dari 5 — Belum dinilai');
-    assert.equal(await part('start').isEnabled(), true);
-    assert.equal((await stored()).history.length, 2);
-    assert.doesNotMatch(await page.locator('.oopy-final-exam').innerText(), /Lulus Evaluasi Akhir/);
-    await page.goto(url, { waitUntil: 'networkidle' });
-    assert.equal(await part('history').locator('tr').count(), 2);
-    assert.match(await part('history').locator('tr').first().innerText(), /73,33/);
-    await start();
-    await part('options').locator('input').nth(questions[0].correct).check();
-    await navigate(16); await part('essay-answer').fill('x');
-    await advance(35 * 60_000);
-    await page.waitForFunction(() => document.querySelector('.exam-timer').dataset.warning === 'five');
-    await advance(4 * 60_000 + 1000);
-    await page.waitForFunction(() => document.querySelector('.exam-timer').dataset.warning === 'one');
-    assert.equal(await part('timer').textContent(), '00:59');
+    await page.reload();
+    await part('results').waitFor({ state: 'visible' });
+    assert.equal((await state()).history.length, 1);
+    await page.goto(url);
+    await part('history-table').waitFor({ state: 'visible' });
+    assert.match(await part('history').innerText(), /65/);
+    assert.doesNotMatch(await part('history').innerText(), /Menunggu|Belum dinilai/);
+    console.log('PASS guest: composition, keyboard, navigation, flags, autosave, refresh, deadline, score 65, review, immutable history, layouts');
+
+    await loginAccount(page, base, { email: 'student.browser@example.test', password: 'password123' });
+    await page.goto(url);
+    const official = await start();
+    assert.equal(official.official, true);
+    await answerAll(14);
+    await context.route('**/evaluasi/attempts/*/submit', route => route.abort('failed'));
     await part('finish').click();
-    await advance(59_000);
-    await page.waitForURL((target) => target.pathname.endsWith('/hasil'));
-    assert.equal(await part('completion-reason').textContent(), 'Waktu habis');
-    assert.equal(await part('duration').textContent(), '40:00');
-    assert.equal(await part('correct').textContent(), '1 dari 15');
-    assert.equal(await part('essays').textContent(), '1 dari 5 — Belum dinilai');
-    assert.equal((await stored()).history.length, 3);
-    await page.reload({ waitUntil: 'networkidle' });
-    assert.equal((await stored()).history.length, 3);
-    assert.equal(await page.evaluate(() => localStorage.getItem('oopy.quiz.progress')), quizProgress);
-    // Expiration on the intro page also permits an immediate retry.
-    await page.waitForFunction(() => !document.querySelector('[data-exam="start"]').disabled);
+    await part('finish-confirm').click();
+    await part('local-results').waitFor({ state: 'visible' });
+    assert.match(await part('local-summary').textContent(), /belum dikumpulkan/);
+    await context.unroute('**/evaluasi/attempts/*/submit');
+    await part('retry-save').click();
+    await page.waitForURL(target => target.pathname.endsWith('/hasil'));
+    await part('results').waitFor({ state: 'visible' });
+    assert.equal(await part('score').textContent(), '70');
+    assert.equal(await part('objective-status').textContent(), 'Lulus');
+    await page.goto(`${base}/dashboard`);
+    assert.match(await page.locator('[data-dashboard=final-exam]').innerText(), /70/);
+    await layout('dashboard');
+    const adminContext = await browser.newContext();
+    await cacheAssets(adminContext);
+    const admin = await adminContext.newPage();
+    await loginAccount(admin, base, { email: 'admin.browser@example.test', password: 'password123' });
+    await admin.goto(`${base}/admin/evaluations/${official.id}`);
+    assert.equal(await admin.locator('input[name^="scores["]').count(), 0);
+    assert.match(await admin.locator('main').innerText(), /70/);
+    const csv = await admin.evaluate(async () => (await fetch('/admin/scores/export?q=student.browser%40example.test')).text());
+    assert.match(csv, /;70;Dinilai;/);
+    await adminContext.close();
+    await page.goto(url);
     await start();
-    await page.goto(url, { waitUntil: 'networkidle' });
-    assert.equal(await part('resume').isVisible(), true);
-    await advance(40 * 60_000);
-    await page.waitForFunction(() => !document.querySelector('[data-exam="start"]').disabled && document.querySelector('[data-exam="resume"]').hidden);
-    assert.equal((await stored()).history.length, 4);
-    assert.equal(await page.evaluate(() => window.__examIntervals.size), 1);
-    assert.equal(await part('start').textContent(), 'Ulangi Evaluasi');
-    console.log('PASS: confirmation, 20-number navigation, keyboard/flags, autosave/resume/refresh, objective threshold, ungraded essays/review, immediate retries, deadline warnings/expiry and idempotent history');
-
-    const damaged = await browser.newContext();
-    const damagedPage = await damaged.newPage();
-    await damagedPage.goto(url, { waitUntil: 'networkidle' });
-    for (const raw of ['{broken', '[]', 'null', JSON.stringify({ version: 1, history: [], active: { bad: true } })]) {
-        await damagedPage.evaluate(({ key, raw }) => localStorage.setItem(key, raw), { key, raw });
-        await damagedPage.reload({ waitUntil: 'networkidle' });
-        assert.equal(await damagedPage.locator('[data-exam="storage-warning"]').isVisible(), true);
-        assert.equal(await damagedPage.locator('[data-exam="history-empty"]').isVisible(), true);
-    }
-    await damaged.close();
-
-    const denied = await browser.newContext();
-    const deniedPage = await denied.newPage();
-    await deniedPage.addInitScript(() => {
-        Storage.prototype.getItem = () => { throw new Error('Storage denied'); };
-        Storage.prototype.setItem = () => { throw new Error('Storage denied'); };
-    });
-    await deniedPage.goto(url, { waitUntil: 'networkidle' });
-    assert.equal(await deniedPage.locator('[data-exam="storage-warning"]').isVisible(), true);
-    await deniedPage.locator('[data-exam="start"]').click();
-    await deniedPage.locator('[data-exam="start-confirm"]').click();
-    assert.equal(deniedPage.url(), url);
-    assert.match(await deniedPage.locator('[data-exam="storage-warning"]').textContent(), /belum dimulai/);
-    await denied.close();
-
-    const failedWrite = await browser.newContext();
-    const failedPage = await failedWrite.newPage();
-    await failedPage.goto(url, { waitUntil: 'networkidle' });
-    await failedPage.locator('[data-exam="start"]').click();
-    await failedPage.locator('[data-exam="start-confirm"]').click();
-    await failedPage.waitForURL(`${url}/ujian`);
-    await failedPage.locator('[data-exam="counter"]').waitFor({ state: 'visible' });
-    await failedPage.evaluate(() => { window.restoreStorage = Storage.prototype.setItem; Storage.prototype.setItem = () => { throw new Error('Quota exceeded'); }; });
-    await failedPage.locator('[data-exam="numbers"] button').nth(15).click();
-    await failedPage.locator('[data-exam="essay-answer"]').fill('Jawaban dalam memori.');
-    await failedPage.locator('[data-exam="finish"]').click();
-    await failedPage.locator('[data-exam="finish-confirm"]').click();
-    assert.equal(await failedPage.locator('[data-exam="local-results"]').isVisible(), true);
-    assert.match(await failedPage.locator('[data-exam="local-summary"]').textContent(), /Uraian 1 dari 5/);
-    await failedPage.evaluate(() => { Storage.prototype.setItem = window.restoreStorage; });
-    await failedPage.locator('[data-exam="retry-save"]').click();
-    await failedPage.waitForURL((target) => target.pathname.endsWith('/hasil'));
-    assert.equal(await failedPage.locator('[data-exam="essays"]').textContent(), '1 dari 5 — Belum dinilai');
-    await failedWrite.close();
-    console.log('PASS: corrupted/denied storage, no phantom start, in-memory completion and storage retry recovery');
-
-    assert.equal((await page.goto(`${url}/mini-project`, { waitUntil: 'domcontentloaded' })).status(), 404);
+    await answerAll(20);
+    await finish();
+    assert.equal(await part('score').textContent(), '100');
+    assert.equal(await part('objective-status').textContent(), 'Lulus');
+    console.log('PASS official: score 70 and 100, submission retry after network failure, dashboard, Admin automatic result, CSV');
     assert.deepEqual(errors, []);
-    console.log('PASS: mini project removed; inline code answers and all pages responsive at 320/390/768/1024/1440px; no page errors');
 } finally {
     await browser.close();
 }

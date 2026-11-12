@@ -13,7 +13,7 @@
 .oopy-final-exam p, .oopy-final-exam li { line-height: 1.7; overflow-wrap: anywhere; }
 .oopy-final-exam .exam-card { min-width: 0; background: var(--oopy-surface); border: 1px solid var(--oopy-border); border-radius: 18px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 8px 24px rgb(64 81 78 / 5%); }
 .oopy-final-exam .exam-card-heading { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 20px 28px; background: var(--oopy-primary); color: var(--oopy-on-primary); }
-.oopy-final-exam .exam-card-heading h2 { margin: 0; }
+.oopy-final-exam .exam-card-heading h2 { margin: 0; color: inherit; }
 .oopy-final-exam .exam-card-heading > span { font-size: .875rem; font-weight: 600; }
 .oopy-final-exam .exam-card-heading.light { background: var(--oopy-selected); color: var(--oopy-text); }
 .oopy-final-exam .exam-card-body { padding: 28px; }

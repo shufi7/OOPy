@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Chapter;
+use App\Models\FinalExamAttempt;
 use App\Models\User;
 
 class DashboardProgressService
@@ -88,6 +89,10 @@ class DashboardProgressService
                 ];
             })->all();
 
+        $finals = FinalExamAttempt::where('user_id', $user->id)->whereNotNull('submitted_at')
+            ->selectRaw("MAX(CASE WHEN status = 'completed' THEN total_score END) AS best_score,
+                COUNT(*) AS submitted, SUM(CASE WHEN status = 'pending_review' THEN 1 ELSE 0 END) AS pending")->first();
+
         return [
             'chapters' => $cards->all(),
             'completed_chapters' => $done,
@@ -98,6 +103,11 @@ class DashboardProgressService
             'completed_attempts' => (int) $scores->sum('attempts_count'),
             'recommendation' => $recommendation,
             'recent_activity' => $recent,
+            'final_exam' => [
+                'best_score_label' => $this->formatScore($finals->best_score === null ? null : (float) $finals->best_score),
+                'pending' => (int) $finals->pending,
+                'submitted' => (int) $finals->submitted,
+            ],
             'coding' => $this->coding->forUser($user),
         ];
     }

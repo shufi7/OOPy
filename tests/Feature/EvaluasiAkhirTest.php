@@ -39,8 +39,8 @@ class EvaluasiAkhirTest extends TestCase
         $questions = $content['questions'];
         $this->assertCount(20, $questions);
         $this->assertSame(array_fill(0, 10, 'multiple_choice'), array_column(array_slice($questions, 0, 10), 'type'));
-        $this->assertSame(array_fill(0, 5, 'code_fill'), array_column(array_slice($questions, 10, 5), 'type'));
-        $this->assertSame(array_fill(0, 5, 'essay'), array_column(array_slice($questions, 15), 'type'));
+        $this->assertSame(array_fill(0, 10, 'code_fill'), array_column(array_slice($questions, 10), 'type'));
+        $this->assertNotContains('essay', array_column($questions, 'type'));
         $this->assertSame([2, 3, 0, 2, 0, 2, 3, 0, 1, 3], array_column(array_slice($questions, 0, 10), 'correct'));
         $this->assertSame(['self.nilai = nilai', 'return self._ph', 'super().__init__(nama, lokasi)', 'baca_data', '@abstractmethod'], array_column(array_slice($questions, 10, 5), 'answer'));
         $ids = array_column($questions, 'id');

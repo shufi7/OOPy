@@ -98,8 +98,8 @@ class LearningDatabaseTest extends TestCase
         $this->assertSame(50, Question::count());
         $this->assertSame(0, User::count(), 'Content seeding must not create default accounts.');
         $this->assertSame(28, Question::where('question_type', 'multiple_choice')->count());
-        $this->assertSame(17, Question::where('question_type', 'code_fill')->count());
-        $this->assertSame(5, Question::where('question_type', 'essay')->count());
+        $this->assertSame(22, Question::where('question_type', 'code_fill')->count());
+        $this->assertSame(0, Question::where('question_type', 'essay')->count());
 
         $registry = require resource_path('materi/chapters.php');
         foreach ($registry as $slug => $metadata) {
@@ -257,7 +257,10 @@ class LearningDatabaseTest extends TestCase
         $foreign = Question::where('quiz_id', '!=', $final->id)->firstOrFail();
         $this->rejected(fn () => QuizAnswer::create(['attempt_id' => $attempt->id, 'question_id' => $foreign->id, 'answer_text' => '0']), ValidationException::class);
         $this->rejected(fn () => DB::table('quiz_answers')->insert(['attempt_id' => $attempt->id, 'question_id' => $foreign->id, 'quiz_id' => $final->id, 'answer_text' => '0']));
-        $essay = $final->questions()->where('question_type', 'essay')->firstOrFail();
+        $essay = Question::create([
+            'quiz_id' => $final->id, 'question_order' => 21, 'question_type' => 'essay',
+            'question_text' => 'Uraian historis untuk validasi database.', 'publication_status' => 'archived',
+        ]);
         $this->rejected(fn () => QuizAnswer::create(['attempt_id' => $attempt->id, 'question_id' => $essay->id, 'answer_text' => 'Penjelasan', 'is_correct' => false]), ValidationException::class);
         $this->rejected(fn () => DB::table('quiz_answers')->insert(['attempt_id' => $attempt->id, 'question_id' => $essay->id, 'quiz_id' => $final->id, 'answer_text' => 'Penjelasan', 'is_correct' => false]));
         $answer = QuizAnswer::create(['attempt_id' => $attempt->id, 'question_id' => $essay->id, 'answer_text' => 'Penjelasan']);

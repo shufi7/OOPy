@@ -60,7 +60,9 @@ async function initialize() {
     let localResult = null;
     const ticker = new ExamTicker();
     const scoreText = (score) => Number(score).toLocaleString('id-ID', { maximumFractionDigits: 2 });
-    const objectiveStatus = (record) => record.result.metThreshold ? 'Memenuhi ambang objektif' : 'Belum memenuhi ambang objektif';
+    const resultStatus = (record) => record.result.totalScore === null
+        ? 'Menunggu penilaian uraian'
+        : record.result.passed ? 'Lulus' : 'Belum Lulus';
     const resultUrl = (id) => {
         const target = new URL(urls.results, location.href);
         target.searchParams.set('attempt', id);
@@ -176,12 +178,15 @@ async function initialize() {
             const link = node('a', new Date(record.finishedAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }));
             link.href = resultUrl(record.id);
             date.append(link);
-            row.append(date, node('td', String(record.result.correct)), node('td', String(record.result.incorrect)),
-                node('td', scoreText(record.result.score)), node('td', `${record.result.essaysFilled} / ${record.result.essayTotal} — ${record.result.essayPoints === null ? 'Belum dinilai' : `${scoreText(record.result.essayPoints)} / 25 poin`}`));
+            const r = record.result;
+            row.append(date, node('td', String(r.correct)), node('td', String(r.incorrect)),
+                node('td', r.totalScore === null ? 'Belum tersedia' : scoreText(r.totalScore)),
+                node('td', r.essayTotal > 0
+                    ? `${r.essaysFilled} / ${r.essayTotal} uraian terisi; ${r.essayPoints === null ? 'Belum dinilai' : `${scoreText(r.essayPoints)} / ${r.essayTotal * 5} poin`}`
+                    : 'Otomatis'));
             const status = document.createElement('td');
-            status.append(node('span', record.timedOut ? 'Waktu habis' : objectiveStatus(record), 'exam-tag'));
-            if (record.timedOut) status.append(node('p', objectiveStatus(record), 'exam-muted'));
-            status.append(node('p', record.result.totalScore === null ? 'Total: menunggu penilaian uraian' : `Total: ${scoreText(record.result.totalScore)} — ${record.result.passed ? 'Lulus' : 'Belum lulus'}`, 'exam-muted'));
+            status.append(node('span', resultStatus(record), 'exam-tag'));
+            if (record.timedOut) status.append(node('p', 'Waktu habis', 'exam-muted'));
             row.append(status);
             find('history').append(row);
         }
@@ -321,6 +326,9 @@ async function initialize() {
             grid.append(button);
         });
         find('number-panel').open = innerWidth >= 992;
+        find('finish-policy').textContent = questions.some(q => q.type === 'essay')
+            ? 'Soal objektif yang belum dijawab dihitung sebagai tidak benar. Uraian pada percobaan lama ini menunggu penilaian Admin.'
+            : 'Soal yang belum dijawab dihitung sebagai tidak benar. Nilai akhir dihitung otomatis setelah dikumpulkan.';
         question(false);
     }
 
@@ -351,15 +359,20 @@ async function initialize() {
         if (!record) return;
         const r = record.result;
         find('completion-reason').textContent = record.timedOut ? 'Waktu habis' : 'Dikumpulkan';
-        find('score').textContent = scoreText(r.score);
-        find('objective-status').textContent = objectiveStatus(record);
+        find('score-label').textContent = r.totalScore === null ? 'Nilai objektif sementara' : 'Nilai akhir';
+        find('score').textContent = scoreText(r.totalScore ?? r.score);
+        find('score-description').textContent = r.essayTotal > 0 ? `${r.objectiveTotal} soal objektif dan ${r.essayTotal} uraian` : `Dari ${r.objectiveTotal} soal, maksimal 100`;
+        find('objective-status').textContent = resultStatus(record);
         find('correct').textContent = `${r.correct} dari ${r.objectiveTotal}`;
         find('incorrect').textContent = `${r.incorrect} dari ${r.objectiveTotal}`;
-        find('essays').textContent = `${r.essaysFilled} dari ${r.essayTotal} — ${r.essayPoints === null ? 'Belum dinilai' : `${scoreText(r.essayPoints)} / 25 poin`}`;
+        find('essay-result').hidden = r.essayTotal === 0;
+        find('essays').textContent = `${r.essaysFilled} dari ${r.essayTotal}; ${r.essayPoints === null ? 'Belum dinilai' : `${scoreText(r.essayPoints)} / ${r.essayTotal * 5} poin`}`;
         find('duration').textContent = formatSeconds(r.durationMs / 1000);
         find('final-score').textContent = r.totalScore === null
             ? 'Uraian: Belum dinilai. Nilai objektif ini belum merupakan penilaian keseluruhan Evaluasi Akhir.'
-            : `Nilai total: ${scoreText(r.totalScore)} / 100. ${r.passed ? 'Lulus' : 'Belum lulus'}. Objektif ${scoreText(r.objectivePoints)} / 75 poin + uraian ${scoreText(r.essayPoints)} / 25 poin.`;
+            : r.essayTotal > 0
+                ? `Nilai total: ${scoreText(r.totalScore)} / 100. ${resultStatus(record)}. Objektif ${scoreText(r.objectivePoints)} / ${r.objectiveTotal * 5} poin + uraian ${scoreText(r.essayPoints)} / ${r.essayTotal * 5} poin.`
+                : `Nilai akhir: ${scoreText(r.totalScore)} / 100. ${resultStatus(record)}. Seluruh jawaban dinilai otomatis oleh server.`;
         const review = find('review-list'); review.replaceChildren();
         for (const [index, q] of record.questions.entries()) {
             const item = node('section', '', 'exam-review-item');

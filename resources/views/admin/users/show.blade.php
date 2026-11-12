@@ -34,7 +34,7 @@
 @empty<tr><td colspan="4" class="admin-empty">Belum ada kuis yang selesai.</td></tr>@endforelse
 </tbody></table></div>{{ $history->links('pagination::bootstrap-5') }}
 <h2 class="mb-3">Hasil Evaluasi Akhir</h2>
-<div class="table-responsive" role="region" aria-label="Hasil evaluasi pengguna" tabindex="0"><table class="table"><thead><tr><th scope="col">Tanggal</th><th scope="col">Objektif / 75</th><th scope="col">Uraian / 25</th><th scope="col">Total / 100</th><th scope="col">Status</th><th scope="col">Jawaban</th></tr></thead><tbody>
+<div class="table-responsive" role="region" aria-label="Hasil evaluasi pengguna" tabindex="0"><table class="table"><thead><tr><th scope="col">Tanggal</th><th scope="col">Poin objektif</th><th scope="col">Poin uraian (riwayat lama)</th><th scope="col">Total / 100</th><th scope="col">Status</th><th scope="col">Jawaban</th></tr></thead><tbody>
 @forelse($finals as $attempt)<tr><td>{{ $format::date($attempt->submitted_at) }}</td><td>{{ $format::score($attempt->objective_points) }}</td><td>{{ $format::score($attempt->essay_points) }}</td><td>{{ $format::score($attempt->total_score) }}</td><td>{{ $attempt->status === 'pending_review' ? 'Menunggu penilaian uraian' : ($attempt->total_score >= $attempt->passing_score ? 'Lulus' : 'Belum lulus') }}</td><td><a href="{{ route('admin.evaluations.show', $attempt) }}">Periksa</a></td></tr>
 @empty<tr><td colspan="6" class="admin-empty">Belum ada hasil evaluasi tersimpan.</td></tr>@endforelse
 </tbody></table></div>{{ $finals->links('pagination::bootstrap-5') }}

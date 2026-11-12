@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'description' => 'Tinjau pemahaman Python OOP setelah BAB 1–6 melalui soal konsep, isian kode, dan uraian dalam konteks lahan basah.',
+    'description' => 'Tinjau pemahaman Python OOP setelah BAB 1–6 melalui 10 pilihan ganda dan 10 isian kode Python dalam konteks lahan basah.',
     'questions' => [
         ['id' => 'q1', 'type' => 'multiple_choice', 'question' => 'Atribut object terutama digunakan untuk menyimpan ...', 'options' => ['Nama file', 'CSS', 'State/data object', 'Module import'], 'correct' => 2],
         ['id' => 'q2', 'type' => 'multiple_choice', 'question' => 'self pada instance method merujuk pada ...', 'options' => ['Semua class Python', 'Module abc', 'Nama file', 'Instance yang sedang menggunakan method'], 'correct' => 3],
@@ -43,10 +43,35 @@ return [
             'code' => "class SensorLingkungan(ABC):\n    ____________________\n    def baca_data(self):\n        pass",
             'answer' => '@abstractmethod',
         ],
-        ['id' => 'q16', 'type' => 'essay', 'question' => 'Jelaskan perbedaan class dan object menggunakan satu contoh dari konteks lahan basah.'],
-        ['id' => 'q17', 'type' => 'essay', 'question' => 'Mengapa enkapsulasi bukan sekadar menyembunyikan atribut?'],
-        ['id' => 'q18', 'type' => 'essay', 'question' => 'Jelaskan perbedaan inheritance dan composition.'],
-        ['id' => 'q19', 'type' => 'essay', 'question' => 'Bagaimana polimorfisme mengurangi percabangan if berdasarkan tipe object?'],
-        ['id' => 'q20', 'type' => 'essay', 'question' => 'Kapan abstract base class lebih berguna daripada hanya mengandalkan duck typing?'],
+        [
+            'id' => 'q16', 'type' => 'code_fill',
+            'question' => 'Isi bagian kosong dengan nama class agar object stasiun dibuat dari class Stasiun.',
+            'code' => "class Stasiun:\n    pass\n\nstasiun = __________()",
+            'answer' => 'Stasiun',
+        ],
+        [
+            'id' => 'q17', 'type' => 'code_fill',
+            'question' => 'Isi nama method khusus Python yang dipanggil otomatis saat object Sensor dibuat.',
+            'code' => "class Sensor:\n    def __________(self, nilai):\n        self.nilai = nilai",
+            'answer' => '__init__',
+        ],
+        [
+            'id' => 'q18', 'type' => 'code_fill',
+            'question' => 'Isi nama class induk agar SensorPH mewarisi method baca_data() dari SensorLingkungan.',
+            'code' => "class SensorLingkungan:\n    def baca_data(self):\n        return None\n\nclass SensorPH(__________):\n    pass",
+            'answer' => 'SensorLingkungan',
+        ],
+        [
+            'id' => 'q19', 'type' => 'code_fill',
+            'question' => 'Gunakan parameter nilai untuk memperbarui atribut internal _ph melalui setter berikut. Isi satu pernyataan penugasan.',
+            'code' => "class SensorPH:\n    @property\n    def ph(self):\n        return self._ph\n\n    @ph.setter\n    def ph(self, nilai):\n        ________________________________",
+            'answer' => 'self._ph = nilai',
+        ],
+        [
+            'id' => 'q20', 'type' => 'code_fill',
+            'question' => 'Isi nama abstract base class standar yang telah diimpor agar SensorLingkungan menjadi abstract base class.',
+            'code' => "from abc import ABC, abstractmethod\n\nclass SensorLingkungan(__________):\n    @abstractmethod\n    def baca_data(self):\n        pass",
+            'answer' => 'ABC',
+        ],
     ],
 ];

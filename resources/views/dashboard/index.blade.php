@@ -69,6 +69,10 @@
                     <div><dt>Rata-rata Nilai Kuis</dt><dd data-dashboard="average">{{ $dashboard['average_score_label'] }}</dd>@if ($dashboard['average_score'] === null)<span class="oopy-dashboard-stat-note">Belum ada nilai kuis</span>@endif</div>
                     <div><dt>Total Kuis Dikerjakan</dt><dd data-dashboard="attempts">{{ $dashboard['completed_attempts'] }}</dd></div>
                 </dl>
+                <p data-dashboard="final-exam">Evaluasi Akhir: nilai terbaik <strong>{{ $dashboard['final_exam']['best_score_label'] }}</strong> / 100 dari {{ $dashboard['final_exam']['submitted'] }} percobaan terkumpul.
+                    @if($dashboard['final_exam']['pending'] > 0)<span>Riwayat menunggu penilaian uraian: {{ $dashboard['final_exam']['pending'] }}.</span>@endif
+                    <a href="{{ route('evaluasi.index') }}#riwayat">Lihat riwayat evaluasi</a>
+                </p>
             </section>
         </div>
 

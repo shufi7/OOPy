@@ -72,28 +72,26 @@ def run(client, base, results):
     wait("document.querySelector('[data-exam=code-answer]')?.value === " + json.dumps(code_value), "Code draft did not survive refresh")
     resumed = api("return (await fetch('/evaluasi/attempts',{headers:{Accept:'application/json'}}).then(r=>r.json())).active;")
     assert resumed["id"] == active["id"] and resumed["deadline"] == active["deadline"]
-    # Add an essay and submit through the existing confirmation dialog.
-    client.evaluate("document.querySelectorAll('[data-exam=numbers] button')[15].click();const field=document.querySelector('[data-exam=essay-answer]');field.value='Class merupakan rancangan; object merupakan instance, contohnya sensor pada sungai.';field.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('[data-exam=finish]').click();true")
+    # Answer another code fill and submit through the confirmation dialog.
+    client.evaluate("document.querySelectorAll('[data-exam=numbers] button')[15].click();const field=document.querySelector('[data-exam=code-answer]');field.value='Stasiun';field.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('[data-exam=finish]').click();true")
     wait("document.querySelector('[data-exam=finish-dialog]').open", "Finish dialog did not open")
     client.evaluate("const button=document.querySelector('[data-exam=finish-confirm]');button.click();button.click();true")
     wait("location.pathname.endsWith('/hasil') && !!document.querySelector('[data-exam=results]:not([hidden])')", "Final results did not load")
-    assert client.evaluate("document.querySelector('[data-exam=final-score]').textContent.includes('Belum dinilai')")
+    assert client.evaluate("document.querySelector('[data-exam=final-score]').textContent.includes('Nilai akhir:')")
     record = api("return (await fetch('/evaluasi/attempts',{headers:{Accept:'application/json'}}).then(r=>r.json())).history.find(r=>r.id===" + json.dumps(active["id"]) + ");")
-    assert record["result"]["totalScore"] is None and record["result"]["essayPoints"] is None
-    layout("final-pending-results")
-    results.append({"interaction": "Official final exam starts, autosaves, resumes identical deadline and submits once with essays pending", "status": "PASS"})
+    assert record["result"]["totalScore"] == record["result"]["correct"] * 5
+    assert record["result"]["essayTotal"] == 0
+    layout("final-automatic-results")
+    results.append({"interaction": "Official final exam starts, autosaves, resumes identical deadline and publishes the server grade immediately", "status": "PASS"})
 
     login("admin.browser@example.test")
     visit("/admin/evaluations/" + active["id"])
-    assert client.evaluate("document.querySelectorAll('input[name^=\"scores[\"]').length") == 5
-    layout("admin-final-grading")
-    client.evaluate("document.querySelectorAll('input[name^=\"scores[\"]').forEach(el=>el.value='4');document.querySelector('form[action*=\"/evaluations/\"]').requestSubmit();true")
-    wait("document.body.innerText.includes('Penilaian uraian tersimpan')", "Manual essay grading did not finish")
+    assert client.evaluate("document.querySelectorAll('input[name^=\"scores[\"]').length") == 0
+    layout("admin-final-automatic-result")
     assert client.evaluate("!document.body.innerText.includes('Menunggu penilaian uraian')")
     login("student.browser@example.test")
     visit("/materi/evaluasi-akhir/hasil?attempt=" + active["id"])
-    wait("document.querySelector('[data-exam=final-score]')?.textContent.includes('Nilai total:')", "Published total not visible to learner")
+    wait("document.querySelector('[data-exam=final-score]')?.textContent.includes('Nilai akhir:')", "Published total not visible to learner")
     graded = api("return (await fetch('/evaluasi/attempts',{headers:{Accept:'application/json'}}).then(r=>r.json())).history.find(r=>r.id===" + json.dumps(active["id"]) + ");")
-    assert graded["result"]["essayPoints"] == 20
-    assert graded["result"]["totalScore"] == graded["result"]["objectivePoints"] + 20
-    results.append({"interaction": "Admin assigns bounded manual essay scores; learner receives valid objective + essay total", "status": "PASS"})
+    assert graded["result"]["totalScore"] == record["result"]["totalScore"]
+    results.append({"interaction": "Admin and learner see the same automatic total without manual grading controls", "status": "PASS"})

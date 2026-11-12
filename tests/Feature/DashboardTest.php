@@ -246,13 +246,14 @@ class DashboardTest extends TestCase
             Model::preventLazyLoading(false);
             DB::disableQueryLog();
         }
-        $this->assertCount(8, $queries);
+        $this->assertCount(9, $queries);
         foreach ($queries as $query) {
             $this->assertStringStartsWith('select ', strtolower($query['query']));
             $this->assertStringNotContainsString('quiz_answers', $query['query']);
             $this->assertStringNotContainsString('questions', $query['query']);
             $this->assertStringNotContainsString('"code"', $query['query']);
             $this->assertStringNotContainsString('"output"', $query['query']);
+            $this->assertStringNotContainsString('"snapshot"', $query['query']);
         }
         $this->assertSame($attemptsBefore, QuizAttempt::count());
         $this->assertDatabaseCount('exercise_submissions', 12);

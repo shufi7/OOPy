@@ -17,7 +17,7 @@
     @if($quiz)
     <section class="admin-panel admin-question-panel" aria-labelledby="publication-title">
         <div class="admin-question-section-heading">
-            <div><h2 id="publication-title">{{ $quiz->title }}</h2><p>{{ $quiz->type === 'final_exam' ? 'Pilih 10 pilihan ganda, 5 isian kode, dan 5 uraian.' : 'Pilih '.config('quiz.minimum_questions').' sampai '.config('quiz.maximum_questions').' soal pilihan ganda atau isian kode. Komposisi kedua jenis soal boleh berbeda untuk setiap BAB.' }} Urutan terpilih harus berbeda. Soal aktif yang tidak dipilih akan diarsipkan saat terbit.</p>
+            <div><h2 id="publication-title">{{ $quiz->title }}</h2><p>{{ $quiz->type === 'final_exam' ? 'Pilih tepat 10 pilihan ganda dan 10 isian kode. Seluruh soal dinilai otomatis.' : 'Pilih '.config('quiz.minimum_questions').' sampai '.config('quiz.maximum_questions').' soal pilihan ganda atau isian kode. Komposisi kedua jenis soal boleh berbeda untuk setiap BAB.' }} Urutan terpilih harus berbeda. Soal aktif yang tidak dipilih akan diarsipkan saat terbit.</p>
             @if($quiz->type === 'chapter_quiz')<p>Soal yang diarsipkan dapat dicentang untuk diaktifkan kembali saat paket diterbitkan.</p>@endif</div>
         </div>
     @php

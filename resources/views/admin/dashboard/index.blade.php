@@ -189,7 +189,7 @@
         @if($stats['recent_finals']->isNotEmpty())
             <div class="table-responsive admin-dashboard-table" role="region" aria-label="Evaluasi Akhir terbaru dan menunggu penilaian" tabindex="0">
                 <table class="table">
-                    <thead><tr><th scope="col">Pengguna</th><th scope="col">Objektif / 75</th><th scope="col">Uraian / 25</th><th scope="col">Total / 100</th><th scope="col">Status</th><th scope="col">Dikumpulkan</th><th scope="col">Tindakan</th></tr></thead>
+                    <thead><tr><th scope="col">Pengguna</th><th scope="col">Poin objektif</th><th scope="col">Poin uraian (riwayat lama)</th><th scope="col">Total / 100</th><th scope="col">Status</th><th scope="col">Dikumpulkan</th><th scope="col">Tindakan</th></tr></thead>
                     <tbody>
                         @foreach($stats['recent_finals'] as $attempt)
                             @php($pending = $attempt->status === 'pending_review')
