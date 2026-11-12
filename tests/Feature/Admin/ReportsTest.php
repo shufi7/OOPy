@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\Admin\LearningReportService;
 use Database\Seeders\OopyContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class ReportsTest extends TestCase
@@ -61,8 +62,47 @@ class ReportsTest extends TestCase
         $this->assertNull($stats['average']);
         $this->assertSame(['attempted_users' => 0, 'exercise_1_completed' => 0, 'exercise_2_completed' => 0, 'both_completed' => 0, 'none_passed' => 0], $stats['coding']);
         $this->assertCount(0, $stats['recent_coding']);
-        $this->get('/admin')->assertSee('Belum ada submission latihan Coding dari pengguna.');
+        $this->get('/admin')->assertSee('Belum ada aktivitas Coding');
+        $this->get('/admin')->assertSee('Belum ada riwayat kuis')->assertSee('Belum ada Evaluasi Akhir');
+        $this->assertFalse($stats['has_activity_history']);
         $this->actingAs($admin)->get('/admin/users/'.$admin->id)->assertNotFound();
+    }
+
+    public function test_dashboard_charts_show_actual_chapter_counts_and_only_a_multi_day_activity_trend(): void
+    {
+        $this->seed(OopyContentSeeder::class);
+        Carbon::setTestNow(Carbon::parse('2026-11-12 04:00:00', 'UTC'));
+        try {
+            $admin = $this->admin();
+            $student = User::factory()->create();
+            $chapters = app(LearningReportService::class)->chapters()->keyBy('chapter_order');
+            $quizzes = Quiz::where('type', 'chapter_quiz')->get()->keyBy('chapter_id');
+            $one = $quizzes[$chapters[1]->id];
+            $two = $quizzes[$chapters[2]->id];
+            $this->attempt($student, $one, 80)->update([
+                'started_at' => Carbon::parse('2026-11-08 02:50:00', 'UTC'),
+                'completed_at' => Carbon::parse('2026-11-08 03:00:00', 'UTC'),
+            ]);
+            $this->attempt($student, $one, 90)->update([
+                'started_at' => Carbon::parse('2026-11-08 03:50:00', 'UTC'),
+                'completed_at' => Carbon::parse('2026-11-08 04:00:00', 'UTC'),
+            ]);
+            $this->attempt($student, $two, 70)->update([
+                'started_at' => Carbon::parse('2026-11-10 03:50:00', 'UTC'),
+                'completed_at' => Carbon::parse('2026-11-10 04:00:00', 'UTC'),
+            ]);
+
+            $stats = $this->actingAs($admin)->get('/admin')->assertOk()->viewData('stats');
+            $this->assertSame([1 => 2, 2 => 1, 3 => 0, 4 => 0, 5 => 0, 6 => 0], collect($stats['quiz_by_chapter'])
+                ->mapWithKeys(fn ($chapter) => [$chapter['number'] => $chapter['attempts']])->all());
+            $this->assertTrue($stats['has_activity_history']);
+            $this->assertSame(3, collect($stats['activity_by_day'])->sum('count'));
+            $this->assertSame(2, collect($stats['activity_by_day'])->where('count', '>', 0)->count());
+            $this->get('/admin')->assertSee(route('admin.scores.index'))->assertSee(route('admin.users.show', $student))
+                ->assertSee($one->title)->assertSee($two->title);
+        } finally {
+            Carbon::setTestNow();
+        }
     }
 
     public function test_best_completed_scores_filters_zero_and_absent_scores_are_distinct(): void
@@ -189,10 +229,13 @@ class ReportsTest extends TestCase
         $record = $reports->users()->whereKey($student->id)->firstOrFail();
         $this->assertNull($record->final_score);
         $this->assertSame(1, (int) $record->final_pending);
-        $stats = $this->actingAs($admin)->get('/admin')->assertOk()->viewData('stats');
+        $response = $this->actingAs($admin)->get('/admin')->assertOk();
+        $stats = $response->viewData('stats');
         $this->assertSame(1, $stats['finals']);
         $this->assertSame(1, $stats['pending']);
         $this->assertNull($stats['final_average']);
+        $response->assertSee('Menunggu penilaian')->assertSee('Nilai uraian')
+            ->assertSee('<td><span class="admin-score-value">—</span></td>', false);
         $this->get('/admin/users/'.$student->id)->assertOk()->assertSee('Menunggu penilaian uraian');
         $this->get('/admin/scores/export')->assertOk();
     }

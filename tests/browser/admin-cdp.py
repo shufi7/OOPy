@@ -129,7 +129,7 @@ def main():
         pages = ["/admin", "/admin/users", "/admin/users/2", "/admin/scores", "/admin/questions", "/admin/questions/create", "/admin/questions/1", "/admin/questions/1/edit", "/admin/materials", "/admin/materials/1/edit"]
         for path in pages:
             visit(path)
-            for width in [360, 390, 768, 1024, 1440]:
+            for width in [320, 360, 390, 768, 1024, 1366, 1440]:
                 client.call("Emulation.setDeviceMetricsOverride", width=width, height=1000, deviceScaleFactor=1, mobile=False)
                 client.evaluate("new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))")
                 layout = client.evaluate("""(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth, font: getComputedStyle(document.body).fontFamily, unlabeled: [...document.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=checkbox]),textarea,select')].filter(el=>!el.labels?.length&&!el.getAttribute('aria-label')).map(el=>el.name) }))()""")

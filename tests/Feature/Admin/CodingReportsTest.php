@@ -142,6 +142,7 @@ class CodingReportsTest extends TestCase
         $response = $this->actingAs($this->admin)->get('/admin')->assertOk();
         $stats = $response->viewData('stats');
         $this->assertSame(['attempted_users' => 4, 'exercise_1_completed' => 2, 'exercise_2_completed' => 2, 'both_completed' => 1, 'none_passed' => 1], $stats['coding']);
+        $response->assertSee(route('admin.users.show', $failed));
         $this->assertCount(10, $stats['recent_coding']);
         $this->assertSame(array_slice(array_reverse($ids), 0, 10), $stats['recent_coding']->pluck('id')->all());
         $this->assertSame('failed', $stats['recent_coding'][0]['status']);

@@ -12,6 +12,7 @@ use App\Services\CodingProgressService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class LearningReportService
 {
@@ -180,6 +181,7 @@ class LearningReportService
         $attempts = $this->completedAttempts()->whereHas('user', fn ($query) => $query->where('role', 'user'));
         $students = User::where('role', 'user');
         $finals = FinalExamAttempt::whereNotNull('submitted_at')->whereHas('user', fn ($query) => $query->where('role', 'user'));
+        $chapters = $this->chapters();
 
         return [
             'users' => (clone $students)->count(),
@@ -194,14 +196,89 @@ class LearningReportService
             'finals' => (clone $finals)->count(),
             'pending' => (clone $finals)->where('status', 'pending_review')->count(),
             'final_average' => (clone $finals)->where('status', 'completed')->avg('total_score'),
+            'quiz_by_chapter' => $this->quizActivityByChapter($chapters, $attempts),
+            ...$this->activityByDay($chapters),
             'recent' => (clone $attempts)->with(['user:id,name', 'quiz:id,title,passing_score'])->orderByDesc('completed_at')->limit(10)->get(),
-            'recent_finals' => (clone $finals)->with('user:id,name')->orderByDesc('submitted_at')->limit(5)->get(),
+            'recent_finals' => (clone $finals)->with('user:id,name')->orderByRaw("CASE WHEN status = 'pending_review' THEN 0 ELSE 1 END")
+                ->orderByDesc('submitted_at')->limit(5)->get(),
             'coding' => $this->codingStatistics(),
             'recent_coding' => $this->coding->history()->whereHas('user', fn ($query) => $query->where('role', 'user'))
                 ->with('user:id,name')->limit(10)->get()->map(fn ($submission) => $this->coding->activity($submission) + [
                     'user_name' => $submission->user->name,
                     'user_url' => route('admin.users.show', $submission->user_id),
                 ]),
+        ];
+    }
+
+    private function quizActivityByChapter(Collection $chapters, Builder $attempts): array
+    {
+        $counts = collect();
+        if ($chapters->isNotEmpty()) {
+            $counts = (clone $attempts)->join('quizzes as dashboard_quizzes', 'dashboard_quizzes.id', '=', 'quiz_attempts.quiz_id')
+                ->selectRaw('dashboard_quizzes.chapter_id, COUNT(*) AS attempts_count')
+                ->groupBy('dashboard_quizzes.chapter_id')->pluck('attempts_count', 'dashboard_quizzes.chapter_id');
+        }
+
+        return $chapters->map(fn ($chapter) => [
+            'number' => $chapter->chapter_order,
+            'title' => $chapter->title,
+            'attempts' => (int) ($counts[$chapter->id] ?? 0),
+        ])->values()->all();
+    }
+
+    /** Return seven WITA-day buckets of recent learning events for student accounts. */
+    private function activityByDay(Collection $chapters): array
+    {
+        $today = Carbon::now('Asia/Makassar')->startOfDay();
+        $firstDay = $today->copy()->subDays(6);
+        $afterLastDay = $today->copy()->addDay();
+        $startUtc = $firstDay->copy()->timezone('UTC');
+        $endUtc = $afterLastDay->copy()->timezone('UTC');
+        $driver = DB::connection()->getDriverName();
+        $localDate = fn (string $column) => $driver === 'sqlite'
+            ? "DATE({$column}, '+8 hours')"
+            : "DATE(DATE_ADD({$column}, INTERVAL 8 HOUR))";
+
+        $quizEvents = DB::table('quiz_attempts')->join('quizzes', 'quizzes.id', '=', 'quiz_attempts.quiz_id')
+            ->join('users', 'users.id', '=', 'quiz_attempts.user_id')->where('users.role', 'user')
+            ->where('quizzes.type', 'chapter_quiz')->whereIn('quizzes.chapter_id', $chapters->pluck('id'))
+            ->where('quiz_attempts.status', 'completed')->whereNotNull('quiz_attempts.completed_at')
+            ->whereColumn('quiz_attempts.completed_at', '>=', 'quiz_attempts.started_at')
+            ->whereBetween('quiz_attempts.score', [0, 100])
+            ->where('quiz_attempts.completed_at', '>=', $startUtc)->where('quiz_attempts.completed_at', '<', $endUtc)
+            ->selectRaw($localDate('quiz_attempts.completed_at').' AS activity_date, COUNT(*) AS event_count')
+            ->groupByRaw($localDate('quiz_attempts.completed_at'));
+
+        $codingEvents = DB::table('exercise_submissions')->join('exercises', 'exercises.id', '=', 'exercise_submissions.exercise_id')
+            ->join('users', 'users.id', '=', 'exercise_submissions.user_id')->where('users.role', 'user')
+            ->whereIn('exercises.exercise_key', array_column(CodingProgressService::EXERCISES, 'key'))
+            ->whereNotNull('exercise_submissions.submitted_at')
+            ->where('exercise_submissions.submitted_at', '>=', $startUtc)->where('exercise_submissions.submitted_at', '<', $endUtc)
+            ->selectRaw($localDate('exercise_submissions.submitted_at').' AS activity_date, COUNT(*) AS event_count')
+            ->groupByRaw($localDate('exercise_submissions.submitted_at'));
+
+        $finalEvents = DB::table('final_exam_attempts')->join('users', 'users.id', '=', 'final_exam_attempts.user_id')
+            ->where('users.role', 'user')->whereNotNull('final_exam_attempts.submitted_at')
+            ->where('final_exam_attempts.submitted_at', '>=', $startUtc)->where('final_exam_attempts.submitted_at', '<', $endUtc)
+            ->selectRaw($localDate('final_exam_attempts.submitted_at').' AS activity_date, COUNT(*) AS event_count')
+            ->groupByRaw($localDate('final_exam_attempts.submitted_at'));
+
+        $events = $quizEvents->unionAll($codingEvents)->unionAll($finalEvents);
+        $dailyCounts = DB::query()->fromSub($events, 'dashboard_activity')
+            ->selectRaw('activity_date, SUM(event_count) AS event_count')->groupBy('activity_date')->pluck('event_count', 'activity_date');
+        $days = collect(range(0, 6))->map(function ($offset) use ($firstDay, $dailyCounts) {
+            $date = $firstDay->copy()->addDays($offset);
+
+            return [
+                'date' => $date->toDateString(),
+                'label' => $date->locale('id')->translatedFormat('D j M'),
+                'count' => (int) ($dailyCounts[$date->toDateString()] ?? 0),
+            ];
+        })->all();
+
+        return [
+            'activity_by_day' => $days,
+            'has_activity_history' => count(array_filter($days, fn ($day) => $day['count'] > 0)) > 1,
         ];
     }
 
