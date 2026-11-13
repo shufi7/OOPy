@@ -16,18 +16,18 @@
 @endphp
 <aside class="material-sidebar" aria-label="Navigasi {{ $chapter['bab'] }}">
     <details class="material-toc" open>
-        <summary aria-controls="chapter-navigation">Daftar Isi {{ $chapter['bab'] }} <i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+        <summary aria-controls="chapter-navigation">Daftar Isi {{ $chapter['bab'] }} <i class="bi bi-chevron-down material-toc-chevron" aria-hidden="true"></i></summary>
         <div id="chapter-navigation">
-            <p class="material-eyebrow">{{ $chapter['bab'] }}</p>
+            <p class="material-eyebrow"><i class="bi bi-book" aria-hidden="true"></i><span>{{ $chapter['bab'] }}</span></p>
             <p class="material-sidebar-title">{{ $chapter['judul'] }}</p>
             <nav aria-label="Daftar isi BAB">
                 <ol>
-                    <li><a href="#tujuan">Tujuan Pembelajaran</a></li>
+                    <li><a class="material-toc-primary-link" href="#tujuan"><i class="bi bi-bullseye" aria-hidden="true"></i><span>Tujuan Pembelajaran</span></a></li>
                     @foreach ($navGroups as $group => $items)
                     <li>
                         @if ($group === 'pendahuluan')
                         <div class="material-toc-introduction">
-                            <p class="material-toc-group-label">Pendahuluan</p>
+                            <p class="material-toc-group-label"><span class="material-toc-group-heading"><i class="bi bi-book" aria-hidden="true"></i> Pendahuluan</span></p>
                             <ol class="material-toc-submenu">
                                 @foreach ($items as $item)
                                 <li><a href="#{{ $item['id'] }}">{{ $item['title'] }}</a></li>
@@ -37,8 +37,8 @@
                         @else
                         <details class="material-toc-group" data-toc-group="{{ $group }}">
                             <summary>
-                                {{ $group === 'penutup' ? 'Penutup' : 'Materi '.$chapter['bab'] }}
-                                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                                <span class="material-toc-group-heading"><i class="bi {{ $group === 'penutup' ? 'bi-flag' : 'bi-layers' }}" aria-hidden="true"></i> {{ $group === 'penutup' ? 'Penutup' : 'Materi '.$chapter['bab'] }}</span>
+                                <i class="bi bi-chevron-down material-toc-chevron" aria-hidden="true"></i>
                             </summary>
                             <ol class="material-toc-submenu">
                                 @foreach ($items as $item)
@@ -50,7 +50,7 @@
                     </li>
                     @endforeach
                     @if (!empty($content['quiz']))
-                    <li class="material-toc-quiz"><a href="#kuis">Kuis {{ $chapter['bab'] }}</a></li>
+                    <li class="material-toc-quiz"><a class="material-toc-primary-link" href="#kuis"><i class="bi bi-clipboard-check" aria-hidden="true"></i><span>Kuis {{ $chapter['bab'] }}</span></a></li>
                     @endif
                 </ol>
             </nav>

@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { join } from 'node:path';
 import { chapters, evaluationChapter } from './chapters.mjs';
 import { cacheAssets, registerAccount, answerQuiz } from './quiz-helpers.mjs';
 
@@ -7,6 +8,14 @@ const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 await cacheAssets(page.context());
+if (process.env.OOPY_ICON_CACHE) {
+    await page.context().route('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/**', route => {
+        const name = new URL(route.request().url()).pathname.split('/').at(-1);
+        return route.fulfill({ path: join(process.env.OOPY_ICON_CACHE, name),
+            contentType: name.endsWith('.css') ? 'text/css' : name.endsWith('.woff2') ? 'font/woff2' : 'font/woff',
+            headers: { 'access-control-allow-origin': '*' } });
+    });
+}
 const errors = [];
 page.on('pageerror', (error) => errors.push(error.message));
 page.on('dialog', (dialog) => dialog.accept());
@@ -91,15 +100,15 @@ const inspectManualCollapse = async (width) => {
         await assertOpen(true);
         await summary.click();
         await assertOpen(false);
-        await page.goBack();
-        await page.waitForURL((url) => url.hash === first);
+        await page.goBack({ waitUntil: 'domcontentloaded' });
+        await page.waitForURL((url) => url.hash === first, { waitUntil: 'domcontentloaded' });
         await waitActive(first);
         await assertOpen(true);
         await showMenu();
         await summary.click();
         await assertOpen(false);
-        await page.goForward();
-        await page.waitForURL((url) => url.hash === second);
+        await page.goForward({ waitUntil: 'domcontentloaded' });
+        await page.waitForURL((url) => url.hash === second, { waitUntil: 'domcontentloaded' });
         await waitActive(second);
         await assertOpen(true);
     }
