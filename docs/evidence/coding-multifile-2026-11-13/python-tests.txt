@@ -1,0 +1,30 @@
+test_http_authenticated_success_and_gateway_failure (test_grader.GatewayHttpTest.test_http_authenticated_success_and_gateway_failure) ... ok
+test_http_authentication_rejects_missing_and_wrong_token (test_grader.GatewayHttpTest.test_http_authentication_rejects_missing_and_wrong_token) ... ok
+test_http_payload_size_and_path_validation (test_grader.GatewayHttpTest.test_http_payload_size_and_path_validation) ... ok
+test_docker_limits_timeout_cleanup_and_unavailable_fail_closed (test_grader.GraderTest.test_docker_limits_timeout_cleanup_and_unavailable_fail_closed) ... ok
+test_gateway_payload_validation (test_grader.GraderTest.test_gateway_payload_validation) ... ok
+test_inheritance_and_overriding_required (test_grader.GraderTest.test_inheritance_and_overriding_required) ... ok
+test_local_and_official_rubrics_agree (test_grader.GraderTest.test_local_and_official_rubrics_agree) ... ok
+test_malformed_container_response_fails_closed (test_grader.GraderTest.test_malformed_container_response_fails_closed) ... ok
+test_optional_output_and_formatting_variations (test_grader.GraderTest.test_optional_output_and_formatting_variations) ... ok
+test_real_container_pass_error_timeout_and_system_access (test_grader.GraderTest.test_real_container_pass_error_timeout_and_system_access) ... skipped 'Docker integration explicitly opt-in'
+test_real_container_variants_unicode_wrong_syntax_and_output_limit (test_grader.GraderTest.test_real_container_variants_unicode_wrong_syntax_and_output_limit) ... skipped 'Docker integration explicitly opt-in'
+test_solutions_and_super_constructor (test_grader.GraderTest.test_solutions_and_super_constructor) ... ok
+test_syntax_runtime_error_and_forged_results_cannot_pass (test_grader.GraderTest.test_syntax_runtime_error_and_forged_results_cannot_pass) ... ok
+test_tampering_and_system_access_rejected_before_execution (test_grader.GraderTest.test_tampering_and_system_access_rejected_before_execution) ... ok
+test_unicode_transport_and_request_byte_limit (test_grader.GraderTest.test_unicode_transport_and_request_byte_limit) ... ok
+test_updates_shared_attributes_print_only_and_missing_constructor_fail (test_grader.GraderTest.test_updates_shared_attributes_print_only_and_missing_constructor_fail) ... ok
+test_wrong_boundaries_values_and_attributes (test_grader.GraderTest.test_wrong_boundaries_values_and_attributes) ... ok
+test_behavior_boundaries_mutation_and_actual_super_call (test_grader.MultiFileTest.test_behavior_boundaries_mutation_and_actual_super_call) ... ok
+test_files_shape_size_and_error_location (test_grader.MultiFileTest.test_files_shape_size_and_error_location) ... ok
+test_forbidden_imports_in_every_file_rejected_before_execution (test_grader.MultiFileTest.test_forbidden_imports_in_every_file_rejected_before_execution) ... ok
+test_local_official_parity_for_trusted_multifile_fixtures (test_grader.MultiFileTest.test_local_official_parity_for_trusted_multifile_fixtures) ... Xdebug: [Step Debug] Time-out connecting to debugging client, waited: 200 ms. Tried: 127.0.0.1:9003 (through xdebug.client_host/xdebug.client_port).
+ok
+test_modular_contract_output_bonus_and_forged_results (test_grader.MultiFileTest.test_modular_contract_output_bonus_and_forged_results) ... ok
+test_real_multifile_container (test_grader.MultiFileTest.test_real_multifile_container) ... skipped 'Docker integration explicitly opt-in'
+test_reference_aliases_explicit_super_and_wrapped_main (test_grader.MultiFileTest.test_reference_aliases_explicit_super_and_wrapped_main) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 2.893s
+
+OK (skipped=3)

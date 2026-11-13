@@ -1,15 +1,16 @@
 # Fitur Coding OOPy
 
 Halaman `/coding` menyediakan dua latihan mandiri: class/object SensorAir dan
-inheritance/overriding Ekosistem–Rawa. Guest dapat membaca soal, memakai Monaco,
+proyek multi-file Ekosistem–Rawa. Guest dapat membaca soal, memakai Monaco,
 Run Code dan memperoleh feedback lokal Pyodide. Akun yang masuk dapat meminta
 grading resmi. Komponen, worker, runtime manager, timeout, antrean, Stop dan
 Reset memakai Live Coding existing. Materi dan `/editor` tetap memeriksa lokal.
 
-Latihan 1 dan 2 dimulai dengan `main.py` benar-benar kosong. Tidak ada template,
+Latihan 1 dimulai dengan satu `main.py` kosong. Latihan 2 menyediakan tiga file
+kosong: `ekosistem.py`, `rawa.py`, dan `main.py`. Tidak ada template,
 komentar TODO, contoh jawaban, atau pemulihan otomatis kode awal. Reset dengan
 konfirmasi mengosongkan kode kembali; membatalkan konfirmasi mempertahankan kode.
-Run Code dan Submit menolak editor kosong atau hanya spasi dengan pemberitahuan,
+Run Code dan Submit menolak file wajib yang kosong atau hanya whitespace dengan pemberitahuan,
 tanpa menjalankan worker atau mengirim submission. Menjalankan kode tidak
 mengubah isi editor. Kode awal latihan materi dan `/editor` tetap mengikuti
 konfigurasi masing-masing.
@@ -18,6 +19,36 @@ Panel **Soal Latihan** berada sebelum editor dan memuat judul spesifik, deskrips
 langkah pengerjaan, kontrak class/atribut/method, contoh output dan kriteria
 keberhasilan. Rentang pH inklusif 6.5–8.5 dan teks status mengikuti grader resmi.
 Panel hanya menjelaskan tugas dan output; tidak menyediakan kode penyelesaian.
+Rentang pH berlaku untuk Latihan 1. Latihan 2 memakai ambang tinggi air 80 cm
+sebagai aturan simulasi pemrograman, bukan standar resmi peringatan banjir.
+
+## Latihan 2: proyek pemantauan rawa
+
+Judul soal: **Membangun Sistem Pemantauan Ekosistem Rawa Berbasis Multi-File**.
+Mahasiswa berlatih pengorganisasian modul, constructor, atribut instance,
+inheritance, penggunaan super(), overriding, import, pembuatan objek, serta
+perubahan perilaku berdasarkan atribut terbaru.
+
+| File | Tanggung jawab |
+| --- | --- |
+| `ekosistem.py` | Mendefinisikan `Ekosistem`; constructor menyimpan nama/lokasi, `status()` mengembalikan `Belum dipantau` |
+| `rawa.py` | Mengimpor `Ekosistem`; mendefinisikan `Rawa`, constructor memakai `super()` dan menyimpan `tinggi_air_cm`; overriding `status()` |
+| `main.py` | Mengimpor `Rawa`, membuat contoh objek, memanggil method, dan menampilkan output |
+
+Status Rawa adalah `Siaga` untuk tinggi >= 80, selain itu `Normal`. Contoh
+data: Rawa Bangkau, Hulu Sungai Selatan, tinggi 85. Output contoh:
+
+```text
+Rawa Bangkau - Hulu Sungai Selatan
+Status air: Siaga
+```
+
+Explorer dan tab memakai model Monaco terpisah. Entry point selalu main.py.
+Run/Submit memakai snapshot terbaru seluruh model, termasuk file yang sedang
+tidak aktif. Tab, shortcut Ctrl+Enter, Stop, penanda perubahan, dan Reset memakai
+komponen existing. Reset meminta konfirmasi bila ada perubahan dan mengosongkan
+seluruh file. Run Code memakai filesystem virtual Pyodide; import antarmodul
+ditulis dengan nama tanpa akhiran .py. Traceback mempertahankan nama file.
 
 ## Penerapan database dan route
 
@@ -29,12 +60,19 @@ php artisan db:seed --class=CodingExerciseSeeder --force
 
 Pada instalasi baru, jalankan `php artisan migrate` lalu `php artisan db:seed`.
 `DatabaseSeeder` memanggil OopyContentSeeder kemudian CodingExerciseSeeder.
-Seeder Coding meng-upsert dua key `coding-latihan-1` dan `coding-latihan-2`,
+Seeder Coding meng-upsert key aktif `coding-latihan-1` dan `coding-latihan-2-multifile-v1`,
 terhubung ke materi `kelas-dan-objek` dan `pewarisan`, tanpa menghapus latihan
 atau submission lama. Tidak menggunakan migrate:fresh.
 Kolom `starter_code` kedua latihan diisi string kosong. Validasi model Exercise
 mengizinkan string kosong yang tetap hadir; kolom tidak diubah menjadi nullable.
 Menjalankan ulang seeder memperbarui kode awal tanpa mengubah riwayat submission.
+Jangan menjalankan seeder pada database utama secara otomatis; backup dan tinjau
+dulu. URL `/coding/latihan-2` tetap sama, tetapi identitas exercise berubah
+karena kompetensi barunya berbeda. Record `coding-latihan-2` lama dan submission
+miliknya tetap utuh. Kelulusan lama tidak menyelesaikan versi multi-file.
+Dashboard, status halaman, filter Admin, rekap, dan CSV menghitung versi aktif.
+Riwayat lama masih dapat dibaca dengan label **versi lama**, tanpa digabungkan
+ke skor/progres aktif. Tidak diperlukan perubahan schema atau migration.
 
 | Method | URL | Nama | Akses |
 | --- | --- | --- | --- |
@@ -42,8 +80,19 @@ Menjalankan ulang seeder memperbarui kode awal tanpa mengubah riwayat submission
 | GET | /coding/{slug} | coding.show | Publik; latihan-1 atau latihan-2 |
 | POST | /coding/{slug}/submit | coding.submit | auth, CSRF, 6 request/menit |
 
-Request JSON hanya membutuhkan `{"files":{"main.py":"...kode..."}}`.
-Satu file, maksimal 30.000 karakter dan 60.000 byte. `user_id`, `role`, `score`,
+Request JSON hanya memuat `files`. Latihan 1 menerima tepat `main.py`.
+Latihan 2 menerima tepat `ekosistem.py`, `rawa.py`, dan `main.py`:
+
+```json
+{"files":{"ekosistem.py":"...kode...","rawa.py":"...kode...","main.py":"...kode..."}}
+```
+
+Setiap file harus string berisi kode, maksimal 30.000 karakter dan 60.000 byte
+UTF-8. Total seluruh proyek juga maksimal 30.000 karakter dan 60.000 byte.
+Batas agregat menjaga JSON transport, termasuk Unicode escaped, di bawah batas
+gateway 200.000 byte. File tambahan, path traversal/absolut, daftar numerik,
+string kosong/whitespace, dan struktur lain ditolak. Source tidak dipangkas atau
+dinormalisasi sebelum dikirim/disimpan. `user_id`, `role`, `score`,
 `passed`, `status` dan identitas latihan dari request ditolak. Server memilih
 latihan dari slug terdaftar dan pengguna dari session.
 
@@ -80,18 +129,52 @@ inheritance, dan override. Enam pemeriksaan inti masing-masing bernilai 15 poin
 dan semuanya wajib berhasil. Contoh object dan output bernilai tambahan 10 poin;
 kegagalannya tidak membatalkan kelulusan. Kapitalisasi dan whitespace string
 status/output dinormalisasi; makna status, nama class/method/atribut, nilai data,
-serta batas pH tetap diperiksa. Pemeriksaan memakai object dan pemanggilan method,
-tanpa mencari pola source code. Python dasar, `super()`, class, if/loop, fungsi dan print didukung.
-Import, decorator, async, akses filesystem, manipulasi builtins dan introspeksi
+serta batas pH/tinggi air tetap diperiksa. Pemeriksaan memakai object dan pemanggilan method,
+tanpa mencari substring source. Penggunaan super() diamati melalui pemanggilan
+initializer induk yang benar-benar terjadi, lalu namespace dipulihkan. Struktur
+multi-file diverifikasi dari identitas modul, class, dan method, bukan keberadaan
+teks import saja. Checker berada dalam namespace tepercaya yang terpisah;
+variabel pengguna bernama score, passed, results atau run_checks tidak menentukan hasil.
+
+Rubrik Latihan 2, dengan urutan ID yang juga diverifikasi Laravel:
+
+| ID pemeriksaan | Bobot | Wajib |
+| --- | --- | --- |
+| `modules`: definisi dan import pada modul yang benar | 15 | Ya |
+| `constructor`: constructor dan atribut Ekosistem | 15 | Ya |
+| `parent_status`: status induk | 15 | Ya |
+| `inheritance`: relasi subclass | 15 | Ya |
+| `child_constructor`: atribut subclass dan super() | 15 | Ya |
+| `overriding`: implementasi sendiri dan perilaku dinamis | 15 | Ya |
+| `presentation`: objek contoh, pemanggilan status, serta output main.py | 10 | Tidak |
+
+Enam inti wajib berhasil, dengan skor minimal 90. Output tambahan tidak
+menggagalkan kelulusan 90 poin. Uji mencakup 79.9, 80, 80.0, 85, nilai lain,
+perubahan atribut, dua objek independen, serta data acak privat server.
+Pemanggilan contoh di dalam fungsi main() juga didukung.
+
+Python dasar, `super()`, class, if/loop, fungsi dan print didukung.
+Pada Latihan 1, semua import tetap ditolak. Pada versi multi-file, validator AST
+memeriksa **setiap file sebelum file mana pun dijalankan**. Loader dalam container
+hanya membangun modul dari source yang diterima, tanpa mencari file pada host:
+main.py dapat mengimpor ekosistem/rawa; rawa.py hanya dapat mengimpor ekosistem;
+ekosistem.py tidak memiliki dependensi. Bentuk `from ... import ...` dan import
+modul dengan alias biasa diterima. Impor relatif, wildcard, submodule, export
+di luar kontrak, dan alias yang menimpa builtins ditolak. Tidak ada import bebas.
+Decorator, async, akses filesystem, manipulasi builtins dan introspeksi
 interpreter tidak didukung. Validator AST dan builtins terbatas melindungi
 objek checker dari manipulasi; batas keamanan eksekusi tetap container.
 Pembatasan ini khusus dua latihan dasar ini, bukan grader Python serbaguna.
-Pyodide menyediakan feedback latihan; pembatasan keamanan eksekusi resmi tetap
+Pyodide menyediakan feedback latihan dan tetap memakai runner umum di browser;
+pembatasan import di atas merupakan kontrak **grader resmi**, bukan janji bahwa
+Pyodide adalah sandbox Python terbatas yang sama. Pembatasan keamanan eksekusi resmi tetap
 diterapkan di server. Respons grader memakai protokol versi 2. Laravel memeriksa
 ID, kelengkapan, urutan, bobot dan penanda wajib rubrik sebelum menghitung status
 dan skor. Grader versi lama, pemeriksaan hilang/duplikat dan perubahan bobot ditolak
 tanpa menyimpan submission. Setelah memperbarui kode, bangun ulang image dan mulai
-ulang gateway agar keduanya memakai protokol yang sama.
+ulang gateway agar keduanya memakai protokol yang sama. Protokol tetap versi 2;
+identitas exercise baru dan urutan pemeriksaan baru membedakan rubrik multi-file
+dari versi lama, tanpa mengubah rubrik Latihan 1.
 
 Jalankan gateway pada host sandbox Linux/VM terpisah untuk produksi. Lindungi
 Docker daemon, gunakan firewall/private network dan TLS bila gateway tidak di
@@ -164,8 +247,14 @@ refresh; status DB menjadi sumber kebenaran.
 
 Konten, konfigurasi editor kosong dan checker lokal: `resources/coding/exercises.php`.
 Pemeriksaan resmi terpisah: `services/coding-grader/sandbox.py`.
-Perubahan checker resmi membutuhkan rebuild image. Request saat ini sengaja
-hanya mengizinkan main.py; komponen existing masih mendukung banyak file untuk materi.
+Perubahan checker resmi membutuhkan rebuild image. Setelah review dan backup,
+bangun ulang image, mulai ulang gateway, lalu jalankan CodingExerciseSeeder secara
+manual untuk menyiapkan identitas baru pada database tujuan. Tidak perlu
+migration, perubahan .env, atau reset data. Verifikasi Latihan 1 dan submission
+tiga file sebelum mengaktifkan versi baru untuk mahasiswa.
+
+Hasil implementasi multi-file 13 November 2026, rincian file, bukti QA, dan batas
+integrasi aktual tersedia di [laporan multi-file](coding-multifile-2026-11-13.md).
 
 ```powershell
 php artisan test --compact

@@ -62,12 +62,18 @@ def error_report(key, message):
 
 
 def valid_payload(payload):
-    return (isinstance(payload, dict) and set(payload) == {'exercise_key', 'files'}
-            and payload['exercise_key'] in ('coding-latihan-1', 'coding-latihan-2')
-            and isinstance(payload['files'], dict) and set(payload['files']) == {'main.py'}
-            and isinstance(payload['files']['main.py'], str)
-            and 0 < len(payload['files']['main.py']) <= 30000
-            and len(payload['files']['main.py'].encode('utf-8')) <= 60000)
+    if not isinstance(payload, dict) or set(payload) != {'exercise_key', 'files'}:
+        return False
+    key = payload['exercise_key']
+    if key not in ('coding-latihan-1', 'coding-latihan-2', 'coding-latihan-2-multifile-v1'):
+        return False
+    files = payload['files']
+    expected = {'ekosistem.py', 'rawa.py', 'main.py'} if key == 'coding-latihan-2-multifile-v1' else {'main.py'}
+    return (isinstance(files, dict) and set(files) == expected
+            and all(isinstance(source, str) and source.strip() and len(source) <= 30000
+                    and len(source.encode('utf-8')) <= 60000 for source in files.values())
+            and sum(len(source) for source in files.values()) <= 30000
+            and sum(len(source.encode('utf-8')) for source in files.values()) <= 60000)
 
 
 class Handler(BaseHTTPRequestHandler):

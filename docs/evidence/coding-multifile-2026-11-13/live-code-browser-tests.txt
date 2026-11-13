@@ -1,0 +1,10 @@
+PASS: A Run, B Run, A edit, C Submit, A Reset; independent models, output and scores
+PASS: assertion feedback, syntax/import errors, unsupported input, output limit
+PASS: custom entry, six files, packages, module isolation, fresh imports, checker errors
+PASS: queued cancellation, active Stop, timeout and queued-job recovery
+PASS: keyboard navigation, shortcut, 390/768/940/1440px layout; no page errors
+PASS: Python CDN failure/retry and Monaco CDN failure message
+PASS BAB 4: four tabs/models, independent edits, dirty indicators, cursor restoration, all-file Reset and five responsive sizes
+PASS: pewarisan: starter/wrong rejected, solution/alternatives 100%, real Python output, feedback/progress, Reset, one worker/loader; no page errors
+PASS: polimorfisme: starter/wrong rejected, solution/alternatives 100%, real Python output, feedback/progress, Reset, one worker/loader; no page errors
+PASS: kelas-abstrak: starter/wrong rejected, solution/alternatives 100%, real Python output, feedback/progress, Reset, one worker/loader; no page errors

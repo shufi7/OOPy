@@ -10,16 +10,16 @@ class CodingProgressService
 {
     public const EXERCISES = [
         1 => ['key' => 'coding-latihan-1', 'slug' => 'latihan-1', 'title' => 'Latihan 1 — Class dan Object'],
-        2 => ['key' => 'coding-latihan-2', 'slug' => 'latihan-2', 'title' => 'Latihan 2 — Inheritance'],
+        2 => ['key' => 'coding-latihan-2-multifile-v1', 'slug' => 'latihan-2', 'title' => 'Latihan 2: OOP Multi-File'],
     ];
 
     private const VALID_SCORE = "CASE WHEN exercise_submissions.status IN ('passed', 'failed', 'error')
         AND exercise_submissions.score BETWEEN 0 AND 100 THEN exercise_submissions.score END";
 
-    private function submissions(): Builder
+    private function submissions(bool $includeLegacy = false): Builder
     {
         return ExerciseSubmission::query()->join('exercises', 'exercises.id', '=', 'exercise_submissions.exercise_id')
-            ->whereIn('exercises.exercise_key', array_column(self::EXERCISES, 'key'));
+            ->whereIn('exercises.exercise_key', [...array_column(self::EXERCISES, 'key'), ...($includeLegacy ? ['coding-latihan-2'] : [])]);
     }
 
     public function summaries(): Builder
@@ -76,7 +76,7 @@ class CodingProgressService
 
     public function history(?User $user = null): Builder
     {
-        return $this->submissions()->when($user, fn ($query) => $query->where('exercise_submissions.user_id', $user->id))
+        return $this->submissions(true)->when($user, fn ($query) => $query->where('exercise_submissions.user_id', $user->id))
             ->select(['exercise_submissions.id', 'exercise_submissions.user_id', 'exercise_submissions.status',
                 'exercise_submissions.submitted_at', 'exercises.exercise_key'])
             ->selectRaw(self::VALID_SCORE.' AS score')
@@ -85,7 +85,9 @@ class CodingProgressService
 
     public function activity(ExerciseSubmission $submission): array
     {
-        $exercise = collect(self::EXERCISES)->firstWhere('key', $submission->exercise_key);
+        $exercise = $submission->exercise_key === 'coding-latihan-2'
+            ? ['title' => 'Latihan 2: Pewarisan (versi lama)', 'slug' => 'latihan-2']
+            : collect(self::EXERCISES)->firstWhere('key', $submission->exercise_key);
         $time = $submission->submitted_at->copy()->timezone('Asia/Makassar')->locale('id');
 
         return [

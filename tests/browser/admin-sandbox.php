@@ -64,7 +64,7 @@ app(QuizGradingService::class)->submit($quiz, $attempt, $user, $quiz->questions-
     'answer' => $question->question_type === 'multiple_choice' ? (int) $question->correct_answer : $question->correct_answer,
 ])->all());
 $first = Exercise::where('exercise_key', 'coding-latihan-1')->sole();
-$second = Exercise::where('exercise_key', 'coding-latihan-2')->sole();
+$second = Exercise::where('exercise_key', 'coding-latihan-2-multifile-v1')->sole();
 foreach (range(1, 23) as $index) {
     $user->exerciseSubmissions()->create([
         'exercise_id' => $index === 23 ? $second->id : $first->id,

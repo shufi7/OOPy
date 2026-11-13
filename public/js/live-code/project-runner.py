@@ -40,6 +40,16 @@ def execute_project(files, entry_file, checker, checking, workspace):
     bytecode = sys.dont_write_bytecode
     directory = '/workspaces/' + workspace
     phase = 'Program'
+    observations = []
+    profiler = sys.getprofile()
+
+    def observe(frame, event, result):
+        if (len(observations) < 1000 and event == 'return' and frame.f_code.co_name in ('__init__', 'status')
+                and frame.f_back is not None and frame.f_back.f_code.co_filename == directory + '/' + entry_file):
+            obj = frame.f_locals.get(frame.f_code.co_varnames[0]) if frame.f_code.co_argcount else None
+            if obj is not None:
+                observations.append((frame.f_code.co_name, obj, result, tuple(
+                    getattr(obj, name, None) for name in ('nama', 'lokasi', 'tinggi_air_cm'))))
     try:
         shutil.rmtree('/workspaces', ignore_errors=True)
         os.makedirs(directory)
@@ -58,7 +68,12 @@ def execute_project(files, entry_file, checker, checking, workspace):
         namespace = {'__name__': '__main__', '__file__': directory + '/' + entry_file}
         captured = CapturedOutput(sys.stdout)
         with contextlib.redirect_stdout(captured) if checking else contextlib.nullcontext():
-            exec(compile(files[entry_file], namespace['__file__'], 'exec'), namespace)
+            try:
+                if checking and set(files) == {'ekosistem.py', 'rawa.py', 'main.py'}:
+                    sys.setprofile(observe)
+                exec(compile(files[entry_file], namespace['__file__'], 'exec'), namespace)
+            finally:
+                sys.setprofile(profiler)
         results = None
         if checking:
             phase = 'Checker'
@@ -67,6 +82,8 @@ def execute_project(files, entry_file, checker, checking, workspace):
             checks = dict(namespace)
             checks.pop('results', None)
             checks['__oopy_output__'] = captured.text
+            checks['__oopy_modules__'] = {name: sys.modules[name] for name in ('ekosistem', 'rawa') if name in sys.modules}
+            checks['__oopy_execution__'] = observations
             try:
                 exec(compile(checker, '<pemeriksaan>', 'exec'), checks)
                 results = checks.get('results', [
@@ -90,6 +107,7 @@ def execute_project(files, entry_file, checker, checking, workspace):
     except BaseException:
         return json.dumps({'error': phase + ' Python Error\n' + traceback.format_exc()[-100000:]})
     finally:
+        sys.setprofile(profiler)
         sys.stdin, sys.stdout, sys.stderr = streams
         # Flush partial lines while this request still owns the output stream.
         sys.stdout.flush()

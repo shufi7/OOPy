@@ -13,6 +13,7 @@ from pathlib import Path
 import runpy
 import secrets
 import sys
+import types
 
 run_checks = runpy.run_path(str(Path(__file__).with_name('checks.py')))['run_checks']
 
@@ -38,16 +39,32 @@ ALLOWED_ATTRIBUTES = {
 }
 
 
-def validate_source(source):
-    tree = ast.parse(source, filename='main.py')
+MULTIFILE_KEY = 'coding-latihan-2-multifile-v1'
+EXPORTS = {'ekosistem': 'Ekosistem', 'rawa': 'Rawa'}
+
+
+def validate_source(source, filename='main.py', key='coding-latihan-1'):
+    tree = ast.parse(source, filename=filename)
     if sum(1 for _ in ast.walk(tree)) > 6000:
         raise ValueError('Kode terlalu kompleks untuk latihan ini.')
     for node in ast.walk(tree):
-        if isinstance(node, (ast.Import, ast.ImportFrom, ast.Global, ast.Nonlocal,
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            allowed = {'main.py': {'ekosistem', 'rawa'}, 'rawa.py': {'ekosistem'}, 'ekosistem.py': set()}
+            names = [node.module] if isinstance(node, ast.ImportFrom) else [alias.name for alias in node.names]
+            if (key != MULTIFILE_KEY or any(name not in allowed.get(filename, set()) for name in names)
+                    or isinstance(node, ast.ImportFrom) and (node.level != 0 or any(
+                        alias.name != EXPORTS[node.module] for alias in node.names))):
+                raise ValueError(filename + ': import hanya diperbolehkan untuk dependensi ekosistem dan rawa dalam proyek ini.')
+            for alias in node.names:
+                name = alias.asname or alias.name
+                if name.startswith('_') or name in SAFE_BUILTINS:
+                    raise ValueError(filename + ': alias import tidak diizinkan.')
+        if isinstance(node, (ast.Global, ast.Nonlocal,
                              ast.AsyncFunctionDef, ast.Await, ast.AsyncFor,
                              ast.With, ast.AsyncWith)):
             raise ValueError('Gunakan Python dasar tanpa import, akses sistem, atau async.')
-        if isinstance(node, ast.Attribute) and node.attr not in ALLOWED_ATTRIBUTES:
+        attributes = ALLOWED_ATTRIBUTES | ({'tinggi_air_cm', 'Ekosistem', 'Rawa'} if key == MULTIFILE_KEY else set())
+        if isinstance(node, ast.Attribute) and node.attr not in attributes:
             raise ValueError('Atribut di luar kontrak latihan: ' + node.attr[:80])
         if isinstance(node, ast.Name):
             if node.id.startswith('_') and not (node.id == '__name__' and isinstance(node.ctx, ast.Load)):
@@ -65,31 +82,103 @@ def validate_source(source):
             raise ValueError('Nama exception tersebut tidak didukung.')
         if isinstance(node, (ast.MatchAs, ast.MatchStar)) and node.name and (node.name.startswith('_') or node.name in SAFE_BUILTINS):
             raise ValueError('Nama pattern tersebut tidak didukung.')
+        if isinstance(node, ast.MatchMapping) and node.rest and (node.rest.startswith('_') or node.rest in SAFE_BUILTINS):
+            raise ValueError('Nama pattern tersebut tidak didukung.')
+        if isinstance(node, ast.MatchClass) and any(name not in attributes for name in node.kwd_attrs):
+            raise ValueError('Atribut pattern di luar kontrak latihan.')
     return tree
+
+
+def execute_files(files, key):
+    expected = {'ekosistem.py', 'rawa.py', 'main.py'} if key == MULTIFILE_KEY else {'main.py'}
+    if (key not in ('coding-latihan-1', 'coding-latihan-2', MULTIFILE_KEY)
+            or not isinstance(files, dict) or set(files) != expected
+            or any(not isinstance(source, str) or not source.strip() or len(source) > 30000
+                   or len(source.encode('utf-8')) > 60000 for source in files.values())
+            or sum(len(source) for source in files.values()) > 30000
+            or sum(len(source.encode('utf-8')) for source in files.values()) > 60000):
+        raise ValueError('Struktur file atau batas ukuran proyek tidak valid.')
+    trees = {name: validate_source(source, name, key) for name, source in files.items()}
+    modules = {}
+    loading = set()
+
+    def load(name):
+        if name in loading:
+            raise ValueError('Import melingkar tidak didukung: ' + name)
+        if name not in modules:
+            module = types.ModuleType(name)
+            modules[name] = module
+            module.__dict__.update({'__builtins__': safe_builtins()})
+            loading.add(name)
+            try:
+                exec(compile(trees[name + '.py'], name + '.py', 'exec'), module.__dict__)
+            finally:
+                loading.remove(name)
+        return modules[name]
+
+    def restricted_import(name, globals=None, locals=None, fromlist=(), level=0):
+        caller = (globals or {}).get('__name__')
+        allowed = {'__main__': {'ekosistem', 'rawa'}, 'rawa': {'ekosistem'}, 'ekosistem': set()}
+        if (key != MULTIFILE_KEY or level or name not in allowed.get(caller, set())
+                or any(export != EXPORTS[name] for export in (fromlist or ()))):
+            raise ValueError('Import modul di luar proyek tidak diizinkan.')
+        return load(name)
+
+    def safe_builtins():
+        result = dict(SAFE_BUILTINS)
+        if key == MULTIFILE_KEY:
+            result['__import__'] = restricted_import
+        return result
+
+    namespace = {'__builtins__': safe_builtins(), '__name__': '__main__'}
+    observations = []
+
+    def observe(frame, event, result):
+        if (len(observations) < 1000 and event == 'return' and frame.f_code.co_name in ('__init__', 'status')
+                and frame.f_back is not None and frame.f_back.f_code.co_filename == 'main.py'):
+            obj = frame.f_locals.get(frame.f_code.co_varnames[0]) if frame.f_code.co_argcount else None
+            if obj is not None:
+                observations.append((frame.f_code.co_name, obj, result, tuple(
+                    getattr(obj, name, None) for name in ('nama', 'lokasi', 'tinggi_air_cm'))))
+
+    previous = sys.getprofile()
+    try:
+        if key == MULTIFILE_KEY:
+            sys.setprofile(observe)
+        exec(compile(trees['main.py'], 'main.py', 'exec'), namespace)
+    finally:
+        sys.setprofile(previous)
+    return namespace, modules, observations
 
 
 def grade(payload):
     key = payload['exercise_key']
-    source = payload['files']['main.py']
     output = LimitedOutput()
-    try:
-        tree = validate_source(source)
-    except (SyntaxError, ValueError, RecursionError) as error:
-        return execution_error(key, '', type(error).__name__ + ': ' + str(error)[:300])
-    namespace = {'__builtins__': dict(SAFE_BUILTINS), '__name__': '__main__'}
     try:
         with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
             # This process is launched only within a constrained, networkless container.
-            exec(compile(tree, 'main.py', 'exec'), namespace)
+            namespace, modules, observations = execute_files(payload['files'], key)
             program_output = output.getvalue()
             checks = run_checks(namespace, program_output, key,
                                 extra_sensor=[('Sensor ' + secrets.token_hex(4), ph) for ph in (
                                     6.5 + secrets.randbelow(2000) / 1000,
                                     5 + secrets.randbelow(1000) / 1000,
                                     9 + secrets.randbelow(1000) / 1000)],
-                                extra_ecosystem=[('Ekosistem ' + secrets.token_hex(4), 'Amuntai')])
+                                extra_ecosystem=[('Ekosistem ' + secrets.token_hex(4), 'Amuntai')],
+                                modules=modules, execution=observations,
+                                extra_water=[secrets.randbelow(8000) / 100, 80 + secrets.randbelow(12000) / 100])
     except BaseException as error:
-        return execution_error(key, output.getvalue(), type(error).__name__)
+        if isinstance(error, (SyntaxError, ValueError, RecursionError)):
+            detail = type(error).__name__ + ': ' + str(error)[:300]
+        else:
+            trace = error.__traceback__
+            location = ''
+            while trace:
+                if trace.tb_frame.f_code.co_filename in payload['files']:
+                    location = ' di ' + trace.tb_frame.f_code.co_filename + ' baris ' + str(trace.tb_lineno)
+                trace = trace.tb_next
+            detail = type(error).__name__ + location
+        return execution_error(key, output.getvalue(), detail)
     return {'version': 2, 'exercise_key': key, 'status': 'graded', 'checks': checks, 'output': program_output}
 
 

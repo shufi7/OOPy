@@ -45,7 +45,7 @@ $cases = match ($argv[1] ?? '') {
 };
 foreach ($cases as [$number, $status, $score, $minute]) {
     $user->exerciseSubmissions()->create([
-        'exercise_id' => Exercise::where('exercise_key', 'coding-latihan-'.$number)->sole()->id,
+        'exercise_id' => Exercise::where('exercise_key', \App\Services\CodingProgressService::EXERCISES[$number]['key'])->sole()->id,
         'code' => 'private-browser-fixture-source',
         'output' => 'private-browser-fixture-output',
         'status' => $status,

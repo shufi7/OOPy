@@ -1,8 +1,8 @@
 <?php
 
 $checks = file_get_contents(__DIR__.'/../../services/coding-grader/checks.py');
-$checker = fn (string $key): string => "_oopy_namespace = dict(globals())\n".$checks
-    ."\nresults = run_checks(_oopy_namespace, __oopy_output__, '$key')\n";
+$checker = fn (string $key): string => "_oopy_namespace = dict(globals())\n_oopy_rubric = {}\nexec(".json_encode($checks, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR).", _oopy_rubric)\n"
+    ."results = _oopy_rubric['run_checks'](_oopy_namespace, __oopy_output__, '$key', modules=__oopy_modules__, execution=__oopy_execution__)\n";
 
 return [
     'latihan-1' => [
@@ -42,38 +42,40 @@ return [
     ],
     'latihan-2' => [
         'number' => 2,
-        'key' => 'coding-latihan-2',
+        'key' => 'coding-latihan-2-multifile-v1',
         'material_slug' => 'pewarisan',
-        'title' => 'Latihan 2 — Pewarisan dan Method Overriding',
-        'problem_title' => 'Membuat Class Ekosistem dan Subclass Rawa Menggunakan Python',
-        'description' => 'Terapkan konsep inheritance dan method overriding untuk menyelesaikan permasalahan pemrograman.',
-        'case' => 'Sistem pemantauan lingkungan Kalimantan Selatan membutuhkan class dasar untuk berbagai jenis ekosistem lahan basah.',
-        'objective' => 'Menggunakan inheritance untuk berbagi atribut dan overriding untuk memberi perilaku khusus pada rawa.',
+        'title' => 'Latihan 2 — Implementasi OOP dengan Multi-File Python',
+        'problem_title' => 'Membangun Sistem Pemantauan Ekosistem Rawa Berbasis Multi-File',
+        'description' => 'Organisasikan kelas induk, kelas turunan, dan program utama dalam tiga modul Python yang saling terhubung.',
+        'case' => 'Seorang mahasiswa Pendidikan Komputer membuat simulasi pemantauan ekosistem lahan basah di Kalimantan Selatan.',
+        'objective' => 'Terapkan class, object, constructor, atribut instance, inheritance, super(), overriding, serta import antarmodul. Uji perubahan perilaku objek saat atributnya diperbarui.',
         'steps' => [
-            'Tulis program Python dari awal pada main.py. Buat class induk bernama Ekosistem.',
-            'Buat constructor __init__(self, nama, lokasi), lalu simpan kedua parameter sebagai atribut objek menggunakan self.',
-            'Buat method status(self) pada Ekosistem yang mengembalikan status dasar sesuai ketentuan program.',
-            'Buat class Rawa yang mewarisi Ekosistem. Warisi constructor induk atau panggil constructor induk menggunakan super() jika membuat constructor sendiri.',
-            'Definisikan kembali method status(self) pada Rawa agar mengembalikan status khusus rawa.',
-            'Buat objek Rawa dengan nama "Rawa Bangkau" dan lokasi "Kalimantan Selatan", lalu gunakan print() untuk menampilkan hasil status().',
+            'Kerjakan ekosistem.py terlebih dahulu: definisikan superclass Ekosistem beserta constructor dan method status().',
+            'Lanjutkan rawa.py: impor Ekosistem dari modul ekosistem, lalu definisikan subclass Rawa dengan constructor sendiri dan overriding status().',
+            'Kerjakan main.py: impor Rawa dari modul rawa dan buat objek dengan nama "Rawa Bangkau", lokasi "Hulu Sungai Selatan", serta tinggi air 85 cm.',
+            'Dari main.py, tampilkan nama dan lokasi dipisahkan " - ", lalu tampilkan "Status air: " diikuti hasil status() melalui objek.',
+            'Gunakan Run Code untuk menjalankan main.py bersama kedua modul. Uji tinggi air di bawah, tepat pada, dan di atas 80 serta perubahan atribut setelah objek dibuat.',
+            'Gunakan Submit untuk memeriksa seluruh proyek. Akun yang masuk memperoleh penilaian resmi server; hasil lokal tamu tidak menyimpan nilai.',
         ],
         'requirements' => [
-            'Nama class induk: Ekosistem. Constructor menerima nama dan lokasi; atribut publik objek bernama nama dan lokasi.',
-            'Method Ekosistem.status() harus mengembalikan string "Status belum ditentukan".',
-            'Rawa harus merupakan subclass Ekosistem dan memperoleh atribut nama serta lokasi dari parameter constructor.',
-            'Rawa mendefinisikan method status() sendiri (overriding) yang mengembalikan string "Genangan rawa dipantau".',
-            'Kedua method status() tidak menerima parameter tambahan. Kembalikan teks dengan return, kemudian cetak hasil pemanggilannya pada program utama.',
+            'ekosistem.py: Ekosistem.__init__(self, nama, lokasi) menyimpan self.nama dan self.lokasi sesuai parameter. Ekosistem.status(self) mengembalikan "Belum dipantau".',
+            'rawa.py: gunakan from ekosistem import Ekosistem atau import modul yang setara. Definisikan Rawa sebagai subclass Ekosistem pada file ini.',
+            'Rawa.__init__(self, nama, lokasi, tinggi_air_cm) memanggil super().__init__(nama, lokasi), lalu menyimpan self.tinggi_air_cm.',
+            'Rawa.status(self) mengembalikan "Siaga" jika tinggi_air_cm >= 80 dan "Normal" jika kurang dari 80. Gunakan nilai atribut terbaru, bukan hasil yang disimpan untuk satu contoh.',
+            'main.py: impor Rawa dari rawa dan jalankan contoh objek serta pemanggilan status() di file utama ini. Mendefinisikan seluruh kelas di main.py tidak memenuhi struktur modular.',
+            'Ketiga file harus berisi kode. Masing-masing maksimal 30.000 karakter dan 60.000 byte UTF-8; total proyek juga maksimal 30.000 karakter dan 60.000 byte.',
+            'Batas 80 cm adalah aturan simulasi latihan pemrograman, bukan standar resmi peringatan banjir.',
         ],
         'criteria' => [
-            'Program berjalan tanpa error. Pembuatan contoh objek Rawa dan penyajian output dinilai sebagai tambahan.',
-            'Constructor Ekosistem dan Rawa menyimpan nama dan lokasi yang berbeda sesuai data masing-masing objek.',
-            'Pewarisan Rawa dari Ekosistem terbukti, dan pemanggilan status() pada induk serta subclass memberikan hasil yang berbeda sesuai ketentuan.',
-            'Semua pemeriksaan konsep inti wajib berhasil (90 poin). Contoh object dan output merupakan tambahan (10 poin) yang tidak menentukan kelulusan. Variasi kapitalisasi dan spasi diterima; cara menulis solusi boleh berbeda.',
+            'Enam konsep inti masing-masing bernilai 15 poin: struktur modul/import; constructor dan atribut induk; status induk; inheritance; constructor subclass dengan super(); overriding dan perilaku dinamis.',
+            'Semua pemeriksaan inti wajib berhasil dan skor minimal 90. Penyajian contoh objek serta output merupakan tambahan 10 poin.',
+            'Status diuji pada 79.9, 80, 80.0, 85, data lain, perubahan atribut, serta dua objek independen. Solusi yang hanya benar untuk contoh 85 cm tidak lulus.',
+            'Variasi gaya penulisan serta kapitalisasi dan whitespace status/output yang setara diterima. Nilai dan progres resmi hanya berasal dari server.',
         ],
-        'hint' => 'Tuliskan nama class induk dalam tanda kurung pada deklarasi Rawa. Gunakan nama method yang sama untuk overriding.',
-        'example' => 'Genangan rawa dipantau',
-        'files' => ['main.py' => ''],
-        'core_checks' => ['constructor', 'attributes', 'parent_status', 'inheritance', 'child_attributes', 'overriding'],
-        'checker' => $checker('coding-latihan-2'),
+        'hint' => 'Nama modul pada import tidak memakai akhiran .py. Pilih tab untuk mengedit file; main.py selalu menjadi entry point. Gunakan return pada status() dan print() di program utama.',
+        'example' => "Rawa Bangkau - Hulu Sungai Selatan\nStatus air: Siaga",
+        'files' => ['ekosistem.py' => '', 'rawa.py' => '', 'main.py' => ''],
+        'core_checks' => ['modules', 'constructor', 'parent_status', 'inheritance', 'child_constructor', 'overriding'],
+        'checker' => $checker('coding-latihan-2-multifile-v1'),
     ],
 ];

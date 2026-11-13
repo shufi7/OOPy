@@ -1,11 +1,57 @@
 """Behavioral rubric shared by Pyodide practice checks and the Docker grader."""
+import builtins
+import sys
 
 
 def normalized(value):
     return ' '.join(value.casefold().split()) if isinstance(value, str) else None
 
 
-def run_checks(namespace, output, key, extra_sensor=(), extra_ecosystem=()):
+def uses_parent_initializer(child):
+    initializer = vars(child).get('__init__')
+    if not callable(initializer):
+        return False
+    scope = initializer.__globals__
+    missing = object()
+    previous = scope.get('super', missing)
+    calls = []
+
+    class SuperProbe:
+        def __getattribute__(self, name):
+            target = object.__getattribute__(self, 'target')
+            method = getattr(target, name)
+            if name != '__init__':
+                return method
+
+            def initialize(*args, **kwargs):
+                result = method(*args, **kwargs)
+                calls.append((target.__self__, getattr(target.__self__, 'nama', None),
+                              getattr(target.__self__, 'lokasi', None)))
+                return result
+            return initialize
+
+    def observed_super(*args):
+        if not args:
+            frame = sys._getframe(1)
+            args = (frame.f_locals['__class__'], frame.f_locals[frame.f_code.co_varnames[0]])
+        proxy = object.__new__(SuperProbe)
+        object.__setattr__(proxy, 'target', builtins.super(*args))
+        return proxy
+
+    try:
+        scope['super'] = observed_super
+        instance = child('Uji constructor', 'Lokasi uji', 81.25)
+        return any(obj is instance and nama == 'Uji constructor' and lokasi == 'Lokasi uji'
+                   for obj, nama, lokasi in calls)
+    finally:
+        if previous is missing:
+            scope.pop('super', None)
+        else:
+            scope['super'] = previous
+
+
+def run_checks(namespace, output, key, extra_sensor=(), extra_ecosystem=(), modules=None,
+               extra_water=(), execution=()):
     results = []
 
     def check(identifier, label, callback, feedback, required=True):
@@ -63,6 +109,70 @@ def run_checks(namespace, output, key, extra_sensor=(), extra_ecosystem=()):
         check('presentation', 'Penyajian output program',
               lambda: printed_output(['rawa bangkau', 'status air:normal']),
               'Tambahan: buat object dan cetak lokasi Rawa Bangkau serta Status air: Normal. Kapitalisasi dan spasi boleh berbeda.', False)
+    elif key == 'coding-latihan-2-multifile-v1':
+        modules = modules or {}
+        parent_module, child_module = modules.get('ekosistem'), modules.get('rawa')
+        parent = getattr(parent_module, 'Ekosistem', None)
+        child = getattr(child_module, 'Rawa', None)
+        pairs = [('Rawa Bangkau', 'Hulu Sungai Selatan'), ('Danau', 'Amuntai'), *extra_ecosystem]
+
+        def modular():
+            if not isinstance(parent, type) or not isinstance(child, type):
+                return False
+            imported_child = any(value is child or getattr(value, 'Rawa', None) is child for value in namespace.values())
+            imported_child = imported_child or any(isinstance(obj, child) for _, obj, _, _ in execution)
+            imported_parent = any(value is parent or getattr(value, 'Ekosistem', None) is parent
+                                  for value in vars(child_module).values()) if child_module is not None else False
+            methods_in_module = all(vars(cls).get(name) is None or getattr(vars(cls)[name], '__module__', None) == module
+                                    for cls, module in ((parent, 'ekosistem'), (child, 'rawa'))
+                                    for name in ('__init__', 'status'))
+            return (parent.__module__ == 'ekosistem' and child.__module__ == 'rawa'
+                    and imported_parent and imported_child and methods_in_module)
+
+        def child_constructor():
+            values = [('A', 'Lokasi A', 79.9), ('B', 'Lokasi B', 85.5),
+                      *[(name, location, 80.25) for name, location in extra_ecosystem]]
+            return attributes(child, values, ('nama', 'lokasi', 'tinggi_air_cm')) and uses_parent_initializer(child)
+
+        def dynamic_status():
+            if not callable(vars(child).get('status')) or child.status is parent.status:
+                return False
+            a, b = child('A', 'X', 85), child('B', 'Y', 12)
+            for value in [79.9, 80, 80.0, 85, 0, 12.5, 180, *extra_water]:
+                a.tinggi_air_cm = value
+                if normalized(a.status()) != ('siaga' if value >= 80 else 'normal'):
+                    return False
+                if b.tinggi_air_cm != 12 or normalized(b.status()) != 'normal':
+                    return False
+            a.nama, a.lokasi = 'Diubah', 'Baru'
+            return b.nama == 'B' and b.lokasi == 'Y'
+
+        def presentation():
+            example = ('Rawa Bangkau', 'Hulu Sungai Selatan', 85)
+            created = [obj for method, obj, result, values in execution
+                       if method == '__init__' and isinstance(obj, child) and values == example]
+            called = any(method == 'status' and any(obj is item for item in created)
+                         and normalized(result) == 'siaga' and values == example
+                         for method, obj, result, values in execution)
+            return called and printed_output(['rawa bangkau - hulu sungai selatan', 'status air:siaga'])
+
+        check('modules', 'Struktur modul dan import', modular,
+              'Definisikan Ekosistem di ekosistem.py dan Rawa di rawa.py; impor induk pada rawa.py dan Rawa pada main.py.')
+        check('constructor', 'Constructor dan atribut Ekosistem',
+              lambda: callable(vars(parent).get('__init__')) and attributes(parent, pairs, ('nama', 'lokasi')),
+              'Constructor Ekosistem harus menyimpan nama dan lokasi yang diterima pada setiap instance.')
+        check('parent_status', 'Method status induk',
+              lambda: all(normalized(parent(*pair).status()) == 'belum dipantau' for pair in pairs),
+              'Ekosistem.status() harus mengembalikan string Belum dipantau.')
+        check('inheritance', 'Pewarisan Rawa dari Ekosistem',
+              lambda: isinstance(parent, type) and isinstance(child, type) and child is not parent and issubclass(child, parent),
+              'Rawa harus benar-benar mewarisi Ekosistem dari modul ekosistem.')
+        check('child_constructor', 'Constructor Rawa dan super()', child_constructor,
+              'Definisikan constructor Rawa; gunakan super().__init__(nama, lokasi) dan simpan tinggi_air_cm pada instance.')
+        check('overriding', 'Overriding dan perubahan tinggi air', dynamic_status,
+              'Override status(): Siaga jika tinggi_air_cm >= 80, selain itu Normal. Baca atribut terbaru dan pisahkan data antarobjek.')
+        check('presentation', 'Contoh objek dan output main.py', presentation,
+              'Tambahan: buat contoh Rawa Bangkau di main.py, panggil status() melalui objek, lalu tampilkan kedua baris output.', False)
     elif key == 'coding-latihan-2':
         parent, child = namespace.get('Ekosistem'), namespace.get('Rawa')
         pairs = [('Rawa Bangkau', 'Kalimantan Selatan'), ('Danau', 'Amuntai'), *extra_ecosystem]

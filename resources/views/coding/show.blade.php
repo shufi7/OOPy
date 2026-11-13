@@ -34,7 +34,7 @@
             <h4>Kriteria Keberhasilan</h4>
             <ul>@foreach($exercise['criteria'] as $criterion)<li>{{ $criterion }}</li>@endforeach</ul>
             <p class="coding-hint"><strong>Petunjuk:</strong> {{ $exercise['hint'] }}</p>
-            <p class="small mb-0">Editor dimulai kosong. Gunakan Python dasar tanpa import atau akses sistem. Run Code menampilkan output program; Submit memberikan feedback lokal dan meminta penilaian resmi untuk akun yang masuk.</p>
+            <p class="small mb-0">{{ count($exercise['files']) > 1 ? 'Ketiga editor dimulai kosong. Import hanya diperbolehkan untuk modul ekosistem dan rawa dari proyek ini. Akses sistem tidak diperbolehkan.' : 'Editor dimulai kosong. Gunakan Python dasar tanpa import atau akses sistem.' }} Run Code menampilkan output program; Submit memberikan feedback lokal dan meminta penilaian resmi untuk akun yang masuk.</p>
         </section>
         <x-live-code :config="$config" />
         <a class="coding-back" href="{{ route('coding.index') }}">← Kembali ke daftar latihan</a>

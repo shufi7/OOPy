@@ -137,7 +137,12 @@ class GraderTest(unittest.TestCase):
                 with contextlib.redirect_stdout(output):
                     exec(source, namespace)
                 namespace['__oopy_output__'] = output.getvalue()
-                exec(catalog[slug]['checker'], namespace)
+                namespace['__oopy_modules__'] = {}
+                namespace['__oopy_execution__'] = []
+                if slug == 'latihan-2':
+                    namespace['results'] = sandbox.run_checks(namespace, output.getvalue(), 'coding-latihan-2')
+                else:
+                    exec(catalog[slug]['checker'], namespace)
                 official = sandbox.grade(payload(source, 'coding-' + slug))
                 with self.subTest(slug=slug, source=source[-40:]):
                     self.assertEqual('graded', official['status'])
@@ -148,7 +153,9 @@ class GraderTest(unittest.TestCase):
         for source in ['import os', 'open("/etc/passwd")', 'globals()',
                        'print((1).__class__)', 'print("{0.__class__}".format(1))',
                        'print = lambda *a: None', 'f = (x for x in []); print(f.gi_frame)',
-                       'def x():\n    global print\n    print = 1']:
+                       'def x():\n    global print\n    print = 1',
+                       'match 1:\n    case object(__class__=klass):\n        pass',
+                       'match {}:\n    case {**super}:\n        pass']:
             self.assertFalse(self.passed(sandbox.grade(payload(source))))
 
     def test_syntax_runtime_error_and_forged_results_cannot_pass(self):
@@ -229,6 +236,116 @@ class GraderTest(unittest.TestCase):
         remaining = subprocess.run(['docker', 'ps', '-a', '--filter', 'name=oopy-grade-', '--format', '{{.Names}}'],
                                    text=True, capture_output=True, check=True)
         self.assertEqual('', remaining.stdout.strip())
+
+
+MULTIFILE = json.loads((Path(__file__).parents[2] / 'tests/Fixtures/coding-multifile.json').read_text())
+MULTIFILE_KEY = 'coding-latihan-2-multifile-v1'
+
+
+class MultiFileTest(unittest.TestCase):
+    def report(self, files=None):
+        return sandbox.grade({'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE if files is None else files})
+
+    def test_reference_aliases_explicit_super_and_wrapped_main(self):
+        variants = [MULTIFILE,
+                    MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('super()', 'super(Rawa, self)')},
+                    MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('from ekosistem import Ekosistem', 'import ekosistem as eco').replace('Rawa(Ekosistem)', 'Rawa(eco.Ekosistem)')},
+                    MULTIFILE | {'main.py': MULTIFILE['main.py'].replace('from rawa import Rawa', 'import rawa as modul').replace('rawa = Rawa(', 'rawa = modul.Rawa(')},
+                    MULTIFILE | {'main.py': 'def main():\n' + '\n'.join('    ' + line for line in MULTIFILE['main.py'].splitlines()) + '\nmain()'}]
+        for files in variants:
+            with self.subTest(files=files):
+                report = self.report(files)
+                self.assertEqual('graded', report['status'], report)
+                self.assertEqual(['modules', 'constructor', 'parent_status', 'inheritance', 'child_constructor', 'overriding', 'presentation'],
+                                 [c['id'] for c in report['checks']])
+                self.assertTrue(all(c['passed'] for c in report['checks']), report)
+                self.assertEqual(100, sum(c['weight'] for c in report['checks'] if c['passed']))
+
+    def test_behavior_boundaries_mutation_and_actual_super_call(self):
+        variants = [
+            ('rawa.py', 'self.tinggi_air_cm >= 80', 'self.tinggi_air_cm > 80', 'overriding'),
+            ('rawa.py', 'self.tinggi_air_cm >= 80', 'True', 'overriding'),
+            ('rawa.py', 'super().__init__(nama, lokasi)', 'Ekosistem.__init__(self, nama, lokasi)', 'child_constructor'),
+            ('rawa.py', 'super().__init__(nama, lokasi)', 'self.nama = nama\n        self.lokasi = lokasi\n        if False:\n            super().__init__(nama, lokasi)', 'child_constructor'),
+            ('ekosistem.py', 'self.nama = nama', 'self.nama = "Tetap"', 'constructor'),
+            ('ekosistem.py', 'Belum dipantau', 'Status lama', 'parent_status'),
+        ]
+        for name, old, new, failed in variants:
+            with self.subTest(failed=failed, new=new):
+                report = self.report(MULTIFILE | {name: MULTIFILE[name].replace(old, new)})
+                self.assertEqual('graded', report['status'], report)
+                self.assertFalse(next(c for c in report['checks'] if c['id'] == failed)['passed'])
+        no_override = MULTIFILE['rawa.py'].split('    def status(self):')[0]
+        self.assertFalse(next(c for c in self.report(MULTIFILE | {'rawa.py': no_override})['checks'] if c['id'] == 'overriding')['passed'])
+        unrelated = MULTIFILE['rawa.py'].replace('class Rawa(Ekosistem):', 'class Rawa:').replace('super().__init__(nama, lokasi)', 'self.nama = nama\n        self.lokasi = lokasi')
+        report = self.report(MULTIFILE | {'rawa.py': unrelated})
+        self.assertFalse(next(c for c in report['checks'] if c['id'] == 'inheritance')['passed'])
+
+    def test_modular_contract_output_bonus_and_forged_results(self):
+        combined = MULTIFILE['ekosistem.py'] + MULTIFILE['rawa.py'].replace('from ekosistem import Ekosistem', '') + MULTIFILE['main.py'].replace('from rawa import Rawa', '')
+        report = self.report({'ekosistem.py': 'pass', 'rawa.py': 'pass', 'main.py': combined})
+        self.assertFalse(report['checks'][0]['passed'])
+        report = self.report(MULTIFILE | {'main.py': 'from rawa import Rawa'})
+        self.assertTrue(all(c['passed'] for c in report['checks'] if c['required']))
+        self.assertFalse(report['checks'][-1]['passed'])
+        self.assertEqual(90, sum(c['weight'] for c in report['checks'] if c['passed']))
+        fake = 'from rawa import Rawa\nprint("Rawa Bangkau - Hulu Sungai Selatan\\nStatus air: Siaga")\nresults = [{"passed": True}]; score=100; passed=True; run_checks=1; type=1; vars=1'
+        report = self.report(MULTIFILE | {'main.py': fake})
+        self.assertEqual('graded', report['status'])
+        self.assertFalse(report['checks'][-1]['passed'])
+        self.assertEqual(7, len(report['checks']))
+
+    def test_forbidden_imports_in_every_file_rejected_before_execution(self):
+        for name, code in [
+            ('ekosistem.py', 'import os'), ('rawa.py', 'import sys'), ('main.py', 'import subprocess'),
+            ('main.py', 'from rawa import *'), ('main.py', 'from .rawa import Rawa'),
+            ('main.py', 'from rawa import Rawa as print'), ('main.py', 'from rawa import __dict__'),
+            ('main.py', 'import ekosistem.extra'), ('ekosistem.py', 'from rawa import Rawa'),
+            ('main.py', 'from rawa import Rawa as __builtins__'),
+        ]:
+            with self.subTest(name=name, code=code):
+                report = self.report(MULTIFILE | {name: code + '\n' + MULTIFILE[name]})
+                self.assertEqual('error', report['status'])
+                self.assertIn('import', report['output'])
+                self.assertNotIn('Status air: Siaga', report['output'])
+        self.assertEqual('error', sandbox.grade(payload('import ekosistem'))['status'])
+        for source in ['from rawa import Rawa\nprint(Rawa.__mro__)', 'from rawa import Rawa\nopen("/etc/passwd")']:
+            self.assertEqual('error', self.report(MULTIFILE | {'main.py': source})['status'])
+
+    def test_files_shape_size_and_error_location(self):
+        for files in [dict(list(MULTIFILE.items())[1:]), MULTIFILE | {'../x.py': 'pass'}, MULTIFILE | {'/main.py': 'pass'},
+                      MULTIFILE | {'rawa.py': []}, MULTIFILE | {'rawa.py': ' \n\t'},
+                      MULTIFILE | {'rawa.py': '#' + 'x' * 30000},
+                      {name: '#' + 'x' * 11000 for name in MULTIFILE}]:
+            request = {'exercise_key': MULTIFILE_KEY, 'files': files}
+            self.assertFalse(server.valid_payload(request))
+            self.assertEqual('error', sandbox.grade(request)['status'])
+        report = self.report(MULTIFILE | {'rawa.py': 'class Broken(:'})
+        self.assertIn('rawa.py', report['output'])
+        report = self.report(MULTIFILE | {'rawa.py': 'raise TypeError("fixture")'})
+        self.assertIn('rawa.py', report['output'])
+
+    def test_local_official_parity_for_trusted_multifile_fixtures(self):
+        root = Path(__file__).parents[2]
+        config = json.loads(subprocess.check_output(['php', '-r', "echo json_encode((require 'resources/coding/exercises.php')['latihan-2']);"], cwd=root))
+        variants = [MULTIFILE, MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('>= 80', '> 80')},
+                    MULTIFILE | {'main.py': 'from rawa import Rawa'},
+                    MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('super().__init__(nama, lokasi)', 'Ekosistem.__init__(self, nama, lokasi)')}]
+        reports = json.loads(subprocess.check_output([sys.executable, 'tests/js/checker-harness.py'],
+                            input=json.dumps({'checker': config['checker'], 'sources': variants}).encode(), cwd=root))
+        for files, local in zip(variants, reports):
+            self.assertNotIn('error', local, local)
+            self.assertTrue(local['super_restored'])
+            official = self.report(files)
+            self.assertEqual([(c['id'], c['passed'], c['weight'], c['required']) for c in official['checks']],
+                             [(c['id'], c['passed'], c['weight'], c['required']) for c in local['results']])
+
+    @unittest.skipUnless(os.environ.get('OOPY_TEST_DOCKER') == '1', 'Docker integration explicitly opt-in')
+    def test_real_multifile_container(self):
+        report = server.run_sandbox({'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE})
+        self.assertEqual('graded', report['status'])
+        self.assertTrue(all(c['passed'] for c in report['checks']))
+        self.assertEqual('error', server.run_sandbox({'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE | {'rawa.py': 'import os'}})['status'])
 
 
 class GatewayHttpTest(unittest.TestCase):

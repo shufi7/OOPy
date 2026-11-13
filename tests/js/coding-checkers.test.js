@@ -8,11 +8,12 @@ for (const [slug, solution] of Object.entries(codingSolutions)) {
         const php = spawnSync('php', ['-d', 'display_errors=stderr', '-r', `$all = require 'resources/coding/exercises.php'; echo json_encode($all['${slug}']);`], { encoding: 'utf8' });
         assert.equal(php.status, 0, php.stderr);
         const config = JSON.parse(php.stdout);
-        assert.deepEqual(config.files, { 'main.py': '' });
+        assert.deepEqual(config.files, slug === 'latihan-1' ? { 'main.py': '' } : { 'ekosistem.py': '', 'rawa.py': '', 'main.py': '' });
         const alternative = slug === 'latihan-1'
             ? solution.replace('6.5 <= self.ph <= 8.5', 'not (self.ph < 6.5 or self.ph > 8.5)')
-            : solution.replace('class Rawa(Ekosistem):', 'class Rawa(Ekosistem):\n    def __init__(self, nama, lokasi):\n        super().__init__(nama, lokasi)');
-        const incorrect = solution.replace(slug === 'latihan-1' ? 'return "Normal"' : 'return "Genangan rawa dipantau"', 'return "Salah"');
+            : { ...solution, 'rawa.py': solution['rawa.py'].replace('self.tinggi_air_cm >= 80', 'not (self.tinggi_air_cm < 80)') };
+        const incorrect = slug === 'latihan-1' ? solution.replace('return "Normal"', 'return "Salah"')
+            : { ...solution, 'rawa.py': solution['rawa.py'].replace('return "Siaga"', 'return "Salah"') };
         const python = spawnSync('python', ['tests/js/checker-harness.py'], {
             input: JSON.stringify({ checker: config.checker, sources: [config.files, incorrect, solution, alternative] }), encoding: 'utf8',
         });

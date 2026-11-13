@@ -1,0 +1,5 @@
+{
+  "ekosistem.py": "class Ekosistem:\n    def __init__(self, nama, lokasi):\n        self.nama = nama\n        self.lokasi = lokasi\n\n    def status(self):\n        return \"Belum dipantau\"\n",
+  "rawa.py": "from ekosistem import Ekosistem\n\nclass Rawa(Ekosistem):\n    def __init__(self, nama, lokasi, tinggi_air_cm):\n        super().__init__(nama, lokasi)\n        self.tinggi_air_cm = tinggi_air_cm\n\n    def status(self):\n        if self.tinggi_air_cm >= 80:\n            return \"Siaga\"\n        return \"Normal\"\n",
+  "main.py": "from rawa import Rawa\n\nrawa = Rawa(\"Rawa Bangkau\", \"Hulu Sungai Selatan\", 85)\nprint(rawa.nama + \" - \" + rawa.lokasi)\nprint(\"Status air:\", rawa.status())\n"
+}

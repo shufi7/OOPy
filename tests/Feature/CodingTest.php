@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Exercise;
 use App\Models\ExerciseSubmission;
 use App\Models\User;
+use App\Services\CodingExerciseCatalog;
 use Database\Seeders\CodingExerciseSeeder;
 use Database\Seeders\OopyContentSeeder;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -35,16 +36,17 @@ class CodingTest extends TestCase
         parent::tearDown();
     }
 
-    private function payload(): array
+    private function payload(string $slug = 'latihan-1'): array
     {
-        return ['files' => ['main.py' => "print('contoh snapshot')"]];
+        return ['files' => $slug === 'latihan-1' ? ['main.py' => "print('contoh snapshot')"]
+            : json_decode(file_get_contents(base_path('tests/Fixtures/coding-multifile.json')), true, flags: JSON_THROW_ON_ERROR)];
     }
 
     private function report(bool $passed = true, string $slug = 'latihan-1'): array
     {
         $catalog = require resource_path('coding/exercises.php');
 
-        return ['version' => 2, 'exercise_key' => 'coding-'.$slug, 'status' => 'graded', 'output' => 'Output resmi',
+        return ['version' => 2, 'exercise_key' => $catalog[$slug]['key'], 'status' => 'graded', 'output' => 'Output resmi',
             'checks' => array_map(fn ($id) => ['id' => $id, 'label' => $id, 'required' => $id !== 'presentation',
                 'weight' => $id === 'presentation' ? 10 : 15, 'passed' => $passed,
                 'feedback' => $passed ? 'Sudah sesuai.' : 'Perbaiki '.$id.'.'], [...$catalog[$slug]['core_checks'], 'presentation'])];
@@ -54,7 +56,7 @@ class CodingTest extends TestCase
     {
         $this->get('/')->assertOk()->assertSee('href="'.route('coding.index').'"', false);
         $this->get('/coding')->assertOk()->assertSeeInOrder(['Materi', 'Coding', 'Masuk', 'Daftar'])
-            ->assertSee('Latihan Coding OOPy')->assertSee('Membuat Class dan Object')->assertSee('Pewarisan dan Method Overriding')
+            ->assertSee('Latihan Coding OOPy')->assertSee('Membuat Class dan Object')->assertSee('Implementasi OOP dengan Multi-File Python')
             ->assertSee('/coding/latihan-1')->assertSee('/coding/latihan-2');
         foreach (['latihan-1' => 'SensorAir', 'latihan-2' => 'Ekosistem'] as $slug => $name) {
             $html = $this->get('/coding/'.$slug)->assertOk()->assertSee($name)->assertSee('Masuk untuk menyimpan hasil latihan')
@@ -66,7 +68,7 @@ class CodingTest extends TestCase
             $config = json_decode($match[1], true, flags: JSON_THROW_ON_ERROR);
             $this->assertTrue($config['persistence_enabled']);
             $this->assertFalse($config['authenticated']);
-            $this->assertSame(['main.py' => ''], $config['files']);
+            $this->assertSame($slug === 'latihan-1' ? ['main.py' => ''] : ['ekosistem.py' => '', 'rawa.py' => '', 'main.py' => ''], $config['files']);
             $this->assertTrue($config['require_code']);
             $this->assertFalse($config['show_activity_label']);
             $this->assertStringNotContainsString(config('coding.grader_token'), $html);
@@ -83,13 +85,13 @@ class CodingTest extends TestCase
                 'Aktivitas Live Coding', 'Soal Latihan', 'Deskripsi Soal', 'Instruksi Pengerjaan',
                 'Ketentuan Program', 'Contoh Output', 'Kriteria Keberhasilan', 'Editor Python',
             ])->assertDontSee('TODO')->assertDontSee('AKTIVITAS LIVE CODING');
-            $record = Exercise::where('exercise_key', 'coding-'.$slug)->sole();
+            $record = Exercise::where('exercise_key', app(CodingExerciseCatalog::class)->find($slug)['key'])->sole();
             $this->assertSame('', $record->starter_code);
         }
         $this->get('/coding/latihan-1')->assertSee('6.5')->assertSee('8.5')->assertSee('Perlu pemeriksaan')
             ->assertSee('Status air: Normal')->assertSee('ph terbaru');
-        $this->get('/coding/latihan-2')->assertSee('Status belum ditentukan')->assertSee('Genangan rawa dipantau')
-            ->assertSee('super()')->assertSee('Kalimantan Selatan');
+        $this->get('/coding/latihan-2')->assertSee('Belum dipantau')->assertSee('Siaga')
+            ->assertSee('super()')->assertSee('Hulu Sungai Selatan')->assertSee('ekosistem.py')->assertSee('rawa.py')->assertSee('79.9');
     }
 
     public function test_guests_cannot_submit_and_reading_never_creates_a_submission(): void
@@ -120,7 +122,7 @@ class CodingTest extends TestCase
     public function test_failed_submission_is_not_complete_and_second_exercise_needs_no_unlock(): void
     {
         Http::fake(['grader.test/grade' => Http::response($this->report(false, 'latihan-2'))]);
-        $this->actingAs(User::factory()->create())->postJson('/coding/latihan-2/submit', $this->payload())
+        $this->actingAs(User::factory()->create())->postJson('/coding/latihan-2/submit', $this->payload('latihan-2'))
             ->assertOk()->assertJsonPath('status', 'failed')->assertJsonPath('completed', false);
         $this->assertDatabaseHas('exercise_submissions', ['status' => 'failed', 'score' => 0]);
         $this->get('/coding')->assertDontSee('Kerjakan Lagi')->assertSee('Belum Dikerjakan');
@@ -143,7 +145,7 @@ class CodingTest extends TestCase
         $partial['checks'][1]['passed'] = true;
         Http::fake(['grader.test/grade' => Http::sequence()->push($this->report(true, 'latihan-2'))->push($partial)]);
         $this->actingAs(User::factory()->create());
-        $this->postJson('/coding/latihan-2/submit', $this->payload())->assertOk()
+        $this->postJson('/coding/latihan-2/submit', $this->payload('latihan-2'))->assertOk()
             ->assertJsonPath('status', 'passed')->assertJsonPath('completed', true);
         $this->postJson('/coding/latihan-1/submit', $this->payload())->assertOk()
             ->assertJsonPath('status', 'failed')->assertJsonPath('score', 30)->assertJsonPath('completed', false);
@@ -253,7 +255,7 @@ class CodingTest extends TestCase
             $optional = $this->report(true, $slug);
             $optional['checks'][6]['passed'] = false;
             $currentReport = $optional;
-            $this->actingAs($user)->postJson('/coding/'.$slug.'/submit', $this->payload())->assertOk()
+            $this->actingAs($user)->postJson('/coding/'.$slug.'/submit', $this->payload($slug))->assertOk()
                 ->assertJsonPath('status', 'passed')->assertJsonPath('score', 90)->assertJsonPath('completed', true);
             foreach (range(0, 5) as $index) {
                 $core = $this->report(true, $slug);
@@ -261,7 +263,7 @@ class CodingTest extends TestCase
                 $core['score'] = 100;
                 $core['passed'] = true;
                 $currentReport = $core;
-                $this->actingAs(User::factory()->create())->postJson('/coding/'.$slug.'/submit', $this->payload())->assertOk()
+                $this->actingAs(User::factory()->create())->postJson('/coding/'.$slug.'/submit', $this->payload($slug))->assertOk()
                     ->assertJsonPath('status', 'failed')->assertJsonPath('score', 85)->assertJsonPath('completed', false);
             }
         }

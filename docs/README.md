@@ -7,6 +7,7 @@ Petunjuk instalasi, teknologi, dan menjalankan aplikasi ada di [README proyek](.
 | Topik | Dokumen |
 | --- | --- |
 | Coding, gateway privat, sandbox, dan pengujian | [Coding](coding.md) |
+| Latihan Coding 2 multi-file, versi latihan, dan QA | [Implementasi multi-file, 13 November 2026](coding-multifile-2026-11-13.md) |
 | Rubrik penilaian Coding | [Laporan rubrik, 22 Oktober 2026](coding-grader-rubric-2026-10-22.md) |
 | Aktivasi grader development | [Laporan aktivasi, 22 Oktober 2026](coding-grader-activation-2026-10-22.md) |
 | Dashboard Pengguna dan agregasi Coding, Tahap 2 | [Integrasi Dashboard, 5 November 2026](coding-dashboard-2026-11-05.md) |

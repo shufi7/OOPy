@@ -56,9 +56,6 @@ class CodingController extends Controller
             return response()->json(['message' => 'Latihan belum disiapkan di database. Hubungi pengelola.'], 503);
         }
         $files = $request->validated('files');
-        if (strlen($files['main.py']) > 60000) {
-            return response()->json(['message' => 'Kode terlalu panjang (maksimal 60 KB).'], 422);
-        }
         try {
             $report = $grader->grade($exercise['key'], $files);
         } catch (RuntimeException) {

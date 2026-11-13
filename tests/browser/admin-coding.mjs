@@ -103,7 +103,7 @@ try {
     await page.waitForURL(`${base}/admin/users/2`);
     assert.equal(await page.getByRole('progressbar', { name: 'Progres Latihan Coding' }).getAttribute('aria-valuenow'), '50');
     assert.match(await page.locator('[data-coding-exercise="coding-latihan-1"]').innerText(), /90.*Selesai.*22/s);
-    assert.match(await page.locator('[data-coding-exercise="coding-latihan-2"]').innerText(), /70.*Belum Lulus.*1/s);
+    assert.match(await page.locator('[data-coding-exercise="coding-latihan-2-multifile-v1"]').innerText(), /70.*Belum Lulus.*1/s);
     assert.equal(await page.locator('[data-coding-submission]').count(), 10);
     assert.equal(await page.locator('[data-coding-submission]').first().getAttribute('data-coding-submission'), '23');
     await layout('student');
@@ -190,7 +190,7 @@ try {
     await visit('/dashboard');
     assert.equal(await page.getByRole('progressbar', { name: 'Progres Latihan Coding' }).getAttribute('aria-valuenow'), '50');
     assert.match(await page.locator('[data-dashboard-coding="coding-latihan-1"]').innerText(), /Selesai.*90/s);
-    assert.match(await page.locator('[data-dashboard-coding="coding-latihan-2"]').innerText(), /Belum Lulus.*70/s);
+    assert.match(await page.locator('[data-dashboard-coding="coding-latihan-2-multifile-v1"]').innerText(), /Belum Lulus.*70/s);
     for (const path of ['/admin', '/admin/users/2', '/admin/scores', '/admin/scores/export']) assert.equal((await page.request.get(`${base}${path}`)).status(), 403);
     await context.clearCookies();
     assert.equal((await page.request.get(`${base}/admin`, { maxRedirects: 0 })).status(), 302);

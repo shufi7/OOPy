@@ -103,6 +103,16 @@ export function createLiveCode(root, config) {
         if (!editor || runtimeManager.state !== 'ready' || running || submitting) return;
         if (type === 'check' && !config.checker.trim()) return;
         const files = Object.fromEntries([...models].map(([name, model]) => [name, model.getValue()]));
+        const emptyFiles = Object.keys(files).filter(name => !files[name].trim());
+        if (config.require_code && fileNames.length > 1 && emptyFiles.length) {
+            clearResults();
+            output.replaceChildren();
+            appendOutput(`File belum lengkap: ${emptyFiles.join(', ')}. Tulis kode pada setiap file sebelum Run Code atau Submit.\n`, 'muted');
+            setStatus('ready', 'Lengkapi seluruh file proyek.');
+            selectFile(emptyFiles[0]);
+            editor.focus();
+            return;
+        }
         if (config.require_code && Object.values(files).every(source => !source.trim())) {
             clearResults();
             output.replaceChildren();

@@ -8,6 +8,7 @@ use App\Models\FinalExamAttempt;
 use App\Models\Quiz;
 use App\Models\User;
 use App\Services\Admin\LearningReportService;
+use App\Services\CodingProgressService;
 use Database\Seeders\CodingExerciseSeeder;
 use Database\Seeders\OopyContentSeeder;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +35,7 @@ class CodingReportsTest extends TestCase
     private function submit(User $user, int $exercise, string $status, ?float $score, string $time = '2026-11-05 00:01:00'): ExerciseSubmission
     {
         return $user->exerciseSubmissions()->create([
-            'exercise_id' => Exercise::where('exercise_key', 'coding-latihan-'.$exercise)->sole()->id,
+            'exercise_id' => Exercise::where('exercise_key', CodingProgressService::EXERCISES[$exercise]['key'])->sole()->id,
             'code' => 'private-coding-source', 'output' => 'private-coding-output',
             'status' => $status, 'score' => $score, 'submitted_at' => $time,
         ]);
@@ -136,7 +137,7 @@ class CodingReportsTest extends TestCase
         $this->submit($this->admin, 1, 'passed', 100, '2026-11-05 00:10:00');
         $this->submit($this->admin, 2, 'passed', 100, '2026-11-05 00:10:00');
         $live->exerciseSubmissions()->create([
-            'exercise_id' => Exercise::whereNotIn('exercise_key', ['coding-latihan-1', 'coding-latihan-2'])->firstOrFail()->id,
+            'exercise_id' => Exercise::whereNotIn('exercise_key', ['coding-latihan-1', 'coding-latihan-2-multifile-v1'])->firstOrFail()->id,
             'code' => 'private-live-source', 'status' => 'passed', 'score' => 100, 'submitted_at' => '2026-11-05 00:11:00',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin')->assertOk();
@@ -194,8 +195,8 @@ class CodingReportsTest extends TestCase
             ['coding-latihan-1', 'not_started', ['A New', 'D Two']],
             ['coding-latihan-1', 'in_progress', ['B Failed', 'F Pending']],
             ['coding-latihan-1', 'completed', ['C One', 'E Both']],
-            ['coding-latihan-2', 'not_started', ['A New', 'B Failed', 'C One', 'F Pending']],
-            ['coding-latihan-2', 'completed', ['D Two', 'E Both']],
+            ['coding-latihan-2-multifile-v1', 'not_started', ['A New', 'B Failed', 'C One', 'F Pending']],
+            ['coding-latihan-2-multifile-v1', 'completed', ['D Two', 'E Both']],
             ['', 'not_started', ['A New']],
             ['', 'in_progress', ['B Failed', 'C One', 'D Two', 'F Pending']],
             ['', 'completed', ['E Both']],

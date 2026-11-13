@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { codingSolutions } from './coding-fixtures.mjs';
+import { codingKeys, codingSolutions } from './coding-fixtures.mjs';
 import { registerAccount, loginAccount, logoutAccount } from './quiz-helpers.mjs';
 
 assert.match(process.env.OOPY_TEST_DATABASE || '', /^oopy_grader_test_[a-f0-9]{32}$/);
@@ -38,8 +38,13 @@ page.on('dialog', dialog => dialog.accept());
 const part = name => page.locator(`[data-live-code] [data-role="${name}"]`);
 const ready = () => page.waitForFunction(() => !document.querySelector('[data-role="run-code"]').disabled, null, { timeout: 120000 });
 const edit = (slug, source) => page.evaluate(({ slug, source }) => {
-    window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/coding-${slug}/main.py`)).setValue(source);
-}, { slug, source });
+    for (const [name, code] of Object.entries(typeof source === 'string' ? { 'main.py': source } : source)) {
+        window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${slug}/${name}`)).setValue(code);
+    }
+}, { slug: codingKeys[slug], source });
+const files = source => typeof source === 'string' ? { 'main.py': source } : source;
+const mapSource = (source, transform) => typeof source === 'string' ? transform(source)
+    : Object.fromEntries(Object.entries(source).map(([name, code]) => [name, transform(code)]));
 const probe = account => JSON.parse(execFileSync('php', ['-d', 'display_errors=stderr', 'tests/browser/coding-db-probe.php', account.email], {
     encoding: 'utf8', env: process.env, stdio: ['ignore', 'pipe', 'pipe'],
 }));
@@ -62,15 +67,15 @@ try {
         assert.equal(await page.evaluate(() => window.monaco.editor.getModels()[0].getValue()), '');
         assert.equal((await page.content()).includes(secret), false, 'Private token must never reach the browser');
         assert.equal((await page.content()).includes('secrets.randbelow'), false);
-        const correct = `\n${solution}\n\n`;
+        const correct = mapSource(solution, code => `\n${code}\n\n`);
         await edit(slug, correct);
         await part('run-code').click();
         await ready();
-        assert.match(await part('code-output').innerText(), slug === 'latihan-1' ? /Rawa Bangkau\nStatus air: Normal/ : /Genangan rawa dipantau/);
-        assert.equal(await page.evaluate(() => window.monaco.editor.getModels()[0].getValue()), correct);
+        assert.match(await part('code-output').innerText(), slug === 'latihan-1' ? /Rawa Bangkau\nStatus air: Normal/ : /Status air: Siaga/);
+        for (const [name, code] of Object.entries(files(correct))) assert.equal(await page.evaluate(({ key, name }) => window.monaco.editor.getModel(window.monaco.Uri.parse(`file:///workspaces/${key}/${name}`)).getValue(), { key: codingKeys[slug], name }), code);
         assert.equal(await page.locator('[data-coding-completion]').innerText(), 'Belum Dikerjakan');
 
-        for (const [status, source] of [['passed', correct], ['failed', slug === 'latihan-1' ? 'class SensorAir:\n    pass' : 'class Ekosistem:\n    pass'], ['error', 'print(1 / 0)']]) {
+        for (const [status, source] of [['passed', correct], ['failed', slug === 'latihan-1' ? 'class SensorAir:\n    pass' : mapSource(solution, () => 'pass')], ['error', slug === 'latihan-1' ? 'print(1 / 0)' : { ...solution, 'main.py': 'print(1 / 0)' }]]) {
             await edit(slug, source);
             const before = probe(account).submissions.length;
             let release;
@@ -101,13 +106,13 @@ try {
             assert.equal(snapshot.submissions.length, before + 1);
             const stored = snapshot.submissions.at(-1);
             assert.equal(stored.user_id, owner);
-            assert.equal(stored.exercise_key, `coding-${slug}`);
+            assert.equal(stored.exercise_key, codingKeys[slug]);
             assert.equal(stored.status, status);
             assert.equal(Number(stored.score), report.score);
             assert.equal(stored.code.entry_file, 'main.py');
-            assert.equal(stored.code.files['main.py'], source);
+            assert.deepEqual(stored.code.files, files(source));
             assert.ok(stored.submitted_at);
-            if (status === 'passed') assert.match(stored.output, slug === 'latihan-1' ? /Status air: Normal/ : /Genangan rawa dipantau/);
+            if (status === 'passed') assert.match(stored.output, slug === 'latihan-1' ? /Status air: Normal/ : /Status air: Siaga/);
             assert.match(await part('check-score').innerText(), /Skor resmi/);
             assert.equal(await part('practice-percentage').innerText(), '100%');
             results.submissions.push({ slug, status, score: report.score, submissionId: stored.id, userId: stored.user_id, snapshotPreserved: true });
@@ -146,7 +151,7 @@ try {
         headers: { Accept: 'application/json', ...(withCsrf ? { 'X-CSRF-TOKEN': otherCsrf } : {}) }, data,
     });
     for (const slug of Object.keys(codingSolutions)) {
-        const response = await post(slug, { files: { 'main.py': 'class Incomplete:\n    pass' } });
+        const response = await post(slug, { files: mapSource(files(codingSolutions[slug]), () => 'pass') });
         assert.equal(response.status(), 200);
         const report = await response.json();
         assert.equal(report.status, 'failed');
@@ -167,22 +172,22 @@ try {
         const learner = await registerAccount(page, base);
         await page.goto(`${base}/coding/${slug}`, { waitUntil: 'domcontentloaded' });
         await ready();
-        const formatted = solution.replaceAll('Normal', ' NORMAL ').replaceAll('Perlu pemeriksaan', ' PERLU   PEMERIKSAAN ')
+        const formatted = mapSource(solution, code => code.replaceAll('Normal', ' NORMAL ').replaceAll('Perlu pemeriksaan', ' PERLU   PEMERIKSAAN ')
             .replaceAll('Status air:', ' STATUS  AIR : ').replaceAll('Rawa Bangkau', 'RAWA   BANGKAU')
             .replaceAll('Status belum ditentukan', ' STATUS   BELUM DITENTUKAN ')
-            .replaceAll('Genangan rawa dipantau', ' GENANGAN   RAWA DIPANTAU ');
+            .replaceAll('Belum dipantau', ' BELUM   DIPANTAU ').replaceAll('Siaga', ' SIAGA '));
         const conceptError = slug === 'latihan-1'
             ? solution.replace('6.5 <= self.ph <= 8.5', '6.5 < self.ph < 8.5')
-            : solution.replaceAll('Genangan rawa dipantau', 'Salah');
+            : { ...solution, 'rawa.py': solution['rawa.py'].replace('>= 80', '> 80') };
         const marker = slug === 'latihan-1' ? 'sensor = ' : 'rawa = ';
         let completed = false;
         const cases = [
-            ['core-error', conceptError, 'failed', slug === 'latihan-1' ? 70 : 75],
-            ['syntax-error', 'if True print(1)', 'error', 0],
+            ['core-error', conceptError, 'failed', slug === 'latihan-1' ? 70 : 85],
+            ['syntax-error', slug === 'latihan-1' ? 'if True print(1)' : { ...solution, 'main.py': 'if True print(1)' }, 'error', 0],
             ['format-variation', formatted, 'passed', 100],
-            ['missing-output', solution.slice(0, solution.indexOf('print(')), 'passed', 90],
-            ['classes-only', solution.slice(0, solution.indexOf(marker)), 'passed', 90],
-            ['forged-results', 'results = [{"passed": True}]; score = 100; passed = True', 'failed', 0],
+            ['missing-output', slug === 'latihan-1' ? solution.slice(0, solution.indexOf('print(')) : { ...solution, 'main.py': 'from rawa import Rawa' }, 'passed', 90],
+            ['classes-only', slug === 'latihan-1' ? solution.slice(0, solution.indexOf(marker)) : { ...solution, 'main.py': 'from rawa import Rawa' }, 'passed', 90],
+            ['forged-results', slug === 'latihan-1' ? 'results = [{"passed": True}]; score = 100; passed = True' : { ...solution, 'main.py': 'results = [{"passed": True}]; score = 100; passed = True' }, 'failed', 0],
         ];
         for (const [name, source, status, score] of cases) {
             await edit(slug, source);
@@ -213,7 +218,7 @@ try {
             assert.equal(await part('check-score').innerText(), `Skor resmi: ${score}`);
             assert.equal(await part('practice-percentage').innerText(), completed ? '100%' : '0%');
             const stored = probe(learner).submissions.at(-1);
-            assert.equal(stored.code.files['main.py'], source);
+            assert.deepEqual(stored.code.files, files(source));
             assert.equal(stored.status, status);
             assert.equal(Number(stored.score), score);
             if (name === 'missing-output' || name === 'classes-only') {

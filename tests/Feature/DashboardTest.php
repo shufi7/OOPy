@@ -264,8 +264,8 @@ class DashboardTest extends TestCase
         return [
             'none' => [[], 0],
             'exercise one' => [['coding-latihan-1'], 50],
-            'exercise two' => [['coding-latihan-2'], 50],
-            'both' => [['coding-latihan-1', 'coding-latihan-2'], 100],
+            'exercise two' => [['coding-latihan-2-multifile-v1'], 50],
+            'both' => [['coding-latihan-1', 'coding-latihan-2-multifile-v1'], 100],
         ];
     }
 
@@ -278,7 +278,7 @@ class DashboardTest extends TestCase
         foreach ($passed as $key) {
             $this->submitCoding($user, $key, 'passed', 90);
         }
-        $this->submitCoding($user, Exercise::whereNotIn('exercise_key', ['coding-latihan-1', 'coding-latihan-2'])->firstOrFail()->exercise_key, 'passed', 100);
+        $this->submitCoding($user, Exercise::whereNotIn('exercise_key', ['coding-latihan-1', 'coding-latihan-2-multifile-v1'])->firstOrFail()->exercise_key, 'passed', 100);
         $response = $this->actingAs($user)->get('/dashboard')->assertOk();
         $data = $response->viewData('dashboard');
         $coding = $data['coding'];
@@ -323,7 +323,7 @@ class DashboardTest extends TestCase
         $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
         $user = User::factory()->create();
         $this->submitCoding($user, 'coding-latihan-1', 'failed', 100);
-        $this->submitCoding($user, 'coding-latihan-2', 'failed', 0);
+        $this->submitCoding($user, 'coding-latihan-2-multifile-v1', 'failed', 0);
         $data = $this->actingAs($user)->get('/dashboard')->assertOk()->viewData('dashboard')['coding'];
         $this->assertSame(0, $data['progress_percent']);
         foreach ($data['exercises'] as $exercise) {
@@ -341,7 +341,7 @@ class DashboardTest extends TestCase
         $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
         $user = User::factory()->create();
         $this->submitCoding($user, 'coding-latihan-1', 'failed', null);
-        $this->submitCoding($user, 'coding-latihan-2', 'submitted', 100);
+        $this->submitCoding($user, 'coding-latihan-2-multifile-v1', 'submitted', 100);
         $data = $this->actingAs($user)->get('/dashboard')->assertOk()->viewData('dashboard')['coding'];
         $this->assertSame(0, $data['progress_percent']);
         foreach ($data['exercises'] as $exercise) {
@@ -359,8 +359,8 @@ class DashboardTest extends TestCase
         foreach ([7, 1, 6, 2, 5, 3, 4] as $minute) {
             $this->submitCoding($user, 'coding-latihan-1', 'failed', $minute, '2026-11-05 00:0'.$minute.':00');
         }
-        $this->submitCoding($user, 'coding-latihan-2', 'error', 0, '2026-11-05 00:07:00');
-        $this->submitCoding($user, 'coding-latihan-2', 'passed', 90, '2026-11-05 00:07:00');
+        $this->submitCoding($user, 'coding-latihan-2-multifile-v1', 'error', 0, '2026-11-05 00:07:00');
+        $this->submitCoding($user, 'coding-latihan-2-multifile-v1', 'passed', 90, '2026-11-05 00:07:00');
         $response = $this->actingAs($user)->get('/dashboard')->assertOk();
         $recent = $response->viewData('dashboard')['coding']['recent_activity'];
         $this->assertCount(5, $recent);
@@ -381,7 +381,7 @@ class DashboardTest extends TestCase
         $admin->role = 'admin';
         $admin->save();
         $this->submitCoding($student, 'coding-latihan-1', 'passed', 90);
-        $this->submitCoding($other, 'coding-latihan-2', 'error', 0);
+        $this->submitCoding($other, 'coding-latihan-2-multifile-v1', 'error', 0);
         $this->actingAs($other)->get('/dashboard?user_id='.$student->id)->assertOk()
             ->assertViewHas('dashboard', fn ($data) => $data['coding']['progress_percent'] === 0
                 && $data['coding']['exercises'][0]['status'] === 'not_started'
