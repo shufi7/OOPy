@@ -19,13 +19,17 @@ class CodingController extends Controller
     public function index(Request $request): View
     {
         $exercises = $this->catalog->all();
-        $completed = $request->user()
+        $records = $request->user()
             ? Exercise::whereIn('exercise_key', array_column($exercises, 'key'))
-                ->whereHas('submissions', fn ($query) => $query->where('user_id', $request->user()->id)->where('status', 'passed'))
-                ->pluck('exercise_key')->all()
-            : [];
+                ->withExists([
+                    'submissions as attempted' => fn ($query) => $query->where('user_id', $request->user()->id),
+                    'submissions as completed' => fn ($query) => $query->where('user_id', $request->user()->id)->where('status', 'passed'),
+                ])->get()
+            : collect();
+        $completed = $records->where('completed', true)->pluck('exercise_key')->all();
+        $attempted = $records->where('attempted', true)->pluck('exercise_key')->all();
 
-        return view('coding.index', compact('exercises', 'completed'));
+        return view('coding.index', compact('exercises', 'completed', 'attempted'));
     }
 
     public function show(Request $request, string $slug): View
@@ -34,6 +38,9 @@ class CodingController extends Controller
         $record = Exercise::where('exercise_key', $exercise['key'])->first();
         $completed = $record && $request->user()
             ? $record->submissions()->where('user_id', $request->user()->id)->where('status', 'passed')->exists()
+            : false;
+        $attempted = $record && $request->user()
+            ? $record->submissions()->where('user_id', $request->user()->id)->exists()
             : false;
         $config = [
             'id' => $exercise['key'], 'exercise_key' => $exercise['key'], 'exercise_id' => $record?->id,
@@ -45,7 +52,7 @@ class CodingController extends Controller
             'require_code' => true, 'show_activity_label' => false,
         ];
 
-        return view('coding.show', compact('exercise', 'slug', 'config', 'completed'));
+        return view('coding.show', compact('exercise', 'slug', 'config', 'completed', 'attempted'));
     }
 
     public function submit(SubmitCodingRequest $request, string $slug, CodingGraderService $grader): JsonResponse

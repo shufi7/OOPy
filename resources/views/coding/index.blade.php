@@ -17,15 +17,16 @@
         <div class="row g-4">
             @foreach ($exercises as $slug => $exercise)
                 @php($done = in_array($exercise['key'], $completed, true))
+                @php($started = in_array($exercise['key'], $attempted, true))
                 <div class="col-12 col-lg-6">
                     <article class="coding-card h-100">
                         <span class="coding-number">0{{ $exercise['number'] }}</span>
                         @auth
-                            <span class="coding-status {{ $done ? 'is-completed' : '' }}">@if($done)<i class="bi bi-check-circle-fill" aria-hidden="true"></i> @endif{{ $done ? 'Selesai' : 'Belum Dikerjakan' }}</span>
+                            <span class="coding-status {{ $done ? 'is-completed' : '' }}">@if($done)<i class="bi bi-check-circle-fill" aria-hidden="true"></i> @endif{{ $done ? 'Selesai' : ($started ? 'Belum Lulus' : 'Belum Dikerjakan') }}</span>
                         @endauth
                         <h2>{{ $exercise['title'] }}</h2>
                         <p>{{ $exercise['description'] }}</p>
-                        <a class="btn btn-brand mt-auto align-self-start" href="{{ route('coding.show', $slug) }}">{{ $done ? 'Kerjakan Lagi' : 'Mulai Latihan' }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                        <a class="btn btn-brand mt-auto align-self-start" href="{{ route('coding.show', $slug) }}">{{ $done ? 'Kerjakan Lagi' : ($started ? 'Lanjutkan Latihan' : 'Mulai Latihan') }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                     </article>
                 </div>
             @endforeach

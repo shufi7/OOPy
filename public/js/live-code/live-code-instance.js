@@ -196,7 +196,7 @@ export function createLiveCode(root, config) {
             const messages = {
                 401: 'Sesi masuk berakhir. Masuk kembali untuk menyimpan hasil latihan.',
                 419: 'Sesi keamanan berakhir. Salin kode kamu, lalu muat ulang halaman sebelum Submit.',
-                422: 'Kode tidak dapat dikirim. Gunakan satu main.py dengan maksimal 30.000 karakter dan 60 KB.',
+                422: `Kode tidak dapat dikirim. Lengkapi ${fileNames.join(', ')}. Total proyek maksimal 30.000 karakter dan 60.000 byte UTF-8.`,
                 429: 'Terlalu banyak Submit. Tunggu satu menit dan coba lagi.',
             };
             const report = await response.json().catch(() => ({}));
@@ -208,12 +208,10 @@ export function createLiveCode(root, config) {
             renderResults(report.checks, true);
             byId('check-score').textContent = `Skor resmi: ${report.score}`;
             byId('check-summary').textContent = report.message;
-            if (completed) {
-                document.querySelectorAll('[data-coding-completion]').forEach((status) => {
-                    status.textContent = '✓ Selesai';
-                    status.classList.add('is-completed');
-                });
-            }
+            document.querySelectorAll('[data-coding-completion]').forEach((status) => {
+                status.textContent = completed ? '✓ Selesai' : 'Belum Lulus';
+                status.classList.toggle('is-completed', completed);
+            });
         } catch (error) {
             byId('check-summary').textContent = error.name === 'AbortError'
                 ? 'Waktu tunggu verifikasi habis. Penyimpanan belum terkonfirmasi; muat ulang untuk memeriksa progres atau coba Submit lagi.'

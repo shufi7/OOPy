@@ -79,6 +79,30 @@ try {
             assert.match(await role('code-output').innerText(), /ModuleNotFoundError/);
             assert.match(await role('code-output').innerText(), /rawa.py/);
             await edit(slug, solution);
+            await edit(slug, { 'rawa.py': 'class Rawa(:' });
+            await execute('run-code');
+            assert.match(await role('code-output').innerText(), /SyntaxError/);
+            assert.match(await role('code-output').innerText(), /rawa.py/);
+            assert.deepEqual(await source(), { ...solution, 'rawa.py': 'class Rawa(:' });
+            await tabs.nth(0).click();
+            for (const marker of ['VERSI A', 'VERSI B']) {
+                await edit(slug, { 'rawa.py': solution['rawa.py'].replace('return "Siaga"', `return "${marker}"`) });
+                await execute('run-code');
+                assert.match(await role('code-output').innerText(), new RegExp(marker));
+                assert.equal((await role('code-output').innerText()).includes(marker === 'VERSI A' ? 'VERSI B' : 'VERSI A'), false);
+                assert.equal((await source())['main.py'], solution['main.py']);
+            }
+            for (const replacement of [
+                'if tinggi_air_cm == 81.25:\n            super().__init__(nama, lokasi)\n        else:\n            self.nama = nama\n            self.lokasi = lokasi',
+                'self.nama = nama\n        self.lokasi = lokasi\n        super(Ekosistem, self).__init__()',
+            ]) {
+                await edit(slug, { ...solution, 'rawa.py': solution['rawa.py'].replace('super().__init__(nama, lokasi)', replacement) });
+                await execute('check-code');
+                assert.equal(await role('check-list').locator('.is-failed').count(), 1);
+                assert.match(await role('check-score').innerText(), /Skor lokal: 85/);
+                assert.equal(await role('practice-percentage').innerText(), '0%');
+            }
+            await edit(slug, solution);
             assert.equal(await page.locator('[role=tab] .oopy-file-dirty:not([hidden])').count(), 3);
             await edit(slug, { 'main.py': 'while True:\n    pass' });
             await role('run-code').click();
@@ -132,10 +156,10 @@ try {
         await execute('check-code');
         assert.equal(guestPosts, postsBeforeBlank, 'Authenticated empty Submit never reaches the server');
         await edit('latihan-1', codingSolutions['latihan-1']);
-        for (const status of [401, 419, 429, 500]) {
+        for (const status of [401, 419, 422, 429, 500]) {
             await page.route('**/coding/latihan-1/submit', route => route.fulfill({ status, json: {} }));
             await execute('check-code');
-            assert.match(await role('check-summary').textContent(), { 401: /Masuk kembali/, 419: /Sesi keamanan/, 429: /Terlalu banyak/, 500: /Server gagal/ }[status]);
+            assert.match(await role('check-summary').textContent(), { 401: /Masuk kembali/, 419: /Sesi keamanan/, 422: /Lengkapi main.py/, 429: /Terlalu banyak/, 500: /Server gagal/ }[status]);
             await page.unroute('**/coding/latihan-1/submit');
         }
         await page.route('**/coding/latihan-1/submit', route => route.abort());
@@ -177,6 +201,22 @@ try {
         assert.equal(await role('practice-percentage').textContent(), '0%');
         assert.equal(await page.locator('[data-coding-completion]').textContent(), 'Belum Dikerjakan');
         console.log('PASS authenticated multi-file: all three latest sources reach Laravel; unavailable grader saves no completion');
+        await page.route('**/coding/latihan-2/submit', route => route.fulfill({ json: {
+            status: 'failed', score: 85, completed: false,
+            checks: [{ label: 'Constructor Rawa', passed: false, feedback: 'Gunakan initializer Ekosistem.' }],
+            message: 'Percobaan ini belum lulus.',
+        } }));
+        await execute('check-code');
+        assert.equal(await page.locator('[data-coding-completion]').innerText(), 'Belum Lulus');
+        assert.equal(await role('practice-percentage').innerText(), '0%');
+        await page.unroute('**/coding/latihan-2/submit');
+        await page.route('**/coding/latihan-2/submit', route => route.fulfill({ status: 422, json: {} }));
+        await execute('check-code');
+        assert.match(await role('check-summary').textContent(), /Lengkapi ekosistem.py, rawa.py, main.py/);
+        assert.match(await role('check-summary').textContent(), /Total proyek maksimal 30.000 karakter dan 60.000 byte UTF-8/);
+        assert.deepEqual(await page.evaluate(() => Object.fromEntries(window.monaco.editor.getModels().map(model => [model.uri.path.split('/').at(-1), model.getValue()]))), codingSolutions['latihan-2']);
+        await page.unroute('**/coding/latihan-2/submit');
+        console.log('PASS validation feedback names every required file for the active exercise and preserves the project');
     }
     assert.deepEqual(errors, []);
 } finally {

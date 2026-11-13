@@ -47,7 +47,7 @@ const luminance = color => {
     return .2126 * channels[0] + .7152 * channels[1] + .0722 * channels[2];
 };
 const colors = async () => {
-    for (const selector of ['.admin-coding-status', '.admin-metrics dt', '.admin-metrics dd', '.admin-coding-history td', '.admin-coding-history th', '.admin-filters label']) {
+    for (const selector of ['.admin-coding-status', '.admin-status-badge', '.admin-metrics dt', '.admin-metrics dd', '.admin-coding-history td', '.admin-coding-history th', '.admin-filters label']) {
         for (const element of await page.locator(selector).all()) {
             const pair = await element.evaluate(el => {
                 const style = getComputedStyle(el);
@@ -86,11 +86,12 @@ const applyFilters = async () => {
 try {
     await login('admin.browser@example.test');
     await visit('/admin');
-    for (const [key, expected] of Object.entries({ attempted_users: 2, exercise_1_completed: 1, exercise_2_completed: 0, both_completed: 0, none_passed: 1 })) {
+    for (const [key, expected] of Object.entries({ attempted_users: 2, exercise_1_completed: 1, exercise_2_completed: 0, both_completed: 0 })) {
         assert.equal(await page.locator(`[data-coding-stat="${key}"]`).innerText(), String(expected));
     }
+    assert.equal(await page.locator('.admin-coding-note').innerText(), '1 pengguna sudah mencoba, tetapi belum lulus latihan mana pun.');
     assert.equal(await page.locator('[data-coding-submission]').count(), 10);
-    assert.match(await page.locator('[data-coding-submission]').first().innerText(), /=SUM\(1;2\).*0.*error.*08:24 WITA/s);
+    assert.match(await page.locator('[data-coding-submission]').first().innerText(), /=SUM\(1;2\).*0.*Error.*08:24 WITA/s);
     await layout('dashboard');
     await page.locator('[data-coding-submission]').first().getByRole('link').click();
     await page.waitForURL(`${base}/admin/users/3`);

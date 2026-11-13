@@ -1,0 +1,3 @@
+PASS Coding dashboard empty: six widths, targets and text contrast
+PASS Coding dashboard half: six widths, targets and text contrast
+PASS Coding dashboard complete: six widths, targets and text contrast

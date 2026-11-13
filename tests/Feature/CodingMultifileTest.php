@@ -85,6 +85,22 @@ class CodingMultifileTest extends TestCase
         $this->assertDatabaseCount('exercise_submissions', 0);
     }
 
+    public function test_failed_attempt_is_shown_as_not_passed_on_coding_pages(): void
+    {
+        $report = $this->report();
+        $report['checks'][4]['passed'] = false;
+        Http::fake(['grader.test/grade' => Http::response($report)]);
+        $user = User::factory()->create();
+        $this->actingAs($user)->get('/coding/latihan-2')->assertOk()->assertSee('Belum Dikerjakan');
+        $this->postJson('/coding/latihan-2/submit', ['files' => $this->files()])->assertOk()
+            ->assertJsonPath('score', 85)->assertJsonPath('status', 'failed')->assertJsonPath('completed', false);
+        $this->get('/coding')->assertOk()->assertSee('Belum Lulus')->assertSee('Belum Dikerjakan');
+        $this->get('/coding/latihan-2')->assertOk()->assertSee('Belum Lulus')->assertDontSee('Belum Dikerjakan');
+        $this->get('/dashboard')->assertOk()->assertViewHas('dashboard', fn ($data) => $data['coding']['exercises'][1]['status_label'] === 'Belum Lulus');
+        $this->actingAs(User::factory()->create())->get('/coding/latihan-2')->assertOk()
+            ->assertSee('Belum Dikerjakan')->assertDontSee('Belum Lulus');
+    }
+
     public function test_corrupt_or_old_rubric_cannot_publish_a_pass(): void
     {
         $good = $this->report();

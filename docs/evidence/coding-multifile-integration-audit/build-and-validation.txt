@@ -1,0 +1,18 @@
+Build
+
+> build
+> vite build
+
+vite v6.4.3 building for production...
+transforming...
+✓ 58 modules transformed.
+rendering chunks...
+computing gzip size...
+public/build/manifest.json             0.27 kB │ gzip:  0.15 kB
+public/build/assets/app-eXMNgxPU.css  35.06 kB │ gzip:  6.90 kB
+public/build/assets/app-DMsN-rLE.js   51.52 kB │ gzip: 19.51 kB
+✓ built in 1.18s
+Composer
+./composer.json is valid
+Pint
+{"tool":"pint","result":"passed"}

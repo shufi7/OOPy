@@ -1,0 +1,100 @@
+python-before-fix.txt
+integration explicitly opt-in'
+test_reference_aliases_explicit_super_and_wrapped_main
+(test_grader.MultiFileTest.test_reference_aliases_explicit_super_and_wrapped_main) ... ok
+test_security_surface_is_rejected_without_running_payloads
+(test_grader.MultiFileTest.test_security_surface_is_rejected_without_running_payloads) ... ok
+test_super_initializer_is_required_for_each_constructor_case
+(test_grader.MultiFileTest.test_super_initializer_is_required_for_each_constructor_case) ... FAIL
+
+======================================================================
+FAIL: test_super_initializer_is_required_for_each_constructor_case
+(test_grader.MultiFileTest.test_super_initializer_is_required_for_each_constructor_case)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\xampp\htdocs\OOPy\services\coding-grader\test_grader.py", line 257, in
+test_super_initializer_is_required_for_each_constructor_case
+    self.assertFalse(next(c for c in report['checks'] if c['id'] == 'child_constructor')['passed'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 28 tests in 2.247s
+
+FAILED (failures=1, skipped=3)
+
+python-object-before-fix.txt
+(test_grader.MultiFileTest.test_reference_aliases_explicit_super_and_wrapped_main) ... ok
+test_security_surface_is_rejected_without_running_payloads
+(test_grader.MultiFileTest.test_security_surface_is_rejected_without_running_payloads) ... ok
+test_super_initializer_is_required_for_each_constructor_case
+(test_grader.MultiFileTest.test_super_initializer_is_required_for_each_constructor_case) ... ok
+test_super_must_call_ekosistem_initializer_rather_than_object
+(test_grader.MultiFileTest.test_super_must_call_ekosistem_initializer_rather_than_object) ... FAIL
+
+======================================================================
+FAIL: test_super_must_call_ekosistem_initializer_rather_than_object
+(test_grader.MultiFileTest.test_super_must_call_ekosistem_initializer_rather_than_object)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\xampp\htdocs\OOPy\services\coding-grader\test_grader.py", line 265, in
+test_super_must_call_ekosistem_initializer_rather_than_object
+    self.assertFalse(next(c for c in report['checks'] if c['id'] == 'child_constructor')['passed'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 29 tests in 2.648s
+
+FAILED (failures=1, skipped=3)
+
+php-status-before-fix.txt
+    </dialog>\n
+    <script src="http://localhost:8000/js/oopy-logout.js" defer></script>\n
+        </body>\n
+</html>\n
+
+
+  To contain: Belum Lulus
+
+  at tests\Feature\CodingMultifileTest.php:97
+     93▕         $user = User::factory()->create();
+     94▕         $this->actingAs($user)->get('/coding/latihan-2')->assertOk()->assertSee('Belum Dikerjakan');
+     95▕         $this->postJson('/coding/latihan-2/submit', ['files' => $this->files()])->assertOk()
+     96▕             ->assertJsonPath('score', 85)->assertJsonPath('status', 'failed')->assertJsonPath('completed', false);
+  ➜  97▕         $this->get('/coding')->assertOk()->assertSee('Belum Lulus')->assertSee('Belum Dikerjakan');
+     98▕         $this->get('/coding/latihan-2')->assertOk()->assertSee('Belum Lulus')->assertDontSee('Belum Dikerjakan');
+     99▕         $this->get('/dashboard')->assertOk()->assertViewHas('dashboard', fn ($data) => $data['coding']['exercises'][1]['status_label'] === 'Belum Lulus');
+    100▕         $this->actingAs(User::factory()->create())->get('/coding/latihan-2')->assertOk()
+    101▕             ->assertSee('Belum Dikerjakan')->assertDontSee('Belum Lulus');
+
+
+  Tests:    1 failed (8 assertions)
+  Duration: 2.43s
+
+
+dashboard-browser-before-fix.txt
+node : node:internal/modules/run_main:107
+At line:2 char:484
++ ... son').Path; node tests/browser/dashboard-coding.mjs *> 'storage/frame ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (node:internal/modules/run_main:107:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+    triggerUncaughtException(
+    ^
+
+locator.innerText: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-dashboard-coding="coding-latihan-2"]').getByRole('link')[22m
+
+    at openExercise (D:\xampp\htdocs\OOPy\tests\browser\dashboard-coding.mjs:90:29)
+    at D:\xampp\htdocs\OOPy\tests\browser\dashboard-coding.mjs:116:11 {
+  log: [
+    `  - waiting for locator('[data-dashboard-coding="coding-latihan-2"]').getByRole('link')`
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.19.0
+

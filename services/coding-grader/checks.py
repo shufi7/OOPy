@@ -7,9 +7,10 @@ def normalized(value):
     return ' '.join(value.casefold().split()) if isinstance(value, str) else None
 
 
-def uses_parent_initializer(child):
+def uses_parent_initializer(child, parent, cases):
     initializer = vars(child).get('__init__')
-    if not callable(initializer):
+    parent_initializer = vars(parent).get('__init__')
+    if not callable(initializer) or not callable(parent_initializer):
         return False
     scope = initializer.__globals__
     missing = object()
@@ -25,8 +26,9 @@ def uses_parent_initializer(child):
 
             def initialize(*args, **kwargs):
                 result = method(*args, **kwargs)
-                calls.append((target.__self__, getattr(target.__self__, 'nama', None),
-                              getattr(target.__self__, 'lokasi', None)))
+                if getattr(method, '__func__', None) is parent_initializer:
+                    calls.append((target.__self__, getattr(target.__self__, 'nama', None),
+                                  getattr(target.__self__, 'lokasi', None)))
                 return result
             return initialize
 
@@ -40,9 +42,13 @@ def uses_parent_initializer(child):
 
     try:
         scope['super'] = observed_super
-        instance = child('Uji constructor', 'Lokasi uji', 81.25)
-        return any(obj is instance and nama == 'Uji constructor' and lokasi == 'Lokasi uji'
-                   for obj, nama, lokasi in calls)
+        for name, location, water in cases:
+            calls.clear()
+            instance = child(name, location, water)
+            if not any(obj is instance and nama == name and lokasi == location
+                       for obj, nama, lokasi in calls):
+                return False
+        return True
     finally:
         if previous is missing:
             scope.pop('super', None)
@@ -130,9 +136,9 @@ def run_checks(namespace, output, key, extra_sensor=(), extra_ecosystem=(), modu
                     and imported_parent and imported_child and methods_in_module)
 
         def child_constructor():
-            values = [('A', 'Lokasi A', 79.9), ('B', 'Lokasi B', 85.5),
-                      *[(name, location, 80.25) for name, location in extra_ecosystem]]
-            return attributes(child, values, ('nama', 'lokasi', 'tinggi_air_cm')) and uses_parent_initializer(child)
+            values = [('A', 'Lokasi A', 79.9), ('B', 'Lokasi B', 85.5), ('Batas', 'Lokasi batas', 80),
+                      *[(name, location, water) for name, location in extra_ecosystem for water in (80.25, *extra_water)]]
+            return attributes(child, values, ('nama', 'lokasi', 'tinggi_air_cm')) and uses_parent_initializer(child, parent, values)
 
         def dynamic_status():
             if not callable(vars(child).get('status')) or child.status is parent.status:

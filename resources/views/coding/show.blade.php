@@ -16,7 +16,7 @@
             <h1>{{ $exercise['title'] }}</h1>
             <p>{{ $exercise['description'] }}</p>
             @auth
-                <span class="coding-status {{ $completed ? 'is-completed' : '' }}" data-coding-completion role="status">{{ $completed ? '✓ Selesai' : 'Belum Dikerjakan' }}</span>
+                <span class="coding-status {{ $completed ? 'is-completed' : '' }}" data-coding-completion role="status">{{ $completed ? '✓ Selesai' : ($attempted ? 'Belum Lulus' : 'Belum Dikerjakan') }}</span>
             @else
                 <p class="coding-notice"><a href="{{ route('login') }}">Masuk untuk menyimpan hasil latihan</a>. Submit akan memberikan feedback lokal.</p>
             @endauth

@@ -1,0 +1,11 @@
+PASS dashboard: five viewports and local table overflow
+PASS Unique student statistics and latest ten, including valid zero/Error; activity opens the correct student
+PASS users: five viewports and local table overflow
+PASS student: five viewports and local table overflow
+PASS Student detail preserves best score and completion after failed retries; Coding pagination is independent
+PASS scores: five viewports and local table overflow
+PASS Coding and quiz filters combine with AND; search and downloaded CSV preserve filters, BOM, zero and formula protection
+PASS Search accepts zero, treats percent/underscore literally, submits with Enter and resets cleanly
+PASS Filter reset and keyboard scrolling reach the wide score table without page overflow
+PASS empty-student: five viewports and local table overflow
+PASS Empty state, student/Admin consistency, ordinary-user 403 and guest redirect verified

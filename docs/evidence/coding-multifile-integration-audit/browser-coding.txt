@@ -1,0 +1,5 @@
+PASS latihan-1: empty Monaco, blank/whitespace guard, wrong/correct Submit, real Pyodide output/error, source preserved, Reset empties, responsive sizes
+PASS latihan-2: empty Monaco, blank/whitespace guard, wrong/correct Submit, real Pyodide output/error, source preserved, Reset empties, responsive sizes
+PASS authenticated UI: real unavailable grader leaves progress incomplete; session/CSRF/rate/network errors; delayed simulated acknowledgement and disabled duplicate Submit
+PASS authenticated multi-file: all three latest sources reach Laravel; unavailable grader saves no completion
+PASS validation feedback names every required file for the active exercise and preserves the project

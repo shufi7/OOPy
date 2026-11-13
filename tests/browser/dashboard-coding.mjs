@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { registerAccount, loginAccount, logoutAccount, answerQuiz } from './quiz-helpers.mjs';
-import { codingSolutions } from './coding-fixtures.mjs';
+import { codingKeys, codingSolutions } from './coding-fixtures.mjs';
 
 assert.equal(process.env.DB_CONNECTION, 'sqlite');
 assert.match(process.env.DB_DATABASE || '', /coding-dashboard-[a-f0-9]{32}\.sqlite$/);
@@ -32,7 +32,7 @@ page.on('pageerror', error => results.errors.push(error.message));
 page.on('dialog', dialog => dialog.accept());
 const coding = () => page.locator('.oopy-dashboard-coding');
 const history = () => page.locator('.oopy-dashboard-coding-history');
-const row = number => page.locator(`[data-dashboard-coding="coding-latihan-${number}"]`);
+const row = number => page.locator(`[data-dashboard-coding="${codingKeys[`latihan-${number}`]}"]`);
 const visit = async () => {
     assert.equal((await page.goto(`${base}/dashboard`, { waitUntil: 'load' })).status(), 200);
     await page.evaluate(() => document.fonts.ready);

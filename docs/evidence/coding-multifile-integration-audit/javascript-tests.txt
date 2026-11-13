@@ -1,0 +1,32 @@
+✔ Coding latihan-1: blank catalog, incorrect solution, and different valid implementations (559.9884ms)
+✔ Coding latihan-2: blank catalog, incorrect solution, and different valid implementations (654.887ms)
+✔ practice model scores twenty objective questions at five points each (8.5948ms)
+✔ code fill normalization preserves token boundaries and case, rejecting substrings and extra code (1.702ms)
+✔ code matching agrees with the Python-verified fixture corpus (2.1308ms)
+✔ deadline persists across serialization; expired attempts finish once with elapsed time capped (3.6925ms)
+✔ legacy retry delays are discarded without losing failed history or active answers (1.9773ms)
+✔ malformed storage fails safely, invalid records are removed and stored totals are recalculated (3.401ms)
+✔ storage keeps unrelated quiz keys and merges immutable history without duplicates (2.013ms)
+✔ denied storage reads and writes notify clearly while preserving in-memory answers (0.7678ms)
+✔ timer owns one interval and clears it on restart, stop and immediate expiry (0.6672ms)
+✔ default browser timers are called with the global receiver (0.7029ms)
+✔ pewarisan: starter, incorrect behavior, real execution and alternative solutions (1260.1315ms)
+✔ polimorfisme: starter, incorrect behavior, real execution and alternative solutions (767.7144ms)
+✔ kelas-abstrak: starter, incorrect behavior, real execution and alternative solutions (842.5492ms)
+✔ BAB 6: every teaching example executes with the documented output (223.6935ms)
+✔ publication preview follows the selected count and composition without rounding the weight (3.5049ms)
+✔ empty, oversized and unsupported packages cannot be published and bounds are configurable (1.0936ms)
+✔ one worker queues jobs and routes output/results only to their owner (12.1433ms)
+✔ worker crash releases both active and queued editors (2.2841ms)
+✔ cancelling a queued job does not interrupt the active worker (1.9487ms)
+✔ stopping active work restarts one runtime and preserves queued jobs (2.0823ms)
+✔ load failure settles all queued jobs and a single retry recovers (1.2168ms)
+✔ timeout starts at execution, restarts runtime, and keeps the queue (4.5998ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3334.0937

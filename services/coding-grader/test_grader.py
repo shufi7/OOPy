@@ -246,6 +246,75 @@ class MultiFileTest(unittest.TestCase):
     def report(self, files=None):
         return sandbox.grade({'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE if files is None else files})
 
+    def test_super_initializer_is_required_for_each_constructor_case(self):
+        conditional = MULTIFILE['rawa.py'].replace(
+            'super().__init__(nama, lokasi)',
+            'if tinggi_air_cm == 81.25:\n            super().__init__(nama, lokasi)\n'
+            '        else:\n            self.nama = nama\n            self.lokasi = lokasi')
+        report = self.report(MULTIFILE | {'rawa.py': conditional})
+        self.assertEqual('graded', report['status'])
+        self.assertTrue(report['checks'][1]['passed'])
+        self.assertFalse(next(c for c in report['checks'] if c['id'] == 'child_constructor')['passed'])
+        self.assertEqual(85, sum(c['weight'] for c in report['checks'] if c['passed']))
+
+    def test_super_must_call_ekosistem_initializer_rather_than_object(self):
+        bypass = MULTIFILE['rawa.py'].replace('super().__init__(nama, lokasi)',
+            'self.nama = nama\n        self.lokasi = lokasi\n        super(Ekosistem, self).__init__()')
+        report = self.report(MULTIFILE | {'rawa.py': bypass})
+        self.assertEqual('graded', report['status'])
+        self.assertFalse(next(c for c in report['checks'] if c['id'] == 'child_constructor')['passed'])
+        self.assertEqual(85, sum(c['weight'] for c in report['checks'] if c['passed']))
+
+    def test_additional_valid_imports_constructor_styles_and_fresh_modules(self):
+        variants = [
+            MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace(
+                'from ekosistem import Ekosistem', 'from ekosistem import Ekosistem as Induk')
+                .replace('Rawa(Ekosistem)', 'Rawa(Induk)')},
+            MULTIFILE | {'main.py': MULTIFILE['main.py'].replace(
+                'from rawa import Rawa', 'from rawa import Rawa as Habitat').replace('rawa = Rawa(', 'rawa = Habitat(')},
+            MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace(
+                'super().__init__(nama, lokasi)', 'super().__init__(lokasi=lokasi, nama=nama)')},
+            MULTIFILE | {'ekosistem.py': MULTIFILE['ekosistem.py'].replace(
+                'self.nama = nama\n        self.lokasi = lokasi', 'self.nama, self.lokasi = nama, lokasi')},
+            MULTIFILE | {'main.py': 'def main():\n' + '\n'.join(
+                '    ' + line for line in MULTIFILE['main.py'].splitlines()) + '\nif __name__ == "__main__":\n    main()'},
+        ]
+        for files in variants:
+            with self.subTest(files=files):
+                self.assertTrue(all(c['passed'] for c in self.report(files)['checks']))
+        wrong = MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('return "Siaga"', 'return "Salah"')}
+        self.assertFalse(self.report(wrong)['checks'][5]['passed'])
+        self.assertTrue(all(c['passed'] for c in self.report()['checks']), 'Previous modules must not be reused')
+
+    def test_cached_status_print_only_and_wrong_classes_do_not_pass(self):
+        cached = MULTIFILE['rawa.py'].replace(
+            'self.tinggi_air_cm = tinggi_air_cm',
+            'self.tinggi_air_cm = tinggi_air_cm\n        self.ph = "Siaga" if tinggi_air_cm >= 80 else "Normal"')
+        cached = cached[:cached.index('    def status(self):')] + '    def status(self):\n        return self.ph\n'
+        variants = [
+            (MULTIFILE | {'rawa.py': cached}, 'overriding'),
+            (MULTIFILE | {'main.py': 'print("Rawa Bangkau - Hulu Sungai Selatan\\nStatus air: Siaga")'}, 'modules'),
+            (MULTIFILE | {'ekosistem.py': MULTIFILE['ekosistem.py'].replace('Ekosistem', 'Habitat'),
+                          'rawa.py': MULTIFILE['rawa.py'].replace('from ekosistem import Ekosistem',
+                              'import ekosistem').replace('Rawa(Ekosistem)', 'Rawa(object)').replace(
+                                  'super().__init__(nama, lokasi)', 'self.nama = nama\n        self.lokasi = lokasi')}, 'inheritance'),
+        ]
+        for files, failed in variants:
+            with self.subTest(failed=failed):
+                report = self.report(files)
+                self.assertEqual('graded', report['status'])
+                self.assertFalse(next(c for c in report['checks'] if c['id'] == failed)['passed'])
+                self.assertFalse(all(c['passed'] for c in report['checks'] if c['required']))
+
+    def test_security_surface_is_rejected_without_running_payloads(self):
+        for name in ('open', 'eval', 'exec', 'compile', 'globals', 'locals', 'getattr', 'setattr', '__import__'):
+            self.assertNotIn(name, sandbox.SAFE_BUILTINS)
+        for source in ('import os', 'import subprocess', 'from rawa import Rawa\nRawa.__dict__',
+                       'from rawa import Rawa\nRawa.__init__.__globals__',
+                       '__builtins__["open"]("fixture")', 'object.__subclasses__()'):
+            with self.subTest(source=source), self.assertRaises(ValueError):
+                sandbox.validate_source(source, 'main.py', MULTIFILE_KEY)
+
     def test_reference_aliases_explicit_super_and_wrapped_main(self):
         variants = [MULTIFILE,
                     MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('super()', 'super(Rawa, self)')},
@@ -330,6 +399,11 @@ class MultiFileTest(unittest.TestCase):
         config = json.loads(subprocess.check_output(['php', '-r', "echo json_encode((require 'resources/coding/exercises.php')['latihan-2']);"], cwd=root))
         variants = [MULTIFILE, MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('>= 80', '> 80')},
                     MULTIFILE | {'main.py': 'from rawa import Rawa'},
+                    MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('super().__init__(nama, lokasi)',
+                        'if tinggi_air_cm == 81.25:\n            super().__init__(nama, lokasi)\n'
+                        '        else:\n            self.nama = nama\n            self.lokasi = lokasi')},
+                    MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('super().__init__(nama, lokasi)',
+                        'self.nama = nama\n        self.lokasi = lokasi\n        super(Ekosistem, self).__init__()')},
                     MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('super().__init__(nama, lokasi)', 'Ekosistem.__init__(self, nama, lokasi)')}]
         reports = json.loads(subprocess.check_output([sys.executable, 'tests/js/checker-harness.py'],
                             input=json.dumps({'checker': config['checker'], 'sources': variants}).encode(), cwd=root))
@@ -346,6 +420,26 @@ class MultiFileTest(unittest.TestCase):
         self.assertEqual('graded', report['status'])
         self.assertTrue(all(c['passed'] for c in report['checks']))
         self.assertEqual('error', server.run_sandbox({'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE | {'rawa.py': 'import os'}})['status'])
+
+    @unittest.skipUnless(os.environ.get('OOPY_TEST_DOCKER') == '1', 'Docker integration explicitly opt-in')
+    def test_real_multifile_partial_resource_limits_and_recovery(self):
+        for replacement in [
+            'if tinggi_air_cm == 81.25:\n            super().__init__(nama, lokasi)\n'
+            '        else:\n            self.nama = nama\n            self.lokasi = lokasi',
+            'self.nama = nama\n        self.lokasi = lokasi\n        super(Ekosistem, self).__init__()',
+        ]:
+            files = MULTIFILE | {'rawa.py': MULTIFILE['rawa.py'].replace('super().__init__(nama, lokasi)', replacement)}
+            report = server.run_sandbox({'exercise_key': MULTIFILE_KEY, 'files': files})
+            self.assertEqual('graded', report['status'])
+            self.assertEqual(85, sum(c['weight'] for c in report['checks'] if c['passed']))
+        for main in ('while True: pass', 'data = [0] * 100000000', 'print("x" * 1000)\nwhile True: pass'):
+            with self.subTest(main=main):
+                started = time.monotonic()
+                report = server.run_sandbox({'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE | {'main.py': main}})
+                self.assertEqual('error', report['status'])
+                self.assertLess(time.monotonic() - started, 12)
+        report = server.run_sandbox({'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE})
+        self.assertTrue(all(c['passed'] for c in report['checks']))
 
 
 class GatewayHttpTest(unittest.TestCase):
@@ -400,6 +494,24 @@ class GatewayHttpTest(unittest.TestCase):
             self.assertEqual(503, self.post(token=self.secret)[0])
             run.assert_not_called()
             slots.release.assert_not_called()
+
+    def test_http_multifile_invalid_requests_do_not_break_next_submission(self):
+        valid = {'exercise_key': MULTIFILE_KEY, 'files': MULTIFILE}
+        cases = [valid | {'score': 100}, valid | {'passed': True}, valid | {'results': []},
+                 valid | {'files': list(MULTIFILE.values())},
+                 valid | {'files': MULTIFILE | {'../rawa.py': 'pass'}},
+                 valid | {'files': MULTIFILE | {'rawa.py': ['pass']}},
+                 valid | {'files': MULTIFILE | {'rawa.py': 'x' * 30001}},
+                 valid | {'files': MULTIFILE | {'rawa.py': '\ud800'}}]
+        with patch.object(server, 'run_sandbox') as run:
+            for request in cases:
+                with self.subTest(request=request):
+                    self.assertEqual(422, self.post(body=json.dumps(request), token=self.secret)[0])
+            run.assert_not_called()
+            expected = server.error_report(MULTIFILE_KEY, 'Controlled sandbox fixture')
+            run.return_value = expected
+            self.assertEqual((200, expected), self.post(body=json.dumps(valid), token=self.secret))
+            run.assert_called_once_with(valid)
 
 
 if __name__ == '__main__':
