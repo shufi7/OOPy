@@ -80,7 +80,7 @@
 .oopy-dashboard-grade-table tbody th > span { display: block; }
 .oopy-dashboard-grade-table .oopy-dashboard-chapter-number { color: var(--oopy-link); font-size: .75rem; font-weight: 800; margin-bottom: .2rem; }
 .oopy-dashboard-grade-value { font-size: 1.125rem; font-weight: 800; }
-.oopy-dashboard-status { display: inline-block; padding: .35rem .6rem; border-radius: 7px; background: #f1f5f9; color: #475569; font-size: .75rem; font-weight: 700; line-height: 1.5; }
+.oopy-dashboard-status { display: inline-block; padding: .35rem .6rem; border-radius: 7px; background: #f1f5f9; color: var(--oopy-text); font-size: .75rem; font-weight: 700; line-height: 1.5; }
 .oopy-dashboard-status.is-completed { background: var(--dashboard-green); color: #fff; }
 .oopy-dashboard-status.is-in_progress { background: var(--oopy-warning-soft); color: var(--oopy-warning); border: 1px solid var(--oopy-warning-line); }
 .oopy-dashboard-status.is-error { background: var(--dashboard-danger-soft); color: var(--dashboard-danger); }

@@ -5,9 +5,9 @@
     --oopy-canvas: #F6FBF9;
     --oopy-surface: #FFFFFF;
     --oopy-line: #D2EBE6;
-    --oopy-ink: #243B39;
-    --oopy-text: #40514E;
-    --oopy-muted: #526B66;
+    --oopy-ink: #000000;
+    --oopy-text: #000000;
+    --oopy-muted: #000000;
     --oopy-action: #076D71;
     --oopy-action-hover: #065F63;
     --oopy-action-active: #054E52;
@@ -67,8 +67,10 @@
     --bs-link-hover-color: var(--oopy-action-hover);
     --bs-link-hover-color-rgb: 6, 95, 99;
     --bs-secondary-color: var(--oopy-text);
+    --bs-secondary-color-rgb: 0, 0, 0;
     --bs-border-color: var(--oopy-border);
     --bs-body-color: var(--oopy-text);
+    --bs-body-color-rgb: 0, 0, 0;
     --bs-body-bg: var(--oopy-cream);
     --bs-heading-color: var(--oopy-ink);
     --bs-code-color: var(--oopy-action);
