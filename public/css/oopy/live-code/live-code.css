@@ -46,6 +46,7 @@
 .oopy-live-code .oopy-file-tab:hover { color: #e4e4ef; }
 .oopy-live-code .oopy-file-tab.is-active { background: #1e1e2e; color: #ececf5; border-top-color: var(--oopy-accent); }
 .oopy-live-code .oopy-file-tab.is-active > i { color: var(--oopy-accent); }
+.oopy-live-code .oopy-file-guidance { min-height: 40px; margin: 0; padding: 9px 14px; border-bottom: 1px solid var(--oopy-border); background: var(--oopy-brand-mint); color: var(--oopy-text); font-size: var(--oopy-font-small); line-height: 1.5; overflow-wrap: anywhere; }
 .oopy-live-code .oopy-file-dirty { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 .oopy-live-code .oopy-editor-panel { position: relative; min-width: 0; height: var(--oopy-editor-height, 365px); }
 .oopy-live-code .oopy-monaco-editor { position: absolute; inset: 0; min-width: 0; min-height: 0; }

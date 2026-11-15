@@ -36,6 +36,9 @@
                         <button type="button" role="tab" id="{{ $config['id'] }}-tab-{{ $loop->index }}" data-role="tab-{{ $loop->index }}" class="oopy-file-tab {{ $file === $config['entry_file'] ? 'is-active' : '' }}" data-file="{{ $file }}" aria-selected="{{ $file === $config['entry_file'] ? 'true' : 'false' }}" aria-controls="{{ $config['id'] }}-editor-panel" tabindex="{{ $file === $config['entry_file'] ? '0' : '-1' }}"><i class="bi bi-file-earmark-code" aria-hidden="true"></i>{{ $file }}<span class="oopy-file-dirty" aria-label="Diubah" hidden></span></button>
                     @endforeach
                 </div>
+                @if (count($config['files']) > 1)
+                <p class="oopy-file-guidance" data-role="file-guidance" role="status" aria-live="polite">File aktif: {{ $config['entry_file'] }}.</p>
+                @endif
                 <div class="oopy-editor-panel" id="{{ $config['id'] }}-editor-panel" data-role="editor-panel" role="tabpanel" aria-labelledby="{{ $config['id'] }}-tab-{{ array_search($config['entry_file'], array_keys($config['files']), true) }}">
                     <div class="oopy-monaco-editor" id="{{ $config['id'] }}-monaco-editor" data-role="monaco-editor" aria-label="Editor kode Python"></div>
                     <div class="oopy-editor-loading" id="{{ $config['id'] }}-editor-loading" data-role="editor-loading" role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span><span>Menyiapkan editor...</span></div>
@@ -58,6 +61,7 @@
         <div class="oopy-terminal-heading">
             <h{{ $headingLevel }} id="{{ $config['id'] }}-output-title" data-role="output-title"><i class="bi bi-terminal" aria-hidden="true"></i> {{ !empty($config['persistence_enabled']) ? 'Output Program' : 'Output' }}</h{{ $headingLevel }}>
             <div class="oopy-terminal-tools">
+                <span class="oopy-execution-status visually-hidden" data-role="execution-status" role="status" aria-live="polite" aria-atomic="true"></span>
                 <span class="oopy-runtime-status" id="{{ $config['id'] }}-python-status" data-role="python-status" data-state="loading" role="status"><span></span><span id="{{ $config['id'] }}-python-status-text" data-role="python-status-text">Menyiapkan Python...</span></span>
                 <button type="button" class="oopy-terminal-retry" id="{{ $config['id'] }}-retry-runtime" data-role="retry-runtime" hidden>Coba lagi</button>
                 <button type="button" class="oopy-icon-button" id="{{ $config['id'] }}-clear-output" data-role="clear-output" aria-label="Bersihkan output" title="Bersihkan output"><i class="bi bi-trash3" aria-hidden="true"></i></button>

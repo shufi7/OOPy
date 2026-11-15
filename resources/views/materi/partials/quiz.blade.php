@@ -40,6 +40,9 @@
             <h3 data-quiz="counter" tabindex="-1"></h3>
             <span data-quiz="answered" role="status"></span>
         </div>
+        <nav class="oopy-quiz-question-map" aria-label="Navigasi soal kuis">
+            <ol data-quiz="question-navigation"></ol>
+        </nav>
         <div class="oopy-quiz-question">
             <p id="quiz-question" data-quiz="question"></p>
             <figure class="material-code" data-quiz="code-card" hidden>
