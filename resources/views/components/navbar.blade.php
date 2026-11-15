@@ -1,49 +1,49 @@
-<nav class="navbar navbar-expand-lg navbar-light site-navbar py-3">
-    <div class="container-fluid px-lg-5 px-3">
-        <a class="navbar-brand d-flex align-items-center gap-2 me-4" href="{{ route('home') }}">
+<nav class="navbar navbar-expand-lg navbar-light site-navbar" aria-label="Navigasi utama">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
             <img src="{{ asset('images/oopy-logo.png') }}" alt="" class="navbar-logo" width="64" height="64">
-            <span class="brand-name fw-bold fs-3">OOPy</span>
+            <span class="brand-name fw-bold">OOPy</span>
         </a>
 
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarOOPy" aria-controls="navbarOOPy" aria-expanded="false" aria-label="Buka menu navigasi">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarOOPy" aria-controls="navbarOOPy" aria-expanded="false" aria-label="Buka menu navigasi">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarOOPy">
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4 gap-2 pt-2 pt-lg-0 fw-bold">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
                 <li class="nav-item">
-                    <a class="nav-link px-2 {{ request()->routeIs('home') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
                        @if (request()->routeIs('home')) aria-current="page" @endif
                        href="{{ route('home') }}">
                         Beranda
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2 {{ request()->routeIs('materi.*') ? 'active' : '' }}"
-                       @if (request()->routeIs('materi.*')) aria-current="page" @endif
+                    <a class="nav-link {{ request()->routeIs('materi.*', 'evaluasi.*') ? 'active' : '' }}"
+                       @if (request()->routeIs('materi.*', 'evaluasi.*')) aria-current="page" @endif
                        href="{{ route('materi.index') }}">
                         Materi
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2 {{ request()->routeIs('coding.*') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('coding.*') ? 'active' : '' }}"
                        @if (request()->routeIs('coding.*')) aria-current="page" @endif
                        href="{{ route('coding.index') }}">Coding</a>
                 </li>
                 @guest('web')
                     <li class="nav-item">
-                        <a href="{{ route('login') }}" class="nav-link px-2 {{ request()->routeIs('login') ? 'active' : '' }}" @if(request()->routeIs('login')) aria-current="page" @endif>Masuk</a>
+                        <a href="{{ route('login') }}" class="nav-link {{ request()->routeIs('login') ? 'active' : '' }}" @if(request()->routeIs('login')) aria-current="page" @endif>Masuk</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
-                        <a href="{{ route('register') }}" class="btn btn-brand fw-bold px-4 py-2" @if(request()->routeIs('register')) aria-current="page" @endif>Daftar</a>
+                    <li class="nav-item">
+                        <a href="{{ route('register') }}" class="btn btn-brand" @if(request()->routeIs('register')) aria-current="page" @endif>Daftar</a>
                     </li>
                 @else
                     <li class="nav-item">
-                        <a href="{{ route('dashboard') }}" class="nav-link px-2 {{ request()->routeIs('dashboard') ? 'active' : '' }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>Dashboard</a>
                     </li>
                     <li class="nav-item dropdown oopy-account">
-                        <button class="nav-link dropdown-toggle px-2 oopy-account-toggle" type="button" id="oopyAccountMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ auth('web')->user()->name }}
+                        <button class="nav-link dropdown-toggle oopy-account-toggle" type="button" id="oopyAccountMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="oopy-account-name">{{ auth('web')->user()->name }}</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-lg-end oopy-account-menu" aria-labelledby="oopyAccountMenu">
                             <li><span class="dropdown-item-text fw-bold">{{ auth('web')->user()->name }}</span></li>

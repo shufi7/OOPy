@@ -3,6 +3,8 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -70,6 +72,24 @@ class RoleAuthorizationTest extends TestCase
         $this->actingAs($user)->get('/')->assertSee($user->name)->assertDontSee($user->name, false)
             ->assertSee('Role akun: Admin')->assertSee('method="POST" action="'.route('logout').'"', false)
             ->assertSee('name="_token"', false)->assertDontSee('href="'.route('login').'"', false);
+    }
+
+    public function test_navbar_identifies_one_current_destination_including_final_evaluation(): void
+    {
+        foreach ([
+            '/' => 'home', '/materi' => 'materi.index', '/coding' => 'coding.index',
+            '/login' => 'login', '/register' => 'register',
+            '/materi/evaluasi-akhir' => 'materi.index',
+            '/materi/evaluasi-akhir/ujian' => 'materi.index',
+            '/materi/evaluasi-akhir/hasil' => 'materi.index',
+        ] as $path => $destination) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $dom = new DOMDocument;
+            @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+            $current = (new DOMXPath($dom))->query('//nav[contains(concat(" ", normalize-space(@class), " "), " site-navbar ")]//a[@aria-current="page"]');
+            $this->assertSame(1, $current->length, $path);
+            $this->assertSame(route($destination), $current->item(0)->getAttribute('href'));
+        }
     }
 
     public function test_all_existing_learning_pages_remain_public_and_auth_css_is_scoped(): void
