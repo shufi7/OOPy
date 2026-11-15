@@ -21,7 +21,7 @@ async function context() {
         const contentType = url.includes('fonts.googleapis.com') || path.endsWith('.css') ? 'text/css'
             : path.endsWith('.js') ? 'application/javascript' : path.endsWith('.woff2') ? 'font/woff2'
                 : path.endsWith('.ttf') ? 'font/ttf' : 'application/octet-stream';
-        return route.fulfill({ path: assets[url], contentType });
+        return route.fulfill({ path: assets[url], contentType, headers: { 'access-control-allow-origin': '*' } });
     });
     context.on('page', page => page.on('pageerror', error => results.errors.push(error.message)));
     return context;
@@ -69,6 +69,15 @@ try {
     await row().getByRole('checkbox').uncheck();
     await publish();
     assert.equal(await admin.locator('[data-publication-active="count"]').innerText(), '5');
+    const activeWeight = await admin.locator('[data-publication-active="weight"]').innerText();
+    const selectedBoxes = admin.locator('input[name="question_ids[]"]');
+    for (const box of await selectedBoxes.all()) await box.uncheck();
+    assert.equal(await admin.locator('[data-publication="summary"]').innerText(), '0 soal dipilih. Pemilihan belum valid.');
+    assert.equal(await admin.getByRole('button', { name: 'Terbitkan paket terpilih', exact: true }).isDisabled(), true);
+    assert.equal(await admin.locator('[data-publication-active="weight"]').innerText(), activeWeight);
+    for (const box of await admin.locator('input[name="question_ids[]"]').all()) {
+        if (await box.getAttribute('value') !== await row().getByRole('checkbox').getAttribute('value')) await box.check();
+    }
     assert.match(await row().innerText(), /Diarsipkan/);
     assert.equal(await row().getByRole('checkbox').isChecked(), false);
     await student.reload({ waitUntil: 'load' });
@@ -81,12 +90,14 @@ try {
     assert.equal(await row().getByRole('checkbox').isChecked(), true);
     assert.equal(await admin.locator('[data-publication="count"]').innerText(), '6');
     assert.equal(await admin.locator('[data-publication="weight"]').innerText(), '16,67 poin');
+    assert.equal(await admin.locator('[data-publication="summary"]').innerText(), '6 soal dipilih untuk diterbitkan');
     assert.equal(await admin.locator('[data-publication-active="count"]').innerText(), '5');
-    for (const width of [390, 1440]) {
+    for (const width of [320, 360, 390, 768, 1024, 1366, 1440]) {
         await admin.setViewportSize({ width, height: 1000 });
         assert.ok(await admin.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
         await admin.evaluate(() => { document.activeElement?.blur(); window.scrollTo(0, 0); });
-        if (directory) await admin.screenshot({ path: join(directory, `archived-selected-${width}.png`), fullPage: true });
+        assert.equal(await admin.locator('.admin-question-select').evaluateAll(labels => labels.every(label => label.getBoundingClientRect().width >= 44 && label.getBoundingClientRect().height >= 44)), true);
+        if (directory && [390, 1440].includes(width)) await admin.screenshot({ path: join(directory, `archived-selected-${width}.png`), fullPage: true });
         results.layouts.push({ width, status: 'PASS' });
     }
     await publish();

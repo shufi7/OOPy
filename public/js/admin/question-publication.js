@@ -25,6 +25,10 @@ if (typeof document !== 'undefined') document.querySelectorAll('[data-question-p
             ? `${preview.count} soal terpilih. Bobot setiap soal ${format.format(preview.weight)} poin.`
             : `Pilih ${minimum} sampai ${maximum} soal pilihan ganda atau isian kode untuk menerbitkan paket.`;
         find('notice').classList.toggle('text-danger', !preview.valid);
+        const summary = find('summary');
+        if (summary) summary.textContent = preview.valid
+            ? `${preview.count} soal dipilih untuk diterbitkan`
+            : `${preview.count} soal dipilih. Pemilihan belum valid.`;
         form.querySelector('button[type="submit"]').disabled = !preview.valid;
     }
     form.addEventListener('change', update);

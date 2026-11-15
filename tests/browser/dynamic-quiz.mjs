@@ -209,7 +209,7 @@ try {
     await visit(admin, '/admin/questions?quiz_id=7');
     assert.equal(await admin.locator('[data-question-publication]').count(), 0);
     assert.equal(await admin.locator('input[name="question_ids[]"]:checked').count(), 20);
-    assert.match(await admin.locator('main').innerText(), /10 pilihan ganda, 5 isian kode, dan 5 uraian/);
+    assert.match(await admin.locator('main').innerText(), /10 pilihan ganda dan 10 isian kode/);
     record('Final Exam retains its separate twenty-question publication form');
     assert.deepEqual(results.errors, []);
     results.status = 'PASS';
