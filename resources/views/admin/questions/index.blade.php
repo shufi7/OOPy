@@ -60,7 +60,7 @@
         </dl>
         <div class="admin-question-preview-feedback">
             <span class="admin-question-feedback-icon admin-question-valid"><x-dashboard-icon name="check-circle" /></span><span class="admin-question-feedback-icon admin-question-invalid"><x-dashboard-icon name="info" /></span>
-            <div><p id="publication-notice" data-publication="notice" role="status" aria-live="polite"></p><p class="admin-question-scoring-help">Bobot tampilan dibulatkan maksimal dua desimal. Nilai resmi berasal dari rasio jawaban benar terhadap seluruh soal, maksimal 100. Preview berlaku setelah terbit; draft tidak mengubah paket aktif.</p></div>
+            <div><p id="publication-notice" data-publication="notice" role="status" aria-live="polite"></p><p class="admin-question-scoring-help"></div>
         </div>
         <noscript><p>Aktifkan JavaScript untuk memperbarui preview saat memilih soal. Server tetap memvalidasi seluruh pilihan saat diterbitkan.</p></noscript>
         </div>
