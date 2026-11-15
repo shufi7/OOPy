@@ -60,6 +60,91 @@
 .oopy-admin td { font-size: .9375rem; }
 .oopy-admin td a:not(.btn) { display: inline-flex; align-items: center; min-height: 44px; }
 .admin-scores-table { min-width: 1500px; }
+/* Score reports keep their filter layout and table styles local to this page. */
+.admin-scores-page { min-width: 0; }
+.admin-scores-page .admin-scores-heading { align-items: center; gap: 20px; margin-bottom: 28px; }
+.admin-scores-page .admin-scores-title { display: flex; align-items: flex-start; gap: 16px; min-width: 0; flex: 1 1 420px; }
+.admin-scores-page .admin-scores-title > div { min-width: 0; }
+.admin-scores-page .admin-scores-title-icon { display: grid; place-items: center; flex: 0 0 52px; height: 52px; border-radius: 14px; background: var(--oopy-brand-mint); color: var(--oopy-action); }
+.admin-scores-page .admin-scores-title-icon svg { width: 30px; height: 30px; }
+.admin-scores-page .admin-scores-heading h1 { margin: 0 0 6px; line-height: 1.2; }
+.admin-scores-page .admin-scores-heading p { margin: 0; font-size: .9375rem; line-height: 1.65; }
+.admin-scores-page .admin-scores-heading > .btn { flex: 0 0 auto; }
+.admin-scores-page .admin-scores-filter-panel { min-width: 0; margin-bottom: 32px; background: var(--oopy-surface); border: 1px solid var(--oopy-line); border-radius: var(--oopy-radius-card); }
+.admin-scores-page .admin-scores-filter-panel > h2 { margin: 0; padding: 18px 24px; border-bottom: 1px solid var(--oopy-line); border-radius: var(--oopy-radius-card) var(--oopy-radius-card) 0 0; background: var(--oopy-brand-mint); font-size: 1.125rem; }
+.admin-scores-page .admin-scores-filters { display: grid; gap: 24px; margin: 0; padding: 24px; }
+.admin-scores-page .admin-scores-search-row { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: end; gap: 20px; }
+.admin-scores-page .admin-scores-filter-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.admin-scores-page fieldset { margin: 0; padding: 0; }
+.admin-scores-page legend { float: none; width: auto; margin: 0 0 12px; font-size: .875rem; font-weight: 700; color: var(--oopy-action); }
+.admin-scores-page .admin-scores-field-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.admin-scores-page .admin-scores-search-row > div, .admin-scores-page .admin-scores-field-pair > div { min-width: 0; }
+.admin-scores-page .admin-scores-filters label { margin-bottom: 8px; font-size: .875rem; line-height: 1.5; }
+.admin-scores-page .form-control, .admin-scores-page .form-select { width: 100%; font-size: .9375rem; }
+.admin-scores-page .form-control::placeholder { color: #526461; opacity: 1; }
+.admin-scores-page .admin-scores-filter-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; padding-top: 20px; border-top: 1px solid var(--oopy-line); }
+.admin-scores-page .admin-scores-filter-footer p { flex: 1 1 340px; max-width: 70ch; margin: 0; font-size: .8125rem; line-height: 1.65; }
+.admin-scores-page .admin-scores-filter-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-left: auto; }
+.admin-scores-page .admin-scores-filter-actions .btn { min-width: 100px; font-size: .9375rem; font-weight: 600; }
+.admin-scores-page .admin-scores-results-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 12px 24px; margin-bottom: 16px; }
+.admin-scores-page .admin-scores-results-heading h2 { margin: 0 0 10px; }
+.admin-scores-page .admin-scores-results-heading > div > p { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; margin: 0; font-size: .875rem; }
+.admin-scores-page .admin-scores-count { padding: 4px 10px; border-radius: 6px; background: var(--oopy-brand-mint); color: var(--oopy-action); font-weight: 700; font-variant-numeric: tabular-nums; }
+.admin-scores-page .admin-scores-help { flex: 0 1 360px; min-width: 0; font-size: .875rem; }
+.admin-scores-page .admin-scores-help summary { display: list-item; min-height: 44px; padding: 10px 4px; color: var(--oopy-link); font-weight: 600; cursor: pointer; }
+.admin-scores-page .admin-scores-help > div { padding: 16px; border: 1px solid var(--oopy-line); border-radius: var(--oopy-radius-control); background: var(--oopy-surface); }
+.admin-scores-page .admin-scores-help p { margin: 0 0 12px; line-height: 1.65; }
+.admin-scores-page .admin-scores-help p:last-child { margin-bottom: 0; }
+.admin-scores-page .admin-scores-table-panel { border: 1px solid var(--oopy-line); border-radius: var(--oopy-radius-card); background: var(--oopy-surface); }
+.admin-scores-page .admin-scores-scroll { margin: 0; border: 0; border-radius: var(--oopy-radius-card) var(--oopy-radius-card) 0 0; scrollbar-color: var(--oopy-control-border) var(--oopy-canvas); }
+.admin-scores-page .admin-scores-scroll:focus-visible, .admin-scores-page summary:focus-visible { outline: 3px solid var(--oopy-focus); outline-offset: -3px; }
+.admin-scores-page .admin-scores-table { min-width: 1660px; border-collapse: separate; border-spacing: 0; font-variant-numeric: tabular-nums; line-height: 1.5; }
+.admin-scores-page .admin-scores-table th, .admin-scores-page .admin-scores-table td { padding: 14px 12px; border-bottom: 1px solid var(--oopy-line); overflow-wrap: normal; }
+.admin-scores-page .admin-scores-table thead th { text-align: center; font-size: .8125rem; }
+.admin-scores-page .admin-scores-table thead tr:first-child th { padding-block: 16px; }
+.admin-scores-page .admin-scores-table thead tr:nth-child(2) th { background: var(--oopy-canvas); }
+.admin-scores-page .admin-scores-table tbody th, .admin-scores-page .admin-scores-table tbody td { background: var(--oopy-surface); font-size: .875rem; }
+.admin-scores-page .admin-scores-table tbody tr:hover > * { background: var(--oopy-canvas); }
+.admin-scores-page .admin-scores-table .admin-scores-name { position: sticky; left: 0; z-index: 1; width: 176px; min-width: 176px; max-width: 176px; text-align: left; overflow-wrap: anywhere; border-right: 1px solid var(--oopy-line); }
+.admin-scores-page .admin-scores-table thead .admin-scores-name { z-index: 2; background: var(--oopy-brand-mint); }
+.admin-scores-page .admin-scores-name a { display: inline-flex; align-items: center; min-height: 44px; color: var(--oopy-link); font-weight: 600; text-underline-offset: 3px; }
+.admin-scores-page .admin-scores-table .admin-scores-group-start { border-left: 1px solid var(--oopy-line); }
+.admin-scores-page .admin-scores-number { min-width: 64px; text-align: center; font-weight: 600; }
+.admin-scores-page .admin-scores-number[headers$="scores-final"] { min-width: 136px; }
+.admin-scores-page .admin-scores-table td[headers$="scores-status"] { min-width: 164px; }
+.admin-scores-page .admin-scores-date { min-width: 156px; }
+.admin-scores-page .admin-scores-table td[headers*="scores-coding-"] { min-width: 136px; }
+.admin-scores-page .admin-scores-table td[headers$="scores-progress"] { min-width: 152px; }
+.admin-scores-page .admin-scores-status, .admin-scores-page .admin-coding-status { display: inline-block; padding: 5px 9px; border-radius: 6px; font-size: .75rem; font-weight: 600; line-height: 1.5; white-space: normal; }
+.admin-scores-page .admin-scores-status { background: var(--oopy-canvas); color: var(--oopy-text); }
+.admin-scores-page .admin-scores-status[data-status="Lulus semua BAB"], .admin-scores-page .admin-coding-status.is-completed { background: var(--oopy-brand-mint); color: var(--oopy-action); }
+.admin-scores-page .admin-scores-status[data-status="Belum lulus semua BAB"] { background: var(--oopy-danger-soft); color: var(--oopy-danger); }
+.admin-scores-page .admin-scores-status.is-pending { display: block; margin-top: 6px; background: var(--oopy-warning-soft); color: var(--oopy-warning); }
+.admin-scores-page .admin-coding-score { margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.admin-scores-page .admin-scores-progress { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.admin-scores-page .admin-scores-progress progress { appearance: none; width: 68px; height: 8px; border: 0; border-radius: 6px; overflow: hidden; background: var(--oopy-line); color: var(--oopy-action); }
+.admin-scores-page .admin-scores-progress progress::-webkit-progress-bar { background: var(--oopy-line); }
+.admin-scores-page .admin-scores-progress progress::-webkit-progress-value { border-radius: 6px; background: var(--oopy-action); }
+.admin-scores-page .admin-scores-progress progress::-moz-progress-bar { border-radius: 6px; background: var(--oopy-action); }
+.admin-scores-page .admin-scores-table small { font-size: .75rem; }
+.admin-scores-page .admin-scores-scroll-help { margin: 0; padding: 12px 16px; font-size: .8125rem; line-height: 1.6; }
+.admin-scores-page .admin-scores-pagination { margin-top: 20px; }
+@media (min-width: 1200px) {
+    .admin-scores-page .admin-scores-field-pair { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
+}
+@media (max-width: 575px) {
+    .admin-scores-page .admin-scores-heading { gap: 16px; margin-bottom: 24px; }
+    .admin-scores-page .admin-scores-title { gap: 12px; }
+    .admin-scores-page .admin-scores-title-icon { flex-basis: 44px; height: 44px; border-radius: 10px; }
+    .admin-scores-page .admin-scores-title-icon svg { width: 26px; height: 26px; }
+    .admin-scores-page .admin-scores-heading > .btn { width: 100%; }
+    .admin-scores-page .admin-scores-filter-panel > h2 { padding: 16px; }
+    .admin-scores-page .admin-scores-filters { padding: 16px; gap: 20px; }
+    .admin-scores-page .admin-scores-search-row, .admin-scores-page .admin-scores-filter-groups { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .admin-scores-page .admin-scores-filter-actions { width: 100%; margin: 0; }
+    .admin-scores-page .admin-scores-filter-actions .btn { flex: 1 1 auto; }
+    .admin-scores-page .admin-scores-table .admin-scores-name { width: 136px; min-width: 136px; max-width: 136px; }
+}
 .admin-coding-history { min-width: 700px; }
 .admin-coding-history thead th { white-space: nowrap; }
 .admin-coding-score { display: block; font-weight: 700; margin-bottom: 8px; }

@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\FinalExamAttempt;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\User;
 use App\Services\Admin\LearningReportService;
 use Database\Seeders\OopyContentSeeder;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
@@ -137,6 +140,15 @@ class ReportsTest extends TestCase
         $this->assertEqualsWithDelta(140 / 3, $stats['average'], .001);
         $this->assertSame(50, $stats['questions']);
         $this->get('/admin/users/'.$student->id)->assertOk()->assertSee('100');
+        $html = $this->get('/admin/scores')->assertOk()->getContent();
+        $dom = new DOMDocument;
+        @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+        $xpath = new DOMXPath($dom);
+        foreach ([$student->id => '100', $zero->id => '0', $new->id => '—'] as $id => $expected) {
+            $cell = $xpath->query('//tr[@data-score-user="'.$id.'"]/td[contains(@headers, "scores-bab-1")]')->item(0);
+            $this->assertNotNull($cell);
+            $this->assertSame($expected, trim($cell->textContent));
+        }
     }
 
     public function test_search_pagination_and_filtered_formula_safe_csv(): void
@@ -225,7 +237,7 @@ class ReportsTest extends TestCase
         $student = User::factory()->create();
         $id = $this->actingAs($student)->postJson('/evaluasi/attempts')->assertOk()->json('attempt.id');
         $snapshot = require base_path('tests/Fixtures/legacy-final-exam.php');
-        \App\Models\FinalExamAttempt::findOrFail($id)->update([
+        FinalExamAttempt::findOrFail($id)->update([
             'snapshot' => $snapshot, 'answers' => array_fill_keys(array_column($snapshot, 'id'), null),
         ]);
         $this->postJson('/evaluasi/attempts/'.$id.'/submit', ['answers' => [], 'score' => 100])->assertOk();
@@ -241,6 +253,7 @@ class ReportsTest extends TestCase
         $response->assertSee('Menunggu penilaian')->assertSee('Nilai uraian')
             ->assertSee('<td><span class="admin-score-value">—</span></td>', false);
         $this->get('/admin/users/'.$student->id)->assertOk()->assertSee('Menunggu penilaian uraian');
+        $this->get('/admin/scores')->assertOk()->assertSee('Menunggu uraian: 1');
         $this->get('/admin/scores/export')->assertOk();
     }
 }

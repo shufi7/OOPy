@@ -47,7 +47,7 @@ const luminance = color => {
     return .2126 * channels[0] + .7152 * channels[1] + .0722 * channels[2];
 };
 const colors = async () => {
-    for (const selector of ['.admin-coding-status', '.admin-status-badge', '.admin-metrics dt', '.admin-metrics dd', '.admin-coding-history td', '.admin-coding-history th', '.admin-filters label']) {
+    for (const selector of ['.admin-coding-status', '.admin-status-badge', '.admin-scores-status', '.admin-metrics dt', '.admin-metrics dd', '.admin-coding-history td', '.admin-coding-history th', '.admin-filters label']) {
         for (const element of await page.locator(selector).all()) {
             const pair = await element.evaluate(el => {
                 const style = getComputedStyle(el);
@@ -63,7 +63,7 @@ const colors = async () => {
     }
 };
 const layout = async name => {
-    for (const width of [360, 390, 768, 1024, 1440]) {
+    for (const width of [320, 360, 390, 768, 1024, 1366, 1440]) {
         await page.setViewportSize({ width, height: 1000 });
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
         const data = await page.evaluate(() => ({
@@ -73,14 +73,32 @@ const layout = async name => {
         }));
         assert.ok(data.scroll <= width + 1, `${name}: ${JSON.stringify(data)}`);
         assert.deepEqual(data.unlabeled, []);
+        if (name === 'scores') {
+            assert.equal(await page.locator('.admin-scores-filters input, .admin-scores-filters select').evaluateAll(elements => elements.every(el => {
+                const bounds = el.getBoundingClientRect();
+                return bounds.height >= 44 && bounds.width <= el.parentElement.clientWidth + 1;
+            })), true, `Score filter sizes at ${width}px`);
+            const actions = await page.locator('.admin-scores-filter-actions .btn').evaluateAll(elements => elements.map(el => el.getBoundingClientRect().top));
+            assert.equal(actions[0], actions[1], `Score filter actions stay together at ${width}px`);
+            const region = page.locator('.admin-scores-scroll');
+            await region.evaluate(el => { el.scrollLeft = el.scrollWidth; });
+            await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+            assert.equal(await region.evaluate(el => [...el.querySelectorAll('.admin-scores-name')].every(cell => {
+                const bounds = cell.getBoundingClientRect();
+                return Math.abs(bounds.left - el.getBoundingClientRect().left) < 2
+                    && getComputedStyle(cell).backgroundColor !== 'rgba(0, 0, 0, 0)';
+            })), true, `Sticky names and headers at ${width}px`);
+            assert.equal(await region.evaluate(el => el.querySelector('td[headers$="scores-progress"]').getBoundingClientRect().right <= el.getBoundingClientRect().right + 1), true);
+            await region.evaluate(el => { el.scrollLeft = 0; });
+        }
         results.layouts.push({ name, ...data });
         if (directory && [390, 1440].includes(width)) await page.screenshot({ path: join(directory, `${name}-${width}.png`), fullPage: true });
     }
     await colors();
-    console.log(`PASS ${name}: five viewports and local table overflow`);
+    console.log(`PASS ${name}: seven viewports and local table overflow`);
 };
 const applyFilters = async () => {
-    await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.getByRole('button', { name: 'Terapkan', exact: true }).click()]);
+    await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.getByRole('button', { name: 'Terapkan Filter', exact: true }).click()]);
 };
 
 try {
@@ -121,6 +139,19 @@ try {
     await visit('/admin/scores');
     assert.equal(await page.locator('[data-score-user]').count(), 3);
     await layout('scores');
+    assert.equal(await page.locator('.admin-scores-table thead tr').count(), 2);
+    assert.equal(await page.locator('.admin-scores-table th[scope="colgroup"]').count(), 3);
+    assert.deepEqual(await page.locator('.admin-scores-table [headers]').evaluateAll(cells => cells.flatMap(cell => cell.headers.split(/\s+/).filter(id => document.getElementById(id)?.tagName !== 'TH'))), []);
+    assert.equal(await page.locator('[data-score-user] th[scope="row"] a').count(), 3);
+    const help = page.locator('.admin-scores-help');
+    await help.locator('summary').focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await help.evaluate(el => el.open), true);
+    assert.match(await help.innerText(), /Ambang lulus kuis BAB: 80/);
+    assert.match(await help.innerText(), /Uraian pada riwayat lama tetap memerlukan penilaian Admin/);
+    await page.keyboard.press('Space');
+    assert.equal(await help.evaluate(el => el.open), false);
+    record('Grouped table headers reference real headers; row links and native keyboard help retain grading information');
     await page.locator('#coding_exercise').focus();
     await page.keyboard.press('Tab');
     assert.equal(await page.locator('#coding_status').evaluate(el => el === document.activeElement), true);
