@@ -2,14 +2,15 @@
 <?php
 
 return [
-    'description' => 'Pelajari pewarisan (inheritance) untuk menggunakan kembali atribut dan method dari superclass, memahami super() dan method overriding, serta membedakan hubungan is-a dan has-a dalam ekosistem lahan basah.',
+    'description' => 'Bangun keluarga class Ekosistem untuk Sungai, Rawa, dan Mangrove. Pelajari kapan memakai pewarisan, bagaimana super() menghindari pengulangan inisialisasi, dan kapan hubungan has-a lebih sesuai.',
 
     'objectives' => [
-        'Menjelaskan hubungan superclass dan subclass.',
-        'Membuat subclass dari class yang sudah ada.',
-        'Menggunakan super() untuk memanfaatkan inisialisasi superclass.',
-        'Melakukan method overriding pada subclass.',
-        'Membedakan inheritance (is-a) dengan composition (has-a).',
+        'Menjelaskan hubungan superclass dan subclass menggunakan Ekosistem, Sungai, Rawa, dan Mangrove.',
+        'Menggunakan method yang diwarisi dan menambahkan atribut khusus subclass.',
+        'Menggunakan super().__init__() untuk memakai inisialisasi superclass tanpa mengulanginya.',
+        'Melakukan method overriding untuk memberi perilaku yang lebih khusus.',
+        'Memilih inheritance untuk hubungan is-a dan has-a untuk hubungan kepemilikan atau penggunaan object.',
+        'Membedakan hubungan has-a sederhana dengan komposisi ketat dalam pemodelan UML.',
     ],
 
     'sections' => [
@@ -22,8 +23,9 @@ return [
             'title' => 'Apersepsi',
             'nav_group' => 'pendahuluan',
             'paragraphs' => [
-                'Sungai, rawa, dan mangrove dapat dipandang sebagai jenis Ekosistem. Ketiganya memiliki nama dan lokasi, tetapi masing-masing juga mempunyai informasi khusus.',
-                'Sebaliknya, StasiunPemantau memiliki Sensor. Stasiun bukan jenis sensor. Dari dua contoh ini, kita akan belajar memilih hubungan antarkelas yang tepat.',
+                'Pada BAB 2, class Ekosistem digunakan untuk membuat object dengan nama dan lokasi. Kini kita dapat memakai inheritance ketika beberapa jenis ekosistem memiliki data dan perilaku umum yang sama.',
+                'Sungai, Rawa, dan Mangrove adalah jenis Ekosistem (is-a), sehingga dapat menjadi subclass. StasiunPemantau memiliki atau menggunakan Sensor (has-a); stasiun bukan jenis sensor.',
+                'Kita akan melihat cara mewarisi method, menambahkan data khusus, dan memilih hubungan antarkelas berdasarkan maknanya, bukan sekadar untuk mempersingkat kode.',
             ],
             'tip' => 'Bayangkan kalimat “Sungai adalah jenis Ekosistem” dan “StasiunPemantau memiliki Sensor”. Kalimat pertama menunjukkan is-a; kalimat kedua menunjukkan has-a.',
         ],
@@ -38,9 +40,10 @@ return [
             'paragraphs' => [
                 'Inheritance adalah mekanisme pewarisan yang memungkinkan suatu class menggunakan atribut dan method dari class lain. Class yang diwarisi disebut superclass (class induk), sedangkan class yang mewarisi disebut subclass (class turunan).',
 
-                'Dalam contoh OOPy, Ekosistem menjadi superclass. Sungai, Rawa, dan Mangrove dapat menjadi subclass karena masing-masing merupakan jenis ekosistem (is-a).',
+                'Dalam contoh pemantauan lahan basah, Ekosistem menjadi superclass yang menyimpan data umum nama dan lokasi serta menyediakan method info(). Sungai, Rawa, dan Mangrove menjadi subclass karena masing-masing merupakan jenis ekosistem (is-a).',
 
-                'Penulisan class Sungai(Ekosistem) berarti Sungai mewarisi Ekosistem. Jika subclass tidak mendefinisikan ulang method info(), method tersebut dapat digunakan dari superclass.',
+                'Penulisan class Sungai(Ekosistem) berarti Sungai mewarisi atribut dan method Ekosistem. Jika subclass belum mendefinisikan ulang info(), object-nya tetap dapat memakai method induk tersebut.',
+                'Contoh membuat satu object dari setiap subclass. Semuanya memakai info() yang diwarisi, tetapi masing-masing menyimpan data sendiri.',
             ],
 
             'code' => <<<'PYTHON'
@@ -55,13 +58,29 @@ class Ekosistem:
 class Sungai(Ekosistem):
     pass
 
-sungai = Sungai("Sungai Barito", "Banjarmasin")
-print(sungai.info())
+class Rawa(Ekosistem):
+    pass
+
+class Mangrove(Ekosistem):
+    pass
+
+ekosistem = [
+    Sungai("Sungai Barito", "Banjarmasin"),
+    Rawa("Rawa Bangkau", "Hulu Sungai Selatan"),
+    Mangrove("Pesisir", "Tanah Laut"),
+]
+
+for lokasi in ekosistem:
+    print(lokasi.info())
 PYTHON,
 
-            'output' => 'Sungai Barito - Banjarmasin',
+            'output' => <<<'OUTPUT'
+Sungai Barito - Banjarmasin
+Rawa Bangkau - Hulu Sungai Selatan
+Pesisir - Tanah Laut
+OUTPUT,
 
-            'tip' => 'Walaupun Sungai belum mempunyai method info() sendiri, object sungai tetap dapat memanggil info() yang diwarisi dari Ekosistem.',
+            'tip' => 'Kesalahan umum: menganggap subclass harus menyalin semua method induk. Jika method yang diwarisi sudah sesuai, subclass dapat langsung menggunakannya.',
         ],
 
         // ==================================================
@@ -72,11 +91,13 @@ PYTHON,
             'title' => '4.2 super() dan Duplikasi Kode',
 
             'paragraphs' => [
-                'Subclass bisa menambahkan atribut khusus. Sebagai contoh, Sungai memiliki panjang_km, sedangkan nama dan lokasi sudah dimiliki oleh Ekosistem.',
+                'Subclass dapat menambahkan atribut khusus. Pada contoh ini, Sungai memiliki panjang_km, sementara atribut nama dan lokasi sudah menjadi tanggung jawab Ekosistem.',
 
-                'Ketika subclass membuat __init__() sendiri, gunakan super().__init__(nama, lokasi) untuk menjalankan inisialisasi pada superclass. Dengan demikian, kita tidak perlu menulis ulang self.nama dan self.lokasi.',
+                'Saat subclass mendefinisikan __init__() sendiri, inisialisasi induk tidak berjalan otomatis. Panggil super().__init__(nama, lokasi) agar aturan penyimpanan nama dan lokasi digunakan kembali.',
 
-                'Setelah super().__init__() dipanggil, barulah atribut khusus subclass ditambahkan menggunakan self.panjang_km.',
+                'Tanpa super(), kita harus mengulang self.nama = nama dan self.lokasi = lokasi di setiap subclass. Pengulangan membuat perubahan pada inisialisasi umum harus diperbaiki di banyak tempat dan dapat tidak konsisten.',
+
+                'Setelah inisialisasi induk selesai, subclass menambahkan atributnya sendiri, yaitu self.panjang_km.',
             ],
 
             'code' => <<<'PYTHON'
@@ -101,7 +122,7 @@ PYTHON,
 
             'output' => "Sungai Barito - Banjarmasin\nPanjang: 25 km",
 
-            'tip' => 'super() tidak membuat object superclass baru. Pada contoh ini, pemanggilannya menginisialisasi bagian Ekosistem dari object Sungai yang sama.',
+            'tip' => 'super() tidak membuat object superclass baru. Pemanggilannya menjalankan implementasi berikutnya dalam hierarki untuk object Sungai yang sama. Pastikan argumen pada super().__init__() sesuai dengan parameter constructor induk.',
         ],
 
         // ==================================================
@@ -112,9 +133,11 @@ PYTHON,
             'title' => '4.3 Method Overriding',
 
             'paragraphs' => [
-                'Method overriding terjadi saat subclass mendefinisikan method dengan nama yang sama seperti method milik superclass untuk memberikan implementasi yang lebih spesifik.',
+                'Method overriding terjadi ketika subclass mendefinisikan method dengan nama yang sama untuk mengganti atau mengkhususkan perilaku yang diwarisi.',
 
-                'Pada contoh berikut, Rawa dan Mangrove mempunyai method info() masing-masing. Pemanggilan info() pada object akan memakai implementasi sesuai class object tersebut.',
+                'Ekosistem menyediakan info() umum. Rawa dan Mangrove meng-override info() agar hasilnya lebih sesuai dengan jenis ekosistem tersebut; object Sungai yang tidak meng-override tetap memakai method umum.',
+
+                'Saat kita memanggil objek.info(), Python menjalankan implementasi yang sesuai dengan class object itu. Cara pemanggilan tetap sama, sementara perilakunya dapat berbeda; ide ini akan dipakai kembali pada BAB 5 tentang polimorfisme.',
 
                 'Python tidak memerlukan keyword khusus untuk overriding. Kita cukup mendefinisikan ulang method dengan nama yang sama pada subclass.',
             ],
@@ -156,11 +179,15 @@ PYTHON,
             'title' => '4.4 Inheritance vs Composition',
 
             'paragraphs' => [
-                'Inheritance digunakan untuk memodelkan hubungan is-a: suatu class adalah jenis dari class lain. Contohnya, SensorPH adalah jenis SensorLingkungan.',
+                'Inheritance digunakan untuk memodelkan hubungan is-a: suatu class adalah jenis dari class lain. Contohnya, Sungai adalah jenis Ekosistem.',
 
-                'Composition digunakan untuk memodelkan hubungan has-a: sebuah object memiliki atau menggunakan object lain. Contohnya, StasiunPemantau memiliki kumpulan sensor.',
+                'Hubungan has-a menunjukkan bahwa sebuah object memiliki atau menggunakan object lain. Contohnya, StasiunPemantau menyimpan beberapa object sensor.',
 
-                'Jangan memakai inheritance hanya supaya kode tampak lebih pendek. Pilih relasi berdasarkan makna objek yang sedang dimodelkan.',
+                'Dalam kode Python, menyimpan object sensor di dalam list stasiun menunjukkan has-a sederhana. Fakta bahwa satu object menyimpan referensi ke object lain belum dengan sendirinya menentukan kepemilikan kuat atau masa hidup object tersebut.',
+
+                'Dalam UML, komposisi ketat ditandai wajik terisi di sisi whole (pemilik). Model itu menyatakan bagian dimiliki secara kuat oleh whole dan masa hidup bagian terkait dengan whole. Relasi has-a sederhana tidak otomatis berarti komposisi ketat; Python juga tidak menegakkan aturan UML tersebut secara otomatis.',
+
+                'Pilih hubungan berdasarkan makna dan kebutuhan kepemilikan object, bukan sekadar agar kode lebih pendek.',
             ],
 
             'tables' => [
@@ -171,18 +198,27 @@ PYTHON,
                         'Relasi',
                         'Pertanyaan',
                         'Contoh OOPy',
+                        'Makna hubungan',
                     ],
 
                     'rows' => [
                         [
                             'Inheritance (is-a)',
                             'Apakah A merupakan jenis dari B?',
-                            'SensorPH adalah jenis SensorLingkungan.',
+                            'Sungai adalah jenis Ekosistem.',
+                            'Subclass mewarisi bagian umum superclass dan dapat menambahkan atau mengkhususkan perilakunya.',
                         ],
                         [
-                            'Composition (has-a)',
-                            'Apakah A memiliki B?',
-                            'StasiunPemantau memiliki beberapa SensorLingkungan.',
+                            'Has-a sederhana',
+                            'Apakah A memiliki atau menggunakan B?',
+                            'StasiunPemantau menyimpan beberapa SensorLingkungan.',
+                            'Menunjukkan object berhubungan; belum menetapkan bahwa stasiun menguasai siklus hidup sensor.',
+                        ],
+                        [
+                            'Komposisi ketat (UML)',
+                            'Apakah A merupakan whole yang memiliki bagian secara kuat?',
+                            'StasiunPemantau memiliki bagian Sensor yang masa hidupnya terkait dengan stasiun.',
+                            'Wajik terisi berada di sisi whole; aturan kepemilikan kuat ini tidak muncul otomatis hanya karena Python menyimpan referensi.',
                         ],
                     ],
                 ],
@@ -199,7 +235,7 @@ PYTHON,
             'paragraphs' => [
                 'StasiunPemantau menyimpan referensi ke sejumlah object sensor dalam sebuah list. Method tambah_sensor() memasukkan object sensor ke list tersebut.',
 
-                'StasiunPemantau tidak mewarisi SensorLingkungan karena stasiun bukan jenis sensor. Hubungan yang tepat adalah memiliki sensor.',
+                'StasiunPemantau tidak mewarisi SensorLingkungan karena stasiun bukan jenis sensor. Contoh ini menunjukkan has-a sederhana: object sensor dibuat di luar stasiun, lalu referensinya disimpan. Model ini tidak menyatakan aturan komposisi ketat UML tentang kepemilikan dan masa hidup bagian.',
             ],
 
             'code' => <<<'PYTHON'
@@ -529,11 +565,11 @@ PYTHON,
             ],
 
             'practice' => [
-                'Buat superclass Perangkat dengan atribut nama dan status_aktif, kemudian turunkan SensorPH dan SensorSuhu.',
+                'Buat class Ekosistem dengan nama dan lokasi, lalu buat subclass Sungai menggunakan super().__init__() dan tambahkan atribut panjang_km. Jelaskan bagian mana yang diwarisi dan bagian mana yang khusus.',
 
                 'Tuliskan dua contoh relasi is-a dan dua contoh relasi has-a dalam konteks pemantauan lahan basah.',
 
-                'Ubah satu desain yang awalnya memakai inheritance menjadi composition, lalu jelaskan alasan perubahan tersebut.',
+                'Ubah satu desain yang awalnya memakai inheritance menjadi has-a sederhana, lalu jelaskan alasan perubahan tersebut. Apakah hubungan itu juga berarti komposisi ketat UML? Jelaskan kepemilikan atau masa hidup bagian yang dimaksud.',
             ],
         ],
     ],
@@ -542,26 +578,26 @@ PYTHON,
     // RANGKUMAN
     // ======================================================
     'summary' => [
-        'Inheritance memungkinkan subclass menggunakan kembali atribut dan method superclass untuk hubungan is-a.',
+        'Inheritance menghubungkan superclass dengan subclass untuk hubungan is-a; Sungai, Rawa, dan Mangrove dapat menjadi jenis Ekosistem.',
 
-        'super() membantu subclass memanfaatkan inisialisasi atau implementasi superclass tanpa menduplikasi kode.',
+        'Subclass mewarisi method induk, dapat menambahkan atribut sendiri, dan dapat meng-override method untuk perilaku yang lebih khusus.',
 
-        'Subclass dapat menambahkan atribut atau method baru dan melakukan method overriding.',
+        'super().__init__() menjalankan inisialisasi induk pada object subclass dan mencegah pengulangan penyimpanan atribut umum.',
 
-        'Composition digunakan untuk hubungan has-a, ketika suatu object memiliki object lain.',
+        'Has-a sederhana menunjukkan bahwa object memiliki atau menggunakan object lain. Komposisi ketat UML menambahkan gagasan kepemilikan kuat dan hubungan masa hidup.',
 
-        'Pilih inheritance atau composition berdasarkan makna hubungan antarkelas, bukan hanya untuk memperpendek kode.',
+        'Pilih inheritance atau has-a berdasarkan makna relasi dan kebutuhan kepemilikan object.',
     ],
 
     // ======================================================
     // REFLEKSI
     // ======================================================
     'reflection' => [
-        'Apa manfaat utama inheritance saat membuat beberapa class yang memiliki atribut sama?',
+        'Mengapa Sungai, Rawa, dan Mangrove dapat menjadi subclass Ekosistem, sedangkan StasiunPemantau tidak?',
 
-        'Mengapa tidak semua hubungan antarkelas cocok dimodelkan menggunakan inheritance?',
+        'Bagaimana super().__init__() mengurangi duplikasi saat Sungai memiliki atribut umum dan atribut khusus?',
 
-        'Jelaskan kegunaan super() melalui contoh class Ekosistem dan Sungai.',
+        'Apa perbedaan has-a sederhana dengan komposisi ketat dalam UML?',
     ],
 
     // ======================================================

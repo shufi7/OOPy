@@ -243,11 +243,11 @@ class MateriTest extends TestCase
     {
         $response = $this->get('/materi/dasar-pemrograman-oop')->assertOk()->assertViewIs('materi.show');
         $content = $response->viewData('content');
-        $this->assertSame('Fondasi singkat yang dibutuhkan sebelum memasuki pemodelan object.', $content['description']);
+        $this->assertSame('Pelajari fondasi Python melalui kasus pemantauan lahan basah, lalu pahami kapan data dan perilaku perlu dikelompokkan menggunakan pendekatan OOP.', $content['description']);
         $this->assertCount(5, $content['objectives']);
         $this->assertCount(8, $content['sections']);
-        $this->assertCount(4, $content['summary']);
-        $this->assertCount(3, $content['reflection']);
+        $this->assertCount(6, $content['summary']);
+        $this->assertCount(5, $content['reflection']);
         foreach ([...$content['objectives'], ...$content['reflection']] as $text) {
             $response->assertSee($text);
         }
@@ -256,7 +256,7 @@ class MateriTest extends TestCase
         $this->assertCount(4, $sections['nilai-tipe-data-variabel']['tables'][0]['rows']);
         $this->assertCount(3, $sections['operator-ekspresi']['tables'][0]['rows']);
         $this->assertCount(5, $sections['prosedural-ke-oop']['tables'][0]['rows']);
-        $this->assertCount(3, $sections['prosedural-ke-oop']['practice']);
+        $this->assertCount(4, $sections['prosedural-ke-oop']['practice']);
         $this->assertSame(['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill'], array_column($content['quiz'], 'type'));
         $this->assertSame(['return', 'elif'], array_column(array_slice($content['quiz'], 3), 'answer'));
         $response->assertSee('Ayo Berlatih')->assertSee('klasifikasi_suhu(suhu)')->assertSee('rata_rata(a, b, c)');
@@ -306,7 +306,7 @@ class MateriTest extends TestCase
     {
         $response = $this->get('/materi/kelas-abstrak')->assertOk()->assertViewIs('materi.show');
         $content = $response->viewData('content');
-        $this->assertSame('Menyatakan kontrak perilaku minimum ketika desain memerlukannya.', $content['description']);
+        $this->assertSame('Pelajari cara ABC dan @abstractmethod menyatakan kontrak perilaku minimum bagi keluarga class, serta kapan duck typing sudah cukup.', $content['description']);
         $this->assertSame([
             'Menjelaskan perbedaan class konkret dan abstract base class.',
             'Menggunakan ABC dan abstractmethod dari modul abc.',

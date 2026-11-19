@@ -1,13 +1,14 @@
 <?php
 
 return [
-    'description' => 'Pelajari bagaimana class digunakan sebagai cetak biru untuk membuat object dalam Python. Materi menggunakan contoh ekosistem lahan basah seperti sungai, rawa, mangrove, spesies, dan sensor air.',
+    'description' => 'Lanjutkan dari variabel dan fungsi prosedural di BAB 1: kelompokkan data serta perilaku yang selalu berkaitan ke dalam class dan object untuk memodelkan ekosistem lahan basah.',
 
     'objectives' => [
-        'Menjelaskan hubungan antara class dan object.',
-        'Membuat constructor __init__ dan atribut instance.',
-        'Membuat dan memanggil instance method.',
-        'Membuat beberapa object dari satu class.',
+        'Menjelaskan perbedaan class, object atau instance, atribut, method, dan state.',
+        'Membuat class Ekosistem dengan __init__() untuk menginisialisasi atribut instance.',
+        'Menjelaskan peran self sebagai referensi ke instance yang sedang digunakan method.',
+        'Membuat beberapa instance dari satu class dengan data dan state yang berbeda.',
+        'Memanggil method untuk membaca dan mengubah state sebuah object.',
     ],
 
     'sections' => [
@@ -23,8 +24,9 @@ return [
             'title' => 'Apersepsi',
             'nav_group' => 'pendahuluan',
             'paragraphs' => [
-                'Dalam lingkungan lahan basah terdapat berbagai entitas seperti sungai, rawa, mangrove, tumbuhan, hewan, dan sensor. Setiap entitas memiliki data yang berbeda, tetapi kita dapat menemukan pola yang sama untuk memodelkannya dalam program.',
-                'Sebagai contoh, sebuah ekosistem dapat memiliki nama dan lokasi. Ekosistem tersebut juga dapat memiliki perilaku tertentu, misalnya menampilkan informasi mengenai dirinya sendiri. Konsep class dan object membantu kita membuat model seperti ini dalam Python.',
+                'Pada BAB 1, kita menyimpan data lokasi dalam variabel dan mengolahnya dengan fungsi. Cara itu cocok untuk tugas sederhana, tetapi saat banyak lokasi dipantau, pasangan data dan fungsi untuk setiap lokasi dapat semakin sulit dikelola.',
+                'Class membantu mengelompokkan pola data dan perilaku yang sama. Kita dapat merancang class Ekosistem, lalu membuat object Sungai, Rawa, atau Mangrove yang masing-masing menyimpan nama dan lokasi sendiri.',
+                'Di bab ini, kita akan membedakan rancangan (class) dari object yang dibuat berdasarkan rancangan tersebut, lalu melihat bagaimana atribut dan method bekerja bersama.',
             ],
         ],
 
@@ -38,9 +40,9 @@ return [
             'id' => 'class-object',
             'title' => '2.1 Class dan Object',
             'paragraphs' => [
-                'Class dapat dipahami sebagai cetak biru atau rancangan yang digunakan untuk membuat object. Class menentukan data apa yang dimiliki object dan perilaku apa yang dapat dilakukan oleh object tersebut.',
-                'Object merupakan hasil atau instance yang dibuat berdasarkan sebuah class. Satu class dapat digunakan untuk membuat banyak object dengan data yang berbeda.',
-                'Pada contoh berikut, class Ekosistem memiliki data berupa nama dan lokasi. Object rawa dibuat berdasarkan class tersebut dengan nilai "Rawa" dan "Kalimantan Selatan".',
+                'Class adalah rancangan yang mendefinisikan atribut dan method yang tersedia pada object. Object adalah satu hasil nyata yang dibuat dari class. Istilah instance merujuk pada object yang dibuat dari class tersebut; dalam percakapan OOP, object dan instance sering dipakai untuk hal yang sama.',
+                'Atribut adalah data milik object, sedangkan method adalah fungsi yang didefinisikan di dalam class dan dapat dipanggil melalui object. Nilai atribut pada suatu waktu membentuk state atau keadaan object.',
+                'Pada contoh ini, Ekosistem adalah class, rawa adalah object sekaligus instance, nama dan lokasi adalah atribut, dan info() adalah method.',
             ],
             'code' => <<<'PYTHON'
 class Ekosistem:
@@ -54,7 +56,8 @@ class Ekosistem:
 rawa = Ekosistem("Rawa", "Kalimantan Selatan")
 print(rawa.info())
 PYTHON,
-            'tip' => 'Class adalah rancangan, sedangkan object adalah instance yang dibuat berdasarkan rancangan tersebut.',
+            'output' => 'Rawa berada di Kalimantan Selatan',
+            'tip' => 'Class adalah rancangan; object atau instance adalah hasil yang dibuat darinya. Atribut menyimpan data, method menyediakan perilaku, dan nilai atribut saat ini membentuk state object.',
         ],
 
         /*
@@ -68,11 +71,11 @@ PYTHON,
             'title' => '2.2 Bedah Kode',
             'paragraphs' => [
                 'class Ekosistem: digunakan untuk membuat class baru dengan nama Ekosistem. Class ini menjadi rancangan untuk object yang akan dibuat nantinya.',
-                '__init__ merupakan constructor yang dipanggil ketika sebuah object dibuat. Constructor digunakan untuk memberikan nilai awal pada object.',
-                'Parameter self merujuk pada object yang sedang menggunakan method. Karena itu, self digunakan untuk mengakses data yang dimiliki oleh object tersebut.',
+                '__init__ adalah method inisialisasi yang dijalankan otomatis saat Ekosistem(...) membuat instance. Method ini menyiapkan nilai awal object; dalam contoh, nama dan lokasi diberikan saat object dibuat.',
+                'self adalah parameter yang merujuk pada instance yang sedang ditangani method. Saat kita menulis rawa.info(), Python mengirimkan instance rawa sebagai self secara otomatis; kita tidak menulis rawa sebagai argumen pertama.',
                 'self.nama dan self.lokasi merupakan atribut instance. Atribut tersebut menyimpan data yang dimiliki oleh masing-masing object.',
                 'rawa = Ekosistem("Rawa", "Kalimantan Selatan") membuat sebuah object bernama rawa dari class Ekosistem.',
-                'rawa.info() memanggil method info() milik object rawa. Method tersebut mengembalikan informasi mengenai nama dan lokasi ekosistem.',
+                'rawa.info() memanggil method info() milik instance rawa. Method membaca atribut melalui self lalu mengembalikan teks; print() menampilkan teks tersebut.',
             ],
             'code' => <<<'PYTHON'
 class Ekosistem:
@@ -88,6 +91,8 @@ rawa = Ekosistem("Rawa", "Kalimantan Selatan")
 
 print(rawa.info())
 PYTHON,
+            'output' => 'Rawa berada di Kalimantan Selatan',
+            'tip' => 'Kesalahan umum: menghilangkan self pada parameter method, atau mengira self harus diberikan sendiri saat menulis rawa.info(). Python mengisi referensi instance itu saat method dipanggil melalui object.',
         ],
 
         /*
@@ -101,9 +106,9 @@ PYTHON,
             'title' => '2.3 Membuat Beberapa Object dari Satu Class',
             'nav_title' => '2.3 Membuat Beberapa Object',
             'paragraphs' => [
-                'Satu class dapat digunakan untuk membuat banyak object. Setiap object dapat memiliki nilai atribut yang berbeda meskipun dibuat dari class yang sama.',
-                'Contohnya, class Ekosistem dapat digunakan untuk membuat object sungai, rawa, dan mangrove. Ketiga object tersebut memiliki atribut nama dan lokasi, tetapi masing-masing menyimpan nilai yang berbeda.',
-                'Object-object tersebut juga dapat disimpan dalam sebuah list dan diproses menggunakan perulangan for.',
+                'Satu class dapat menghasilkan banyak object dengan data awal berbeda. Masing-masing instance memiliki atribut instance sendiri, sehingga mengubah sungai.nama hanya mengubah atribut milik object sungai, bukan atribut rawa atau mangrove.',
+                'Di sini, sungai, rawa, dan mangrove dibuat dari class Ekosistem yang sama. Setiap object menyimpan nama dan lokasi sendiri; kesamaan rancangan tidak membuat nilai atribut mereka menjadi satu data bersama.',
+                'Object dapat ditempatkan dalam list dan diproses dengan for. Perubahan pada satu object tetap merujuk pada instance yang sama dan tidak otomatis mengubah instance lain.',
             ],
             'code' => <<<'PYTHON'
 class Ekosistem:
@@ -119,9 +124,25 @@ sungai = Ekosistem("Sungai", "Banjarmasin")
 rawa = Ekosistem("Rawa", "Hulu Sungai")
 mangrove = Ekosistem("Mangrove", "Pesisir")
 
+print(sungai.info())
+print(rawa.info())
+print(mangrove.info())
+
+sungai.nama = "Sungai Barito"
+print("Setelah nama sungai diperbarui:")
 for objek in [sungai, rawa, mangrove]:
     print(objek.info())
 PYTHON,
+            'output' => <<<'OUTPUT'
+Sungai berada di Banjarmasin
+Rawa berada di Hulu Sungai
+Mangrove berada di Pesisir
+Setelah nama sungai diperbarui:
+Sungai Barito berada di Banjarmasin
+Rawa berada di Hulu Sungai
+Mangrove berada di Pesisir
+OUTPUT,
+            'tip' => 'Setiap pemanggilan Ekosistem(...) membuat instance baru. Atribut instance seperti self.nama tidak dipakai bersama oleh semua object; karena itu perubahan pada satu object tidak otomatis diterapkan ke object lain.',
         ],
 
         /*
@@ -134,9 +155,9 @@ PYTHON,
             'id' => 'atribut-method',
             'title' => '2.4 Atribut dan Method',
             'paragraphs' => [
-                'Atribut digunakan untuk menyimpan keadaan atau data yang dimiliki oleh sebuah object. Nilai atribut dapat berbeda antara satu object dengan object lainnya.',
-                'Method merupakan fungsi yang berada di dalam class dan digunakan untuk menentukan perilaku object. Method dapat membaca maupun mengubah atribut yang dimiliki oleh object.',
-                'Pada contoh berikut, atribut dipantau digunakan untuk menyimpan status pemantauan sebuah ekosistem. Nilai awalnya adalah False, kemudian method mulai_pantau() mengubahnya menjadi True.',
+                'Atribut menyimpan data object. State adalah keadaan object pada suatu waktu, yaitu nilai atributnya saat itu. Dua instance dari class yang sama dapat memiliki state berbeda.',
+                'Method adalah fungsi di dalam class yang bekerja pada instance melalui self. Method dapat membaca atau mengubah atribut object tersebut.',
+                'Contoh ini membuat object sungai dan rawa. Keduanya bermula dengan status "Belum aktif"; pemanggilan sungai.mulai_pantau() mengubah state sungai menjadi "Aktif" sementara state rawa tetap sama.',
             ],
             'code' => <<<'PYTHON'
 class Ekosistem:
@@ -150,7 +171,25 @@ class Ekosistem:
 
     def status(self):
         return "Aktif" if self.dipantau else "Belum aktif"
+
+sungai = Ekosistem("Sungai Barito", "Banjarmasin")
+rawa = Ekosistem("Rawa Bangkau", "Hulu Sungai Selatan")
+
+print(sungai.status())
+sungai.mulai_pantau()
+print(sungai.status())
+print(rawa.status())
 PYTHON,
+            'output' => <<<'OUTPUT'
+Belum aktif
+Aktif
+Belum aktif
+OUTPUT,
+            'tip' => 'State bukan class atau method: state adalah nilai atribut instance saat ini. Kesalahan umum adalah mengira method terdefinisi otomatis berjalan; method mulai_pantau() baru mengubah nilai setelah dipanggil.',
+            'practice' => [
+                'Buat dua object Ekosistem dengan nama dan lokasi berbeda. Ubah atribut nama pada object pertama, lalu tampilkan nama kedua object untuk membuktikan perubahan itu bersifat per-instance.',
+                'Tambahkan atribut status_awal pada class Ekosistem dan method aktifkan() yang mengubah statusnya. Sebutkan class, object, atribut, method, dan state dalam programmu.',
+            ],
         ],
 
         /*
@@ -354,13 +393,10 @@ PYTHON,
     */
 
     'summary' => [
-        'Class merupakan cetak biru atau rancangan yang digunakan untuk membuat object.',
-        'Object merupakan instance yang dibuat berdasarkan sebuah class.',
-        'Constructor __init__ digunakan untuk memberikan nilai awal pada object ketika object dibuat.',
-        'self merujuk pada object yang sedang menggunakan method.',
-        'Atribut digunakan untuk menyimpan data atau keadaan yang dimiliki oleh object.',
-        'Method digunakan untuk menentukan perilaku yang dapat dilakukan oleh object.',
-        'Satu class dapat digunakan untuk membuat banyak object dengan nilai atribut yang berbeda.',
+        'Class adalah rancangan yang mendefinisikan atribut dan method; object atau instance adalah hasil yang dibuat dari class tersebut.',
+        '__init__ menginisialisasi nilai awal ketika object dibuat, sedangkan self merujuk pada instance yang sedang ditangani method.',
+        'Atribut menyimpan data object. State adalah nilai atribut instance pada suatu waktu; method membaca atau mengubah data melalui self.',
+        'Satu class dapat menghasilkan banyak instance. Setiap instance memiliki atribut dan state sendiri, sehingga perubahan pada satu object tidak otomatis mengubah object lain.',
     ],
 
     /*
@@ -370,9 +406,9 @@ PYTHON,
     */
 
     'reflection' => [
-        'Apa perbedaan antara class dan object?',
-        'Mengapa self diperlukan ketika membuat method dalam sebuah class?',
-        'Atribut dan method apa saja yang dapat digunakan untuk memodelkan sebuah sungai?',
+        'Apa perbedaan class, object, dan instance? Berikan contoh menggunakan Ekosistem.',
+        'Dalam class Ekosistem, mana yang termasuk atribut dan mana yang termasuk method? Apa yang dimaksud state object?',
+        'Mengapa perubahan nama atau status pada satu object Ekosistem tidak otomatis mengubah object Ekosistem lain?',
     ],
 
     /*

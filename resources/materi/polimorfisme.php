@@ -2,13 +2,13 @@
 <?php
 
 return [
-    'description' => 'Pelajari polimorfisme dalam Python: berbagai object dapat diproses melalui pemanggilan method yang sama, baik melalui inheritance maupun duck typing. Contohnya menggunakan sensor pemantauan lahan basah.',
+    'description' => 'Gunakan satu cara pemanggilan method untuk memproses berbagai sensor. Pelajari hubungan overriding dan polimorfisme, lalu bandingkan inheritance dengan duck typing pada pemantauan lahan basah.',
 
     'objectives' => [
-        'Menjelaskan makna polimorfisme dalam OOP Python.',
-        'Menggunakan method overriding untuk perilaku berbeda pada hierarki inheritance.',
-        'Menerapkan duck typing pada object yang tidak harus memiliki superclass yang sama.',
-        'Memproses berbagai object melalui satu loop atau fungsi pemanggil.',
+        'Menjelaskan polimorfisme sebagai pemrosesan berbagai object melalui antarmuka pemanggilan method yang seragam.',
+        'Menghubungkan overriding pada subclass dengan perilaku berbeda saat method yang sama dipanggil.',
+        'Menerapkan duck typing tanpa mensyaratkan superclass yang sama, selama object menyediakan method yang dibutuhkan.',
+        'Membandingkan pemeriksaan tipe berulang dengan loop yang cukup memanggil method seragam.',
     ],
 
     'sections' => [
@@ -22,9 +22,9 @@ return [
             'nav_group' => 'pendahuluan',
 
             'paragraphs' => [
-                'Pada Bab 4, kita mempelajari bahwa subclass dapat mewarisi serta mendefinisikan ulang method milik superclass. Sekarang, bagaimana jika banyak object berbeda perlu diproses dengan perintah yang sama?',
+                'Pada BAB 4, subclass dapat meng-override method induk. Jika beberapa object sensor memiliki method baca_data(), program dapat memanggil method yang sama pada tiap object meskipun implementasi dan hasilnya berbeda.',
 
-                'Sensor pH, sensor suhu, dan sensor tinggi air sama-sama dapat membaca data, tetapi hasil pembacaannya berbeda. Apakah kita harus membuat if untuk setiap jenis sensor? Dengan polimorfisme, kode utama dapat memanggil baca_data() pada setiap object.',
+                'Kemampuan memproses object berbeda melalui antarmuka pemanggilan yang seragam disebut polimorfisme. Kita akan melihatnya melalui inheritance dan duck typing, lalu membandingkannya dengan pemeriksaan isinstance() yang berulang.',
             ],
 
             'tip' => 'Bayangkan satu perintah: item.baca_data(). Sensor yang berbeda dapat memberikan hasil yang berbeda tanpa mengubah cara pemanggilannya.',
@@ -38,11 +38,11 @@ return [
             'title' => '5.1 Polimorfisme melalui Inheritance',
 
             'paragraphs' => [
-                'Polimorfisme berarti satu cara pemanggilan method dapat menghasilkan perilaku berbeda sesuai object yang menerima pemanggilan tersebut. Pada hierarki inheritance, subclass dapat menyediakan implementasi khusus melalui method overriding.',
+                'Polimorfisme adalah kemampuan memproses object berbeda melalui antarmuka pemanggilan method yang seragam. Method yang sama dapat menghasilkan perilaku atau hasil berbeda sesuai object penerimanya.',
 
-                'SensorLingkungan menjadi superclass dengan method baca_data(). SensorPH dan SensorSuhu mewarisinya, lalu mendefinisikan ulang baca_data() sesuai kebutuhan masing-masing.',
+                'Pada inheritance, SensorLingkungan menyediakan method baca_data(), sementara SensorPH dan SensorSuhu meng-override-nya. Overriding adalah cara subclass menetapkan perilaku khusus; polimorfisme tampak ketika kode umum memanggil method itu pada object dari subclass berbeda.',
 
-                'Kedua object disimpan dalam list sensor. Dalam loop, baris item.baca_data() tetap sama. Python menjalankan method milik object yang sedang diproses.',
+                'Kedua object disimpan dalam list sensor. Di dalam loop, pemanggil cukup menulis item.baca_data(); Python menjalankan implementasi yang sesuai dengan object saat itu.',
             ],
 
             'code' => <<<'PYTHON'
@@ -77,11 +77,11 @@ PYTHON,
             'title' => '5.2 Duck Typing',
 
             'paragraphs' => [
-                'Polimorfisme di Python tidak harus menggunakan inheritance. Duck typing menekankan apakah sebuah object menyediakan method atau atribut yang dibutuhkan, bukan apakah object itu mewarisi class tertentu.',
+                'Polimorfisme di Python tidak harus menggunakan inheritance. Duck typing melihat apakah object menyediakan method atau atribut yang dibutuhkan, bukan apakah object mewarisi superclass tertentu.',
 
-                'Dalam contoh berikut, SensorVirtual dan LaporanManual tidak memiliki superclass khusus yang sama. Namun, keduanya menyediakan method baca_data(). Karena itu, fungsi tampilkan() dapat menerima kedua object tersebut.',
+                'SensorVirtual dan LaporanManual pada contoh ini tidak memiliki superclass khusus yang sama, tetapi keduanya menyediakan baca_data(). Karena itu, fungsi yang memanggil obj.baca_data() dapat bekerja dengan kedua jenis object.',
 
-                'Fungsi tampilkan() tidak perlu memeriksa nama class object terlebih dahulu. Fungsi cukup memanggil obj.baca_data().',
+                'Fungsi tampilkan() tidak perlu memeriksa nama class object terlebih dahulu. Fungsi cukup memanggil obj.baca_data(); setiap object yang diberikan tetap harus menyediakan method tersebut.',
             ],
 
             'code' => <<<'PYTHON'
@@ -102,7 +102,7 @@ PYTHON,
 
             'output' => "simulasi\nmanual",
 
-            'tip' => 'Duck typing tidak berarti semua object otomatis bisa dipakai. Jika object tidak menyediakan method yang diminta, pemanggilannya dapat menghasilkan AttributeError. Nama method dan cara penggunaannya tetap harus konsisten.',
+            'tip' => 'Duck typing tidak mewajibkan superclass yang sama, tetapi pemanggil dan object tetap harus sepakat tentang nama serta cara penggunaan method. Tanpa baca_data(), pemanggilan dapat menghasilkan AttributeError.',
         ],
 
         // ==================================================
@@ -113,11 +113,11 @@ PYTHON,
             'title' => '5.3 Mengurangi Pemeriksaan Tipe',
 
             'paragraphs' => [
-                'Ketika jumlah jenis sensor bertambah, rangkaian if isinstance(obj, SensorPH) dan elif isinstance(obj, SensorSuhu) dapat menjadi panjang. Kode pemanggil juga harus sering diubah saat class baru ditambahkan.',
+                'Salah satu cara adalah memeriksa isinstance(item, SensorPH), isinstance(item, SensorSuhu), dan seterusnya pada setiap putaran. Setiap jenis baru menambah cabang yang perlu dirawat.',
 
-                'Jika masing-masing sensor mempunyai method baca_data(), kode utama dapat memproses seluruh sensor melalui satu loop. Implementasi baca_data() berada pada masing-masing class, bukan dipilih melalui percabangan berdasarkan tipe object.',
+                'Bandingkan dengan loop kedua pada contoh: setiap class menyediakan baca_data(), sehingga kode utama cukup memanggil item.baca_data() tanpa memilih implementasi berdasarkan tipe.',
 
-                'Pendekatan ini membantu membuat program lebih mudah dikembangkan. Pemeriksaan tipe masih mungkin digunakan ketika benar-benar diperlukan, tetapi tidak harus dipakai hanya untuk memilih method yang sebenarnya sudah dimiliki tiap object.',
+                'Pemanggilan seragam cocok ketika semua object memang menyediakan perilaku yang sama. isinstance() tetap berguna jika tindakan yang diperlukan benar-benar berbeda berdasarkan tipe, tetapi tidak perlu dipakai hanya untuk memilih method yang sudah dimiliki object.',
             ],
 
             'code' => <<<'PYTHON'
@@ -139,13 +139,32 @@ sensor = [
     SensorTinggiAir()
 ]
 
+print("Dengan pemeriksaan isinstance():")
+for item in sensor:
+    if isinstance(item, SensorPH):
+        print(item.baca_data())
+    elif isinstance(item, SensorSuhu):
+        print(item.baca_data())
+    elif isinstance(item, SensorTinggiAir):
+        print(item.baca_data())
+
+print("Dengan pemanggilan method seragam:")
 for item in sensor:
     print(item.baca_data())
 PYTHON,
 
-            'output' => "pH: 7.1\nSuhu: 29.5\nTinggi air: 128",
+            'output' => <<<'OUTPUT'
+Dengan pemeriksaan isinstance():
+pH: 7.1
+Suhu: 29.5
+Tinggi air: 128
+Dengan pemanggilan method seragam:
+pH: 7.1
+Suhu: 29.5
+Tinggi air: 128
+OUTPUT,
 
-            'tip' => 'Nilai pH, suhu, dan tinggi air pada contoh merupakan data latihan Python, bukan data pengukuran atau batas ilmiah kondisi lingkungan.',
+            'tip' => 'Kesalahan umum: lupa memastikan setiap class menyediakan method dengan nama yang sama sebelum memakai loop seragam. Nilai pH, suhu, dan tinggi air pada contoh merupakan data latihan, bukan data pengukuran atau batas ilmiah lingkungan.',
         ],
 
         // ==================================================
@@ -160,6 +179,8 @@ PYTHON,
                 'Lengkapi method status() pada SensorPH dan SensorSuhu agar masing-masing mengembalikan teks yang berbeda. Setelah itu, buat class ketiga SensorTinggiAir yang juga memiliki method status().',
 
                 'Simpan ketiga object ke dalam list sensor dan gunakan loop for untuk memanggil item.status() tanpa memeriksa tipe object. Selanjutnya tambahkan class keempat, SensorKekeruhan, dengan method status() serta masukkan object-nya ke list yang sama.',
+
+                'Contoh teori memakai nama baca_data() untuk menekankan tindakan membaca hasil sensor. Live Coding memakai status() karena itulah antarmuka yang diperiksa checker latihan; keempat jenis sensor harus menyediakan implementasi status() yang berbeda. Nama method dapat berbeda antartugas, tetapi pola polimorfismenya sama: satu loop memanggil method seragam pada object berbeda.',
 
                 'Nama SensorTinggiAir dan SensorKekeruhan dipilih sebagai contoh pengembangan latihan. Klik Run Code untuk mengamati output, kemudian Submit untuk memeriksa penerapan polimorfisme.',
             ],
@@ -496,13 +517,13 @@ PYTHON,
     // RANGKUMAN
     // ======================================================
     'summary' => [
-        'Polimorfisme memungkinkan pemanggilan method yang sama memberikan perilaku sesuai object yang digunakan.',
+        'Polimorfisme memungkinkan object berbeda diproses melalui antarmuka pemanggilan method yang seragam.',
 
-        'Method overriding dapat membentuk polimorfisme pada hierarki inheritance.',
+        'Pada inheritance, subclass meng-override method induk agar pemanggilan yang sama menghasilkan perilaku khusus.',
 
-        'Duck typing menekankan method atau atribut yang disediakan object, tidak hanya tipe eksplisitnya.',
+        'Duck typing tidak mensyaratkan superclass yang sama, tetapi object harus menyediakan method yang dibutuhkan.',
 
-        'Polimorfisme mengurangi ketergantungan kode pemanggil terhadap class konkret dan pemeriksaan tipe yang tidak diperlukan.',
+        'Loop dengan pemanggilan method seragam mengurangi pemeriksaan tipe yang tidak diperlukan; isinstance() tetap dapat digunakan jika logika memang bergantung pada tipe.',
     ],
 
     // ======================================================

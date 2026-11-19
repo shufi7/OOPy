@@ -3,7 +3,7 @@
 
 return [
 
-    'description' => 'Menyatakan kontrak perilaku minimum ketika desain memerlukannya.',
+    'description' => 'Pelajari cara ABC dan @abstractmethod menyatakan kontrak perilaku minimum bagi keluarga class, serta kapan duck typing sudah cukup.',
 
     // ==============================================
     // TUJUAN PEMBELAJARAN
@@ -173,13 +173,12 @@ PYTHON,
             'title' => '6.3 Kapan ABC Digunakan?',
 
             'paragraphs' => [
-                'Python tetap dapat menjalankan polimorfisme melalui duck typing tanpa abstract base class. Karena itu, ABC tidak wajib digunakan pada semua desain class.',
+                'Python dapat menjalankan polimorfisme melalui duck typing tanpa abstract base class. Karena itu, ABC bukan syarat untuk setiap penggunaan method seragam.',
 
-                'ABC berguna ketika kontrak eksplisit membuat desain lebih jelas. Misalnya, ada banyak subclass sensor yang semuanya harus menjamin ketersediaan method baca(). Jika implementasi abstract method belum dilengkapi, Python dapat menolak pembuatan object subclass tersebut.',
+                'Pilih ABC ketika beberapa subclass merupakan satu keluarga class dan semuanya wajib menyediakan perilaku yang sama. Kontrak eksplisit membantu pembaca memahami kewajiban itu, dan Python dapat menolak instansiasi subclass yang belum mengimplementasikan abstract method.',
 
-                'Gunakan ABC saat kontrak perilaku benar-benar dibutuhkan. Jangan menambah abstraksi hanya supaya hierarki class terlihat lebih formal.',
-                'ABC bermanfaat ketika beberapa subclass harus menyediakan method yang sama, kontrak perlu dinyatakan dengan jelas, implementasi yang belum lengkap perlu terdeteksi saat instansiasi, dan keluarga class membutuhkan struktur yang lebih terarah.',
-                'ABC tidak diperlukan ketika duck typing sudah cukup atau class sederhana tidak membutuhkan kontrak abstrak. Menambahkan abstract class tanpa kebutuhan dapat membuat rancangan lebih rumit.',
+                'Duck typing biasanya cukup ketika pemanggil hanya membutuhkan method tertentu dan object tidak perlu menjadi bagian dari keluarga class yang dikendalikan bersama. Hindari menambah ABC jika kontrak eksplisit tidak memberi manfaat yang jelas.',
+
                 'Contoh berikut meneruskan duck typing dari BAB 5. Dua class biasa menyediakan baca(), sehingga satu loop dapat memproses keduanya tanpa ABC atau superclass bersama.',
             ],
 
@@ -224,7 +223,7 @@ PYTHON,
                 ],
             ],
 
-            'tip' => 'Jika hanya membutuhkan object berbeda yang sama-sama memiliki method tertentu, duck typing dari Bab 5 mungkin sudah cukup. Gunakan ABC ketika ingin menyatakan dan menegakkan kewajiban method pada subclass.',
+            'tip' => 'Pertanyaan praktis: apakah desain membutuhkan keluarga subclass dengan kewajiban method yang eksplisit? Jika ya, pertimbangkan ABC. Jika pemanggil hanya perlu memanggil method yang tersedia pada object, duck typing dapat lebih sederhana.',
         ],
 
         // ==========================================

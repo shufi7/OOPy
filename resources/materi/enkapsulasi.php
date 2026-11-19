@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'description' => 'Pelajari cara menggabungkan data dan perilaku dalam class serta menyediakan interface yang jelas. Gunakan SensorAir untuk berlatih menjaga konsistensi data pemantauan lahan basah Kalimantan Selatan.',
+    'description' => 'Lanjutkan dari object SensorAir pada BAB 2: sediakan interface untuk membaca dan mengubah data, lalu gunakan validasi agar setiap perubahan tetap mengikuti aturan class.',
     'objectives' => [
-        'Menjelaskan konsep enkapsulasi dalam pemrograman berorientasi objek.',
-        'Membedakan public attribute, konvensi non-public menggunakan underscore, dan name mangling pada Python.',
-        'Menggunakan getter dan setter untuk mengontrol pembacaan dan perubahan data object.',
-        'Menggunakan @property untuk membuat interface atribut yang terkontrol.',
-        'Menerapkan enkapsulasi pada class sederhana dalam konteks pemantauan lahan basah.',
+        'Menjelaskan enkapsulasi sebagai pengelompokan data dan perilaku sekaligus penyediaan interface serta aturan perubahan data.',
+        'Membedakan atribut public, konvensi non-public dengan satu underscore, dan name mangling dengan dua underscore.',
+        'Menggunakan getter, setter, dan @property untuk membaca serta mengubah data melalui aturan class.',
+        'Memvalidasi nilai sebelum disimpan dan menangani ValueError tanpa merusak nilai valid sebelumnya.',
+        'Menerapkan enkapsulasi pada class SensorAir dalam konteks pemantauan lahan basah.',
     ],
     'sections' => [
         [
@@ -49,6 +49,10 @@ print(sensor.lokasi)
 sensor.lokasi = "Rawa Bangkau"
 print(sensor.lokasi)
 PYTHON,
+            'output' => <<<'OUTPUT'
+Sungai Barito
+Rawa Bangkau
+OUTPUT,
             'tip' => 'print(sensor.lokasi) pertama menampilkan Sungai Barito. Setelah assignment, pembacaan berikutnya menampilkan Rawa Bangkau. Atribut public dapat menjadi bagian dari interface object.',
         ],
         [
@@ -67,6 +71,7 @@ class SensorAir:
 sensor = SensorAir("Sungai Barito")
 print(sensor._lokasi)  # Tetap bisa diakses, tetapi dianggap internal.
 PYTHON,
+            'output' => 'Sungai Barito',
             'tip' => 'Kode tetap menampilkan Sungai Barito. Mengakses _lokasi secara langsung membuat pemanggil bergantung pada detail internal yang dapat berubah.',
         ],
         [
@@ -87,6 +92,7 @@ sensor = SensorAir(85)
 # Demonstrasi name mangling, bukan pola akses yang dianjurkan:
 print(sensor._SensorAir__tinggi_air)
 PYTHON,
+            'output' => '85',
             'tip' => 'Contoh menampilkan 85 melalui nama hasil mangling. sensor.__tinggi_air tidak merujuk langsung ke atribut internal tersebut; jangan menggunakan nama hasil mangling sebagai interface sehari-hari.',
         ],
         [
@@ -114,6 +120,10 @@ print(sensor.get_tinggi_air())
 sensor.set_tinggi_air(90)
 print(sensor.get_tinggi_air())
 PYTHON,
+            'output' => <<<'OUTPUT'
+85
+90
+OUTPUT,
             'tip' => 'Output berurutan adalah 85 dan 90. __init__ memanggil setter agar nilai awal juga diperiksa. Python menyediakan pendekatan yang lebih natural melalui @property, dengan syntax penggunaan seperti atribut.',
         ],
         [
@@ -145,34 +155,65 @@ print(sensor.tinggi_air)
 sensor.tinggi_air = 90
 print(sensor.tinggi_air)
 PYTHON,
+            'output' => <<<'OUTPUT'
+85
+90
+OUTPUT,
             'tip' => 'Output adalah 85 lalu 90. Simpan nilai ke self.__tinggi_air di dalam setter; menulis self.tinggi_air = nilai di dalam setter akan memanggil setter itu sendiri berulang kali.',
         ],
         [
             'id' => 'bedah-kode',
             'title' => 'Bedah Kode SensorAir',
             'paragraphs' => [
-                'class SensorAir: mendefinisikan rancangan object sensor beserta data dan aturan penggunaannya.',
-                '__init__(self, lokasi, tinggi_air) menginisialisasi object. self.lokasi menyimpan lokasi sebagai public attribute. self.tinggi_air = tinggi_air meneruskan nilai awal ke setter.',
-                'self.__tinggi_air adalah tempat penyimpanan internal yang mengalami name mangling. Nilainya disimpan oleh setter setelah pemeriksaan berhasil.',
-                '@property menghubungkan method tinggi_air dengan pembacaan property. Getter tinggi_air mengembalikan nilai internal melalui return.',
-                '@tinggi_air.setter menghubungkan method dengan penulisan property. Parameter nilai menerima nilai baru ketika pengguna melakukan assignment.',
-                'if nilai < 0: memeriksa aturan latihan. raise ValueError memberi pesan kesalahan sebelum assignment internal, sehingga nilai valid sebelumnya tidak berubah.',
-                'SensorAir("Rawa Bangkau", 85) membuat object dengan nilai awal 85. print(sensor.tinggi_air) membaca property, sedangkan sensor.tinggi_air = 90 meminta perubahan melalui setter.',
-                'Contoh berikut memakai try dan except ValueError untuk menangani penolakan. Program menampilkan pesan kesalahan, lalu tetap dapat membaca nilai sebelumnya, yaitu 90.',
+                'Contoh ini berdiri sendiri: class SensorAir, property, object, dan seluruh percobaan perubahan nilai didefinisikan dalam satu potongan kode.',
+                '__init__(self, lokasi, tinggi_air) menginisialisasi object. Penugasan self.tinggi_air = tinggi_air melewati setter sehingga aturan validasi berlaku sejak nilai awal diberikan.',
+                '@property membuat tinggi_air dapat dibaca seperti atribut; getter mengembalikan nilai yang disimpan secara internal pada self.__tinggi_air.',
+                '@tinggi_air.setter menerima nilai baru ketika ada assignment. Nilai diperiksa lebih dahulu; jika negatif, raise ValueError menghentikan setter sebelum nilai internal diubah.',
+                'Object dibuat dengan nilai awal 85, lalu diubah menjadi 90. Percobaan mengubahnya menjadi -10 ditangani menggunakan try/except ValueError, sehingga program dapat berlanjut dan menunjukkan bahwa nilai tetap 90.',
+                'ValueError cocok untuk memberi tahu pemanggil bahwa nilai bertipe benar tetapi melanggar aturan nilai yang diterima class. Pemanggil memilih cara menangani kesalahan; class menjaga agar data tidak berubah ketika validasi gagal.',
             ],
             'code' => <<<'PYTHON'
-# Lanjutkan dari class SensorAir pada contoh property.
+class SensorAir:
+    def __init__(self, lokasi, tinggi_air):
+        self.lokasi = lokasi
+        self.tinggi_air = tinggi_air
+
+    @property
+    def tinggi_air(self):
+        return self.__tinggi_air
+
+    @tinggi_air.setter
+    def tinggi_air(self, nilai):
+        if nilai < 0:
+            raise ValueError("Tinggi air tidak boleh negatif.")
+        self.__tinggi_air = nilai
+
+
 sensor = SensorAir("Rawa Bangkau", 85)
+print(sensor.tinggi_air)
+
 sensor.tinggi_air = 90
+print(sensor.tinggi_air)
 
 try:
     sensor.tinggi_air = -10
 except ValueError as error:
     print(error)
 
-print(sensor.tinggi_air)  # Tetap 90.
+print(sensor.tinggi_air)
 PYTHON,
-            'tip' => 'Validasi berada di setter, sedangkan pemanggil memutuskan cara menangani ValueError. Interface yang sama tetap digunakan saat penyimpanan internal class berubah.',
+            'output' => <<<'OUTPUT'
+85
+90
+Tinggi air tidak boleh negatif.
+90
+OUTPUT,
+            'tip' => 'Kesalahan umum: menyimpan nilai sebelum memeriksanya atau memanggil self.tinggi_air = nilai di dalam setter, yang akan memanggil setter berulang kali. Periksa dahulu, lalu simpan ke atribut internal. _atribut dan __atribut mengatur konvensi atau nama, bukan keamanan absolut.',
+            'practice' => [
+                'Tambahkan validasi agar tinggi air harus berupa angka dan tidak negatif. Pastikan nilai lama tidak berubah jika perubahan ditolak.',
+                'Tulis ulang contoh dengan getter dan setter eksplisit, lalu bandingkan cara memanggilnya dengan interface @property.',
+                'Untuk atribut lokasi yang tidak mempunyai aturan khusus, jelaskan mengapa atribut public mungkin sudah cukup.',
+            ],
         ],
         [
             'id' => 'aktivitas-enkapsulasi',
@@ -286,13 +327,13 @@ PYTHON,
         ],
     ],
     'summary' => [
-        'Enkapsulasi menggabungkan data dan perilaku dalam class serta menyediakan interface yang jelas untuk berinteraksi dengan object.',
+        'Enkapsulasi menggabungkan data dan perilaku dalam class serta menyediakan interface dan aturan untuk menjaga konsistensi perubahan data.',
         'Public attribute seperti lokasi dapat dibaca dan diubah langsung; Python tidak memakai keyword public.',
         'Satu underscore menandai konvensi non-public atau penggunaan internal, bukan larangan akses dari luar.',
         'Dua underscore memicu name mangling untuk menghindari konflik nama dan penggunaan langsung secara tidak sengaja, bukan keamanan absolut.',
-        'Getter membaca nilai, sedangkan setter mengubah nilai melalui aturan yang ditentukan class.',
-        '@property dan @tinggi_air.setter menyediakan interface seperti atribut yang menjalankan logika melalui method.',
-        'Validasi sebelum penyimpanan menjaga konsistensi data; interface yang jelas mengurangi ketergantungan pada implementasi internal dan membantu pemeliharaan class.',
+        'Getter membaca nilai dan setter mengubahnya melalui aturan class; @property membuat pemanggilan getter dan setter tampak seperti akses atribut biasa.',
+        'Validasi dilakukan sebelum nilai disimpan. ValueError dapat menolak nilai yang melanggar aturan, sementara nilai sebelumnya tetap terjaga.',
+        'Interface yang jelas mengurangi ketergantungan pada implementasi internal dan membantu pemeliharaan class.',
     ],
     'reflection' => [
         'Mengapa mengubah atribut object secara langsung tidak selalu menjadi pilihan terbaik? Jelaskan dengan contoh SensorAir.',
