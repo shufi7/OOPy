@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { randomUUID, randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { basename, join } from 'node:path';
+import { readFile } from 'node:fs/promises';
 
 // Keys are read by the local test runner, never from HTTP/page JSON.
 export const quizFixtures = JSON.parse(execFileSync('php', ['-d', 'display_errors=stderr', '-r', `
@@ -14,6 +15,20 @@ echo json_encode($quizzes, JSON_THROW_ON_ERROR);
 `], { cwd: fileURLToPath(new URL('../../', import.meta.url)), encoding: 'utf8' }));
 
 export async function cacheAssets(context) {
+    if (process.env.OOPY_ASSET_MANIFEST) {
+        const assets = JSON.parse(await readFile(process.env.OOPY_ASSET_MANIFEST, 'utf8'));
+        await context.route('https://**/*', route => {
+            const url = route.request().url();
+            if (!assets[url]) return route.continue();
+            const pathname = new URL(url).pathname;
+            const contentType = pathname.endsWith('.css') || url.includes('fonts.googleapis.com') ? 'text/css'
+                : pathname.endsWith('.js') ? 'application/javascript'
+                : pathname.endsWith('.wasm') ? 'application/wasm'
+                : pathname.endsWith('.json') ? 'application/json' : 'application/octet-stream';
+            return route.fulfill({ path: assets[url], contentType });
+        });
+        return;
+    }
     const directory = process.env.OOPY_ASSET_CACHE;
     if (!directory) return;
     await context.route('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css', route => route.fulfill({ path: join(directory, 'bootstrap.min.css'), contentType: 'text/css' }));

@@ -1,0 +1,4 @@
+PASS latihan-1 390px: full-page screenshots pixel-identical with original and new CSS
+PASS latihan-1 1440px: full-page screenshots pixel-identical with original and new CSS
+PASS latihan-2 390px: full-page screenshots pixel-identical with original and new CSS
+PASS latihan-2 1440px: full-page screenshots pixel-identical with original and new CSS

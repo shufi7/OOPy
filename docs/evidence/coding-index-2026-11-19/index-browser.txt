@@ -1,0 +1,10 @@
+PASS contrast: minimum 5.10:1 for headings, body, labels and normal buttons
+MISSING ASSET: public/images/coding/latihan-1-sensorair.svg; no broken image rendered
+MISSING ASSET: public/images/coding/latihan-2-ekosistem-rawa.svg; no broken image rendered
+PASS hover contrast: minimum 5.10:1
+PASS active contrast: minimum 5.10:1
+PASS guest: two exercises, links activated by Enter, visible focus, mobile navbar, six widths, aligned buttons, reduced motion, 200% text
+PASS unstarted contrast: minimum 5.10:1
+PASS attempted contrast: minimum 5.10:1
+PASS completed contrast: minimum 5.10:1
+PASS authenticated: all three statuses and action labels from isolated backend fixtures, no guest banner, six widths per state

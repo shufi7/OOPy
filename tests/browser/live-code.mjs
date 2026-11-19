@@ -2,10 +2,12 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { exercises } from './chapters.mjs';
+import { cacheAssets } from './quiz-helpers.mjs';
 
 const base = process.env.OOPY_BASE_URL || 'http://127.0.0.1:8017';
 const browser = await chromium.launch({ channel: process.env.OOPY_BROWSER || 'msedge', headless: true });
 const page = await browser.newPage();
+await cacheAssets(page.context());
 const errors = [];
 page.on('pageerror', (error) => { errors.push(error.message); console.error(error.stack); });
 page.on('dialog', (dialog) => dialog.accept());
@@ -151,6 +153,7 @@ try {
 
     // Real CDN failure and recovery; the editor still renders when Python is offline.
     const failed = await browser.newPage();
+    await cacheAssets(failed.context());
     await failed.route('**/pyodide.js', (route) => route.abort());
     await failed.goto(`${base}/editor`, { waitUntil: 'domcontentloaded' });
     await failed.locator(`#${a} [data-role="retry-runtime"]`).waitFor({ state: 'visible' });
@@ -159,6 +162,7 @@ try {
     await failed.waitForFunction(() => !document.querySelector('[data-role="run-code"]').disabled, null, { timeout: 110000 });
     await failed.close();
     const noMonaco = await browser.newPage();
+    await cacheAssets(noMonaco.context());
     await noMonaco.route('**/vs/loader.js', (route) => route.abort());
     await noMonaco.goto(`${base}/editor`, { waitUntil: 'domcontentloaded' });
     await noMonaco.waitForFunction(() => document.querySelector('[data-role="editor-loading"]').textContent.includes('tidak dapat diunduh'));

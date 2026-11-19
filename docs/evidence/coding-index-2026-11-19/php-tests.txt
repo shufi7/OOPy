@@ -1,0 +1,198 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   PASS  Tests\Feature\CodingMultifileTest
+  ✓ full project snapshot is preserved and sent with session identity                                            1.69s  
+  ✓ missing extra traversal absolute empty and oversized files are rejected                                      0.48s  
+  ✓ identity and browser grades are rejected for multifile                                                       0.34s  
+  ✓ failed attempt is shown as not passed on coding pages                                                        0.76s  
+  ✓ corrupt or old rubric cannot publish a pass                                                                  0.46s  
+  ✓ legacy pass is retained in history but not active progress                                                   0.50s  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   PASS  Tests\Feature\CodingTest
+  ✓ public catalog navbar and both exercises reuse live code                                                     1.12s  
+  ✓ blank editor contract and instructions match official requirements                                           0.49s  
+  ✓ guests cannot submit and reading never creates a submission                                                  0.47s  
+  ✓ official grading saves snapshot and session owner only                                                       0.49s  
+  ✓ failed submission is not complete and second exercise needs no unlock                                        0.36s  
+  ✓ source whitespace is preserved in grader request and database snapshot                                       0.28s  
+  ✓ exercise two can be completed first and partial checks do not pass                                           0.36s  
+  ✓ pass remains after failed retry refresh logout login and is private                                          0.46s  
+  ✓ forged identity and grading fields are rejected                                                              0.24s  
+  ✓ file validation rejects paths extra files empty and oversized code                                           0.24s  
+  ✓ runtime error and timeout reports never pass                                                                 0.30s  
+  ✓ missing unavailable or malformed grader never saves a pass                                                   0.56s  
+  ✓ submit is rate limited and csrf protected                                                                    0.44s  
+  ✓ presentation is optional but each core competency is required                                                0.42s  
+  ✓ incomplete duplicate downgraded and old rubrics are rejected                                                 0.42s  
+  ✓ idempotent seed preserves existing exercises and submissions                                                 0.64s  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   PASS  Tests\Feature\LiveCodeTest
+  ✓ demo renders three independent components and loads assets once                                              0.05s  
+  ✓ component supports custom entry nested paths and more than four files                                        0.03s  
+  ✓ config is embedded without allowing script injection                                                         0.05s  
+  ✓ missing entry is rejected with a clear configuration error                                                   0.04s  
+  ✓ workspace traversal is rejected                                                                              0.06s  
+  ✓ chapter two renders incomplete exercises with assets loaded once                                             0.12s  
+  ✓ default heading level is preserved for the editor demo                                                       0.05s  
+  ✓ chapter one uses one incomplete status air exercise                                                          0.05s  
+  ✓ chapter three reuses live code with an incomplete starter and checker                                        0.07s  
+  ✓ chapters four to six embed their registered exercise contracts                                               0.17s  
+  ✓ material activity headers render one task before the editor                                                  0.45s  
+  ✓ instruction tokens are escaped without rendering html                                                        0.07s  
+  ✓ legacy config without description still renders                                                              0.06s  
+
+  Tests:    35 passed (539 assertions)
+  Duration: 13.33s
+
