@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\MidtransPaymentService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -31,8 +32,19 @@ class Certificate extends Model
 
     public function isDownloadable(): bool
     {
-        return $this->status === 'active' && $this->order?->status === 'simulation_completed'
-            && $this->order->mode === 'simulation' && $this->order->user_id === $this->user_id
-            && $this->order->program_key === $this->program_key;
+        $order = $this->order;
+        if ($this->status !== 'active' || ! $order || $order->user_id !== $this->user_id || $order->program_key !== $this->program_key) {
+            return false;
+        }
+
+        return ($order->mode === 'simulation' && $order->status === 'simulation_completed')
+            || ($order->mode === 'sandbox' && $order->provider === 'midtrans' && $order->status === 'paid'
+                && $this->program_key === MidtransPaymentService::PROGRAM
+                && $order->amount === 24999 && $order->currency === 'IDR' && $order->verified_at !== null && $order->paid_at !== null);
+    }
+
+    public function demoLabel(): string
+    {
+        return $this->order?->mode === 'sandbox' ? 'SANDBOX / DEMO' : 'SIMULASI / DEMO';
     }
 }

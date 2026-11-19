@@ -97,11 +97,11 @@ Baseline cleanup 5 November 2026: PHP **193 lulus, 2 gagal**, JavaScript **21 lu
 | `vendor/`, `node_modules/` | Dependensi lokal yang diabaikan Git |
 | `DESIGN.md` | Pedoman desain proyek |
 
-## Sertifikasi simulasi
+## Sertifikasi dan Midtrans Sandbox
 
-Tombol **Ambil Sertifikat** di bagian paling bawah Dashboard membuka `/sertifikasi`. Ketentuan akademik, checkout **simulasi Rp24.999**, pratinjau, dan download berada di halaman yang sama. Backend memeriksa enam BAB, keenam kuis, kedua latihan Coding aktif, dan Evaluasi Akhir resmi sebelum menerbitkan satu sertifikat PDF berlabel SIMULASI / DEMO, lengkap dengan nomor unik dan QR verifikasi. Halaman Sertifikat Saya terpisah dihapus; URL lamanya mengarah ke halaman sertifikasi.
+Tombol **Ambil Sertifikat** di bagian paling bawah Dashboard membuka `/sertifikasi`. Ketentuan akademik, pembayaran **Midtrans Snap Sandbox Rp24.999**, pratinjau, dan download berada di halaman yang sama. Backend memeriksa enam BAB, keenam kuis, kedua latihan Coding aktif, dan Evaluasi Akhir resmi. Satu PDF **SANDBOX / DEMO** diterbitkan hanya setelah status pembayaran terverifikasi dari server Midtrans. Sertifikat simulasi lama tetap dapat diunduh dan tidak dianggap sebagai pembayaran Sandbox. Halaman Sertifikat Saya terpisah dihapus; URL lamanya mengarah ke halaman sertifikasi.
 
-Fitur ini **tidak memproses pembayaran nyata**. Pada instalasi lain, migration baru perlu ditinjau dan dijalankan pada database lokal tujuan sebelum digunakan. Migration khusus sertifikasi sudah diterapkan pada database development workspace ini saat memperbaiki error tabel belum tersedia, tanpa mengubah data pembelajaran existing. Instal dependensi Composer termasuk ekstensi GD. Arsitektur, route, panduan mencoba, hasil tes aktual, dan batasan ada di [panduan sertifikasi](docs/certification-system.md).
+Fitur ini **tidak memproses pembayaran uang sungguhan** dan menolak mode Production. Migration pembayaran sudah diterapkan pada database development lokal setelah persetujuan pengguna pada 20 November 2026; pemeriksaan 44 tabel memastikan data lama tidak berubah. [Pratinjau SQL](docs/midtrans-sandbox-migration.sql) tersedia untuk peninjauan instalasi lain. Validasi Client Key tidak mewajibkan prefix tertentu; Server Key dan endpoint tetap dibatasi ke Sandbox. Webhook memakai Signature Secret Key terpisah sesuai dokumentasi terbaru. Instal dependensi Composer termasuk ekstensi GD. Konfigurasi, aktivasi kanal QRIS, panduan localhost/webhook HTTPS, hasil tes dan batasan tersedia dalam [panduan Midtrans Sandbox](docs/midtrans-sandbox-integration.md); [panduan sertifikasi awal](docs/certification-system.md) menyimpan riwayat simulasi.
 
 ## Dokumentasi
 

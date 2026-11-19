@@ -6,20 +6,28 @@ use App\Models\Certificate;
 use App\Services\CertificateEligibilityService;
 use App\Services\CertificateIssuanceService;
 use App\Services\CertificatePdfService;
+use App\Services\MidtransGateway;
+use App\Services\MidtransPaymentService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class CertificationController extends Controller
 {
-    public function index(Request $request, CertificateEligibilityService $eligibility, CertificatePdfService $pdf)
+    public function index(Request $request, CertificateEligibilityService $eligibility, CertificatePdfService $pdf, MidtransPaymentService $payments, MidtransGateway $gateway)
     {
-        $certificate = $request->user() ? $this->owned($request)->with('order')
-            ->where('program_key', CertificateIssuanceService::PROGRAM)->first() : null;
+        $certificates = $request->user() ? $this->owned($request)->with('order')->get() : collect();
+        $sandboxCertificate = $certificates->firstWhere('program_key', MidtransPaymentService::PROGRAM);
+        $legacyCertificate = $certificates->firstWhere('program_key', CertificateIssuanceService::PROGRAM);
+        $certificate = $sandboxCertificate ?? $legacyCertificate;
+        $attempt = $request->user() ? $payments->latest($request->user()) : null;
 
         return view('certification.index', [
             'eligibility' => $request->user() ? $eligibility->forUser($request->user()) : null,
             'certificate' => $certificate,
             'qr' => $certificate ? $pdf->qrDataUri($certificate) : null,
+            'sandboxCertificate' => $sandboxCertificate, 'legacyCertificate' => $legacyCertificate,
+            'payment' => $attempt ? $payments->state($attempt) : null,
+            'paymentAvailable' => $payments->installed() && $gateway->configured(),
+            'sandboxMode' => true,
         ]);
     }
 
@@ -35,18 +43,9 @@ class CertificationController extends Controller
         return redirect()->to(route('certification.index').'#penerbitan');
     }
 
-    public function confirm(Request $request, CertificateIssuanceService $issuance)
+    public function confirm(Request $request)
     {
-        $data = $request->validate([
-            'payment_method' => ['required', Rule::in(array_keys(CertificateIssuanceService::METHODS))],
-            'simulation_confirmed' => ['required', 'accepted'],
-            'amount' => ['prohibited'], 'user_id' => ['prohibited'], 'status' => ['prohibited'],
-            'payment_status' => ['prohibited'], 'mode' => ['prohibited'], 'program_key' => ['prohibited'],
-        ]);
-        $issuance->issue($request->user(), $data['payment_method']);
-
-        return redirect()->to(route('certification.index').'#sertifikat')
-            ->with('status', 'Simulasi Selesai. Sertifikat simulasi Anda siap diunduh. Tidak ada pembayaran nyata.');
+        abort(410, 'Penerbitan simulasi langsung sudah ditutup. Gunakan pembayaran Midtrans Sandbox pada halaman sertifikasi.');
     }
 
     public function certificates()
@@ -76,7 +75,7 @@ class CertificationController extends Controller
     {
         $certificate = Certificate::with('order')->where('public_id', $publicId)->first();
 
-        return response()->view('certification.verify', ['certificate' => $certificate], $certificate ? 200 : 404)
+        return response()->view('certification.verify', ['certificate' => $certificate, 'sandboxMode' => $certificate?->order?->mode === 'sandbox'], $certificate ? 200 : 404)
             ->header('Cache-Control', 'no-store, public')->header('X-Robots-Tag', 'noindex, nofollow')
             ->header('Referrer-Policy', 'no-referrer');
     }

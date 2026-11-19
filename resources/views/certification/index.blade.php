@@ -4,7 +4,7 @@
 @section('certification-content')
 @php
     $ready = $certificate?->isDownloadable() ?? false;
-    $canIssue = $eligibility && $eligibility['eligible'] && ! $certificate;
+    $canIssue = $eligibility && $eligibility['eligible'] && ! $sandboxCertificate;
     $chapters = collect($eligibility['chapters'] ?? []);
     $coding = collect($eligibility['coding'] ?? []);
     $groups = $eligibility ? [
@@ -18,7 +18,7 @@
     <a class="certification-back" href="{{ auth()->check() ? route('dashboard') : route('home') }}">{{ auth()->check() ? 'Kembali ke Dashboard' : 'Kembali ke Beranda' }}</a>
     <h1>Sertifikasi OOPy</h1>
     <p>Sertifikat penyelesaian untuk pembelajaran <strong>Pemrograman Berorientasi Objek dengan Python.</strong></p>
-    <p class="certification-header-note">Periksa ketentuan, selesaikan simulasi penerbitan, lalu unduh PDF Anda di halaman ini. Semua kegiatan belajar tetap gratis.</p>
+    <p class="certification-header-note">Periksa ketentuan, bayar melalui Midtrans Sandbox, lalu unduh PDF Anda di halaman ini. Semua kegiatan belajar tetap gratis.</p>
 </header>
 
 <div class="certification-workspace">
@@ -61,9 +61,9 @@
                 <div><p class="certification-section-label">{{ $certificate ? 'Dokumen Anda' : 'Pratinjau dokumen' }}</p><h2 id="document-title">{{ $certificate ? 'Sertifikat penyelesaian Anda' : 'Contoh sertifikat OOPy' }}</h2></div>
             </div>
             @if ($certificate)
-                <p class="certification-section-note">{{ $ready ? 'Diterbitkan untuk akun Anda. Unduh ulang kapan saja dari halaman ini.' : ($certificate->status === 'revoked' ? 'Sertifikat ini dibatalkan dan tidak dapat diunduh.' : 'Sertifikat ini tidak aktif dan belum dapat diunduh.') }}</p>
+                <p class="certification-section-note">{{ $ready ? 'Diterbitkan untuk akun Anda. Unduh ulang kapan saja dari halaman ini.' : ($certificate->status === 'revoked' ? 'Dibatalkan. Sertifikat ini tidak dapat diunduh.' : 'Sertifikat ini tidak aktif dan belum dapat diunduh.') }}</p>
             @else
-                <p class="certification-section-note">Hanya contoh tampilan. Sertifikat dengan nama Anda tersedia setelah semua syarat dan simulasi penerbitan selesai.</p>
+                <p class="certification-section-note">Hanya contoh tampilan. Sertifikat dengan nama Anda tersedia setelah semua syarat terpenuhi dan pembayaran Sandbox terverifikasi.</p>
             @endif
             @include('certification.partials.preview')
             @if ($certificate)
@@ -73,35 +73,47 @@
                 </div>
                 <p role="status" data-copy-status class="certification-copy-status"></p>
             @endif
+            @if ($legacyCertificate && $legacyCertificate->isDownloadable())
+                <p class="certification-action-note">Sertifikat simulasi sebelumnya tetap tersedia, terpisah dari transaksi Midtrans Sandbox.</p>
+                <a class="certification-next-step" href="{{ route('certificates.download', $legacyCertificate->public_id) }}" download>Unduh sertifikat simulasi lama</a>
+            @endif
         </section>
     </div>
 
     <aside id="penerbitan" class="certification-issuance" aria-labelledby="issuance-title">
-        @if ($certificate)
+        @if ($sandboxCertificate)
             <p class="certification-section-label">Sertifikat terbit</p>
             <h2 id="issuance-title">{{ $ready ? 'Siap diunduh' : 'Sertifikat tidak aktif' }}</h2>
-            <p class="certification-state {{ $ready ? 'is-complete' : 'is-unavailable' }}">{{ $certificate->status === 'revoked' ? 'Dibatalkan' : ($ready ? 'Aktif · SIMULASI / DEMO' : 'Tidak aktif') }}</p>
+            <p class="certification-state {{ $ready ? 'is-complete' : 'is-unavailable' }}">{{ $certificate->status === 'revoked' ? 'Dibatalkan' : ($ready ? 'Aktif · SANDBOX / DEMO' : 'Tidak aktif') }}</p>
             <dl class="certification-receipt">
                 <div><dt>Nama peserta</dt><dd>{{ $certificate->participant_name }}</dd></div>
                 <div><dt>Nomor sertifikat</dt><dd>{{ $certificate->certificate_number }}</dd></div>
                 <div><dt>Pembelajaran selesai</dt><dd>{{ $certificate->completed_at->timezone('Asia/Makassar')->locale('id')->translatedFormat('j F Y') }}</dd></div>
                 <div><dt>Diterbitkan</dt><dd>{{ $certificate->issued_at->timezone('Asia/Makassar')->locale('id')->translatedFormat('j F Y') }}</dd></div>
-                <div><dt>Transaksi</dt><dd>{{ $certificate->order->status === 'simulation_completed' ? 'Simulasi Selesai' : 'Belum Selesai' }}</dd></div>
+                <div><dt>Transaksi</dt><dd>{{ $payment['label'] ?? 'Status belum tersedia' }}</dd></div>
             </dl>
             @if ($ready)
                 <a class="certification-press" href="{{ route('certificates.download', $certificate->public_id) }}" download>Unduh Sertifikat PDF</a>
-                <p class="certification-action-note">Tidak perlu mengulang simulasi. Anda dapat mengunduh PDF ini kembali kapan saja.</p>
+                <p class="certification-action-note">Tidak perlu mengulang pembayaran Sandbox. Anda dapat mengunduh PDF ini kembali kapan saja.</p>
             @else
                 <p class="certification-action-note">Hubungi pengelola OOPy untuk informasi status sertifikat ini.</p>
+            @endif
+            @if ($paymentAvailable && $payment)
+                <div data-midtrans-payment data-status-url="{{ $payment['status_url'] }}" data-current-ready="{{ $ready ? '1' : '0' }}">
+                    <button type="button" class="certification-secondary" data-payment-check>Cek Status Pembayaran</button>
+                    <p class="certification-action-note" data-payment-feedback role="status"></p>
+                </div>
             @endif
         @else
             <p class="certification-section-label">Penerbitan opsional</p>
             <h2 id="issuance-title">Ambil sertifikat Anda</h2>
             <p class="certification-price">Rp24.999 <span>/ sertifikat</span></p>
-            <p class="certification-action-note">Satu kali untuk penerbitan. Pada tahap ini hanya simulasi, tanpa penagihan atau transfer uang.</p>
+            <p class="certification-action-note">Satu kali untuk penerbitan melalui Midtrans Sandbox. Gunakan simulator Sandbox, bukan aplikasi bank atau uang sungguhan.</p>
             <ul class="certification-benefits"><li>PDF A4 landscape dengan nama akun Anda</li><li>Nomor unik dan QR verifikasi</li><li>Unduh ulang dari halaman ini</li></ul>
-            @if ($canIssue)
+            @if ($canIssue && $paymentAvailable)
                 @include('certification.partials.payment-form')
+            @elseif ($canIssue)
+                <p class="certification-error" role="status">Pembayaran Sandbox belum tersedia. Hubungi pengelola OOPy untuk menyiapkan layanan.</p>
             @elseif ($eligibility)
                 <button class="certification-press" type="button" disabled aria-describedby="checkout-reason">Ambil Sertifikat</button>
                 <p id="checkout-reason" class="certification-action-note">Penerbitan terbuka setelah seluruh persyaratan akademik terpenuhi.</p>
@@ -116,8 +128,14 @@
 
 <section id="panduan" class="certification-guide" aria-labelledby="guide-title">
     <h2 id="guide-title">Tentang sertifikat ini</h2>
-    <details><summary>Belajar tetap gratis, sertifikat bersifat opsional</summary><p>Materi, kuis, Coding, dan Evaluasi Akhir dapat digunakan gratis. Biaya penerbitan yang tampil saat ini hanya disimulasikan. Tidak diperlukan nomor kartu, rekening, PIN, atau OTP.</p></details>
+    <details><summary>Belajar tetap gratis, sertifikat bersifat opsional</summary><p>Materi, kuis, Coding, dan Evaluasi Akhir dapat digunakan gratis. Penerbitan menggunakan Midtrans Sandbox dan tidak memproses uang sungguhan. Jangan gunakan aplikasi bank sungguhan untuk QRIS Sandbox.</p></details>
     <details><summary>Unduh ulang dan verifikasi</summary><p>Setelah diterbitkan, kembali melalui Dashboard → Ambil Sertifikat untuk melihat dan mengunduh PDF Anda. QR Code dan tautan verifikasi menampilkan nama peserta, program, nomor, tanggal, dan status sertifikat secara publik. Email dan data transaksi privat tidak ditampilkan.</p></details>
-    <p class="certification-disclaimer">Sertifikat berlabel <strong>SIMULASI / DEMO</strong> dan menyatakan penyelesaian pembelajaran OOPy. Bukan sertifikasi profesi atau akreditasi.</p>
+    <p class="certification-disclaimer">Sertifikat dari transaksi Sandbox berlabel <strong>SANDBOX / DEMO</strong>. Sertifikat simulasi lama tetap berlabel SIMULASI / DEMO. Keduanya bukan sertifikat produksi, sertifikasi profesi, atau akreditasi.</p>
 </section>
 @endsection
+
+@if ($paymentAvailable && auth()->check())
+    @push('scripts')
+        <script src="{{ \App\Services\MidtransGateway::SCRIPT_URL }}" data-client-key="{{ config('midtrans.client_key') }}" defer></script>
+    @endpush
+@endif

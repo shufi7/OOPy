@@ -1,22 +1,18 @@
-<form method="POST" action="{{ route('certification.confirm') }}" data-simulation-form novalidate>
-    @csrf
+<div data-midtrans-payment data-store-url="{{ route('midtrans.store') }}" data-status-url="{{ $payment['status_url'] ?? '' }}" data-current-ready="0">
     <div class="certification-participant"><span>Nama pada sertifikat</span><strong>{{ auth()->user()->name }}</strong><small>{{ auth()->user()->email }}</small></div>
-    <fieldset class="certification-methods"><legend>Metode simulasi</legend>
-        @foreach (\App\Services\CertificateIssuanceService::METHODS as $value => $label)
-            <label><input type="radio" name="payment_method" value="{{ $value }}" required @checked(old('payment_method', 'e_wallet') === $value)> {{ $label }}</label>
-        @endforeach
-    </fieldset>
-    <dl class="certification-totals"><div><dt>Subtotal</dt><dd>Rp24.999</dd></div><div><dt>Biaya layanan</dt><dd>Rp0</dd></div><div><dt>Total simulasi</dt><dd>Rp24.999</dd></div></dl>
-    <button type="button" class="certification-press" data-simulation-open>Ambil Sertifikat</button>
-    <p class="certification-action-note">Anda akan diminta mengonfirmasi simulasi sebelum sertifikat diterbitkan.</p>
-    <noscript><p>Aktifkan JavaScript untuk membuka dialog konfirmasi simulasi.</p></noscript>
-    <dialog class="certification-dialog" data-simulation-dialog aria-labelledby="simulation-title" aria-describedby="simulation-description">
-        <p class="certification-section-label">Konfirmasi penerbitan</p>
-        <h2 id="simulation-title">Terbitkan sertifikat simulasi?</h2>
-        <p id="simulation-description">Total Rp24.999 hanya disimulasikan. Tidak ada penagihan, pembayaran bank, atau transfer uang nyata. Anda akan mendapatkan satu sertifikat berlabel SIMULASI / DEMO.</p>
-        <p>Nama peserta: <strong>{{ auth()->user()->name }}</strong>. Nama, program, nomor, tanggal, dan status sertifikat dapat dilihat melalui tautan verifikasi publik.</p>
-        <label class="certification-consent"><input type="checkbox" name="simulation_confirmed" value="1" required> Saya memahami bahwa transaksi dan sertifikat ini adalah simulasi.</label>
-        <div class="certification-actions"><button type="button" class="certification-secondary" data-simulation-cancel autofocus>Batal</button><button type="submit" class="certification-press" data-simulation-submit>Ya, Selesaikan Simulasi</button></div>
-        <p role="status" data-simulation-status class="certification-action-note"></p>
+    <dl class="certification-totals"><div><dt>Harga sertifikat</dt><dd>Rp24.999</dd></div><div><dt>Biaya layanan OOPy</dt><dd>Rp0</dd></div><div><dt>Total Sandbox</dt><dd>Rp24.999</dd></div></dl>
+    <div class="certification-payment-state" role="status"><strong data-payment-label>{{ $payment['label'] ?? 'Belum Dibayar' }}</strong><p data-payment-feedback>{{ $payment['message'] ?? 'Sertifikat diterbitkan setelah pembayaran dikonfirmasi oleh server Midtrans Sandbox.' }}</p></div>
+    <button type="button" class="certification-press" data-payment-open>{{ in_array($payment['status'] ?? '', ['deny', 'cancel', 'expire', 'failure', 'api_error', 'expired_unselected'], true) ? 'Coba Lagi' : 'Bayar dengan QRIS' }}</button>
+    <button type="button" class="certification-secondary" data-payment-check @disabled(! $payment)>Cek Status Pembayaran</button>
+    <a class="certification-next-step" data-payment-redirect hidden target="_blank" rel="noopener noreferrer">Buka halaman pembayaran Sandbox</a>
+    <p class="certification-action-note">QRIS mengikuti ketersediaan kanal merchant. Jika tidak muncul, pengelola perlu mengaktifkan GoPay/QRIS pada Snap Sandbox. Tidak ada QR buatan OOPy.</p>
+    <noscript><p>Aktifkan JavaScript untuk membuka pembayaran Sandbox.</p></noscript>
+    <dialog class="certification-dialog" data-payment-dialog aria-labelledby="payment-title" aria-describedby="payment-description">
+        <h2 id="payment-title">Lanjut ke Midtrans Sandbox?</h2>
+        <p id="payment-description">Pesanan sertifikat Rp24.999 akan dibuka di Snap Sandbox. Tidak ada pembayaran uang sungguhan. Jangan gunakan aplikasi bank nyata; gunakan simulator Sandbox.</p>
+        <p>Nama peserta: <strong>{{ auth()->user()->name }}</strong>. Nama dan status sertifikat dapat dilihat melalui tautan verifikasi publik.</p>
+        <label class="certification-consent"><input type="checkbox" data-payment-consent> Saya memahami bahwa ini pembayaran Sandbox dan sertifikat demo.</label>
+        <div class="certification-actions"><button type="button" class="certification-secondary" data-payment-cancel autofocus>Batal</button><button type="button" class="certification-press" data-payment-confirm>Lanjut ke Sandbox</button></div>
+        <p class="certification-action-note" data-payment-dialog-message role="status"></p>
     </dialog>
-</form>
+</div>

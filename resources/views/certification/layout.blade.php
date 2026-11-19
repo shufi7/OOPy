@@ -10,10 +10,10 @@
 
 @section('content')
 <div class="certification container py-4 py-lg-5">
-    <p class="certification-mode">Mode Simulasi — Tanpa Pembayaran Nyata</p>
+    <p class="certification-mode">{{ ($sandboxMode ?? false) ? 'Mode Sandbox — Tidak ada pembayaran uang sungguhan' : 'Mode Simulasi — Tanpa Pembayaran Nyata' }}</p>
     @if ($errors->any())
         <div class="certification-error" role="alert">
-            <strong>Simulasi belum dapat diproses.</strong>
+            <strong>{{ ($sandboxMode ?? false) ? 'Pembayaran Sandbox belum dapat diproses.' : 'Simulasi belum dapat diproses.' }}</strong>
             <ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
             <a href="{{ route('certification.index') }}">Periksa persyaratan sertifikasi</a>
         </div>

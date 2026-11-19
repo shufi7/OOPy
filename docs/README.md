@@ -6,6 +6,7 @@ Petunjuk instalasi, teknologi, dan menjalankan aplikasi ada di [README proyek](.
 
 | Topik | Dokumen |
 | --- | --- |
+| Pembayaran sertifikat QRIS, Snap, webhook dan pengujian Sandbox | [Midtrans Snap Sandbox](midtrans-sandbox-integration.md) |
 | Kelayakan akademik, checkout simulasi, PDF, dan QR sertifikat | [Sistem Sertifikasi OOPy](certification-system.md) |
 | Coding, gateway privat, sandbox, dan pengujian | [Coding](coding.md) |
 | Latihan Coding 2 multi-file, versi latihan, dan QA | [Implementasi multi-file, 13 November 2026](coding-multifile-2026-11-13.md) |

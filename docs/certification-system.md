@@ -1,5 +1,7 @@
 # Sistem Sertifikasi OOPy
 
+> **Riwayat implementasi simulasi.** Pembayaran terbaru memakai Midtrans Snap Sandbox; baca [panduan integrasi Sandbox](midtrans-sandbox-integration.md) untuk konfigurasi, migration baru, route dan pengujian saat ini. POST penerbitan simulasi pada dokumen ini sudah ditutup dengan HTTP 410. Sertifikat simulasi existing tetap dipertahankan. Entry browser `tests/browser/certification.mjs` sekarang menjalankan QA alur Sandbox. Angka dan metode simulasi berikut mencatat tahap sebelum integrasi pembayaran.
+
 Tanggal implementasi dan QA: 20 November 2026, WITA. Snapshot awal lokal: `e17363d`. Fitur ini **hanya simulasi**, tanpa payment gateway atau perpindahan uang. Pembelajaran, kuis, Coding, dan Evaluasi Akhir tetap gratis. Sesuai revisi alur, seluruh ketentuan, konfirmasi simulasi, pratinjau, dan download berada pada satu halaman `/sertifikasi`.
 
 ## Arsitektur dan audit awal

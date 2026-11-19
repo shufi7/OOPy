@@ -58,4 +58,23 @@ class CertificateIssuanceService
             ]);
         }, 5);
     }
+
+    public function issueSandbox(CertificateOrder $order): Certificate
+    {
+        return DB::transaction(function () use ($order) {
+            $user = User::whereKey($order->user_id)->lockForUpdate()->firstOrFail();
+            $order = CertificateOrder::whereKey($order->id)->lockForUpdate()->firstOrFail();
+            app(MidtransPaymentService::class)->assertOrder($order);
+            abort_unless(config('midtrans.is_production') === false && $order->status === 'paid' && $order->verified_at
+                && $order->paid_at && $order->eligible_completed_at && $order->paid_provider_order, 409, 'Pembayaran Sandbox belum terverifikasi.');
+            abort_unless($order->attempts()->where('order_number', $order->paid_provider_order)->whereNotNull('verified_at')
+                ->whereIn('status', ['settlement', 'capture'])->exists(), 409, 'Bukti status pembayaran belum tersedia.');
+
+            return Certificate::firstOrCreate(['user_id' => $user->id, 'program_key' => MidtransPaymentService::PROGRAM], [
+                'public_id' => (string) Str::uuid(), 'certificate_number' => 'OOPY-SBX-'.Str::upper(bin2hex(random_bytes(12))),
+                'participant_name' => $user->name, 'course_title' => self::COURSE, 'completed_at' => $order->eligible_completed_at,
+                'issued_at' => now(), 'order_id' => $order->id, 'status' => 'active',
+            ]);
+        }, 5);
+    }
 }

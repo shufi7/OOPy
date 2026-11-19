@@ -1,5 +1,5 @@
 <div class="certificate-preview" aria-label="{{ $certificate ? 'Pratinjau sertifikat terbit' : 'Contoh desain sertifikat' }}">
-    <div class="certificate-preview-top"><span><img src="{{ asset('images/oopy-logo.png') }}" width="48" height="48" alt="Logo OOPy"> <strong>OOPy</strong></span><strong>SIMULASI / DEMO</strong></div>
+    <div class="certificate-preview-top"><span><img src="{{ asset('images/oopy-logo.png') }}" width="48" height="48" alt="Logo OOPy"> <strong>OOPy</strong></span><strong>{{ $certificate?->demoLabel() ?? 'SANDBOX / DEMO' }}</strong></div>
     <p class="certificate-preview-heading" lang="en">CERTIFICATE OF COMPLETION</p>
     <p>Sertifikat Penyelesaian Pembelajaran</p>
     <p class="mt-4 mb-1">Diberikan kepada</p>

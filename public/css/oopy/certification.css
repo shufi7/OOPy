@@ -41,6 +41,10 @@
 .certification-guest-requirements li { padding: .5rem 0 .5rem .25rem; }
 .certification-price { margin: .75rem 0 .5rem; color: #243b39; font-size: 2rem; font-weight: 800; letter-spacing: -.035em; }
 .certification-price > span { color: #526762; font-size: .8125rem; font-weight: 400; letter-spacing: 0; }
+.certification-payment-state { margin: 1rem 0; padding: 1rem; border-left: 3px solid #076d71; background: #e4f9f5; font-size: .875rem; }
+.certification-payment-state p { margin: .5rem 0 0; }
+[data-midtrans-payment] .certification-secondary { width: 100%; margin-top: .75rem; }
+[data-midtrans-payment] [hidden] { display: none !important; }
 .certification-action-note { margin: .9rem 0 0; color: #526762; font-size: .8125rem; }
 .certification-benefits { margin: 1.25rem 0 1.5rem; padding-left: 1.1rem; font-size: .875rem; }
 .certification-benefits li { margin: .4rem 0; }

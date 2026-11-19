@@ -18,6 +18,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\CertificationFixture;
@@ -26,6 +27,14 @@ use Tests\TestCase;
 class CertificationTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        config(['midtrans.is_production' => false, 'midtrans.server_key' => 'SB-Mid-server-fixture-only',
+            'midtrans.client_key' => 'SB-Mid-client-fixture-only', 'midtrans.merchant_id' => null]);
+        Http::preventStrayRequests();
+    }
 
     private function student(bool $complete = true): User
     {
@@ -84,7 +93,7 @@ class CertificationTest extends TestCase
             ->assertViewHas('certificate', null)->assertDontSee('data-simulation-form', false);
         $this->get('/sertifikat-saya')->assertRedirect('/sertifikasi#sertifikat');
         $this->get('/sertifikasi/checkout')->assertRedirect('/sertifikasi');
-        $this->post('/sertifikasi', $this->confirmation())->assertSessionHasErrors('eligibility');
+        $this->post('/sertifikasi', $this->confirmation())->assertStatus(410);
         $this->assertDatabaseCount('certificate_orders', 0);
     }
 
@@ -126,7 +135,7 @@ class CertificationTest extends TestCase
         }
         $this->assertFalse($this->eligibility($user)['eligible']);
         $this->actingAs($user)->get('/sertifikasi/checkout')->assertRedirect('/sertifikasi');
-        $this->post('/sertifikasi/checkout', $this->confirmation())->assertSessionHasErrors('eligibility');
+        $this->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true])->assertUnprocessable()->assertJsonValidationErrors('eligibility');
         $this->assertDatabaseCount('certificates', 0);
     }
 
@@ -177,25 +186,26 @@ class CertificationTest extends TestCase
         $this->assertTrue($completed->equalTo($this->eligibility($user)['completed_at']));
     }
 
-    public function test_eligible_checkout_issues_one_certificate_and_retries_do_not_change_it(): void
+    public function test_legacy_certificates_remain_immutable_but_direct_browser_issuance_is_closed(): void
     {
         $user = $this->student();
         $this->actingAs($user)->get('/dashboard')->assertOk()->assertSee('Ambil Sertifikat')->assertDontSee('Sertifikat Saya');
-        $this->get('/sertifikasi')->assertOk()->assertSee('Ambil Sertifikat')->assertSee($user->email)
-            ->assertSee('data-simulation-form', false)->assertSee('Rp24.999');
+        $this->get('/sertifikasi')->assertOk()->assertSee('Bayar dengan QRIS')->assertSee($user->email)->assertSee('Rp24.999');
         $this->get('/sertifikasi/checkout')->assertRedirect('/sertifikasi#penerbitan');
-        $this->post('/sertifikasi', $this->confirmation())->assertRedirect('/sertifikasi#sertifikat');
+        $this->post('/sertifikasi', $this->confirmation())->assertStatus(410);
+        $this->assertDatabaseCount('certificates', 0);
+        $this->issue($user);
         $certificate = Certificate::sole();
         $attributes = $certificate->getAttributes();
         $user->update(['name' => 'Nama Baru']);
-        $this->post('/sertifikasi', $this->confirmation(['payment_method' => 'card']))->assertRedirect('/sertifikasi#sertifikat');
+        $this->post('/sertifikasi', $this->confirmation(['payment_method' => 'card']))->assertStatus(410);
         $this->assertDatabaseCount('certificates', 1);
         $this->assertDatabaseCount('certificate_orders', 1);
         $this->assertSame($attributes, $certificate->fresh()->getAttributes());
         $this->assertDatabaseHas('certificate_orders', ['amount' => 24999, 'mode' => 'simulation', 'status' => 'simulation_completed', 'currency' => 'IDR', 'payment_method' => 'e_wallet']);
         $this->get('/sertifikasi/checkout')->assertRedirect('/sertifikasi#sertifikat');
         $this->get('/sertifikat-saya')->assertRedirect('/sertifikasi#sertifikat');
-        $this->get('/sertifikasi')->assertSee('Unduh Sertifikat PDF')->assertSee($certificate->certificate_number)
+        $this->get('/sertifikasi')->assertSee('Unduh sertifikat simulasi lama')->assertSee($certificate->certificate_number)
             ->assertDontSee('data-simulation-form', false);
     }
 
@@ -208,7 +218,7 @@ class CertificationTest extends TestCase
         $this->assertTrue($gradedAt->equalTo($this->eligibility($user)['completed_at']));
     }
 
-    public function test_inline_confirmation_reuses_pending_order_and_shows_the_issued_document(): void
+    public function test_legacy_pending_order_does_not_count_as_a_paid_sandbox_order(): void
     {
         $user = $this->student();
         $order = CertificateOrder::create([
@@ -216,11 +226,12 @@ class CertificationTest extends TestCase
             'order_number' => 'SIM-PENDING-FIXTURE', 'amount' => 24999, 'currency' => 'IDR',
             'payment_method' => 'e_wallet', 'mode' => 'simulation', 'status' => 'pending',
         ]);
-        $this->actingAs($user)->get('/sertifikasi')->assertViewHas('certificate', null)->assertSee('data-simulation-form', false);
-        $this->post('/sertifikasi', $this->confirmation())->assertRedirect('/sertifikasi#sertifikat');
-        $this->assertSame($order->id, Certificate::sole()->order_id);
+        $this->actingAs($user)->get('/sertifikasi')->assertViewHas('certificate', null)->assertSee('Bayar dengan QRIS');
+        $this->post('/sertifikasi', $this->confirmation())->assertStatus(410);
+        $this->assertDatabaseCount('certificates', 0);
+        $this->assertSame('pending', $order->fresh()->status);
         $this->assertDatabaseCount('certificate_orders', 1);
-        $this->get('/sertifikasi')->assertSee('Unduh Sertifikat PDF')->assertSee('Simulasi Selesai');
+        $this->get('/sertifikasi')->assertDontSee('Unduh Sertifikat PDF')->assertSee('Belum Dibayar');
     }
 
     public function test_unique_numbers_and_tokens_differ_across_users(): void
@@ -238,14 +249,14 @@ class CertificationTest extends TestCase
     public static function hostileFields(): array
     {
         return [['amount', 1], ['user_id', 999], ['status', 'paid'], ['payment_status', 'paid'],
-            ['mode', 'live'], ['program_key', 'other'], ['payment_method', 'unknown'], ['simulation_confirmed', '0']];
+            ['mode', 'live'], ['program_key', 'other'], ['payment_method', 'unknown'], ['sandbox_confirmed', '0']];
     }
 
     #[DataProvider('hostileFields')]
     public function test_confirmation_rejects_forged_fields_and_requires_conscious_consent(string $field, mixed $value): void
     {
         $user = $this->student();
-        $this->actingAs($user)->postJson('/sertifikasi', $this->confirmation([$field => $value]))
+        $this->actingAs($user)->postJson('/sertifikasi/payments', array_replace(['sandbox_confirmed' => true], [$field => $value]))
             ->assertUnprocessable()->assertJsonValidationErrors($field)->assertHeader('Cache-Control', 'no-store, private');
         $this->assertDatabaseCount('certificates', 0);
         $this->assertDatabaseCount('certificate_orders', 0);
@@ -256,7 +267,7 @@ class CertificationTest extends TestCase
         $user = $this->student();
         $this->actingAs($user)->get('/sertifikasi')->assertOk();
         FinalExamAttempt::where('user_id', $user->id)->update(['status' => 'pending_review']);
-        $this->post('/sertifikasi', $this->confirmation())->assertSessionHasErrors('eligibility');
+        $this->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true])->assertUnprocessable()->assertJsonValidationErrors('eligibility');
         $this->assertDatabaseCount('certificate_orders', 0);
     }
 
@@ -273,6 +284,7 @@ class CertificationTest extends TestCase
         $this->actingAs($user)->post('/sertifikasi', $this->confirmation())->assertStatus(419);
         $this->post('/sertifikasi', $this->confirmation(['_token' => 'incorrect']))->assertStatus(419);
         $this->post('/sertifikasi/checkout', $this->confirmation())->assertStatus(419);
+        $this->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true])->assertStatus(419);
         $this->assertDatabaseCount('certificates', 0);
     }
 
@@ -335,7 +347,7 @@ class CertificationTest extends TestCase
         $certificate->update(['status' => 'revoked']);
         $this->get('/sertifikat/verifikasi/'.$certificate->public_id)->assertOk()->assertSee('Dibatalkan');
         $this->actingAs($user)->get('/sertifikasi/'.$certificate->public_id.'/pdf')->assertStatus(409);
-        $this->post('/sertifikasi', $this->confirmation())->assertStatus(409);
+        $this->post('/sertifikasi', $this->confirmation())->assertStatus(410);
         $this->get('/sertifikasi')->assertSee('Dibatalkan')->assertDontSee('Unduh Sertifikat PDF');
         $this->assertDatabaseCount('certificates', 1);
     }
@@ -344,11 +356,17 @@ class CertificationTest extends TestCase
     {
         $user = $this->student();
         DB::unprepared("CREATE TRIGGER certificate_failure BEFORE INSERT ON certificates BEGIN SELECT RAISE(ABORT, 'fixture failure'); END");
-        $this->actingAs($user)->post('/sertifikasi', $this->confirmation())->assertStatus(500);
+        try {
+            $this->issue($user);
+            $this->fail('Expected certificate insertion to fail.');
+        } catch (QueryException) {
+            $this->assertTrue(true);
+        }
         $this->assertDatabaseCount('certificate_orders', 0);
         $this->assertDatabaseCount('certificates', 0);
         DB::unprepared('DROP TRIGGER certificate_failure');
-        $this->post('/sertifikasi', $this->confirmation())->assertRedirect('/sertifikasi#sertifikat');
+        $this->issue($user);
+        $this->assertDatabaseCount('certificates', 1);
     }
 
     public function test_database_constraint_rejects_duplicate_user_program_even_with_different_tokens(): void
