@@ -97,6 +97,12 @@ Baseline cleanup 5 November 2026: PHP **193 lulus, 2 gagal**, JavaScript **21 lu
 | `vendor/`, `node_modules/` | Dependensi lokal yang diabaikan Git |
 | `DESIGN.md` | Pedoman desain proyek |
 
+## Sertifikasi simulasi
+
+Tombol **Ambil Sertifikat** di bagian paling bawah Dashboard membuka `/sertifikasi`. Ketentuan akademik, checkout **simulasi Rp24.999**, pratinjau, dan download berada di halaman yang sama. Backend memeriksa enam BAB, keenam kuis, kedua latihan Coding aktif, dan Evaluasi Akhir resmi sebelum menerbitkan satu sertifikat PDF berlabel SIMULASI / DEMO, lengkap dengan nomor unik dan QR verifikasi. Halaman Sertifikat Saya terpisah dihapus; URL lamanya mengarah ke halaman sertifikasi.
+
+Fitur ini **tidak memproses pembayaran nyata**. Pada instalasi lain, migration baru perlu ditinjau dan dijalankan pada database lokal tujuan sebelum digunakan. Migration khusus sertifikasi sudah diterapkan pada database development workspace ini saat memperbaiki error tabel belum tersedia, tanpa mengubah data pembelajaran existing. Instal dependensi Composer termasuk ekstensi GD. Arsitektur, route, panduan mencoba, hasil tes aktual, dan batasan ada di [panduan sertifikasi](docs/certification-system.md).
+
 ## Dokumentasi
 
 Mulai dari [indeks dokumentasi](docs/README.md). Integrasi terbaru dibahas dalam [Coding ke Dashboard Pengguna](docs/coding-dashboard-2026-11-05.md) dan [Coding ke Panel Admin](docs/admin-coding-2026-11-05.md). Arah visual tetap mengikuti [DESIGN.md](DESIGN.md).

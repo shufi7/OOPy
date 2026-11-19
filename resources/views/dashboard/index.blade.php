@@ -143,6 +143,14 @@
             </section>
             </div>
         </details>
+
+        <section class="oopy-dashboard-panel oopy-dashboard-certification" aria-labelledby="dashboard-certification-title">
+            <div>
+                <h2 id="dashboard-certification-title" class="oopy-dashboard-panel-title">Sertifikasi OOPy</h2>
+                <p>Periksa persyaratan, selesaikan simulasi penerbitan, dan unduh sertifikat Anda di satu halaman.</p>
+            </div>
+            <a class="oopy-dashboard-certificate-action" href="{{ route('certification.index') }}">Ambil Sertifikat</a>
+        </section>
     </div>
 </div>
 @endsection

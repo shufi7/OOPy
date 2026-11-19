@@ -45,3 +45,4 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/admin.php';
 require __DIR__.'/final-evaluation.php';
+require __DIR__.'/certification.php';

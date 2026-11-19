@@ -18,6 +18,8 @@ class UserDeletionService
                 throw ValidationException::withMessages(['deletion' => 'Pengguna ini tercatat sebagai penilai evaluasi pengguna lain dan tidak dapat dihapus.']);
             }
 
+            DB::table('certificates')->where('user_id', $user->id)->delete();
+            DB::table('certificate_orders')->where('user_id', $user->id)->delete();
             DB::table('final_exam_attempts')->where('user_id', $user->id)->delete();
             // Answers and pinned questions cascade from their owning attempts.
             DB::table('quiz_attempts')->where('user_id', $user->id)->delete();
