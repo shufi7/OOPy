@@ -22,7 +22,7 @@ return [
         ],
         [
             'id' => 'mengenal-enkapsulasi',
-            'title' => 'Mengenal Enkapsulasi',
+            'title' => '3.1 Mengenal Enkapsulasi',
             'paragraphs' => [
                 'Enkapsulasi menggabungkan data dan perilaku yang berkaitan di dalam sebuah class serta menyediakan interface yang jelas untuk berinteraksi dengan object. Jadi, enkapsulasi bukan hanya menyembunyikan data.',
                 'Object memiliki data dan perilaku. Tidak semua detail internalnya perlu digunakan langsung oleh bagian program lain. Interface adalah cara yang disediakan class untuk membaca data atau meminta perubahan, misalnya method dan property.',
@@ -32,8 +32,8 @@ return [
         ],
         [
             'id' => 'public-attribute',
-            'title' => 'Public Attribute dan Interface Object',
-            'nav_title' => 'Public Attribute & Interface',
+            'title' => '3.2 Public Attribute dan Interface Object',
+            'nav_title' => '3.2 Public Attribute & Interface',
             'paragraphs' => [
                 'Atribut biasa seperti self.lokasi atau self.nama disebut public attribute. Pengguna object dapat membaca dan mengubahnya langsung. Python tidak menggunakan keyword public untuk mendeklarasikan atribut tersebut.',
                 'Pada contoh berikut, lokasi boleh diubah langsung karena class belum menetapkan aturan khusus untuk atribut tersebut. Pilih interface sesuai kebutuhan; tidak semua atribut harus memiliki getter dan setter.',
@@ -53,8 +53,8 @@ PYTHON,
         ],
         [
             'id' => 'non-public',
-            'title' => 'Konvensi Non-Public dengan _',
-            'nav_title' => 'Konvensi Non-Public (_)',
+            'title' => '3.3 Konvensi Non-Public dengan _',
+            'nav_title' => '3.3 Konvensi Non-Public (_)',
             'paragraphs' => [
                 'Satu underscore di awal nama, seperti self._lokasi, menandai non-public by convention: secara konvensi atribut dianggap untuk penggunaan internal implementasi. Istilah protected by convention juga kadang digunakan, tetapi ini bukan access modifier yang ketat seperti pada Java atau C++.',
                 'Python tetap memungkinkan akses sensor._lokasi dari luar class. Awalan ini merupakan pesan bagi programmer agar menggunakan interface yang disediakan, bukan larangan akses yang ditegakkan oleh Python.',
@@ -71,8 +71,8 @@ PYTHON,
         ],
         [
             'id' => 'name-mangling',
-            'title' => 'Name Mangling dengan __',
-            'nav_title' => 'Name Mangling (__)',
+            'title' => '3.4 Name Mangling dengan __',
+            'nav_title' => '3.4 Name Mangling (__)',
             'paragraphs' => [
                 'Dua underscore di awal nama seperti self.__tinggi_air memicu name mangling. Di dalam class SensorAir, Python mengubah nama atribut tersebut menjadi _SensorAir__tinggi_air. Aturan ini berlaku untuk nama dengan setidaknya dua underscore di depan dan paling banyak satu underscore di belakang; __init__ bukan contoh atribut yang mengalami name mangling.',
                 'Tujuan utamanya menghindari konflik nama, terutama ketika class dikembangkan melalui pewarisan, serta mengurangi penggunaan langsung secara tidak sengaja. Pewarisan akan dibahas pada BAB berikutnya.',
@@ -91,7 +91,7 @@ PYTHON,
         ],
         [
             'id' => 'getter-setter',
-            'title' => 'Getter dan Setter',
+            'title' => '3.5 Getter dan Setter',
             'paragraphs' => [
                 'Getter adalah method untuk membaca nilai, sedangkan setter adalah method untuk mengubah nilai melalui aturan tertentu. Aturan perubahan berada di class sehingga setiap pemanggil memakai pemeriksaan yang sama.',
                 'Pada contoh ini, set_tinggi_air() menolak nilai negatif dengan ValueError. raise menghentikan proses perubahan dan memberi tahu pemanggil bahwa nilai tidak sesuai aturan. Nilai diperiksa sebelum disimpan agar data sebelumnya tetap utuh.',
@@ -118,7 +118,7 @@ PYTHON,
         ],
         [
             'id' => 'property',
-            'title' => 'Property dengan @property',
+            'title' => '3.6 Property dengan @property',
             'paragraphs' => [
                 '@property memberi interface seperti atribut sambil menjalankan logika melalui method. Tanda @ di atas method menghubungkannya dengan property: @property mendefinisikan pembacaan, sedangkan @tinggi_air.setter mendefinisikan perubahan property bernama tinggi_air.',
                 'Dari sisi pengguna object, sensor.tinggi_air terlihat seperti atribut biasa dan digunakan tanpa tanda kurung. Membacanya memanggil getter; assignment sensor.tinggi_air = 90 memanggil setter. Ini merupakan pendekatan Pythonic untuk atribut yang membutuhkan kontrol.',

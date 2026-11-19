@@ -36,7 +36,7 @@ return [
 
         [
             'id' => 'class-object',
-            'title' => 'Class dan Object',
+            'title' => '2.1 Class dan Object',
             'paragraphs' => [
                 'Class dapat dipahami sebagai cetak biru atau rancangan yang digunakan untuk membuat object. Class menentukan data apa yang dimiliki object dan perilaku apa yang dapat dilakukan oleh object tersebut.',
                 'Object merupakan hasil atau instance yang dibuat berdasarkan sebuah class. Satu class dapat digunakan untuk membuat banyak object dengan data yang berbeda.',
@@ -65,7 +65,7 @@ PYTHON,
 
         [
             'id' => 'bedah-kode',
-            'title' => 'Bedah Kode',
+            'title' => '2.2 Bedah Kode',
             'paragraphs' => [
                 'class Ekosistem: digunakan untuk membuat class baru dengan nama Ekosistem. Class ini menjadi rancangan untuk object yang akan dibuat nantinya.',
                 '__init__ merupakan constructor yang dipanggil ketika sebuah object dibuat. Constructor digunakan untuk memberikan nilai awal pada object.',
@@ -98,8 +98,8 @@ PYTHON,
 
         [
             'id' => 'banyak-object',
-            'title' => 'Membuat Beberapa Object dari Satu Class',
-            'nav_title' => 'Membuat Beberapa Object',
+            'title' => '2.3 Membuat Beberapa Object dari Satu Class',
+            'nav_title' => '2.3 Membuat Beberapa Object',
             'paragraphs' => [
                 'Satu class dapat digunakan untuk membuat banyak object. Setiap object dapat memiliki nilai atribut yang berbeda meskipun dibuat dari class yang sama.',
                 'Contohnya, class Ekosistem dapat digunakan untuk membuat object sungai, rawa, dan mangrove. Ketiga object tersebut memiliki atribut nama dan lokasi, tetapi masing-masing menyimpan nilai yang berbeda.',
@@ -132,7 +132,7 @@ PYTHON,
 
         [
             'id' => 'atribut-method',
-            'title' => 'Atribut dan Method',
+            'title' => '2.4 Atribut dan Method',
             'paragraphs' => [
                 'Atribut digunakan untuk menyimpan keadaan atau data yang dimiliki oleh sebuah object. Nilai atribut dapat berbeda antara satu object dengan object lainnya.',
                 'Method merupakan fungsi yang berada di dalam class dan digunakan untuk menentukan perilaku object. Method dapat membaca maupun mengubah atribut yang dimiliki oleh object.',

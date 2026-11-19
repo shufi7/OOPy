@@ -1,7 +1,7 @@
 .oopy-material {
-    --oopy-ink: #243B39;
-    --oopy-text: #40514E;
-    --oopy-ink-soft: #40514E;
+    --oopy-ink: #0e1413;
+    --oopy-text: #0e1413;
+    --oopy-ink-soft: #0e1413;
     --oopy-code-bg: #1E1E2E;
     background: var(--oopy-canvas);
     color: var(--oopy-ink);
