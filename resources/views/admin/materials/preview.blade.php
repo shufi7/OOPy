@@ -10,6 +10,7 @@
 @push('scripts')
 <script src="{{ asset('js/vendor/prism/prism.min.js') }}" data-manual defer></script>
 <script src="{{ asset('js/oopy-syntax.js') }}" defer></script>
+<script src="{{ asset('js/oopy-learning-checks.js') }}" defer></script>
 @endpush
 @section('content')
 <header class="mb-4">

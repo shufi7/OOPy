@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MaterialContent extends Model
 {
-    protected $fillable = ['material_id', 'draft_title', 'draft', 'published_title', 'published', 'published_at', 'lock_version', 'updated_by'];
+    protected $fillable = ['material_id', 'draft_title', 'draft', 'published_title', 'published', 'published_at', 'draft_source_hash', 'published_source_hash', 'lock_version', 'updated_by'];
 
     protected function casts(): array
     {

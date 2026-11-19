@@ -34,9 +34,7 @@ class MateriController extends Controller
             abort(404);
         }
 
-        $content = require resource_path(
-            'materi/'.$chapter['content']
-        );
+        $content = $contents->source($slug);
         [$content, $publishedTitle] = $contents->published($slug, $content);
         if ($publishedTitle !== null) {
             $chapter['judul'] = $publishedTitle;

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('materials', [MaterialController::class, 'index'])->name('materials.index');
 Route::get('materials/{material}/edit', [MaterialController::class, 'edit'])->name('materials.edit');
+Route::get('materials/{material}/sync', [MaterialController::class, 'sync'])->name('materials.sync');
+Route::post('materials/{material}/sync', [MaterialController::class, 'synchronize'])->name('materials.synchronize');
 Route::put('materials/{material}', [MaterialController::class, 'update'])->name('materials.update');
 Route::post('materials/{material}/preview', [MaterialController::class, 'preview'])->name('materials.preview');
 Route::get('materials/{material}/preview', [MaterialController::class, 'showPreview'])->name('materials.preview-saved');

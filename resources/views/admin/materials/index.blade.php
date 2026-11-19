@@ -14,9 +14,9 @@
             <tr>
                 <td>{{ $registry[$material->slug]['bab'] }}</td>
                 <td>{{ $record?->draft_title ?? $material->title }}</td>
-                <td>{{ $record ? ($record->published_at ? ($record->draft == $record->published && $record->draft_title === $record->published_title ? 'Dipublikasikan' : 'Draf perubahan') : 'Draf belum dipublikasikan') : 'Materi awal' }}</td>
+                <td><span class="admin-material-status admin-material-status--{{ $statuses[$material->id]['tone'] }}">{{ $statuses[$material->id]['label'] }}</span></td>
                 <td>{{ $record?->published_at?->timezone('Asia/Makassar')->format('d/m/Y H:i') ?? '—' }}</td>
-                <td><a class="btn btn-outline-primary" href="{{ route('admin.materials.edit', $material) }}">Kelola materi</a></td>
+                <td class="admin-row-actions"><a class="btn btn-outline-primary" href="{{ route('admin.materials.edit', $material) }}">Kelola materi</a><a href="{{ route('admin.materials.sync', $material) }}">Tinjau sumber</a></td>
             </tr>
         @empty
             <tr><td colspan="5">Materi belum tersedia di database. Jalankan seeder konten OOPy terlebih dahulu.</td></tr>

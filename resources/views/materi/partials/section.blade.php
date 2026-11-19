@@ -103,7 +103,11 @@
             @endif
         </div>
     @endforeach
+    @if (!empty($section['learning_check']))
+    <div data-learning-check-slot data-learning-check-config="{{ json_encode($section['learning_check'], JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP) }}"></div>
+    @else
     <div data-learning-check-slot></div>
+    @endif
     @if (!empty($section['tip']))
         <aside class="material-tip" aria-label="Catatan {{ $section['title'] }}">
             <strong><i class="bi bi-lightbulb" aria-hidden="true"></i> Catatan belajar</strong>
