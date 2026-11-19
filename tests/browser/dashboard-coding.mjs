@@ -68,7 +68,7 @@ const auditColors = async state => {
     }
 };
 const layout = async state => {
-    for (const width of [320, 360, 390, 768, 1024, 1440]) {
+    for (const width of [320, 360, 390, 768, 1024, 1366, 1440, 1600]) {
         await page.setViewportSize({ width, height: 1000 });
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
         const data = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth,
@@ -83,7 +83,7 @@ const layout = async state => {
         if (directory && [390, 1440].includes(width)) await page.screenshot({ path: join(directory, `${state}-${width}.png`), fullPage: true });
     }
     await auditColors(state);
-    console.log(`PASS Coding dashboard ${state}: six widths, targets and text contrast`);
+    console.log(`PASS Coding dashboard ${state}: eight widths, targets and text contrast`);
 };
 const openExercise = async (number, action) => {
     const link = row(number).getByRole('link');

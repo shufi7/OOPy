@@ -1,0 +1,5 @@
+PASS text contrast: minimum 4.82:1, including expanded information and sidebar
+PASS desktop sidebar toggle, profile anchor, information link, disclosure Enter/Space and visible focus
+PASS mobile Escape, backdrop, inert, section focus, repeated clicks, Back/Forward, fragment reload, disclosure state and logout cancellation
+PASS logo and Beranda open home, Belajar opens the catalog, and recommendation opens its real destination with Enter
+PASS 200% text resize at eight widths, reduced motion, semantic table, private no-store response and no console errors

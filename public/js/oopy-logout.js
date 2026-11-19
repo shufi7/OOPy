@@ -42,7 +42,8 @@
         if (trigger && document.activeElement !== trigger) {
             const sidebar = trigger.closest('aside');
             const menu = [...document.querySelectorAll('[aria-controls]')]
-                .find(button => button.getAttribute('aria-controls') === sidebar?.id);
+                .find(button => button.getAttribute('aria-controls') === sidebar?.id)
+                || document.querySelector('.site-navbar .navbar-toggler');
             menu?.focus();
         }
         form = null;

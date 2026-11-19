@@ -34,15 +34,13 @@ const login = async (page, admin = false) => {
     await Promise.all([page.waitForURL(url => url.pathname !== '/login'), page.locator('button[type="submit"]').click()]);
 };
 const triggerFor = async (page, kind) => {
-    if (kind === 'navbar') {
+    if (kind === 'navbar' || (kind === 'dashboard' && !await page.locator('[data-dashboard-logout] button').isVisible())) {
         if (!await page.locator('#oopyAccountMenu').isVisible()) await page.locator('.navbar-toggler').click();
         if (await page.locator('#oopyAccountMenu').getAttribute('aria-expanded') !== 'true') await page.locator('#oopyAccountMenu').click();
     } else if (kind === 'admin') {
         if (!await page.locator('.admin-logout').isVisible()) await page.locator('#admin-menu-toggle').click();
-    } else if (await page.locator('.oopy-dashboard-menu-toggle').getAttribute('aria-expanded') === 'false') {
-        await page.locator('.oopy-dashboard-menu-toggle').click();
     }
-    return page.locator('[data-logout-confirmation] button[type="submit"]');
+    return page.locator('[data-logout-confirmation] button[type="submit"]:visible');
 };
 const luminance = rgb => rgb.match(/[\d.]+/g).slice(0, 3).map(Number).map(c => c / 255)
     .map(c => c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4)
@@ -114,7 +112,7 @@ try {
             await dialog.waitFor({ state: 'hidden' });
             await page.waitForFunction(() => document.activeElement?.matches('[data-logout-confirmation] button[type="submit"]'));
             if (kind === 'admin' && width < 992) assert.equal(await page.locator('#admin-menu-toggle').getAttribute('aria-expanded'), 'true');
-            if (kind === 'dashboard' && width < 992) assert.equal(await page.locator('.oopy-dashboard-menu-toggle').getAttribute('aria-expanded'), 'true');
+            if (kind === 'dashboard' && width < 992) assert.equal(await page.locator('.navbar-toggler').getAttribute('aria-expanded'), 'true');
             await trigger.click();
             await cancel.click();
             await dialog.waitFor({ state: 'hidden' });
@@ -131,7 +129,7 @@ try {
             if (kind === 'admin') await page.locator('#admin-sidebar').waitFor({ state: 'hidden' });
             else await page.waitForFunction(() => document.querySelector('#oopyDashboardSidebar').inert);
             await page.keyboard.press('Escape');
-            const menuSelector = kind === 'admin' ? '#admin-menu-toggle' : '.oopy-dashboard-menu-toggle';
+            const menuSelector = kind === 'admin' ? '#admin-menu-toggle' : '.site-navbar .navbar-toggler';
             await page.waitForFunction(selector => document.activeElement === document.querySelector(selector), menuSelector);
             record(`${kind}: resizing while modal is open restores focus to the visible menu when the sidebar closes`);
         }
@@ -174,7 +172,7 @@ try {
         await page.goto(base + path);
         await Promise.all([
             page.waitForResponse(r => r.url() === base + '/logout' && r.request().method() === 'POST'),
-            page.locator('[data-logout-confirmation] button[type="submit"]').click(),
+            page.locator('[data-logout-confirmation] button[type="submit"]:visible').click(),
         ]);
         assert.equal((await context.request.get(base + '/dashboard', { maxRedirects: 0 })).status(), 302);
         record(`User ${path}: logout remains reachable without JavaScript at 320px`);

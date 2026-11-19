@@ -1,0 +1,46 @@
+   PASS  Tests\Feature\Auth\LogoutTest
+  ✓ logout invalidates session rotates token and removes authentication                                          0.50s  
+  ✓ logout is post only and requires authentication                                                              0.91s  
+  ✓ logout rejects missing and invalid csrf but accepts matching token                                           0.03s  
+  ✓ registration and login also require csrf                                                                     0.04s  
+  ✓ all logout navigations render one shared dialog and original csrf form                                       0.27s  
+  ✓ admin can logout directly and cannot reopen protected pages                                                  0.03s  
+   PASS  Tests\Feature\Auth\RoleAuthorizationTest
+  ✓ guest is redirected to login and intended url is kept                                                        0.05s  
+  ✓ regular user gets 403 from the server                                                                        0.03s  
+  ✓ admin is allowed and can return to a protected intended url after login                                      0.07s  
+  ✓ multiple explicit roles are supported                                                                        0.02s  
+  ✓ registering with admin input never grants admin access                                                       0.03s  
+  ✓ navbar shows real guest links and escaped account details with post logout                                   0.07s  
+  ✓ navbar identifies one current destination including final evaluation                                         0.19s  
+  ✓ all existing learning pages remain public and auth css is scoped                                             0.26s  
+   PASS  Tests\Feature\DashboardTest
+  ✓ guest is redirected to login and login preserves intended dashboard                                          0.07s  
+  ✓ new account has real empty state six chapters and scoped styles                                              0.30s  
+  ✓ unseeded catalog still renders the registry and empty state                                                  0.13s  
+  ✓ completed chapters progress and next recommendation with data set #0                                         0.33s  
+  ✓ completed chapters progress and next recommendation with data set #1                                         0.21s  
+  ✓ completed chapters progress and next recommendation with data set #2                                         0.20s  
+  ✓ completed chapters progress and next recommendation with data set #3                                         0.27s  
+  ✓ completed chapters progress and next recommendation with data set #4                                         0.24s  
+  ✓ completed chapters progress and next recommendation with data set #5                                         0.30s  
+  ✓ completed chapters progress and next recommendation with data set #6                                         0.30s  
+  ✓ statistics average the best per chapter excluding unfinished final and invalid results                       0.29s  
+  ✓ zero is a real score and failed attempt is real in progress                                                  0.23s  
+  ✓ recommendation chooses first unfinished chapter and failed retries do not revoke completion                  0.30s  
+  ✓ accounts are isolated and request parameters cannot select another account or raise role                     0.43s  
+  ✓ admin can view only their own learning dashboard                                                             0.15s  
+  ✓ activity is limited to five latest completed attempts and displays actual times                              0.30s  
+  ✓ dashboard is read only and does not fetch questions or all attempts                                          0.28s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "none"                            0.18s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise one"                    0.17s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise two"                    0.18s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "both"                            0.20s  
+  ✓ coding best score and completion survive lower failed retries                                                0.16s  
+  ✓ coding uses official status even with a high score and keeps valid zero                                      0.15s  
+  ✓ coding without a valid graded score shows no score                                                           0.16s  
+  ✓ coding history has five latest submissions with time and id order in wita                                    0.20s  
+  ✓ coding is scoped to the requested user including admin service calls                                         0.18s  
+  ✓ names are escaped and navbar dashboard is only visible when logged in                                        0.03s  
+  Tests:    41 passed (518 assertions)
+  Duration: 8.78s

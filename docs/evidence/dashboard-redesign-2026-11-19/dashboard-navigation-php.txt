@@ -1,0 +1,37 @@
+   PASS  Tests\Feature\Auth\LogoutTest
+  ✓ logout invalidates session rotates token and removes authentication                                          5.02s  
+  ✓ logout is post only and requires authentication                                                              7.68s  
+  ✓ logout rejects missing and invalid csrf but accepts matching token                                           0.06s  
+  ✓ registration and login also require csrf                                                                     0.06s  
+  ✓ all logout navigations render one shared dialog and original csrf form                                       1.33s  
+  ✓ admin can logout directly and cannot reopen protected pages                                                  0.03s  
+   PASS  Tests\Feature\DashboardTest
+  ✓ guest is redirected to login and login preserves intended dashboard                                          0.18s  
+  ✓ new account has real empty state six chapters and scoped styles                                              0.23s  
+  ✓ unseeded catalog still renders the registry and empty state                                                  0.04s  
+  ✓ completed chapters progress and next recommendation with data set #0                                         0.14s  
+  ✓ completed chapters progress and next recommendation with data set #1                                         0.45s  
+  ✓ completed chapters progress and next recommendation with data set #2                                         0.22s  
+  ✓ completed chapters progress and next recommendation with data set #3                                         0.24s  
+  ✓ completed chapters progress and next recommendation with data set #4                                         0.31s  
+  ✓ completed chapters progress and next recommendation with data set #5                                         0.27s  
+  ✓ completed chapters progress and next recommendation with data set #6                                         0.32s  
+  ✓ statistics average the best per chapter excluding unfinished final and invalid results                       0.39s  
+  ✓ zero is a real score and failed attempt is real in progress                                                  0.21s  
+  ✓ recommendation chooses first unfinished chapter and failed retries do not revoke completion                  0.22s  
+  ✓ accounts are isolated and request parameters cannot select another account or raise role                     0.53s  
+  ✓ admin can view only their own learning dashboard                                                             0.20s  
+  ✓ activity is limited to five latest completed attempts and displays actual times                              0.36s  
+  ✓ dashboard is read only and does not fetch questions or all attempts                                          0.40s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "none"                            0.36s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise one"                    0.19s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise two"                    0.19s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "both"                            0.20s  
+  ✓ coding best score and completion survive lower failed retries                                                0.16s  
+  ✓ coding uses official status even with a high score and keeps valid zero                                      0.15s  
+  ✓ coding without a valid graded score shows no score                                                           0.15s  
+  ✓ coding history has five latest submissions with time and id order in wita                                    0.18s  
+  ✓ coding is scoped to the requested user including admin service calls                                         0.20s  
+  ✓ names are escaped and navbar dashboard is only visible when logged in                                        0.04s  
+  Tests:    33 passed (442 assertions)
+  Duration: 25.13s

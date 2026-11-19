@@ -1,0 +1,93 @@
+   PASS  Tests\Feature\Auth\GoogleLoginTest
+  ✓ buttons and missing configuration keep password login available                                              0.69s  
+  ✓ redirect uses state pkce and only identity scopes                                                            0.04s  
+  ✓ invalid state is rejected before contacting google                                                           0.11s  
+  ✓ cancelled and malformed callbacks do not create an account                                                   0.03s  
+  ✓ verified google account registers as user and regenerates session                                            0.14s  
+  ✓ existing gmail account keeps password and progress identity                                                  0.08s  
+  ✓ repeat login uses google subject even if provider email changes                                              0.04s  
+  ✓ unverified and incomplete profiles are rejected                                                              0.05s  
+  ✓ existing admin conflicting identity and third party email cannot be auto linked                              0.13s  
+  ✓ remote failure and replayed callback do not authenticate                                                     0.24s  
+  ✓ google login discards external intended urls                                                                 0.03s  
+  ✓ google identity migration refuses rollback while linked accounts exist                                       0.04s  
+   PASS  Tests\Feature\Auth\LoginTest
+  ✓ guest can open login and authenticated user is redirected                                                    0.09s  
+  ✓ valid credentials authenticate and regenerate session                                                        0.05s  
+  ✓ wrong password and unknown email have the same generic error                                                 0.52s  
+  ✓ login requires valid email and password                                                                      0.19s  
+  ✓ login returns to the internal intended url                                                                   0.04s  
+  ✓ unsafe intended urls are discarded                                                                           0.12s  
+  ✓ five failed attempts lock out even correct credentials until expiry                                          1.27s  
+  ✓ successful login resets the account failure counter                                                          1.76s  
+  ✓ ip limit blocks attempts across different emails                                                             6.53s  
+   PASS  Tests\Feature\Auth\LogoutTest
+  ✓ logout invalidates session rotates token and removes authentication                                          0.08s  
+  ✓ logout is post only and requires authentication                                                              2.25s  
+  ✓ logout rejects missing and invalid csrf but accepts matching token                                           0.05s  
+  ✓ registration and login also require csrf                                                                     0.04s  
+  ✓ all logout navigations render one shared dialog and original csrf form                                       0.65s  
+  ✓ admin can logout directly and cannot reopen protected pages                                                  0.07s  
+   PASS  Tests\Feature\Auth\RoleAuthorizationTest
+  ✓ guest is redirected to login and intended url is kept                                                        0.07s  
+  ✓ regular user gets 403 from the server                                                                        0.09s  
+  ✓ admin is allowed and can return to a protected intended url after login                                      0.11s  
+  ✓ multiple explicit roles are supported                                                                        0.03s  
+  ✓ registering with admin input never grants admin access                                                       0.04s  
+  ✓ navbar shows real guest links and escaped account details with post logout                                   0.04s  
+  ✓ navbar identifies one current destination including final evaluation                                         0.11s  
+  ✓ all existing learning pages remain public and auth css is scoped                                             0.15s  
+   PASS  Tests\Feature\CodingMultifileTest
+  ✓ full project snapshot is preserved and sent with session identity                                            0.44s  
+  ✓ missing extra traversal absolute empty and oversized files are rejected                                      0.32s  
+  ✓ identity and browser grades are rejected for multifile                                                       0.22s  
+  ✓ failed attempt is shown as not passed on coding pages                                                        0.28s  
+  ✓ corrupt or old rubric cannot publish a pass                                                                  0.34s  
+  ✓ legacy pass is retained in history but not active progress                                                   0.33s  
+   PASS  Tests\Feature\CodingTest
+  ✓ public catalog navbar and both exercises reuse live code                                                     0.33s  
+  ✓ blank editor contract and instructions match official requirements                                           0.35s  
+  ✓ guests cannot submit and reading never creates a submission                                                  0.31s  
+  ✓ official grading saves snapshot and session owner only                                                       0.35s  
+  ✓ failed submission is not complete and second exercise needs no unlock                                        0.35s  
+  ✓ source whitespace is preserved in grader request and database snapshot                                       0.32s  
+  ✓ exercise two can be completed first and partial checks do not pass                                           0.30s  
+  ✓ pass remains after failed retry refresh logout login and is private                                          0.41s  
+  ✓ forged identity and grading fields are rejected                                                              0.29s  
+  ✓ file validation rejects paths extra files empty and oversized code                                           0.33s  
+  ✓ runtime error and timeout reports never pass                                                                 0.31s  
+  ✓ missing unavailable or malformed grader never saves a pass                                                   0.35s  
+  ✓ submit is rate limited and csrf protected                                                                    0.34s  
+  ✓ presentation is optional but each core competency is required                                                0.46s  
+  ✓ incomplete duplicate downgraded and old rubrics are rejected                                                 0.40s  
+  ✓ idempotent seed preserves existing exercises and submissions                                                 0.23s  
+   PASS  Tests\Feature\DashboardTest
+  ✓ guest is redirected to login and login preserves intended dashboard                                          0.07s  
+  ✓ new account has real empty state six chapters and scoped styles                                              0.19s  
+  ✓ unseeded catalog still renders the registry and empty state                                                  0.04s  
+  ✓ completed chapters progress and next recommendation with data set #0                                         0.19s  
+  ✓ completed chapters progress and next recommendation with data set #1                                         0.21s  
+  ✓ completed chapters progress and next recommendation with data set #2                                         0.26s  
+  ✓ completed chapters progress and next recommendation with data set #3                                         0.29s  
+  ✓ completed chapters progress and next recommendation with data set #4                                         0.31s  
+  ✓ completed chapters progress and next recommendation with data set #5                                         0.33s  
+  ✓ completed chapters progress and next recommendation with data set #6                                         0.37s  
+  ✓ statistics average the best per chapter excluding unfinished final and invalid results                       0.29s  
+  ✓ zero is a real score and failed attempt is real in progress                                                  0.20s  
+  ✓ recommendation chooses first unfinished chapter and failed retries do not revoke completion                  0.27s  
+  ✓ accounts are isolated and request parameters cannot select another account or raise role                     0.65s  
+  ✓ admin can view only their own learning dashboard                                                             0.22s  
+  ✓ activity is limited to five latest completed attempts and displays actual times                              0.39s  
+  ✓ dashboard is read only and does not fetch questions or all attempts                                          0.45s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "none"                            0.33s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise one"                    0.23s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "exercise two"                    0.35s  
+  ✓ coding completion is separate from chapter and quiz progress with data set "both"                            0.22s  
+  ✓ coding best score and completion survive lower failed retries                                                0.21s  
+  ✓ coding uses official status even with a high score and keeps valid zero                                      0.24s  
+  ✓ coding without a valid graded score shows no score                                                           0.23s  
+  ✓ coding history has five latest submissions with time and id order in wita                                    0.22s  
+  ✓ coding is scoped to the requested user including admin service calls                                         0.20s  
+  ✓ names are escaped and navbar dashboard is only visible when logged in                                        0.04s  
+  Tests:    84 passed (1182 assertions)
+  Duration: 30.93s

@@ -56,8 +56,7 @@ export async function loginAccount(page, base, account) {
 }
 
 export async function logoutAccount(page, base) {
-    if (await page.locator('[data-dashboard-logout]').count()) {
-        if (await page.locator('.oopy-dashboard-menu-toggle').getAttribute('aria-expanded') === 'false') await page.locator('.oopy-dashboard-menu-toggle').click();
+    if (await page.locator('[data-dashboard-logout] button').isVisible()) {
         await page.locator('[data-dashboard-logout] button').click();
         await Promise.all([page.waitForURL(`${base}/`), page.getByRole('button', { name: 'Ya, Logout', exact: true }).click()]);
         return;

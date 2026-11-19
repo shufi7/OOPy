@@ -1,0 +1,2 @@
+PASS Beranda, Materi, Coding and Dashboard share one identical navbar with correct destinations and current page
+PASS eight widths: navbar collapse, account dropdown/logout cancellation, coordinated sidebar menus and automatic header offset

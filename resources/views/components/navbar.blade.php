@@ -41,6 +41,10 @@
                     <li class="nav-item">
                         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif>Dashboard</a>
                     </li>
+                    @if (request()->routeIs('dashboard'))
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="#profil" data-dashboard-section aria-controls="profil">Profil Saya</a></li>
+                        <li class="nav-item d-lg-none"><a class="nav-link" href="#informasi" data-dashboard-section aria-controls="informasi" aria-expanded="false">Informasi</a></li>
+                    @endif
                     <li class="nav-item dropdown oopy-account">
                         <button class="nav-link dropdown-toggle oopy-account-toggle" type="button" id="oopyAccountMenu" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="oopy-account-name">{{ auth('web')->user()->name }}</span>

@@ -25,7 +25,7 @@ const assertStats = async (done, average, attempts, percent) => {
     assert.equal(await page.getByRole('progressbar', { name: 'Progres enam BAB inti' }).getAttribute('aria-valuenow'), String(percent));
 };
 const layout = async state => {
-    for (const width of [320, 390, 768, 1024, 1440]) {
+    for (const width of [320, 360, 390, 768, 1024, 1366, 1440, 1600]) {
         await page.setViewportSize({ width, height: 1000 });
         const result = await page.evaluate(() => ({
             width: innerWidth,
@@ -43,7 +43,14 @@ const layout = async state => {
                 return rect.right <= innerWidth && rect.left >= 0 && rect.height >= 44;
             }), `CTA "${await button.innerText()}" clipping or touch size at ${width}px`);
         }
-        if (process.env.OOPY_SCREENSHOT_DIR && [390, 1440].includes(width)) {
+        if (width >= 1200 && state !== 'long-name') {
+            const heights = await page.locator('.oopy-dashboard-overview').evaluate(node => ({
+                profile: node.querySelector('.oopy-dashboard-profile').getBoundingClientRect().height,
+                grades: node.querySelector('.oopy-dashboard-grades').getBoundingClientRect().height,
+            }));
+            assert.ok(heights.profile < heights.grades * .75, 'Profile must follow its content instead of stretching to the table height');
+        }
+        if (process.env.OOPY_SCREENSHOT_DIR && [390, 768, 1440].includes(width)) {
             await page.screenshot({ path: `${process.env.OOPY_SCREENSHOT_DIR}/dashboard-${state}-${width}.png`, fullPage: true });
         }
         console.log(`PASS dashboard ${state} at ${width}px: grid, font, CTAs and no overflow`);
@@ -66,21 +73,20 @@ try {
     assert.equal((await page.locator('#oopyDashboardSidebar a[aria-current="page"]').textContent()).trim(), 'Dashboard');
     await layout('empty');
     await page.setViewportSize({ width: 390, height: 1000 });
-    const menu = page.locator('.oopy-dashboard-menu-toggle');
-    await page.waitForFunction(() => document.querySelector('.oopy-dashboard-menu-toggle').getAttribute('aria-expanded') === 'false');
+    const menu = page.getByRole('button', { name: 'Buka menu navigasi', exact: true });
+    assert.equal(await page.locator('.oopy-dashboard-menu-toggle,.oopy-dashboard-toolbar').count(), 0);
     assert.equal(await menu.getAttribute('aria-expanded'), 'false');
     await menu.click();
     assert.equal(await menu.getAttribute('aria-expanded'), 'true');
-    assert.equal(await page.locator('#oopyDashboardSidebar').evaluate(el => el.inert), false);
-    await page.keyboard.press('Escape');
+    await page.locator('#navbarOOPy.collapsing').waitFor({ state: 'hidden' });
+    assert.equal(await page.locator('#oopyDashboardSidebar').isVisible(), false);
+    assert.equal(await page.locator('.site-navbar a[href="#profil"]').isVisible(), true);
+    await menu.click();
     assert.equal(await menu.getAttribute('aria-expanded'), 'false');
     assert.equal(await page.locator('#oopyDashboardSidebar').evaluate(el => el.inert), true);
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.waitForFunction(() => document.querySelector('.oopy-dashboard-menu-toggle').getAttribute('aria-expanded') === 'true');
-    assert.equal(await menu.getAttribute('aria-expanded'), 'true');
-    await menu.click();
-    assert.equal(await page.locator('#oopyDashboardSidebar').evaluate(el => el.inert), true);
-    await menu.click();
+    await page.waitForFunction(() => !document.getElementById('oopyDashboardSidebar').inert);
+    assert.equal(await page.locator('#oopyDashboardSidebar').isVisible(), true);
     for (const link of await page.locator('.oopy-dashboard a').all()) {
         const response = await page.request.get(await link.getAttribute('href'));
         assert.equal(response.status(), 200, `Broken dashboard link ${await link.getAttribute('href')}`);
