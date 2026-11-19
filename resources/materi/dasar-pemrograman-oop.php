@@ -20,6 +20,18 @@ return [
                 'Jika hanya ada satu lokasi, beberapa variabel dan fungsi mungkin sudah cukup. Namun, bagaimana jika program harus menangani puluhan lokasi, memperbarui pengukuran, dan menampilkan status setiap lokasi? Pertanyaan ini akan menjadi penghubung antara dasar Python dan Object-Oriented Programming (OOP).',
                 'Pada BAB 1, kamu mempelajari unsur-unsur program Python terlebih dahulu. Setelah itu, kamu akan melihat mengapa class dan object dapat membantu mengorganisasi program yang semakin kompleks. Kamu belum harus menguasai seluruh sintaks OOP; praktik mendalamnya dimulai pada BAB 2.',
             ],
+            'media' => [
+                [
+                    'type' => 'photo',
+                    'src' => 'images/materi/photos/bab1-sungai-banjarmasin.webp',
+                    'alt' => 'Tepian Sungai Martapura dengan permukiman dan aktivitas perairan di Kota Banjarmasin.',
+                    'caption' => 'Tepian Martapura memberi konteks nyata untuk membicarakan lokasi pemantauan lahan basah.',
+                    'source_label' => 'Foto: Sam Hidayat · Wikimedia Commons (diubah ukuran dan dikonversi ke WebP)',
+                    'source_url' => 'https://commons.wikimedia.org/wiki/File:Pinggiran_Sungai_Martapura_di_Kota_Banjarmasin.jpg',
+                    'license_label' => 'CC BY-SA 4.0',
+                    'license_url' => 'https://creativecommons.org/licenses/by-sa/4.0/',
+                ],
+            ],
             'tip' => 'Semua nama lokasi, nilai sensor, dan batas kategori pada BAB ini merupakan contoh untuk belajar pemrograman, bukan hasil pengukuran atau standar ilmiah lingkungan.',
         ],
         [
@@ -343,6 +355,14 @@ PYTHON,
                 'Sampai di sini kamu telah memakai variabel untuk menyimpan data dan fungsi untuk memprosesnya. Pendekatan ini cocok untuk program sederhana. Namun, saat jumlah lokasi bertambah, kita mungkin harus memastikan nama, tinggi air, dan fungsi status selalu digunakan bersama dengan benar.',
                 'Pada pendekatan prosedural, data biasanya dikelola terpisah dari fungsi yang memprosesnya. Pada pendekatan OOP, data yang saling berkaitan (attribute/state) dan operasi terhadap data tersebut (method/behavior) dikelompokkan dalam sebuah object yang dibuat berdasarkan class.',
                 'Bandingkan dua contoh berikut. Keduanya menghasilkan informasi yang sama. Contoh pertama memakai variabel dan fungsi terpisah; contoh kedua memakai satu class bernama LokasiPantau untuk menyimpan nama dan tinggi air sekaligus menyediakan perilaku untuk menentukan status.',
+            ],
+            'media' => [
+                [
+                    'type' => 'diagram',
+                    'src' => 'images/materi/diagram/bab1-prosedural-vs-oop.svg',
+                    'alt' => 'Perbandingan data dan fungsi terpisah pada pendekatan prosedural dengan atribut dan method yang dikelompokkan dalam class LokasiPantau pada OOP.',
+                    'caption' => 'OOP mengelompokkan data pemantauan dan perilakunya dalam satu rancangan class.',
+                ],
             ],
             'code' => <<<'PYTHON'
 # Pendekatan prosedural: data dan fungsi terpisah.

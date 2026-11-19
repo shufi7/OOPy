@@ -44,6 +44,14 @@ return [
 
                 'Kedua object disimpan dalam list sensor. Di dalam loop, pemanggil cukup menulis item.baca_data(); Python menjalankan implementasi yang sesuai dengan object saat itu.',
             ],
+            'media' => [
+                [
+                    'type' => 'diagram',
+                    'src' => 'images/materi/diagram/bab5-polimorfisme-sensor.svg',
+                    'alt' => 'SensorPH dan SensorSuhu diproses melalui pemanggilan baca_data() yang sama, dengan hasil sesuai implementasi tiap sensor.',
+                    'caption' => 'Satu cara memanggil method dapat menghasilkan perilaku berbeda pada object yang berbeda.',
+                ],
+            ],
 
             'code' => <<<'PYTHON'
 class SensorLingkungan:

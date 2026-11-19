@@ -28,6 +28,18 @@ return [
                 'Class membantu mengelompokkan pola data dan perilaku yang sama. Kita dapat merancang class Ekosistem, lalu membuat object Sungai, Rawa, atau Mangrove yang masing-masing menyimpan nama dan lokasi sendiri.',
                 'Di bab ini, kita akan membedakan rancangan (class) dari object yang dibuat berdasarkan rancangan tersebut, lalu melihat bagaimana atribut dan method bekerja bersama.',
             ],
+            'media' => [
+                [
+                    'type' => 'photo',
+                    'src' => 'images/materi/photos/bab2-rawa-kalimantan-selatan.webp',
+                    'alt' => 'Penggembala dan kerbau rawa berada di perairan rawa Daha Utara, Kabupaten Hulu Sungai Selatan, Kalimantan Selatan.',
+                    'caption' => 'Rawa dan aktivitas masyarakat di Daha Utara memberi gambaran ekosistem nyata yang bisa dimodelkan sebagai object.',
+                    'source_label' => 'Foto: Herusutimbul · Wikimedia Commons (diubah ukuran dan dikonversi ke WebP)',
+                    'source_url' => 'https://commons.wikimedia.org/wiki/File:Penggembala_Kerbau_Rawa.jpg',
+                    'license_label' => 'CC BY-SA 4.0',
+                    'license_url' => 'https://creativecommons.org/licenses/by-sa/4.0/',
+                ],
+            ],
         ],
 
         /*
@@ -43,6 +55,14 @@ return [
                 'Class adalah rancangan yang mendefinisikan atribut dan method yang tersedia pada object. Object adalah satu hasil nyata yang dibuat dari class. Istilah instance merujuk pada object yang dibuat dari class tersebut; dalam percakapan OOP, object dan instance sering dipakai untuk hal yang sama.',
                 'Atribut adalah data milik object, sedangkan method adalah fungsi yang didefinisikan di dalam class dan dapat dipanggil melalui object. Nilai atribut pada suatu waktu membentuk state atau keadaan object.',
                 'Pada contoh ini, Ekosistem adalah class, rawa adalah object sekaligus instance, nama dan lokasi adalah atribut, dan info() adalah method.',
+            ],
+            'media' => [
+                [
+                    'type' => 'diagram',
+                    'src' => 'images/materi/diagram/bab2-class-object.svg',
+                    'alt' => 'Class Ekosistem dengan atribut nama dan lokasi serta method info menghasilkan object sungai, rawa, dan mangrove yang memiliki nilai berbeda.',
+                    'caption' => 'Satu class menjadi rancangan bagi beberapa object dengan state yang berbeda.',
+                ],
             ],
             'code' => <<<'PYTHON'
 class Ekosistem:

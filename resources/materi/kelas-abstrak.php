@@ -50,6 +50,14 @@ return [
                 'Subclass konkret harus menyediakan implementasi seluruh abstract method yang masih berlaku sebelum object dapat dibuat secara normal. Hal ini membantu menetapkan kontrak perilaku minimum untuk keluarga class.',
                 'Pada contoh berikut, SensorLingkungan merupakan abstract base class. SensorPH mengimplementasikan baca_data(), sehingga object SensorPH dapat dibuat dan method baca_data() menghasilkan nilai 7.1.',
             ],
+            'media' => [
+                [
+                    'type' => 'diagram',
+                    'src' => 'images/materi/diagram/bab6-kelas-abstrak-alat-pantau.svg',
+                    'alt' => 'Abstract class SensorLingkungan menetapkan kontrak baca_data() yang harus diimplementasikan subclass SensorPH dan SensorSuhu; kelas abstrak tidak dibuat menjadi object langsung.',
+                    'caption' => 'ABC menetapkan kontrak; subclass konkret memenuhi kontrak sebelum object dibuat.',
+                ],
+            ],
 
             'code' => <<<'PYTHON'
 from abc import ABC, abstractmethod

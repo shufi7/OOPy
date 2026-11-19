@@ -134,6 +134,14 @@ OUTPUT,
                 'Dari sisi pengguna object, sensor.tinggi_air terlihat seperti atribut biasa dan digunakan tanpa tanda kurung. Membacanya memanggil getter; assignment sensor.tinggi_air = 90 memanggil setter. Ini merupakan pendekatan Pythonic untuk atribut yang membutuhkan kontrol.',
                 'Pada contoh ini, lokasi tetap public. Nilai tinggi air disimpan pada self.__tinggi_air setelah validasi. Constructor memakai self.tinggi_air = tinggi_air agar nilai awal melewati setter yang sama.',
             ],
+            'media' => [
+                [
+                    'type' => 'diagram',
+                    'src' => 'images/materi/diagram/bab3-enkapsulasi-sensor.svg',
+                    'alt' => 'Perubahan tinggi air melewati property atau setter, diperiksa validitasnya, lalu disimpan jika valid atau ditolak dengan ValueError.',
+                    'caption' => 'Property menjadi interface class yang memeriksa nilai sebelum data internal berubah.',
+                ],
+            ],
             'code' => <<<'PYTHON'
 class SensorAir:
     def __init__(self, lokasi, tinggi_air):

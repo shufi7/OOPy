@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 600" role="img" aria-labelledby="title desc">
+  <title id="title">Satu pemanggilan, perilaku sensor berbeda</title>
+  <desc id="desc">Loop memanggil baca_data() dengan cara yang sama untuk object SensorPH dan SensorSuhu, yang menghasilkan nilai berbeda.</desc>
+  <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#168477"/></marker></defs>
+  <rect width="1040" height="600" rx="24" fill="#f4f8f7"/>
+  <text x="520" y="58" text-anchor="middle" fill="#153b38" font-family="Arial,sans-serif" font-size="34" font-weight="700">Satu antarmuka pemanggilan, banyak perilaku</text>
+  <g font-family="Arial,sans-serif">
+    <rect x="38" y="145" width="280" height="130" rx="18" fill="#fff" stroke="#cddbd8" stroke-width="2"/>
+    <text x="178" y="190" text-anchor="middle" fill="#177f73" font-family="monospace" font-size="26" font-weight="700">SensorPH()</text>
+    <text x="178" y="232" text-anchor="middle" fill="#53635f" font-size="20">implementasi pH</text>
+    <rect x="38" y="325" width="280" height="130" rx="18" fill="#fff" stroke="#cddbd8" stroke-width="2"/>
+    <text x="178" y="370" text-anchor="middle" fill="#177f73" font-family="monospace" font-size="26" font-weight="700">SensorSuhu()</text>
+    <text x="178" y="412" text-anchor="middle" fill="#53635f" font-size="20">implementasi suhu</text>
+    <path d="M322 210H390V300H412M322 390H390V300H412" fill="none" stroke="#168477" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="425" y="190" width="270" height="220" rx="20" fill="#e7f3f0" stroke="#82bdb3" stroke-width="2"/>
+    <text x="560" y="237" text-anchor="middle" fill="#177f73" font-size="21" font-weight="700">PEMANGGILAN SERAGAM</text>
+    <text x="560" y="292" text-anchor="middle" fill="#183a37" font-family="monospace" font-size="25">for item in sensor:</text>
+    <text x="560" y="338" text-anchor="middle" fill="#183a37" font-family="monospace" font-size="25">item.baca_data()</text>
+    <text x="560" y="378" text-anchor="middle" fill="#53635f" font-size="19">loop tidak memilih tipe sensor</text>
+    <path d="M700 300H748V210H778M748 300V390H778" fill="none" stroke="#168477" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="790" y="145" width="218" height="130" rx="18" fill="#fff" stroke="#cddbd8" stroke-width="2"/>
+    <text x="899" y="190" text-anchor="middle" fill="#42635e" font-size="20" font-weight="700">HASIL SensorPH</text>
+    <text x="899" y="238" text-anchor="middle" fill="#183a37" font-family="monospace" font-size="28">7.1</text>
+    <rect x="790" y="325" width="218" height="130" rx="18" fill="#fff" stroke="#cddbd8" stroke-width="2"/>
+    <text x="899" y="370" text-anchor="middle" fill="#42635e" font-size="20" font-weight="700">HASIL SensorSuhu</text>
+    <text x="899" y="418" text-anchor="middle" fill="#183a37" font-family="monospace" font-size="28">29.5</text>
+  </g>
+  <text x="520" y="530" text-anchor="middle" fill="#42635e" font-family="Arial,sans-serif" font-size="20">Object berbeda menentukan perilaku dan hasilnya masing-masing.</text>
+</svg>

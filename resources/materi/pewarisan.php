@@ -27,6 +27,18 @@ return [
                 'Sungai, Rawa, dan Mangrove adalah jenis Ekosistem (is-a), sehingga dapat menjadi subclass. StasiunPemantau memiliki atau menggunakan Sensor (has-a); stasiun bukan jenis sensor.',
                 'Kita akan melihat cara mewarisi method, menambahkan data khusus, dan memilih hubungan antarkelas berdasarkan maknanya, bukan sekadar untuk mempersingkat kode.',
             ],
+            'media' => [
+                [
+                    'type' => 'photo',
+                    'src' => 'images/materi/photos/bab4-embung-bakar.webp',
+                    'alt' => 'Embung Bakar di Desa Sungai Bakar, Bajuin, Kabupaten Tanah Laut, Kalimantan Selatan.',
+                    'caption' => 'Contoh lingkungan perairan Kalimantan Selatan yang memperkaya konteks pemodelan keluarga ekosistem.',
+                    'source_label' => 'Foto: Ilham Mufti Laksono · Wikimedia Commons (diubah ukuran dan dikonversi ke WebP)',
+                    'source_url' => 'https://commons.wikimedia.org/wiki/File:Embung_Bakar_001.jpg',
+                    'license_label' => 'CC BY-SA 4.0',
+                    'license_url' => 'https://creativecommons.org/licenses/by-sa/4.0/',
+                ],
+            ],
             'tip' => 'Bayangkan kalimat “Sungai adalah jenis Ekosistem” dan “StasiunPemantau memiliki Sensor”. Kalimat pertama menunjukkan is-a; kalimat kedua menunjukkan has-a.',
         ],
 
@@ -44,6 +56,14 @@ return [
 
                 'Penulisan class Sungai(Ekosistem) berarti Sungai mewarisi atribut dan method Ekosistem. Jika subclass belum mendefinisikan ulang info(), object-nya tetap dapat memakai method induk tersebut.',
                 'Contoh membuat satu object dari setiap subclass. Semuanya memakai info() yang diwarisi, tetapi masing-masing menyimpan data sendiri.',
+            ],
+            'media' => [
+                [
+                    'type' => 'diagram',
+                    'src' => 'images/materi/diagram/bab4-inheritance-ekosistem.svg',
+                    'alt' => 'Superclass Ekosistem menyediakan nama, lokasi, dan info untuk subclass Sungai, Rawa, dan Mangrove melalui hubungan is-a.',
+                    'caption' => 'Subclass mewarisi hal umum dari Ekosistem lalu dapat memiliki ciri khususnya sendiri.',
+                ],
             ],
 
             'code' => <<<'PYTHON'

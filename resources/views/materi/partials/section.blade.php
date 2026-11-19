@@ -4,6 +4,26 @@
     @foreach ($section['paragraphs'] ?? [] as $paragraph)
         <p>{{ $paragraph }}</p>
     @endforeach
+    @if (!empty($section['media']))
+        <div class="material-media-grid{{ count($section['media']) > 1 ? ' material-media-grid--multiple' : '' }}">
+            @foreach ($section['media'] as $visual)
+                <figure class="material-figure material-figure--{{ $visual['type'] }}">
+                    <img src="{{ asset($visual['src']) }}" alt="{{ $visual['alt'] }}" loading="lazy" decoding="async">
+                    <figcaption>
+                        <span>{{ $visual['caption'] }}</span>
+                        @if (!empty($visual['source_url']))
+                            <a class="material-figure-source" href="{{ $visual['source_url'] }}" target="_blank" rel="noopener noreferrer">{{ $visual['source_label'] ?? 'Sumber visual' }}</a>
+                        @elseif (!empty($visual['source_label']))
+                            <span class="material-figure-source">{{ $visual['source_label'] }}</span>
+                        @endif
+                        @if (!empty($visual['license_url']))
+                            <a class="material-figure-source" href="{{ $visual['license_url'] }}" target="_blank" rel="noopener noreferrer">Lisensi {{ $visual['license_label'] ?? 'visual' }}</a>
+                        @endif
+                    </figcaption>
+                </figure>
+            @endforeach
+        </div>
+    @endif
     @foreach ($section['tables'] ?? [] as $table)
         <div class="material-table-wrapper" role="region" aria-label="{{ $table['caption'] }}" tabindex="0">
             <table class="table material-table align-middle">
