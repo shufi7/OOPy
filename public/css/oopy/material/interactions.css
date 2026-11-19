@@ -1,0 +1,93 @@
+.oopy-material [data-learning-check-slot]:empty { display: none; }
+.oopy-material .material-learning-check {
+    max-width: 72ch;
+    margin: 28px 0;
+    padding: 20px 22px;
+    border: 1px solid var(--oopy-border);
+    border-left: 4px solid var(--oopy-action);
+    border-radius: 10px;
+    background: #F3FBF9;
+}
+.oopy-material .material-learning-check-label {
+    margin: 0 0 6px;
+    color: var(--oopy-link);
+    font-size: var(--oopy-font-small);
+    font-weight: 700;
+}
+.oopy-material .material-learning-check h3 {
+    margin: 0 0 10px;
+    color: var(--oopy-ink);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+.oopy-material .material-learning-check-prompt {
+    margin: 0 0 14px;
+    color: var(--oopy-text);
+    line-height: 1.65;
+}
+.oopy-material .material-learning-check pre {
+    max-width: 100%;
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    border-radius: 8px;
+    background: #1E1E2E;
+    color: var(--oopy-mint);
+    font: var(--oopy-font-code)/1.6 var(--oopy-font-mono);
+    white-space: pre;
+}
+.oopy-material .material-learning-check pre:focus-visible { outline: 3px solid var(--oopy-focus); outline-offset: 3px; }
+.oopy-material .material-learning-check fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.oopy-material .material-learning-check legend { margin-bottom: 9px; color: var(--oopy-text); font-size: var(--oopy-font-small); font-weight: 600; }
+.oopy-material .material-learning-check-choices { display: grid; gap: 8px; }
+.oopy-material .material-learning-check-choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid var(--oopy-border);
+    border-radius: 8px;
+    background: var(--oopy-surface);
+    color: var(--oopy-text);
+    cursor: pointer;
+    line-height: 1.55;
+}
+.oopy-material .material-learning-check-choice:hover { background: var(--oopy-brand-mint); }
+.oopy-material .material-learning-check-choice input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--oopy-action); }
+.oopy-material .material-learning-check-choice:has(input:checked) { border-color: var(--oopy-action); background: var(--oopy-brand-mint); }
+.oopy-material .material-learning-check-choice:has(input:focus-visible) { outline: 3px solid var(--oopy-focus); outline-offset: 2px; }
+.oopy-material .material-learning-check-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.oopy-material .material-learning-check-actions button { min-width: 44px; min-height: 44px; padding: 9px 14px; border: 1px solid var(--oopy-action); border-radius: 8px; font: 600 1rem/1.4 var(--oopy-font-family); cursor: pointer; }
+.oopy-material .material-learning-check-submit { background: var(--oopy-action); color: #fff; }
+.oopy-material .material-learning-check-submit:hover { background: var(--oopy-action-hover); }
+.oopy-material .material-learning-check-retry { background: var(--oopy-surface); color: var(--oopy-action); }
+.oopy-material .material-learning-check-retry:hover { background: var(--oopy-brand-mint); }
+.oopy-material .material-learning-check-actions button:focus-visible { outline: 3px solid var(--oopy-focus); outline-offset: 3px; }
+.oopy-material .material-learning-check-feedback { margin: 14px 0 0; padding: 12px 14px; border-radius: 8px; background: var(--oopy-surface); color: var(--oopy-text); line-height: 1.6; }
+.oopy-material .material-learning-check-feedback[data-state="correct"] { border-left: 4px solid #247348; }
+.oopy-material .material-learning-check-feedback[data-state="incorrect"] { border-left: 4px solid #A02626; }
+.oopy-material .material-learning-check-feedback[data-state="notice"] { border-left: 4px solid #92400E; }
+.oopy-material .material-learning-check [hidden] { display: none !important; }
+
+.oopy-material .material-concept-diagram { margin: 0 0 16px; padding-top: 14px; border-top: 1px solid var(--oopy-border); }
+.oopy-material .material-concept-diagram figcaption { margin-bottom: 12px; color: var(--oopy-ink); font-size: var(--oopy-font-small); font-weight: 700; line-height: 1.5; }
+.oopy-material .material-concept-diagram-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 14px; min-width: 0; padding: 0; margin: 0; list-style: none; }
+.oopy-material .material-concept-diagram-item { display: grid; align-content: start; gap: 6px; min-width: 0; padding-top: 9px; border-top: 2px solid #B7D8D2; }
+.oopy-material .material-concept-diagram-item strong { color: var(--oopy-ink); font-size: .875rem; line-height: 1.4; }
+.oopy-material .material-concept-diagram-item code { width: fit-content; max-width: 100%; padding: 4px 7px; border-radius: 5px; background: #E4F9F5; color: #075A5D; font-family: var(--oopy-font-mono); font-size: .8125rem; line-height: 1.5; overflow-wrap: anywhere; white-space: normal; }
+.oopy-material .material-concept-diagram-item > span { color: var(--oopy-text); font-size: .875rem; line-height: 1.55; }
+.oopy-material .material-concept-diagram.is-flow .material-concept-diagram-items { grid-template-columns: repeat(var(--diagram-columns), minmax(0, 1fr)); gap: 22px; }
+.oopy-material .material-concept-diagram.is-flow .material-concept-diagram-item { position: relative; }
+.oopy-material .material-concept-diagram.is-flow .material-concept-diagram-item + .material-concept-diagram-item::before { content: '→'; position: absolute; top: 50%; left: -18px; color: var(--oopy-action); font-weight: 700; transform: translate(-50%, -50%); }
+
+@media (max-width: 575.98px) {
+    .oopy-material .material-concept-diagram.is-flow .material-concept-diagram-items { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .oopy-material .material-concept-diagram.is-flow .material-concept-diagram-item + .material-concept-diagram-item::before { top: -15px; left: 50%; transform: translate(-50%, -50%) rotate(90deg); }
+}
+
+@media (max-width: 575.98px) {
+    .oopy-material .material-learning-check { padding: 16px 14px; }
+}

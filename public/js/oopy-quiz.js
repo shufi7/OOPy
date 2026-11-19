@@ -93,6 +93,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
                 questions = data.questions;
                 answers = Array(questions.length).fill(null);
                 current = 0;
+                buildQuestionNavigation();
                 renderQuestion();
                 find('validation').textContent = 'Paket soal diperbarui. Jawab soal pada versi percobaan ini.';
             }
@@ -116,6 +117,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
             if (input.type !== 'hidden') input.disabled = value || (input === find('code-fill') && !isCodeFill(questions[current]));
         });
         find('next').textContent = value ? 'Menyimpan hasil…' : (current === questions.length - 1 ? 'Selesai Kuis' : 'Soal Selanjutnya');
+        updateQuestionNavigation();
     }
 
     function clearResults() {
@@ -128,6 +130,46 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
 
     function updateAnswered() {
         find('answered').textContent = `${answers.filter((answer, index) => hasAnswer(questions[index], answer)).length} dari ${questions.length} soal dijawab`;
+        updateQuestionNavigation();
+    }
+
+    function updateQuestionNavigation() {
+        find('question-navigation').querySelectorAll('button[data-question-index]').forEach((button, index) => {
+            const answered = hasAnswer(questions[index], answers[index]);
+            const currentQuestion = index === current;
+            const status = answered ? 'Terjawab' : 'Belum diisi';
+            button.dataset.answered = String(answered);
+            button.setAttribute('aria-label', `Soal ${index + 1}, ${status}${currentQuestion ? ', sedang dibuka' : ''}`);
+            if (currentQuestion) button.setAttribute('aria-current', 'step');
+            else button.removeAttribute('aria-current');
+            button.disabled = busy || completed;
+            button.querySelector('[data-question-state]').textContent = status;
+        });
+    }
+
+    function buildQuestionNavigation() {
+        const list = find('question-navigation');
+        list.replaceChildren();
+        questions.forEach((question, index) => {
+            const item = document.createElement('li');
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'oopy-quiz-question-jump';
+            button.dataset.questionIndex = String(index);
+            const number = element('span', `Soal ${index + 1}`, 'oopy-quiz-question-number');
+            const state = element('span', '', 'oopy-quiz-question-state');
+            state.dataset.questionState = '';
+            button.append(number, state);
+            button.addEventListener('click', () => {
+                if (busy || completed) return;
+                current = index;
+                find('validation').textContent = '';
+                renderQuestion();
+            });
+            item.append(button);
+            list.append(item);
+        });
+        updateQuestionNavigation();
     }
 
     function sizeCodeFill() {
@@ -269,6 +311,7 @@ document.querySelectorAll('[data-oopy-quiz]').forEach((root) => {
     updatePassingMessage();
     updateNavigation();
     clearResults();
+    buildQuestionNavigation();
     renderQuestion(false);
     find('loading').hidden = true;
     find('instructions-toggle').hidden = false;

@@ -4,6 +4,7 @@ if (material) {
     const menu = material.querySelector('.material-toc');
     const links = [...menu.querySelectorAll('nav a')];
     const sections = [...material.querySelectorAll('[data-material-section]')];
+    const readingPosition = material.querySelector('[data-reading-position]');
     const desktop = window.matchMedia('(min-width: 992px)');
     const openGroup = (link) => {
         const group = link?.closest('.material-toc-group');
@@ -16,15 +17,25 @@ if (material) {
     let framePending = false;
     function markActiveSection() {
         framePending = false;
+        if (!sections.length) return;
         let active = sections[0];
         for (const section of sections) {
             if (section.getBoundingClientRect().top <= 160) active = section;
         }
+        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+            active = sections.at(-1) || active;
+        }
+        const activeIndex = sections.indexOf(active);
         links.forEach((link) => {
             if (link.hash === `#${active.id}`) {
                 link.setAttribute('aria-current', 'location');
             } else link.removeAttribute('aria-current');
         });
+        if (readingPosition && active) {
+            const heading = active.querySelector('h2');
+            const title = heading?.textContent.trim() || active.getAttribute('aria-label') || 'Bagian materi';
+            readingPosition.textContent = `Posisi membaca · Bagian ${activeIndex + 1} dari ${sections.length} · ${title}`;
+        }
     }
     function scheduleUpdate() {
         if (framePending) return;

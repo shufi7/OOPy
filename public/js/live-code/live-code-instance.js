@@ -12,6 +12,14 @@ export function createLiveCode(root, config) {
     const checkButton = byId('check-code');
     const resetButton = byId('reset-code');
     const stopButton = byId('stop-code');
+    const executionStatus = byId('execution-status');
+    const fileGuidance = byId('file-guidance');
+    const fileGuidanceByExercise = config.id === 'bab4-pewarisan-ekosistem' ? {
+        'ekosistem.py': 'Class induk Ekosistem sudah disediakan. Pelajari atribut nama dan lokasi yang diwariskan.',
+        'sungai.py': 'Lengkapi subclass Sungai, panggil super().__init__(), simpan panjang_km, lalu override info().',
+        'rawa.py': 'Lengkapi subclass Rawa, panggil super().__init__(), simpan luas_ha, lalu override info().',
+        'main.py': 'Buat object Sungai dan Rawa, kemudian tampilkan hasil method info() dari keduanya.',
+    } : {};
     let editor;
     let activeFile = config.entry_file;
     let running = false;
@@ -46,6 +54,17 @@ export function createLiveCode(root, config) {
     function setStatus(state, message) {
         byId('python-status').dataset.state = state;
         byId('python-status-text').textContent = message;
+    }
+
+    function executionFailureStatus(message) {
+        const details = String(message || '');
+        if (/\bSyntaxError\b/.test(details)) {
+            return 'Syntax error pada kode atau pemeriksaan Python. Periksa detail pesan dan baris di area Output.';
+        }
+        if (/Traceback \(most recent call last\)/.test(details)) {
+            return 'Python mengalami error saat menjalankan program atau pemeriksaan. Periksa detail pesan dan baris di area Output.';
+        }
+        return 'Proses Python gagal. Periksa pesan di area Output lalu coba lagi.';
     }
 
     function appendOutput(text, kind = '') {
@@ -89,6 +108,7 @@ export function createLiveCode(root, config) {
         });
         byId('editor-panel').setAttribute('aria-labelledby', `${config.id}-tab-${fileNames.indexOf(name)}`);
         byId('active-file-path').textContent = `workspace / ${name}`;
+        if (fileGuidance) fileGuidance.textContent = fileGuidanceByExercise[name] || `File aktif: ${name}.`;
         revealActiveTab();
     }
 
@@ -109,6 +129,7 @@ export function createLiveCode(root, config) {
             output.replaceChildren();
             appendOutput(`File belum lengkap: ${emptyFiles.join(', ')}. Tulis kode pada setiap file sebelum Run Code atau Submit.\n`, 'muted');
             setStatus('ready', 'Lengkapi seluruh file proyek.');
+            if (executionStatus) executionStatus.textContent = `File belum lengkap: ${emptyFiles.join(', ')}.`;
             selectFile(emptyFiles[0]);
             editor.focus();
             return;
@@ -118,10 +139,12 @@ export function createLiveCode(root, config) {
             output.replaceChildren();
             appendOutput('Editor masih kosong. Tulis kode Python di main.py sebelum Run Code atau Submit.\n', 'muted');
             setStatus('ready', 'Belum ada kode. Tulis program Python terlebih dahulu.');
+            if (executionStatus) executionStatus.textContent = 'Editor masih kosong. Tulis kode Python terlebih dahulu.';
             editor.focus();
             return;
         }
         running = true;
+        if (executionStatus) executionStatus.textContent = type === 'check' ? 'Memeriksa jawaban latihan.' : `Menjalankan ${config.entry_file}.`;
         clearResults();
         output.replaceChildren();
         appendOutput(type === 'check' ? `[Memeriksa ${fileNames.length} file ...]\n` : `[Menjalankan ${config.entry_file} ...]\n`, 'muted');
@@ -136,6 +159,9 @@ export function createLiveCode(root, config) {
             else if (data.type === 'results') renderResults(data.results);
             else if (['done', 'error', 'cancelled'].includes(data.type)) {
                 appendOutput(data.type === 'done' ? '\n✓ Selesai.\n' : `\n${data.message}\n`, data.type === 'done' ? 'success' : 'error');
+                if (executionStatus) executionStatus.textContent = data.type === 'done'
+                    ? (type === 'check' ? 'Pemeriksaan lokal selesai. Lihat hasil pemeriksaan.' : 'Program selesai. Output tersedia di area Output.')
+                    : data.type === 'cancelled' ? 'Eksekusi dihentikan. Kode tetap tersimpan di editor.' : executionFailureStatus(data.message);
                 running = false;
                 if (type === 'check' && data.type !== 'cancelled' && config.persistence_enabled && config.authenticated) {
                     submitOfficial(files);
@@ -284,7 +310,10 @@ export function createLiveCode(root, config) {
     checkButton.addEventListener('click', () => execute('check'));
     stopButton.addEventListener('click', () => runtimeManager.cancel(config.id));
     byId('retry-runtime').addEventListener('click', () => runtimeManager.start());
-    byId('clear-output').addEventListener('click', () => output.replaceChildren());
+    byId('clear-output').addEventListener('click', () => {
+        output.replaceChildren();
+        if (executionStatus) executionStatus.textContent = 'Output dibersihkan.';
+    });
     resetButton.addEventListener('click', () => {
         const changed = [...models].some(([name, model]) => model.getValue() !== starterFiles[name]);
         const resetMessage = config.require_code
@@ -300,6 +329,7 @@ export function createLiveCode(root, config) {
         editor.revealLine(1);
         output.replaceChildren();
         clearResults();
+        if (executionStatus) executionStatus.textContent = 'Kode dikembalikan ke kondisi awal.';
     });
 
     const unsubscribe = runtimeManager.subscribe(showRuntimeState);

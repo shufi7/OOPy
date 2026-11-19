@@ -83,6 +83,7 @@
             @endif
         </div>
     @endforeach
+    <div data-learning-check-slot></div>
     @if (!empty($section['tip']))
         <aside class="material-tip" aria-label="Catatan {{ $section['title'] }}">
             <strong><i class="bi bi-lightbulb" aria-hidden="true"></i> Catatan belajar</strong>

@@ -8,6 +8,16 @@
 .oopy-quiz .oopy-quiz-counter { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin: 28px 0 16px; }
 .oopy-quiz .oopy-quiz-counter h3 { margin: 0; font-size: 1.125rem; font-weight: 700; line-height: 1.35; }
 .oopy-quiz .oopy-quiz-counter > span { font-size: var(--oopy-font-small); color: var(--oopy-ink-soft); line-height: 1.5; }
+.oopy-quiz .oopy-quiz-question-map { margin: 0 0 22px; }
+.oopy-quiz .oopy-quiz-question-map ol { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 0; list-style: none; }
+.oopy-quiz .oopy-quiz-question-map li { min-width: 0; }
+.oopy-quiz .oopy-quiz-question-jump { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 3px; width: 100%; min-width: 0; min-height: 58px; padding: 8px 10px; border: 1px solid var(--oopy-control-border); border-radius: 8px; background: var(--oopy-surface); color: var(--oopy-text); text-align: left; cursor: pointer; }
+.oopy-quiz .oopy-quiz-question-jump:hover:not(:disabled) { background: var(--oopy-selected); }
+.oopy-quiz .oopy-quiz-question-jump[aria-current='step'] { border: 2px solid var(--oopy-action); padding: 7px 9px; background: var(--oopy-selected); color: var(--oopy-ink); }
+.oopy-quiz .oopy-quiz-question-jump[data-answered='true'] .oopy-quiz-question-state { color: #1E7547; font-weight: 700; }
+.oopy-quiz .oopy-quiz-question-number { font-size: .9375rem; font-weight: 700; line-height: 1.3; }
+.oopy-quiz .oopy-quiz-question-state { color: var(--oopy-text); font-size: .75rem; line-height: 1.3; }
+.oopy-quiz .oopy-quiz-question-jump:focus-visible { outline: 3px solid var(--oopy-focus); outline-offset: 2px; }
 .oopy-quiz .oopy-quiz-question { padding: 22px; border: 1px solid var(--oopy-mist); border-radius: 12px; background: var(--oopy-bg); }
 .oopy-quiz .oopy-quiz-question > p { margin: 0; line-height: 1.65; font-weight: 600; font-size: clamp(1.0625rem, 1rem + .14vw, 1.1875rem); }
 .oopy-quiz .oopy-quiz-question .material-code { margin-bottom: 0; }
@@ -39,6 +49,8 @@
 .oopy-quiz [tabindex='-1']:focus-visible, .oopy-quiz pre:focus-visible { outline: 3px solid var(--oopy-focus); outline-offset: 4px; }
 @media (max-width: 575.98px) {
     .oopy-quiz .oopy-quiz-question { padding: 16px; }
+    .oopy-quiz .oopy-quiz-question-map ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .oopy-quiz .oopy-quiz-question-jump { min-height: 56px; padding: 8px; }
     .oopy-quiz .oopy-quiz-navigation { flex-direction: column; }
     .oopy-quiz .oopy-quiz-option { padding: 14px 12px; }
     .oopy-quiz .oopy-quiz-result-actions { flex-direction: column; }

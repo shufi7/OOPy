@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ asset('css/oopy/material/material.css') }}">
 <link rel="stylesheet" href="{{ asset('css/oopy/material/navigation.css') }}">
 <link rel="stylesheet" href="{{ asset('css/oopy/material/code.css') }}">
+<link rel="stylesheet" href="{{ asset('css/oopy/material/interactions.css') }}">
 <link rel="stylesheet" href="{{ asset('css/oopy/material/quiz.css') }}">
 @endpush
 
@@ -13,6 +14,7 @@
 <script src="{{ asset('js/vendor/prism/prism.min.js') }}" data-manual defer></script>
 <script src="{{ asset('js/oopy-syntax.js') }}" defer></script>
 <script src="{{ asset('js/oopy-material.js') }}" defer></script>
+<script src="{{ asset('js/oopy-learning-checks.js') }}" defer></script>
 <script src="{{ asset('js/oopy-quiz.js') }}" defer></script>
 @endpush
 
@@ -31,6 +33,9 @@
             @include('materi.partials.navigation')
 
             <article class="material-article" aria-labelledby="chapter-title">
+                <p class="material-reading-position" data-reading-position role="status" aria-live="polite" aria-atomic="true">
+                    Posisi membaca · Tujuan Pembelajaran
+                </p>
                 <header class="material-header">
                     <span class="material-eyebrow">{{ $chapter['bab'] }} · MATERI PEMBELAJARAN</span>
                     <h1 id="chapter-title">{{ $chapter['judul'] }}</h1>
@@ -55,10 +60,10 @@
                 @endforeach
 
                 @if (!empty($content['summary']))
-                <section class="material-section" id="rangkuman" aria-labelledby="rangkuman-title" tabindex="-1" data-material-section>
+                <section class="material-section material-summary" id="rangkuman" aria-labelledby="rangkuman-title" tabindex="-1" data-material-section>
                     <span class="material-eyebrow">TINJAU KEMBALI</span>
                     <h2 id="rangkuman-title">Rangkuman</h2>
-                    <ul class="material-list">
+                    <ul class="material-list material-summary-list">
                         @foreach ($content['summary'] as $point)
                         <li>{{ $point }}</li>
                         @endforeach
@@ -67,7 +72,7 @@
                 @endif
 
                 @if (!empty($content['reflection']))
-                <section class="material-section" id="refleksi" aria-labelledby="refleksi-title" tabindex="-1" data-material-section>
+                <section class="material-section material-reflection" id="refleksi" aria-labelledby="refleksi-title" tabindex="-1" data-material-section>
                     <span class="material-eyebrow">REFLEKSI</span>
                     <h2 id="refleksi-title">Refleksi</h2>
 
@@ -76,7 +81,7 @@
                         untuk mengingat kembali konsep yang sudah dipelajari.
                     </p>
 
-                    <ol class="material-list">
+                    <ol class="material-list material-reflection-list">
                         @foreach ($content['reflection'] as $question)
                         <li>{{ $question }}</li>
                         @endforeach

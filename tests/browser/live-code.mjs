@@ -153,7 +153,6 @@ try {
 
     // Real CDN failure and recovery; the editor still renders when Python is offline.
     const failed = await browser.newPage();
-    await cacheAssets(failed.context());
     await failed.route('**/pyodide.js', (route) => route.abort());
     await failed.goto(`${base}/editor`, { waitUntil: 'domcontentloaded' });
     await failed.locator(`#${a} [data-role="retry-runtime"]`).waitFor({ state: 'visible' });
@@ -162,7 +161,6 @@ try {
     await failed.waitForFunction(() => !document.querySelector('[data-role="run-code"]').disabled, null, { timeout: 110000 });
     await failed.close();
     const noMonaco = await browser.newPage();
-    await cacheAssets(noMonaco.context());
     await noMonaco.route('**/vs/loader.js', (route) => route.abort());
     await noMonaco.goto(`${base}/editor`, { waitUntil: 'domcontentloaded' });
     await noMonaco.waitForFunction(() => document.querySelector('[data-role="editor-loading"]').textContent.includes('tidak dapat diunduh'));
