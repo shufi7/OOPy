@@ -25,9 +25,12 @@
     </style>
 </head>
 <body>
+@php($showDemoNotice = $certificate->order?->mode !== 'sandbox')
 <div class="sheet">
     <div class="brand"><img src="{{ $logo }}" alt="Logo OOPy"> <strong>OOPy</strong></div>
-    <div class="demo">{{ $certificate->demoLabel() }}</div>
+    @if ($showDemoNotice)
+        <div class="demo">{{ $certificate->demoLabel() }}</div>
+    @endif
     <div class="heading"><h1>CERTIFICATE OF COMPLETION</h1><div>Sertifikat Penyelesaian Pembelajaran</div></div>
     <div class="recipient">Diberikan kepada
         <div class="name" style="font-size: {{ mb_strlen($certificate->participant_name) > 100 ? 14 : (mb_strlen($certificate->participant_name) > 60 ? 21 : 30) }}pt">{{ $certificate->participant_name }}</div>
@@ -42,7 +45,9 @@
         Diterbitkan: {{ $certificate->issued_at->timezone('Asia/Makassar')->locale('id')->translatedFormat('j F Y') }}
     </div>
     <div class="qr"><img src="{{ $qr }}" alt="QR verifikasi"><br><span>Pindai untuk verifikasi</span></div>
-    <p class="notice">Sertifikat demo penyelesaian pembelajaran OOPy ({{ $certificate->demoLabel() }}). Bukan sertifikasi profesi atau akreditasi.</p>
+    @if ($showDemoNotice)
+        <p class="notice">Sertifikat demo penyelesaian pembelajaran OOPy ({{ $certificate->demoLabel() }}). Bukan sertifikasi profesi atau akreditasi.</p>
+    @endif
 </div>
 </body>
 </html>

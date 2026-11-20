@@ -76,7 +76,12 @@ class MaterialContentService
             return [$this->withLegacyChecks($source), null];
         }
 
-        return [$this->withLegacyChecks($record->published), $record->published_title];
+        $published = $record->published;
+        if (empty($published['quiz']) && ! empty($source['quiz'])) {
+            $published['quiz'] = $source['quiz'];
+        }
+
+        return [$this->withLegacyChecks($published), $record->published_title];
     }
 
     public function editor(Material $material): array

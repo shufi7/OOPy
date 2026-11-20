@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\EnsureChapterUnlocked;
 use DOMDocument;
 use DOMXPath;
 use Tests\TestCase;
@@ -20,7 +21,13 @@ class MateriTest extends TestCase
         $slugs = ['dasar-pemrograman-oop', 'kelas-dan-objek', 'enkapsulasi', 'pewarisan', 'polimorfisme', 'kelas-abstrak', 'evaluasi-akhir'];
         foreach ($slugs as $index => $slug) {
             $links = $xpath->query('.//a', $cards->item($index));
-            $this->assertSame(1, $links->length);
+            $this->assertSame($index === 0 ? 1 : 0, $links->length);
+            if ($index > 0) {
+                $this->assertSame(1, $xpath->query('.//button[@disabled]', $cards->item($index))->length);
+                $this->get(route('materi.show', $slug))->assertRedirect(route('materi.index'));
+
+                continue;
+            }
             $link = $links->item(0);
             $this->assertSame(route('materi.show', $slug), $link->getAttribute('href'));
             $this->assertSame('Pelajari BAB '.($index + 1), preg_replace('/\s+/u', ' ', trim($link->textContent)));
@@ -73,6 +80,7 @@ class MateriTest extends TestCase
 
     public function test_available_chapters_share_the_template_and_have_one_dynamic_footer_navigation(): void
     {
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
         $chapters = require resource_path('materi/chapters.php');
         $neighbors = [
             'dasar-pemrograman-oop' => [null, 'kelas-dan-objek'],
@@ -182,6 +190,7 @@ class MateriTest extends TestCase
 
     public function test_all_available_quizzes_embed_public_questions_without_answer_keys(): void
     {
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
         $answers = [
             'dasar-pemrograman-oop' => ['return', 'elif'],
             'kelas-dan-objek' => ['self.nama = nama', 'Ekosistem'],
@@ -203,9 +212,11 @@ class MateriTest extends TestCase
             $this->assertSame(1, $xpath->query('//*[@id="kuis"]//input[@data-quiz="code-fill"]')->length);
             $this->assertSame(2, $xpath->query('//*[@id="kuis"]//pre/code/span[contains(@class,"language-python")]')->length);
 
-            $this->assertCount(5, $questions);
-            $this->assertSame(['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill'], array_column($questions, 'type'));
-            $this->assertSame($codeAnswers, array_column(array_slice($response->viewData('content')['quiz'], 3), 'answer'));
+            $sourceQuestions = $response->viewData('content')['quiz'];
+            $this->assertCount(count($sourceQuestions), $questions);
+            $this->assertSame(array_map(fn ($question) => $question['type'] ?? 'multiple_choice', $sourceQuestions), array_column($questions, 'type'));
+            $codeKeys = array_column(array_filter($sourceQuestions, fn ($question) => ($question['type'] ?? 'multiple_choice') === 'code_fill'), 'answer');
+            $this->assertSame($codeAnswers, array_slice($codeKeys, 0, count($codeAnswers)));
             foreach ($questions as $index => $question) {
                 if (($question['type'] ?? 'multiple_choice') === 'code_fill') {
                     $this->assertNotEmpty($question['code']);
@@ -257,8 +268,8 @@ class MateriTest extends TestCase
         $this->assertCount(3, $sections['operator-ekspresi']['tables'][0]['rows']);
         $this->assertCount(5, $sections['prosedural-ke-oop']['tables'][0]['rows']);
         $this->assertCount(4, $sections['prosedural-ke-oop']['practice']);
-        $this->assertSame(['multiple_choice', 'multiple_choice', 'multiple_choice', 'code_fill', 'code_fill'], array_column($content['quiz'], 'type'));
-        $this->assertSame(['return', 'elif'], array_column(array_slice($content['quiz'], 3), 'answer'));
+        $this->assertSame([...array_fill(0, 6, 'multiple_choice'), ...array_fill(0, 4, 'code_fill')], array_column($content['quiz'], 'type'));
+        $this->assertSame(['return', 'elif', 'for', 'float'], array_column(array_slice($content['quiz'], 6), 'answer'));
         $response->assertSee('Ayo Berlatih')->assertSee('klasifikasi_suhu(suhu)')->assertSee('rata_rata(a, b, c)');
         $response->assertSee('&lt;class &#039;str&#039;&gt;', false);
         $response->assertDontSee('bab1-variabel')->assertDontSee('id="oop"', false);
@@ -285,6 +296,7 @@ class MateriTest extends TestCase
 
     public function test_encapsulation_chapter_has_objectives_reflection_and_code_questions(): void
     {
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
         $response = $this->get('/materi/enkapsulasi')->assertOk()->assertViewIs('materi.show');
         $content = $response->viewData('content');
         $this->assertCount(5, $content['objectives']);
@@ -304,6 +316,7 @@ class MateriTest extends TestCase
 
     public function test_abstract_chapter_matches_the_learning_contract_and_renders_examples(): void
     {
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
         $response = $this->get('/materi/kelas-abstrak')->assertOk()->assertViewIs('materi.show');
         $content = $response->viewData('content');
         $this->assertSame('Pelajari cara ABC dan @abstractmethod menyatakan kontrak perilaku minimum bagi keluarga class, serta kapan duck typing sudah cukup.', $content['description']);

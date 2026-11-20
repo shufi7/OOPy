@@ -148,10 +148,18 @@ logout/login kembali dan perangkat lain membaca progres yang sama. Urutan Next
 akun login berasal dari chapter_order dan registry server, tidak di-hardcode JS.
 BAB 6 tetap menuju halaman Evaluasi Akhir; engine BAB 7 tidak diintegrasikan.
 
-Navigasi ini bukan pembatasan URL materi: halaman BAB tetap publik, dan quiz
-akun login tidak menerapkan prasyarat akses BAB sebelumnya. Kebijakan course
-gating server/URL langsung adalah pekerjaan terpisah. Mengubah DOM sendiri
-tidak memberikan kelulusan database atau hak mengubah attempt akun lain.
+`ChapterAccessService` membatasi akses sesuai urutan registry BAB. BAB 1 terbuka
+untuk semua pengunjung; BAB selanjutnya hanya terbuka jika semua BAB sebelumnya
+memiliki `user_progress.status = completed` dan `completed_at` pada akun tersebut.
+Kartu terkunci tidak memiliki link dan menjelaskan BAB pertama yang belum selesai.
+`EnsureChapterUnlocked` melindungi URL materi, start/submit/progress kuis,
+halaman Evaluasi Akhir, serta seluruh endpoint `/evaluasi/attempts`.
+Permintaan HTML ke BAB terkunci diarahkan ke daftar materi dengan pesan;
+permintaan JSON ditolak dengan HTTP 403 sebelum jawaban atau attempt ditulis.
+BAB 7 memerlukan kelulusan BAB 1–6. BAB yang sudah selesai tetap dapat dibuka
+ulang; kegagalan latihan ulang tidak mengunci kembali BAB berikutnya.
+Daftar materi dan respons akses memakai `Cache-Control: no-store, private`.
+Mengubah DOM, parameter request, atau localStorage tidak membuka akses.
 
 `oopy.quiz.progress` dan key kelulusan legacy tidak lagi dibaca/ditulis/diimpor.
 Data lama tidak dihapus; forged passed/skor lokal tidak membuka progres resmi.

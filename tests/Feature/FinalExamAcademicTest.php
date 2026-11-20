@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\EnsureChapterUnlocked;
 use App\Models\FinalExamAttempt;
 use App\Models\Quiz;
 use App\Models\User;
@@ -15,6 +16,12 @@ use Tests\TestCase;
 class FinalExamAcademicTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
+    }
 
     public function test_code_variations_and_invalid_fragments_are_graded_by_the_server(): void
     {

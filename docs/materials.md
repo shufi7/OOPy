@@ -102,8 +102,10 @@ BAB 3 dan Next ke BAB 5. Next terkunci sebelum kuis lulus (minimal 4/5 benar).
 BAB 5 memiliki Previous ke BAB 4 dan Next/CTA ke BAB 6 yang terbuka setelah
 kuis lulus. BAB 6 memiliki Previous ke BAB 5 dan Next ke Evaluasi Akhir setelah
 minimal 4/5 benar (80%). BAB 7 memiliki Previous ke BAB 6 dan kembali ke daftar
-materi, tanpa Next ke BAB lanjutan. Direct URL seluruh BAB tetap HTTP 200 tanpa
-progres tersimpan; gate tersebut mengarahkan alur belajar pada browser.
+materi, tanpa Next ke BAB lanjutan. Akses BAB mengikuti progres akun di server:
+BAB 1 terbuka untuk semua pengunjung, sedangkan BAB berikutnya memerlukan
+kelulusan seluruh BAB sebelumnya. Kartu yang terkunci tidak memiliki link;
+URL langsung diarahkan ke daftar materi dan menampilkan BAB yang perlu diselesaikan.
 
 ## Sidebar navigasi BAB
 
@@ -477,13 +479,12 @@ atau diimpor. Jawaban sementara hanya ada di memori halaman.
   `<pre><code>` tetap dapat dibaca ketika editor belum siap.
 - `input()` dijelaskan dengan contoh untuk terminal lokal; editor browser belum
   mendukung input interaktif.
-- Navigasi Next memakai kelulusan database; proteksi URL materi langsung belum
-  diterapkan. Materi tetap publik, sedangkan start/submit/progress kuis memerlukan
-  authentication dan submission memeriksa ownership di server.
+- Navigasi Next dan akses BAB memakai kelulusan database. `ChapterAccessService`
+  dan `EnsureChapterUnlocked` melindungi halaman materi, kuis, serta BAB 7 dan
+  API evaluasinya. Start/submit/progress kuis memerlukan authentication dan
+  submission memeriksa ownership di server.
   Kunci/pembahasan tidak tersedia dalam JSON BAB 1–6 maupun response kuis.
-  Tidak ada backend progres atau penyimpanan nilai. Setelah login/dashboard dan
-  progres backend tersedia, gating dapat dipindahkan ke server. Status kuis tidak
-  mengubah hasil Live Coding.
+  Status kuis tidak mengubah hasil Live Coding.
 - BAB 1–6 memiliki detail dan BAB 7 memiliki evaluasi khusus. Belum ada BAB 8, autentikasi, database materi,
   dashboard, atau perubahan pada engine Live Coding, navbar, footer, dan Beranda.
 

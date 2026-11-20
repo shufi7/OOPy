@@ -410,6 +410,9 @@ class MidtransPaymentTest extends TestCase
         $this->get('/sertifikasi')->assertSee('Unduh sertifikat simulasi lama')->assertSee('Unduh Sertifikat PDF')->assertSee('SANDBOX / DEMO');
         $response = $this->get(route('certificates.download', $sandbox->public_id))->assertOk()->assertHeader('Content-Type', 'application/pdf');
         $this->assertStringStartsWith('%PDF-', $response->getContent());
+        $html = view('certification.pdf', ['certificate' => $sandbox, 'qr' => '', 'logo' => ''])->render();
+        $this->assertStringNotContainsString('SANDBOX / DEMO', $html);
+        $this->assertStringNotContainsString('Sertifikat demo penyelesaian pembelajaran OOPy', $html);
         $this->assertStringContainsString('data:image/png;base64,', app(CertificatePdfService::class)->qrDataUri($sandbox));
         $this->get(route('certificates.verify', $sandbox->public_id))->assertOk()->assertSee('Sertifikat Sandbox OOPy')->assertDontSee($user->email);
         $this->actingAs(User::factory()->create())->get(route('certificates.download', $sandbox->public_id))->assertNotFound();

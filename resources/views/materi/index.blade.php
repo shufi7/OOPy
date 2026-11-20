@@ -10,6 +10,12 @@
 @section('content')
 <div class="materi-section flex-grow-1 d-flex align-items-center py-5">
     <div class="container-fluid px-lg-5 px-3 py-lg-3">
+        @if (session('chapter_locked'))
+            <div class="alert alert-warning" role="alert">{{ session('chapter_locked') }}</div>
+        @endif
+        @guest
+            <p><a href="{{ route('login') }}">Masuk</a> untuk menyimpan progres dan membuka bab selanjutnya.</p>
+        @endguest
         <div class="row g-4 justify-content-center">
 
             @foreach ($materiList as $slug => $materi)
@@ -53,21 +59,36 @@
 
                             {{-- Tombol Pelajari BAB --}}
                             <div class="materi-card-footer">
-                                @if (isset($materi['content']))
-                                    <a
-                                        class="btn btn-brand materi-card-link stretched-link"
-                                        href="{{ route('materi.show', $slug) }}"
-                                        aria-label="Pelajari {{ $materi['bab'] }}: {{ $materi['judul'] }}"
-                                    >
-                                        <span>
-                                            Pelajari {{ $materi['bab'] }}
-                                        </span>
+                                @if (isset($materi['content']) && $chapterAccess[$slug]['locked'])
+                                    <div class="w-100">
+                                        <button type="button" class="btn btn-secondary w-100" disabled
+                                                aria-describedby="bab-{{ $loop->iteration }}-lock-reason">
+                                            <i class="bi bi-lock" aria-hidden="true"></i> {{ $materi['bab'] }} Terkunci
+                                        </button>
+                                        <p class="small mt-2 mb-0" id="bab-{{ $loop->iteration }}-lock-reason">
+                                            Selesaikan kuis {{ $chapterAccess[$slug]['required_chapter']['bab'] }} terlebih dahulu.
+                                        </p>
+                                    </div>
+                                @elseif (isset($materi['content']))
+                                    <div class="w-100">
+                                        @if ($chapterAccess[$slug]['completed'])
+                                            <p class="small fw-bold mb-2">Selesai</p>
+                                        @endif
+                                        <a
+                                            class="btn btn-brand materi-card-link stretched-link"
+                                            href="{{ route('materi.show', $slug) }}"
+                                            aria-label="Pelajari {{ $materi['bab'] }}: {{ $materi['judul'] }}"
+                                        >
+                                            <span>
+                                                Pelajari {{ $materi['bab'] }}
+                                            </span>
 
-                                        <i
-                                            class="bi bi-arrow-right"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </a>
+                                            <i
+                                                class="bi bi-arrow-right"
+                                                aria-hidden="true"
+                                            ></i>
+                                        </a>
+                                    </div>
                                 @else
                                     <span class="badge text-bg-light">
                                         Segera hadir

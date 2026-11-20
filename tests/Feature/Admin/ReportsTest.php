@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Http\Middleware\EnsureChapterUnlocked;
 use App\Models\FinalExamAttempt;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
@@ -232,6 +233,7 @@ class ReportsTest extends TestCase
 
     public function test_pending_essays_are_reported_without_a_fabricated_final_total(): void
     {
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
         $this->seed(OopyContentSeeder::class);
         $admin = $this->admin();
         $student = User::factory()->create();

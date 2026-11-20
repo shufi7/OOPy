@@ -46,6 +46,7 @@ class QuizGradingTest extends QuizTestCase
     public function test_code_fill_trims_ends_but_preserves_case_and_internal_spacing(): void
     {
         $this->actingAs(User::factory()->create());
+        $this->postJson($this->start()['submit_url'], $this->answers($this->quiz(), $this->quiz()->questions->count()))->assertOk();
         $quiz = $this->quiz('kelas-dan-objek');
         $payload = $this->answers($quiz);
         $payload['answers'][3]['answer'] = 'self.nama  = nama';

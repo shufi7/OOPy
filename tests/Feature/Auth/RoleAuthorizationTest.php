@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Http\Middleware\EnsureChapterUnlocked;
 use App\Models\User;
 use DOMDocument;
 use DOMXPath;
@@ -76,6 +77,7 @@ class RoleAuthorizationTest extends TestCase
 
     public function test_navbar_identifies_one_current_destination_including_final_evaluation(): void
     {
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
         foreach ([
             '/' => 'home', '/materi' => 'materi.index', '/coding' => 'coding.index',
             '/login' => 'login', '/register' => 'register',
@@ -92,10 +94,13 @@ class RoleAuthorizationTest extends TestCase
         }
     }
 
-    public function test_all_existing_learning_pages_remain_public_and_auth_css_is_scoped(): void
+    public function test_introductory_pages_remain_public_and_later_chapters_require_progress(): void
     {
-        foreach (['/', '/materi', '/materi/dasar-pemrograman-oop', '/materi/kelas-dan-objek', '/materi/enkapsulasi', '/materi/pewarisan', '/materi/polimorfisme', '/materi/kelas-abstrak', '/materi/evaluasi-akhir', '/materi/evaluasi-akhir/ujian', '/materi/evaluasi-akhir/hasil', '/editor'] as $url) {
+        foreach (['/', '/materi', '/materi/dasar-pemrograman-oop', '/editor'] as $url) {
             $this->get($url)->assertOk()->assertDontSee('css/oopy/auth/auth.css');
+        }
+        foreach (['kelas-dan-objek', 'enkapsulasi', 'pewarisan', 'polimorfisme', 'kelas-abstrak', 'evaluasi-akhir', 'evaluasi-akhir/ujian', 'evaluasi-akhir/hasil'] as $slug) {
+            $this->get('/materi/'.$slug)->assertRedirect(route('materi.index'));
         }
         $this->assertGuest();
     }

@@ -38,7 +38,6 @@
     <div class="home-container home-sections">
         <section class="home-learning" aria-labelledby="home-learning-title">
             <div class="home-section-heading"><h2 id="home-learning-title">Perjalanan Belajar di OOPy</h2></div>
-            <p class="home-learning-subtitle">Belajar OOP Python secara sistematis, langsung praktik, dan ukur pemahamanmu.</p>
             <ol class="home-steps" role="list">
                 @foreach([
                     ['title' => 'Pelajari Materi', 'icon' => 'book', 'description' => 'Pahami konsep OOP Python melalui materi yang interaktif dan terstruktur per BAB.'],

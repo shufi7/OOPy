@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Http\Middleware\EnsureChapterUnlocked;
 use App\Models\FinalExamAttempt;
 use App\Models\Quiz;
 use App\Models\User;
@@ -18,6 +19,8 @@ class FinalEvaluationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // ChapterAccessTest covers prerequisites; this suite exercises the exam engine and legacy practice sessions.
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
         $this->seed(OopyContentSeeder::class);
     }
 

@@ -2,12 +2,19 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\EnsureChapterUnlocked;
 use DOMDocument;
 use DOMXPath;
 use Tests\TestCase;
 
 class EvaluasiAkhirTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
+    }
+
     public function test_evaluation_routes_render_independent_pages_with_safe_assets_and_links(): void
     {
         foreach (['index' => 'intro', 'exam' => 'exam', 'results' => 'results'] as $name => $page) {

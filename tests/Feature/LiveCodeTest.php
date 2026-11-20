@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\EnsureChapterUnlocked;
 use App\View\Components\LiveCode;
 use DOMDocument;
 use DOMXPath;
@@ -11,6 +12,12 @@ use Tests\TestCase;
 
 class LiveCodeTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(EnsureChapterUnlocked::class);
+    }
+
     public function test_demo_renders_three_independent_components_and_loads_assets_once(): void
     {
         $response = $this->get('/editor')->assertOk();

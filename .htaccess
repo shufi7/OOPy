@@ -1,0 +1,13 @@
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# Keep dotfiles private, while allowing certificate verification paths.
+RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L]
+
+# The application must only be served through public/.
+RewriteRule ^(?:app|bootstrap|config|database|node_modules|resources|routes|scripts|services|storage|tests|vendor)(?:/|$) - [F,L,NC]
+
+# public/.htaccess handles Laravel routes after this internal rewrite.
+RewriteRule ^(?!public(?:/|$))(.*)$ public/$1 [L]

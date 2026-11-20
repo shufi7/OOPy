@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Quiz;
 use App\Services\Admin\MaterialContentService;
+use App\Services\ChapterAccessService;
 use App\Services\ChapterQuizScoring;
 use App\Services\ChapterQuizService;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class MateriController extends Controller
 {
-    public function index(MaterialContentService $contents): View
+    public function index(Request $request, MaterialContentService $contents, ChapterAccessService $access)
     {
-        return view('materi.index', [
+        return response()->view('materi.index', [
             'materiList' => $contents->publishedRegistry(require resource_path('materi/chapters.php')),
-        ]);
+            'chapterAccess' => $access->forUser($request->user()),
+        ])->header('Cache-Control', 'no-store, private');
     }
 
     public function show(Request $request, string $slug, ChapterQuizService $quizzes, MaterialContentService $contents)

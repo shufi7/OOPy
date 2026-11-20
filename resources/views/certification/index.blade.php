@@ -108,7 +108,6 @@
             <p class="certification-section-label">Penerbitan opsional</p>
             <h2 id="issuance-title">Ambil sertifikat Anda</h2>
             <p class="certification-price">Rp24.999 <span>/ sertifikat</span></p>
-            <p class="certification-action-note">Satu kali untuk penerbitan melalui Midtrans Sandbox. Gunakan simulator Sandbox, bukan aplikasi bank atau uang sungguhan.</p>
             <ul class="certification-benefits"><li>PDF A4 landscape dengan nama akun Anda</li><li>Nomor unik dan QR verifikasi</li><li>Unduh ulang dari halaman ini</li></ul>
             @if ($canIssue && $paymentAvailable)
                 @include('certification.partials.payment-form')

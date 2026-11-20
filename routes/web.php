@@ -10,14 +10,17 @@ use App\Http\Controllers\EvaluasiAkhirController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\QuizController;
+use App\Http\Middleware\EnsureChapterUnlocked;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/materi', [MateriController::class, 'index'])->name('materi.index');
-Route::get('/materi/evaluasi-akhir', [EvaluasiAkhirController::class, 'index'])->name('evaluasi.index');
-Route::get('/materi/evaluasi-akhir/ujian', [EvaluasiAkhirController::class, 'exam'])->name('evaluasi.exam');
-Route::get('/materi/evaluasi-akhir/hasil', [EvaluasiAkhirController::class, 'results'])->name('evaluasi.results');
-Route::get('/materi/{slug}', [MateriController::class, 'show'])->name('materi.show');
+Route::middleware(EnsureChapterUnlocked::class)->group(function () {
+    Route::get('/materi/evaluasi-akhir', [EvaluasiAkhirController::class, 'index'])->name('evaluasi.index');
+    Route::get('/materi/evaluasi-akhir/ujian', [EvaluasiAkhirController::class, 'exam'])->name('evaluasi.exam');
+    Route::get('/materi/evaluasi-akhir/hasil', [EvaluasiAkhirController::class, 'results'])->name('evaluasi.results');
+    Route::get('/materi/{slug}', [MateriController::class, 'show'])->name('materi.show');
+});
 Route::get('/editor', [EditorController::class, 'index'])->name('editor.index');
 Route::get('/coding', [CodingController::class, 'index'])->name('coding.index');
 Route::get('/coding/{slug}', [CodingController::class, 'show'])->where('slug', 'latihan-[12]')->name('coding.show');
@@ -37,7 +40,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', EnsureChapterUnlocked::class])->group(function () {
     Route::post('/materi/{slug}/kuis/attempts', [QuizController::class, 'start'])->name('quiz.start');
     Route::post('/materi/{slug}/kuis/attempts/{attempt}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
     Route::get('/materi/{slug}/kuis/progress', [QuizController::class, 'progress'])->name('quiz.progress');
