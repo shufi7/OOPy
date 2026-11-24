@@ -1,6 +1,83 @@
 (() => {
     'use strict';
     const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+
+    document.querySelectorAll('[data-identity-form]').forEach(form => {
+        const submit = form.querySelector('[data-busy-label]');
+        const label = submit.textContent;
+        form.addEventListener('submit', () => {
+            submit.disabled = true;
+            submit.textContent = submit.dataset.busyLabel;
+        });
+        window.addEventListener('pageshow', () => {
+            submit.disabled = false;
+            submit.textContent = label;
+        });
+    });
+    document.querySelectorAll('[data-toggle-password]').forEach(button => {
+        button.addEventListener('click', () => {
+            const input = document.getElementById(button.dataset.togglePassword);
+            input.type = input.type === 'password' ? 'text' : 'password';
+            button.textContent = input.type === 'password' ? 'Tampilkan password' : 'Sembunyikan password';
+        });
+    });
+    document.querySelector('[data-cancel-name]')?.addEventListener('click', event => {
+        const details = event.currentTarget.closest('details');
+        const form = event.currentTarget.form;
+        form.reset();
+        const password = form.elements.password;
+        if (password.type === 'text') {
+            // Chromium can retain a zero-sized password field when reopening a native details panel.
+            const masked = password.cloneNode();
+            masked.type = 'password';
+            password.replaceWith(masked);
+        }
+        form.querySelector('[data-toggle-password]').textContent = 'Tampilkan password';
+        details.open = false;
+        details.querySelector('summary').focus();
+    });
+
+    const preview = document.querySelector('[data-preview-tabs]');
+    if (preview) {
+        const list = preview.querySelector('.certification-tab-links');
+        const tabs = Array.from(list.querySelectorAll('a'));
+        const select = (tab, focus = false) => {
+            tabs.forEach(item => {
+                const selected = item === tab;
+                item.setAttribute('aria-selected', selected);
+                item.tabIndex = selected ? 0 : -1;
+                document.getElementById(item.hash.slice(1)).hidden = !selected;
+            });
+            if (focus) tab.focus();
+        };
+        list.setAttribute('role', 'tablist');
+        tabs.forEach((tab, index) => {
+            const panel = document.getElementById(tab.hash.slice(1));
+            tab.setAttribute('role', 'tab');
+            tab.setAttribute('aria-controls', panel.id);
+            panel.setAttribute('role', 'tabpanel');
+            panel.setAttribute('aria-labelledby', tab.id);
+            panel.tabIndex = 0;
+            tab.addEventListener('click', event => {
+                event.preventDefault();
+                select(tab, true);
+            });
+            tab.addEventListener('keydown', event => {
+                const next = {
+                    ArrowLeft: (index - 1 + tabs.length) % tabs.length,
+                    ArrowRight: (index + 1) % tabs.length,
+                    Home: 0,
+                    End: tabs.length - 1,
+                }[event.key];
+                if (next === undefined) return;
+                event.preventDefault();
+                select(tabs[next], true);
+            });
+        });
+        select(tabs.find(tab => tab.hash === window.location.hash) || tabs[0]);
+        document.querySelector('[data-show-transcript]')?.addEventListener('click', () => select(tabs[1], true));
+    }
+
     document.querySelectorAll('[data-midtrans-payment]').forEach(root => {
         const feedback = root.querySelector('[data-payment-feedback]');
         const label = root.querySelector('[data-payment-label]');
@@ -12,7 +89,11 @@
         const consent = root.querySelector('[data-payment-consent]');
         const dialogMessage = root.querySelector('[data-payment-dialog-message]');
         const redirect = root.querySelector('[data-payment-redirect]');
+        const nameControls = document.querySelector('[data-name-controls]');
+        const nameLocked = document.querySelector('[data-name-locked]');
+        const nameRequired = root.querySelector('[data-payment-name-required]');
         const initiallyReady = root.dataset.currentReady === '1';
+        let canStart = !open?.disabled;
         let checking = false;
         let creating = false;
         const request = async (url, data = {}) => {
@@ -31,10 +112,17 @@
             check.disabled = false;
             if (label) label.textContent = payment.label;
             feedback.textContent = payment.message;
-            if (open) open.textContent = ['deny', 'cancel', 'expire', 'failure', 'api_error', 'expired_unselected'].includes(payment.status) ? 'Coba Lagi' : 'Bayar dengan QRIS';
+            if (open) {
+                open.textContent = ['deny', 'cancel', 'expire', 'failure', 'api_error', 'expired_unselected'].includes(payment.status) ? 'Coba Lagi' : 'Bayar dengan QRIS';
+                if (nameControls) nameControls.hidden = payment.name_locked;
+                nameLocked.hidden = !payment.name_locked;
+                canStart = payment.name_locked || root.dataset.nameConfirmed === '1';
+                nameRequired.hidden = canStart;
+                open.disabled = creating || !canStart;
+            }
             if (payment.ready !== initiallyReady) {
                 // A fragment-only navigation would leave the old payment panel on screen.
-                window.history.replaceState(null, '', '/sertifikasi#sertifikat');
+                window.history.replaceState(null, '', window.location.pathname + '#penerbitan');
                 window.location.reload();
             }
         };
@@ -59,7 +147,7 @@
             root.setAttribute('aria-busy', 'true');
             dialogMessage.textContent = 'Menyiapkan pesanan Rp24.999 di Midtrans Sandbox…';
             try {
-                const result = await request(root.dataset.storeUrl, { sandbox_confirmed: true });
+                const result = await request(root.dataset.storeUrl, { sandbox_confirmed: true, confirmed_name: root.dataset.confirmedName });
                 apply(result.payment);
                 dialog.close();
                 if (!result.payment.ready) {
@@ -74,7 +162,7 @@
                 }
             } catch (error) { dialogMessage.textContent = error.message; feedback.textContent = error.message; }
             finally {
-                creating = false; confirm.disabled = false; cancel.disabled = false; open.disabled = false;
+                creating = false; confirm.disabled = false; cancel.disabled = false; open.disabled = !canStart;
                 root.removeAttribute('aria-busy');
             }
         });

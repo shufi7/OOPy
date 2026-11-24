@@ -9,6 +9,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use Tests\TestCase;
 
@@ -190,5 +191,51 @@ class GoogleLoginTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Reconcile Google-linked accounts');
         $migration->down();
+    }
+
+    public function test_linked_google_user_can_set_password_using_single_use_google_proof(): void
+    {
+        $user = User::factory()->create(['password' => 'old-fixture-secret']);
+        $user->forceFill(['google_id' => 'google-subject'])->save();
+        $this->actingAs($user);
+        $payload = ['password' => 'new-fixture-secret', 'password_confirmation' => 'new-fixture-secret'];
+        $this->post('/sertifikasi/password', $payload)->assertSessionHasErrors('google_password');
+        $this->assertTrue(Hash::check('old-fixture-secret', $user->fresh()->password));
+        $this->google();
+        $this->post('/sertifikasi/password/google')->assertRedirectContains('accounts.google.com');
+        $state = session('state');
+        $this->get(route('auth.google.callback', ['code' => 'valid-code', 'state' => $state]))
+            ->assertRedirect('/sertifikasi#password-oopy');
+        $this->get('/sertifikasi')->assertSee('Simpan Password OOPy');
+        $this->post('/sertifikasi/password', $payload)->assertRedirect('/sertifikasi#nama-sertifikat')->assertSessionHasNoErrors();
+        $this->assertTrue(Hash::check($payload['password'], $user->fresh()->password));
+        $this->assertSame('google-subject', $user->fresh()->google_id);
+        $this->post('/sertifikasi/password', $payload)->assertSessionHasErrors('google_password');
+        $this->post('/sertifikasi/nama', ['participant_name' => 'Nama Lulusan', 'password' => $payload['password']])
+            ->assertSessionHasNoErrors();
+    }
+
+    public function test_google_password_flow_rejects_wrong_subject_invalid_state_and_expired_grant(): void
+    {
+        $user = User::factory()->create();
+        $user->forceFill(['google_id' => 'google-subject'])->save();
+        $this->actingAs($user);
+        foreach (['other-subject', 'invalid-state', 'expired'] as $result) {
+            $this->google(['sub' => $result === 'other-subject' ? $result : 'google-subject']);
+            $this->post('/sertifikasi/password/google')->assertRedirect();
+            $state = $result === 'invalid-state' ? 'forged-state' : session('state');
+            $response = $this->get(route('auth.google.callback', ['code' => 'valid-code', 'state' => $state]));
+            if ($result === 'expired') {
+                $response->assertRedirect('/sertifikasi#password-oopy');
+                $this->travel(6)->minutes();
+            } else {
+                $response->assertRedirect('/sertifikasi#nama-sertifikat')->assertSessionHasErrors('google_password');
+                $this->assertCount($result === 'invalid-state' ? 0 : 2, $this->requests);
+            }
+            $this->post('/sertifikasi/password', ['password' => 'new-fixture-secret', 'password_confirmation' => 'new-fixture-secret'])
+                ->assertSessionHasErrors('google_password');
+            $this->assertTrue(Hash::check('password', $user->fresh()->password));
+            $this->assertAuthenticatedAs($user);
+        }
     }
 }

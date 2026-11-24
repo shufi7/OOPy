@@ -29,12 +29,13 @@ Route::post('/coding/{slug}/submit', [CodingController::class, 'submit'])
 
 Route::middleware('guest')->group(function () {
     Route::get('/auth/google', [GoogleLoginController::class, 'redirect'])->middleware('throttle:10,1')->name('auth.google.redirect');
-    Route::get('/auth/google/callback', [GoogleLoginController::class, 'callback'])->middleware('throttle:20,1')->name('auth.google.callback');
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 });
+Route::get('/auth/google/callback', [GoogleLoginController::class, 'callback'])
+    ->middleware('throttle:20,1')->block(30, 10)->name('auth.google.callback');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
 

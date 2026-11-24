@@ -9,13 +9,10 @@
 @endpush
 
 @section('content')
-<div class="certification container py-4 py-lg-5">
-    <p class="certification-mode">{{ ($sandboxMode ?? false) ? 'Mode Sandbox — Tidak ada pembayaran uang sungguhan' : 'Mode Simulasi — Tanpa Pembayaran Nyata' }}</p>
-    @if ($errors->any())
+<div class="certification container pt-3 pt-lg-4 pb-4">
+    @if ($errors->any() || $errors->certificateName->any() || $errors->certificatePassword->any())
         <div class="certification-error" role="alert">
-            <strong>{{ ($sandboxMode ?? false) ? 'Pembayaran Sandbox belum dapat diproses.' : 'Simulasi belum dapat diproses.' }}</strong>
-            <ul class="mb-0">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
-            <a href="{{ route('certification.index') }}">Periksa persyaratan sertifikasi</a>
+            <ul class="mb-0">@foreach (array_merge($errors->all(), $errors->certificateName->all(), $errors->certificatePassword->all()) as $error)<li>{{ $error }}</li>@endforeach</ul>
         </div>
     @endif
     @yield('certification-content')

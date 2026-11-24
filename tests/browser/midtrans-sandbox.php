@@ -3,7 +3,9 @@
 use App\Models\Certificate;
 use App\Models\CertificateOrder;
 use App\Models\CertificatePaymentAttempt;
+use App\Models\FinalExamAttempt;
 use App\Models\User;
+use App\Services\CertificateIdentityService;
 use App\Services\CertificateIssuanceService;
 use App\Services\CertificatePdfService;
 use App\Services\MidtransGateway;
@@ -79,6 +81,7 @@ if (PHP_SAPI === 'cli-server') {
 if (($argv[1] ?? '') === 'prepare-race') {
     DB::statement('PRAGMA busy_timeout = 15000');
     $user = User::where('email', 'concurrent.midtrans@example.test')->sole();
+    app(CertificateIdentityService::class)->confirm($user, $user->name);
     app(MidtransPaymentService::class)->start($user);
     echo "Concurrent fixture prepared.\n";
     exit;
@@ -100,9 +103,17 @@ if (($argv[1] ?? '') === 'pdf-evidence') {
     $certificate = Certificate::where('program_key', MidtransPaymentService::PROGRAM)->where('user_id', User::where('email', 'eligible.midtrans@example.test')->sole()->id)->sole();
     $pdf = app(CertificatePdfService::class);
     file_put_contents($directory.'/certificate-sandbox.pdf', $pdf->generate($certificate));
-    $certificate->participant_name = str_repeat('Nama Peserta Panjang ', 12).'Akhir';
+    $certificate->participant_name = str_repeat('Nama Peserta Panjang ', 4).'Àkhir';
     file_put_contents($directory.'/certificate-long-name.pdf', $pdf->generate($certificate));
+    $certificate->participant_name = str_repeat('W', 100);
+    file_put_contents($directory.'/certificate-unbroken-name.pdf', $pdf->generate($certificate));
     echo "PDF evidence generated.\n";
+    exit;
+}
+if (($argv[1] ?? '') === 'simulate-archived-certificate') {
+    $user = User::where('email', 'eligible.midtrans@example.test')->sole();
+    $certificate = Certificate::where('program_key', MidtransPaymentService::PROGRAM)->where('user_id', $user->id)->sole();
+    $certificate->update(['transcript_snapshot' => null]);
     exit;
 }
 if (file_exists($database)) {
@@ -120,6 +131,12 @@ foreach (['eligible', 'empty', 'concurrent', 'legacy'] as $kind) {
     $user = User::create(['name' => 'Peserta Sandbox '.ucfirst($kind), 'email' => $kind.'.midtrans@example.test', 'password' => 'password123']);
     if ($kind !== 'empty') {
         CertificationFixture::complete($user);
+    }
+    if ($kind === 'eligible') {
+        $user->quizAttempts()->oldest('id')->firstOrFail()->update(['score' => 91.25]);
+        $user->exerciseSubmissions()->oldest('id')->firstOrFail()->update(['score' => null]);
+        $user->exerciseSubmissions()->latest('id')->firstOrFail()->update(['score' => 92.5]);
+        FinalExamAttempt::where('user_id', $user->id)->sole()->update(['total_score' => 84.75]);
     }
     if ($kind === 'legacy') {
         app(CertificateIssuanceService::class)->issue($user, 'e_wallet');

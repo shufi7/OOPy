@@ -17,35 +17,47 @@ class GoogleLoginController extends Controller
 {
     use RedirectsAfterLogin;
 
-    public function redirect(): RedirectResponse
+    public function redirect(Request $request): RedirectResponse
     {
-        if (! $this->configured()) {
+        if (! self::configured()) {
             return $this->unavailable();
         }
 
-        return Socialite::driver('google')->enablePKCE()->with(['prompt' => 'select_account'])->redirect();
+        return Socialite::driver('google')->setRequest($request)->enablePKCE()->with(['prompt' => 'select_account'])->redirect();
     }
 
-    public function callback(Request $request, GoogleLoginService $login): RedirectResponse
+    public function callback(Request $request, GoogleLoginService $login, GoogleCertificatePasswordController $password): RedirectResponse
     {
-        if (! $this->configured()) {
-            return $this->unavailable();
+        $flow = $request->session()->pull(GoogleCertificatePasswordController::FLOW);
+        if ($flow === null && $request->user()) {
+            return redirect()->route('materi.index');
+        }
+        $error = fn (string $message) => $flow === null
+            ? redirect()->route('login')->withErrors(['google' => $message])
+            : $password->error($message);
+
+        if (! self::configured()) {
+            return $error('Login Google belum tersedia. Silakan masuk menggunakan email dan password.');
         }
         if ($request->has('error') || ! is_string($request->query('code')) || $request->query('code') === ''
             || ! is_string($request->query('state'))) {
             $request->session()->forget(['state', 'code_verifier']);
 
-            return redirect()->route('login')->withErrors(['google' => 'Login Google dibatalkan atau tidak selesai. Silakan coba lagi.']);
+            return $error('Login Google dibatalkan atau tidak selesai. Silakan coba lagi.');
         }
 
         try {
-            $profile = Socialite::driver('google')->enablePKCE()->user();
+            $profile = Socialite::driver('google')->setRequest($request)->enablePKCE()->user();
         } catch (InvalidStateException $exception) {
-            return redirect()->route('login')->withErrors(['google' => 'Sesi Login Google sudah tidak valid. Silakan mulai kembali.']);
+            return $error('Sesi Login Google sudah tidak valid. Silakan mulai kembali.');
         } catch (GuzzleException $exception) {
-            return redirect()->route('login')->withErrors(['google' => 'Google belum dapat dihubungi. Silakan coba lagi atau masuk dengan password.']);
+            return $error('Google belum dapat dihubungi. Silakan coba lagi atau masuk dengan password.');
         } finally {
             $request->session()->forget(['state', 'code_verifier']);
+        }
+
+        if ($flow !== null) {
+            return $password->authorizePassword($request, $flow, $profile);
         }
 
         try {
@@ -62,7 +74,7 @@ class GoogleLoginController extends Controller
         return redirect()->to($this->intendedUrl($request));
     }
 
-    private function configured(): bool
+    public static function configured(): bool
     {
         return filled(config('services.google.client_id')) && filled(config('services.google.client_secret'))
             && filled(config('services.google.redirect'));

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Certificate;
 use App\Models\CertificatePaymentAttempt;
+use App\Models\FinalExamAttempt;
 use App\Models\User;
 use App\Services\Admin\UserDeletionService;
 use App\Services\CertificateIssuanceService;
@@ -40,7 +41,7 @@ class MidtransPaymentTest extends TestCase
     private function student(bool $complete = true): User
     {
         $this->seed([OopyContentSeeder::class, CodingExerciseSeeder::class]);
-        $user = User::factory()->create();
+        $user = User::factory()->create(['name' => 'Peserta Uji OOPy']);
         if ($complete) {
             CertificationFixture::complete($user);
         }
@@ -63,10 +64,18 @@ class MidtransPaymentTest extends TestCase
 
     private function start(User $user): CertificatePaymentAttempt
     {
+        $this->confirmName($user);
         $this->snap();
         $id = $this->actingAs($user)->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true])->assertOk()->json('payment.id');
 
         return CertificatePaymentAttempt::where('public_id', $id)->sole();
+    }
+
+    private function confirmName(User $user, ?string $name = null): void
+    {
+        $this->actingAs($user)->post('/sertifikasi/nama/konfirmasi', [
+            'confirmed_name' => $name ?? $user->name, 'name_confirmed' => '1',
+        ])->assertRedirect('/sertifikasi#nama-sertifikat')->assertSessionHasNoErrors();
     }
 
     private function data(CertificatePaymentAttempt $attempt, string $status = 'settlement', array $changes = []): array
@@ -156,6 +165,7 @@ class MidtransPaymentTest extends TestCase
     public function test_current_snap_v4_redirect_response_is_saved_and_reused_without_another_transaction(): void
     {
         $user = $this->student();
+        $this->confirmName($user);
         $url = 'https://app.sandbox.midtrans.com/snap/v4/redirection/sandbox-fixture-token-123456';
         $this->fake([MidtransGateway::SNAP_URL => Http::response(['token' => 'sandbox-fixture-token-123456', 'redirect_url' => $url], 201)]);
         $id = $this->actingAs($user)->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true])
@@ -196,6 +206,7 @@ class MidtransPaymentTest extends TestCase
     public function test_timeout_keeps_the_same_provider_reference_for_explicit_retry(): void
     {
         $user = $this->student();
+        $this->confirmName($user);
         $this->fake(fn () => throw new ConnectionException('Fixture timeout'));
         $this->actingAs($user)->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true])->assertStatus(503);
         $first = CertificatePaymentAttempt::sole();
@@ -208,6 +219,7 @@ class MidtransPaymentTest extends TestCase
     public function test_api_error_bad_token_and_untrusted_redirect_do_not_issue_certificates(): void
     {
         $user = $this->student();
+        $this->confirmName($user);
         foreach ([[500, []], [201, ['token' => 'short', 'redirect_url' => 'https://example.test/']],
             [201, ['token' => 'sandbox-fixture-token-123456', 'redirect_url' => 'https://app.midtrans.com/snap/vtweb/test']]] as [$code, $data]) {
             $this->fake([MidtransGateway::SNAP_URL => Http::response($data, $code)]);
@@ -407,15 +419,277 @@ class MidtransPaymentTest extends TestCase
         $sandbox = Certificate::where('program_key', MidtransPaymentService::PROGRAM)->sole();
         $this->assertSame($legacyBefore, $legacy->fresh()->getAttributes());
         $this->assertTrue($legacy->fresh()->isDownloadable());
-        $this->get('/sertifikasi')->assertSee('Unduh sertifikat simulasi lama')->assertSee('Unduh Sertifikat PDF')->assertSee('SANDBOX / DEMO');
+        $this->get('/sertifikasi')->assertSee('Unduh sertifikat simulasi lama')->assertSee('Unduh Sertifikat PDF')->assertDontSee('SANDBOX / DEMO');
         $response = $this->get(route('certificates.download', $sandbox->public_id))->assertOk()->assertHeader('Content-Type', 'application/pdf');
         $this->assertStringStartsWith('%PDF-', $response->getContent());
         $html = view('certification.pdf', ['certificate' => $sandbox, 'qr' => '', 'logo' => ''])->render();
         $this->assertStringNotContainsString('SANDBOX / DEMO', $html);
-        $this->assertStringNotContainsString('Sertifikat demo penyelesaian pembelajaran OOPy', $html);
+        $this->assertStringContainsString('Sertifikat demo penyelesaian pembelajaran OOPy', $html);
+        $this->assertStringContainsString('Transkrip demo OOPy', $html);
+        $this->assertStringNotContainsString('Tanda – menunjukkan nilai belum tersedia.', $html);
+        $this->assertStringNotContainsString('Kuis: nilai resmi terbaik', $html);
+        $this->assertStringContainsString('TRANSKRIP NILAI', $html);
         $this->assertStringContainsString('data:image/png;base64,', app(CertificatePdfService::class)->qrDataUri($sandbox));
-        $this->get(route('certificates.verify', $sandbox->public_id))->assertOk()->assertSee('Sertifikat Sandbox OOPy')->assertDontSee($user->email);
+        $this->get(route('certificates.verify', $sandbox->public_id))->assertOk()
+            ->assertSee('Sertifikat Sandbox OOPy')->assertSee('SANDBOX / DEMO')->assertDontSee($user->email);
         $this->actingAs(User::factory()->create())->get(route('certificates.download', $sandbox->public_id))->assertNotFound();
         $this->postJson(route('midtrans.status', $attempt->public_id))->assertNotFound();
+    }
+
+    public function test_payment_requires_confirmation_of_the_selected_name_and_locks_it_until_termination(): void
+    {
+        $user = $this->student();
+        $payload = ['sandbox_confirmed' => true];
+        $this->actingAs($user)->postJson('/sertifikasi/payments', $payload)->assertUnprocessable()
+            ->assertJsonValidationErrors('confirmed_name');
+        Http::assertNothingSent();
+        $this->assertDatabaseCount('certificate_orders', 0);
+
+        $this->confirmName($user);
+        $this->postJson('/sertifikasi/payments', $payload + ['confirmed_name' => 'Nama Kedaluwarsa'])
+            ->assertUnprocessable()->assertJsonValidationErrors('confirmed_name');
+        Http::assertNothingSent();
+        $this->snap();
+        $this->postJson('/sertifikasi/payments', $payload)->assertOk()->assertJsonPath('payment.name_locked', true);
+        $first = CertificatePaymentAttempt::sole();
+        $this->assertSame($user->name, $first->participant_name);
+        $this->assertSame($user->name, $first->order->participant_name);
+        $this->mockStatus($first, $this->data($first, 'pending'));
+        $this->postJson(route('midtrans.status', $first->public_id))->assertOk()->assertJsonPath('payment.name_locked', true);
+        $change = ['participant_name' => 'Peserta Baru', 'password' => 'password'];
+        $this->postJson('/sertifikasi/nama', $change)->assertConflict();
+        $this->get('/sertifikasi/'.$first->public_id.'/pdf')->assertNotFound();
+
+        $this->mockStatus($first, $this->data($first, 'expire'));
+        $this->postJson(route('midtrans.status', $first->public_id))->assertOk()->assertJsonPath('payment.name_locked', false);
+        $this->post('/sertifikasi/nama', $change)->assertSessionHasNoErrors();
+        $this->postJson('/sertifikasi/payments', $payload)->assertUnprocessable();
+        $this->confirmName($user, 'Peserta Baru');
+        $this->snap();
+        $this->postJson('/sertifikasi/payments', $payload)->assertOk();
+        $second = CertificatePaymentAttempt::latest('id')->firstOrFail();
+        $this->assertSame('Peserta Baru', $second->participant_name);
+        $this->assertNotSame($first->order_number, $second->order_number);
+
+        $this->mockStatus($first, $this->data($first));
+        $this->notify($first, $this->data($first))->assertOk();
+        $this->assertSame($user->name, Certificate::sole()->participant_name);
+        $this->postJson('/sertifikasi/nama', $change)->assertConflict();
+    }
+
+    public function test_transcript_uses_owners_official_scores_at_issuance_and_remains_immutable(): void
+    {
+        $user = $this->student();
+        $other = User::factory()->create();
+        CertificationFixture::complete($other);
+        $user->quizAttempts()->update(['score' => 87.25]);
+        $user->exerciseSubmissions()->oldest('id')->firstOrFail()->update(['score' => null]);
+        $user->exerciseSubmissions()->latest('id')->firstOrFail()->update(['score' => 91.6]);
+        $final = FinalExamAttempt::where('user_id', $user->id)->sole();
+        $final->update(['total_score' => 76, 'passing_score' => 70]);
+        $failedRetake = $final->replicate();
+        $failedRetake->fill(['total_score' => 86, 'passing_score' => 90])->save();
+
+        $name = 'Dian Élise O’Rana';
+        $this->actingAs($user)->post('/sertifikasi/nama', ['participant_name' => $name, 'password' => 'password'])
+            ->assertSessionHasNoErrors();
+        $this->confirmName($user, $name);
+        $this->snap();
+        $this->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true, 'confirmed_name' => $name])->assertOk();
+        $attempt = CertificatePaymentAttempt::sole();
+        $user->update(['name' => 'Nama Profil Baru']);
+        $final->update(['total_score' => 79.25]);
+        $this->mockStatus($attempt, $this->data($attempt));
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+
+        $certificate = Certificate::sole();
+        $snapshot = $certificate->transcript_snapshot;
+        $this->assertSame($name, $certificate->participant_name);
+        $this->assertSame([87.25, 87.25, 87.25, 87.25, 87.25, 87.25, null, 91.6, 79.25], array_column($snapshot['rows'], 'score'));
+        $this->assertSame('Lulus', $snapshot['rows'][6]['status']);
+        $this->assertSame(70, $snapshot['rows'][8]['passing_score']);
+        $this->assertSame(['min' => 0, 'max' => 100], $snapshot['scale']);
+        $this->assertSame('Lulus', $snapshot['summary']['graduation']);
+        $this->assertArrayNotHasKey('transcript_snapshot', $certificate->toArray());
+
+        $user->quizAttempts()->update(['score' => 97.25]);
+        $final->update(['total_score' => 99]);
+        config(['quiz.passing_score' => 99]);
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+        $this->assertSame($snapshot, $certificate->fresh()->transcript_snapshot);
+        $this->assertDatabaseCount('certificates', 1);
+        $this->get('/sertifikasi')->assertViewHas('transcript', $snapshot)->assertSee($name);
+        $this->get(route('certificates.verify', $certificate->public_id))->assertOk()->assertSee($name)
+            ->assertDontSee('87,25')->assertDontSee('TRANSKRIP NILAI')->assertDontSee($user->email);
+        $html = view('certification.pdf', ['certificate' => $certificate, 'qr' => '', 'logo' => ''])->render();
+        $this->assertSame(2, substr_count($html, $name));
+        $this->assertStringContainsString('79,25', $html);
+        $pdf = app(CertificatePdfService::class)->generate($certificate);
+        $this->assertSame(2, preg_match_all('~/Type\s*/Page\b~', $pdf));
+    }
+
+    public function test_existing_in_flight_payment_can_settle_and_old_sandbox_pdf_remains_downloadable(): void
+    {
+        $user = $this->student();
+        $attempt = $this->start($user);
+        $attempt->update(['participant_name' => null, 'academic_baseline' => null]);
+        $attempt->order->update(['participant_name' => null]);
+        DB::table('certificate_identities')->where('user_id', $user->id)->delete();
+        $this->get('/sertifikasi')->assertSee('Pembayaran dimulai sebelum fitur konfirmasi nama tersedia.');
+        $this->postJson('/sertifikasi/payments', ['sandbox_confirmed' => true])->assertOk()
+            ->assertJsonPath('payment.id', $attempt->public_id);
+        $this->mockStatus($attempt, $this->data($attempt));
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+        $certificate = Certificate::sole();
+        $this->assertSame($user->name, $certificate->participant_name);
+        $this->assertCount(9, $certificate->transcript_snapshot['rows']);
+
+        $certificate->update(['transcript_snapshot' => null]);
+        $this->get('/sertifikasi')->assertSee('Transkrip belum disimpan saat sertifikat ini diterbitkan.');
+        $pdf = $this->get(route('certificates.download', $certificate->public_id))->assertOk()->getContent();
+        $this->assertSame(1, preg_match_all('~/Type\s*/Page\b~', $pdf));
+        $this->assertNull($certificate->fresh()->transcript_snapshot);
+    }
+
+    public function test_confirmed_name_correction_updates_documents_and_preserves_issuance_and_history(): void
+    {
+        $user = $this->student();
+        $attempt = $this->start($user);
+        $this->mockStatus($attempt, $this->data($attempt));
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+        $certificate = Certificate::sole();
+        $original = $certificate->getAttributes();
+        $qr = app(CertificatePdfService::class)->qrDataUri($certificate);
+        $url = route('certification.name.correct', $certificate->public_id);
+        $payload = ['participant_name' => 'Dian Élise O’Rana', 'password' => 'password', 'name_confirmed' => '1', 'name_revision' => '0'];
+
+        $this->get('/sertifikasi')->assertSee('Periksa atau ganti nama sertifikat')->assertSee($certificate->participant_name);
+        $this->post($url, $payload)->assertRedirect('/sertifikasi#nama-sertifikat')->assertSessionHasNoErrors();
+        $revision = $certificate->nameRevisions()->sole();
+        $this->assertSame($payload['participant_name'], $revision->participant_name);
+        $this->postJson($url, array_replace($payload, ['participant_name' => 'Nama Kedaluwarsa']))
+            ->assertUnprocessable()->assertJsonValidationErrors('name_revision');
+        $payload['name_revision'] = $revision->id;
+        $this->post($url, $payload)->assertSessionHas('certificate_status', 'Nama pada sertifikat sudah sesuai.');
+        $this->assertSame(1, $certificate->nameRevisions()->count());
+        $payload['participant_name'] = 'Nadia Rahma';
+        $this->post($url, $payload)->assertSessionHasNoErrors();
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+
+        $current = $certificate->fresh();
+        $this->assertSame($original, $current->getAttributes());
+        $this->assertSame($user->name, $user->fresh()->name);
+        $this->assertSame($user->name, $attempt->order->fresh()->participant_name);
+        $this->assertSame($payload['participant_name'], $current->currentParticipantName());
+        $this->assertSame(['Dian Élise O’Rana', 'Nadia Rahma'], $current->nameRevisions()->orderBy('id')->pluck('participant_name')->all());
+        $this->assertSame($qr, app(CertificatePdfService::class)->qrDataUri($current));
+        $this->assertArrayNotHasKey('latest_name_revision', $current->toArray());
+        $this->get('/sertifikasi')->assertSee($payload['participant_name']);
+        $this->post('/logout');
+        auth()->forgetGuards();
+        $this->get(route('certificates.verify', $certificate->public_id))->assertOk()->assertSee($payload['participant_name'])
+            ->assertSee('Nama pada sertifikat ini telah dikoreksi.')->assertDontSee($user->name)->assertDontSee('Dian Élise O’Rana');
+        $html = view('certification.pdf', ['certificate' => $current, 'qr' => $qr, 'logo' => ''])->render();
+        $this->assertSame(2, substr_count($html, $payload['participant_name']));
+        $this->assertStringNotContainsString($user->name, $html);
+        $pdf = $this->actingAs($user)->get(route('certificates.download', $certificate->public_id))->assertOk()->getContent();
+        $this->assertSame(2, preg_match_all('~/Type\s*/Page\b~', $pdf));
+    }
+
+    public function test_name_correction_rejects_wrong_password_missing_consent_and_nonowners(): void
+    {
+        $owner = $this->student();
+        $attempt = $this->start($owner);
+        $this->mockStatus($attempt, $this->data($attempt));
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+        $certificate = Certificate::sole();
+        $url = route('certification.name.correct', $certificate->public_id);
+        $payload = ['participant_name' => 'Nama Baru', 'password' => 'password', 'name_confirmed' => '1', 'name_revision' => '0'];
+
+        $this->post($url, array_replace($payload, ['password' => 'wrong-secret']))
+            ->assertRedirect('/sertifikasi#nama-sertifikat')
+            ->assertSessionHasErrorsIn('issuedCertificateName', ['password' => 'Password yang Anda masukkan salah. Silakan coba kembali.'])
+            ->assertSessionMissing('_old_input.password');
+        $this->postJson($url, array_diff_key($payload, ['password' => true]))->assertUnprocessable()->assertJsonValidationErrors('password');
+        $this->postJson($url, array_diff_key($payload, ['name_confirmed' => true]))->assertUnprocessable()->assertJsonValidationErrors('name_confirmed');
+        $this->actingAs(User::factory()->create())->postJson($url, $payload)->assertNotFound();
+        $this->post('/logout');
+        auth()->forgetGuards();
+        $this->postJson($url, $payload)->assertUnauthorized();
+        $this->assertDatabaseCount('certificate_name_revisions', 0);
+    }
+
+    public function test_name_correction_supports_archived_sandbox_certificates_and_refuses_refunded_ones(): void
+    {
+        $attempt = $this->start($this->student());
+        $this->mockStatus($attempt, $this->data($attempt));
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+        $certificate = Certificate::sole();
+        $certificate->update(['transcript_snapshot' => null]);
+        $url = route('certification.name.correct', $certificate->public_id);
+        $payload = ['participant_name' => 'Nama Arsip Terkoreksi', 'password' => 'password', 'name_confirmed' => '1', 'name_revision' => '0'];
+        $this->post($url, $payload)->assertSessionHasNoErrors();
+        $pdf = $this->get(route('certificates.download', $certificate->public_id))->assertOk()->getContent();
+        $this->assertSame(1, preg_match_all('~/Type\s*/Page\b~', $pdf));
+
+        $this->mockStatus($attempt, $this->data($attempt, 'refund'));
+        $this->notify($attempt, $this->data($attempt, 'refund'))->assertOk();
+        $this->postJson($url, $payload)->assertConflict();
+        $this->get('/sertifikasi')->assertDontSee('Periksa atau ganti nama sertifikat');
+        $this->assertDatabaseCount('certificate_name_revisions', 1);
+    }
+
+    public function test_payment_uses_checkout_evidence_if_official_policy_changes_while_pending(): void
+    {
+        $user = $this->student();
+        $user->quizAttempts()->update(['score' => 81]);
+        $attempt = $this->start($user);
+        config(['quiz.passing_score' => 90]);
+        $this->mockStatus($attempt, $this->data($attempt));
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+        $this->assertSame($attempt->academic_baseline, Certificate::sole()->transcript_snapshot);
+        $this->get('/sertifikasi')->assertSee('Nilai resmi saat pesanan dibuat.');
+    }
+
+    public function test_owner_can_capture_a_dated_transcript_for_an_old_sandbox_certificate(): void
+    {
+        $owner = $this->student();
+        $attempt = $this->start($owner);
+        $this->mockStatus($attempt, $this->data($attempt));
+        $this->notify($attempt, $this->data($attempt))->assertOk();
+        $certificate = Certificate::sole();
+        $certificate->update(['transcript_snapshot' => null]);
+        $original = $certificate->getAttributes();
+        $url = route('certification.transcript.capture', $certificate->public_id);
+        $this->get('/sertifikasi')->assertOk()->assertSee('Lengkapi Transkrip Nilai');
+        $this->actingAs(User::factory()->create())->postJson($url)->assertNotFound();
+        $this->assertNull($certificate->fresh()->transcript_snapshot);
+
+        $this->travel(3)->days();
+        $owner->quizAttempts()->update(['score' => 87.25]);
+        $owner->exerciseSubmissions()->oldest('id')->firstOrFail()->update(['score' => null]);
+        FinalExamAttempt::where('user_id', $owner->id)->sole()->update(['total_score' => 82.5]);
+        $this->actingAs($owner)->post($url)->assertRedirect('/sertifikasi#transcript-panel');
+
+        $issued = $certificate->fresh();
+        $snapshot = $issued->transcript_snapshot;
+        $this->assertSame($original, array_replace($issued->getAttributes(), ['transcript_snapshot' => null]));
+        $this->assertSame(now()->toIso8601String(), $snapshot['captured_after_issuance_at']);
+        $this->assertSame([87.25, 87.25, 87.25, 87.25, 87.25, 87.25, null, 100, 82.5], array_column($snapshot['rows'], 'score'));
+        $owner->quizAttempts()->update(['score' => 99]);
+        $this->post($url)->assertRedirect('/sertifikasi#transcript-panel');
+        $this->assertSame($snapshot, $certificate->fresh()->transcript_snapshot);
+
+        $this->get('/sertifikasi')->assertSee('setelah sertifikat diterbitkan')->assertSee('82,5')->assertDontSee('Lengkapi Transkrip Nilai');
+        $html = view('certification.pdf', ['certificate' => $issued, 'qr' => '', 'logo' => ''])->render();
+        $this->assertStringContainsString('setelah sertifikat diterbitkan', $html);
+        $this->assertStringContainsString('82,5', $html);
+        $pdf = $this->get(route('certificates.download', $certificate->public_id))->assertOk()->getContent();
+        $this->assertSame(2, preg_match_all('~/Type\s*/Page\b~', $pdf));
+        $this->get(route('certificates.verify', $certificate->public_id))->assertOk()->assertDontSee('82,5');
+
+        $this->mockStatus($attempt, $this->data($attempt, 'refund'));
+        $this->notify($attempt, $this->data($attempt, 'refund'))->assertOk();
+        $this->postJson($url)->assertConflict();
     }
 }

@@ -1,17 +1,30 @@
-<div class="certificate-preview" aria-label="{{ $certificate ? 'Pratinjau sertifikat terbit' : 'Contoh desain sertifikat' }}">
-    <div class="certificate-preview-top"><span><img src="{{ asset('images/oopy-logo.png') }}" width="48" height="48" alt="Logo OOPy"> <strong>OOPy</strong></span><strong>{{ $certificate?->demoLabel() ?? 'SANDBOX / DEMO' }}</strong></div>
-    <p class="certificate-preview-heading" lang="en">CERTIFICATE OF COMPLETION</p>
-    <p>Sertifikat Penyelesaian Pembelajaran</p>
-    <p class="mt-4 mb-1">Diberikan kepada</p>
-    <p class="certificate-preview-name">{{ $certificate?->participant_name ?? '[Nama Peserta]' }}</p>
-    <p>Atas keberhasilannya menyelesaikan program pembelajaran</p>
-    <p class="fw-bold">{{ $certificate?->course_title ?? \App\Services\CertificateIssuanceService::COURSE }}</p>
-    @if ($certificate)
-        <p class="certificate-preview-number">{{ $certificate->certificate_number }}</p>
-        <p>Selesai {{ $certificate->completed_at->timezone('Asia/Makassar')->locale('id')->translatedFormat('j F Y') }} · Terbit {{ $certificate->issued_at->timezone('Asia/Makassar')->locale('id')->translatedFormat('j F Y') }}</p>
-        @isset($qr)<img class="certificate-preview-qr" src="{{ $qr }}" width="112" height="112" alt="QR Code menuju verifikasi sertifikat">@endisset
-    @else
-        <p class="certificate-preview-number">CONTOH DESAIN · BELUM DITERBITKAN</p>
-    @endif
-    <p class="mb-0">OOPy Learning Platform</p>
+<div class="certificate-preview" aria-label="{{ $certificate ? 'Pratinjau sertifikat terbit' : 'Pratinjau sebelum penerbitan' }}">
+    <div class="certificate-preview-top">
+        <span><img src="{{ asset('images/oopy-logo.png') }}" width="36" height="36" alt=""> <strong>OOPy</strong></span>
+        @unless ($certificate)
+            <strong>PRATINJAU</strong>
+        @endunless
+    </div>
+    <div class="certificate-preview-body">
+        <h3 class="certificate-preview-heading" lang="en">Certificate of Completion</h3>
+        <p class="certificate-preview-caption">Diberikan kepada</p>
+        <p class="certificate-preview-name">{{ $certificate?->currentParticipantName() ?? $identity['name'] ?? '[Nama Peserta]' }}</p>
+        <p>Atas penyelesaian program pembelajaran</p>
+        <p class="certificate-preview-program">{{ $certificate?->course_title ?? \App\Services\CertificateIssuanceService::COURSE }}</p>
+    </div>
+    <footer class="certificate-preview-footer">
+        <div>
+            <p class="certificate-preview-issuer">OOPy Learning Platform</p>
+            @if ($certificate)
+                <p class="certificate-reference">{{ $certificate->certificate_number }}</p>
+                <p>Selesai {{ $certificate->completed_at->timezone('Asia/Makassar')->locale('id')->translatedFormat('j F Y') }}</p>
+                <p>Terbit {{ $certificate->issued_at->timezone('Asia/Makassar')->locale('id')->translatedFormat('j F Y') }}</p>
+            @else
+                <p>Belum diterbitkan</p>
+            @endif
+        </div>
+        @isset($qr)
+            <img class="certificate-preview-qr" src="{{ $qr }}" width="92" height="92" alt="QR Code menuju verifikasi sertifikat">
+        @endisset
+    </footer>
 </div>

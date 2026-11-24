@@ -1,6 +1,121 @@
 # Sistem Sertifikasi OOPy
 
-> **Riwayat implementasi simulasi.** Pembayaran terbaru memakai Midtrans Snap Sandbox; baca [panduan integrasi Sandbox](midtrans-sandbox-integration.md) untuk konfigurasi, migration baru, route dan pengujian saat ini. POST penerbitan simulasi pada dokumen ini sudah ditutup dengan HTTP 410. Sertifikat simulasi existing tetap dipertahankan. Entry browser `tests/browser/certification.mjs` sekarang menjalankan QA alur Sandbox. Angka dan metode simulasi berikut mencatat tahap sebelum integrasi pembayaran.
+## Upgrade 24 November 2026
+
+Halaman `/sertifikasi` menampilkan persyaratan akademik dan ringkasan nilai, diikuti konfirmasi nama, dua tab pratinjau, dan pembayaran. Setelah sertifikat terbit, tombol unduh berada tepat di bawah judul halaman. Pratinjau dokumen dan informasi akademik berdampingan di desktop. Di ponsel, dokumen tampil lebih dahulu. Panel ringkasan berwarna mint mengikuti token OOPy, tabel memakai nama komponen dari katalog, dan tab bisa diakses dengan tombol panah. Harga backend tetap Rp24.999 per sertifikat Sandbox.
+
+### Nama dan batas akses
+
+- Nama awal berasal dari profil. Nama yang sudah disimpan untuk sertifikat menjadi pilihan berikutnya. Konfirmasi mengharuskan checkbox persetujuan dan mencocokkan nama yang ditampilkan dengan pilihan terkini di server.
+- Perubahan nama memakai password akun OOPy, CSRF, dan batas lima percobaan per menit per akun. Nama dinormalisasi menjadi 2–100 karakter. Perubahan mengosongkan konfirmasi tanpa mengubah nama profil. Laravel menyimpan hash password pada tabel `users` dan mengecualikan field password dari input lama ketika validasi gagal.
+- Untuk akun Google, **Tetapkan password OOPy dengan Google** memulai OAuth ber-state dan PKCE melalui callback existing. Subject akun Google yang terverifikasi harus cocok dengan akun OOPy yang sedang login. Izin menetapkan password berlaku lima menit, terikat pada akun dan sesi, dan dikonsumsi saat penyimpanan. Google dapat memakai sesi Google yang sudah aktif saat pemilihan akun. [Referensi Google OpenID Connect](https://developers.google.com/identity/openid-connect/reference)
+- Checkout menyimpan nama pada order dan referensi Midtrans sebelum menghubungi Snap. Referensi yang masih bisa dibayar atau berstatus respons API ambigu mengunci nama. Pengguna dapat mengganti nama setelah backend memverifikasi status terminal atau memastikan sesi Snap kedaluwarsa dan metode belum dipilih. Notifikasi yang terlambat menggunakan nama milik referensi yang betul-betul berhasil.
+- Transkrip dan unduhan PDF memerlukan sesi pemilik. Verifikasi publik menampilkan nama pada dokumen terbaru, program, nomor, tanggal terbit, penerbit, dan status Sandbox atau simulasi.
+- Pemilik sertifikat Sandbox aktif dapat membuka **Periksa atau ganti nama sertifikat** pada panel unduh. Formulir menampilkan nama saat ini dan meminta konfirmasi serta password OOPy sebelum menyimpan koreksi. Untuk akun Google, pengaturan password OOPy tersedia melalui verifikasi Google tertaut.
+- Setiap koreksi menambah revisi nama bertanggal dalam transaksi yang mengunci akun dan sertifikat. Nama penerbitan awal, nomor, URL verifikasi, order, dan snapshot nilai disimpan seperti saat terbit. PDF dan halaman verifikasi memakai nama revisi terakhir. Verifikasi publik menampilkan keterangan koreksi dan mengarahkan pengguna ke PDF terbaru. Sertifikat yang dibatalkan atau dikembalikan tidak menerima koreksi.
+
+| Route tambahan | Fungsi |
+| --- | --- |
+| `POST /sertifikasi/nama/konfirmasi` | Konfirmasi nama pilihan |
+| `POST /sertifikasi/nama` | Verifikasi password dan ganti nama |
+| `POST /sertifikasi/{publicId}/koreksi-nama` | Verifikasi password pemilik dan simpan revisi nama sertifikat Sandbox aktif |
+| `POST /sertifikasi/password/google` | Mulai verifikasi Google untuk akun tertaut |
+| `POST /sertifikasi/password` | Simpan password OOPy setelah verifikasi Google |
+
+### Snapshot akademik dan PDF
+
+`CertificateTranscriptService` memakai ringkasan penilaian resmi yang dibaca `CertificateEligibilityService`. Kuis memakai nilai resmi terbaik yang valid dan ambang yang dikonfigurasi. Latihan memakai nilai terbaik dari grader dan status kelulusan resmi. Evaluasi Akhir memakai nilai tertinggi dari percobaan lulus, atau percobaan selesai dengan nilai tertinggi jika belum lulus. Ambang percobaan tersebut ditampilkan pada transkrip. Nilai resmi kosong ditampilkan dengan tanda `–`. Transkrip memakai skala 0–100 dan mencatat versi kebijakan `oopy-transkrip-v1`.
+
+Settlement yang terverifikasi menyimpan nama, transkrip, dan status penerbitan di dalam satu transaksi. Perubahan nilai, profil, atau katalog setelah terbit tidak mengubah dokumen. Jika hasil atau kebijakan akademik berubah sampai kelayakan saat checkout tidak bisa direproduksi, penerbitan memakai data resmi yang dicatat saat checkout dan memberi keterangan di transkrip. Pratinjau sebelum penerbitan berlabel **PRATINJAU**, dengan tab sertifikat dan transkrip. Setelah penerbitan, kedua tab memakai identitas dan nilai tersimpan.
+
+PDF memakai Dompdf dan aset lokal. Halaman 1 memuat identitas OOPy, nama peserta, program, tanggal selesai dan terbit, nomor, dan QR verifikasi. Halaman 2 memuat transkrip sembilan komponen dan ringkasan kelulusan. Kedua halaman berukuran A4 landscape dengan keterangan demo di bagian bawah. Skala dan aturan penilaian tersedia di tab **Transkrip Nilai**. Untuk sertifikat Sandbox lama, pemilik dapat memilih **Lengkapi Transkrip Nilai**. Nilai resmi dicatat satu kali dan diberi tanggal pencatatan setelah penerbitan. Unduhan berikutnya menyertakan transkrip tersebut. Transaksi yang sudah dimulai sebelum upgrade dapat diselesaikan dengan nama akun saat penerbitan bila belum ada nama terkunci. Halaman menandai kondisi tersebut.
+
+### Skema dan prosedur penerapan
+
+| Tabel | Penambahan |
+| --- | --- |
+| `certificate_identities` | Satu pilihan nama dan waktu konfirmasi per pengguna, FK ke `users` |
+| `certificate_orders` | Nama yang dikunci untuk pesanan |
+| `certificate_payment_attempts` | Nama per referensi dan data akademik saat checkout sebagai cadangan |
+| `certificates` | JSON `transcript_snapshot`, berisi label, nilai, status, ambang, skala, dan versi kebijakan |
+| `certificate_name_revisions` | Riwayat nama pengganti dan waktu koreksi, FK ke sertifikat |
+
+Kolom tambahan bersifat nullable. Migration tidak melakukan backfill atas sertifikat atau transaksi lama. Rollback skema ditolak setelah data identitas atau snapshot tersimpan. Dalam rencana rollback aplikasi, pertahankan skema dan data baru.
+
+1. Pastikan database tujuan telah memiliki tabel sertifikasi dan pembayaran Sandbox. Buat cadangan database dan periksa SQL migration.
+2. Setelah persetujuan eksplisit pemilik, terapkan migration aditif sebelum menerbitkan versi aplikasi yang baru. Jalankan langkah ini pada jendela deploy yang mencakup pemrosesan webhook.
+3. Gunakan konfigurasi Sandbox yang sudah ada. Jalankan pemeriksaan localhost atau staging dari nama, pembayaran, sampai PDF dan verifikasi.
+
+```powershell
+php artisan migrate --pretend --path=database/migrations/2026_11_24_000001_add_certificate_identity_and_transcript.php
+# Setelah disetujui dan database tujuan sudah dicadangkan
+php artisan migrate --path=database/migrations/2026_11_24_000001_add_certificate_identity_and_transcript.php
+# Migration koreksi nama terbit
+php artisan migrate --pretend --path=database/migrations/2026_11_24_000002_create_certificate_name_revisions.php
+php artisan migrate --path=database/migrations/2026_11_24_000002_create_certificate_name_revisions.php
+php artisan serve --host=127.0.0.1 --port=8000
+```
+
+Untuk mencoba di localhost, buka `/sertifikasi` dari Dashboard akun yang sudah memenuhi syarat. Coba Ganti Nama dengan password salah lalu benar, lalu periksa bahwa profil tetap sama. Periksa kedua tab dan konfirmasi nama. Ikuti [langkah QRIS Midtrans Sandbox](midtrans-sandbox-integration.md#mencoba-qris-sandbox). Saat pending, periksa bahwa nama terkunci dan tombol unduh belum muncul. Sesudah settlement, periksa kedua halaman PDF dan pindai QR. Buka URL verifikasi tanpa login untuk memeriksa informasi publik, lalu coba URL unduh dengan akun berbeda untuk memeriksa otorisasi. Gunakan akun Google tertaut untuk mencoba pengaturan password melalui callback yang sudah terdaftar.
+
+### Pengujian upgrade
+
+| Pemeriksaan | Sebelum | Sesudah |
+| --- | --- | --- |
+| Laravel `php artisan test --compact` | 310 lulus, 53 gagal | 328 lulus, 53 gagal |
+| Sertifikasi, Midtrans, dan OAuth dalam suite Laravel | 97 lulus | 115 lulus |
+| `node --test tests/js/*.test.js` | 24 lulus | 24 lulus |
+| `composer validate` dan `git diff --check` | Lulus | Lulus |
+
+Perbandingan JUnit menunjukkan 53 tes gagal yang sama pada Admin, Dashboard, Kuis, Materi, dan LearningDatabase. Log baseline dan akhir tersedia di `storage/logs/certification-upgrade-before.log` dan `storage/logs/certification-upgrade-final.log`. Pint pada file yang berubah lulus.
+
+Browser memakai SQLite disposable, Snap SDK tiruan, dan respons provider tiruan. QA memeriksa tujuh keadaan pada lebar 320, 360, 390, 768, 1024, dan 1440 piksel. Pemeriksaan mencakup konfirmasi nama, pemulihan setelah password salah, keyboard, pembayaran pending dan retry, penerbitan, refund, unduh PDF lewat HTTP terautentikasi, serta penolakan PDF milik akun lain. Empat proses verifikasi paralel menghasilkan satu sertifikat. Penyimpanan file oleh browser otomatis dibatalkan lingkungannya. OAuth diuji dengan respons Google tiruan, dan alur Google serta merchant Sandbox langsung masih perlu diuji pada target deploy.
+
+PyMuPDF memeriksa ukuran A4 landscape dan teks PDF, termasuk nama Latin beraksen dengan apostrof Unicode, nama panjang dengan spasi, dan satu nama 100 karakter tanpa spasi. Empat PDF baru memiliki dua halaman, dan satu PDF simulasi lama memiliki satu halaman. OpenCV mendekode QR yang tertanam di PDF. Kedua halaman diperiksa secara visual. Cakupan karakter PDF mengikuti font DejaVu Sans yang dibundel Dompdf. Gunakan direktori evidence yang dicetak runner untuk membuka screenshot, PDF, dan `pdf-results.json`.
+
+```powershell
+$env:XDEBUG_MODE = 'off'
+php artisan test --compact
+node --test tests/js/*.test.js
+composer validate
+git diff --check
+node tests/browser/certification.mjs
+# Gunakan jalur direktori evidence yang dicetak runner
+$evidence = 'storage/framework/testing/<direktori-evidence-browser>'
+$env:PYTHONPATH = (Resolve-Path storage/framework/testing/certification-tools).Path
+python tests/browser/midtrans-pdf-check.py $evidence
+```
+
+Migration diuji pada salinan SQLite sebelum upgrade. Jumlah baris dan hash dari kolom existing cocok di delapan tabel yang diperiksa, meliputi pengguna, sertifikat, order, attempt pembayaran, progres, kuis, Coding, dan Evaluasi Akhir. Kolom baru tetap kosong untuk catatan lama. Pratinjau SQL dan hasil audit berada di `storage/framework/testing/certification-upgrade-migration-1ac3b4ffc6c943048af84305981bd130/`. Verifikasi pada target MariaDB masih tertunda. Penerapan pada database aplikasi, push, dan deploy memerlukan persetujuan.
+
+**Pemeriksaan desain.** ENERGY 2 / RHYTHM 2 / MOTION 1 mengikuti `DESIGN.md`. Mint menandai ringkasan dan status, ruang antarseksi menyatakan urutan kerja, dan garis sampul menjadi bingkai dokumen. Kontrol yang ditambahkan bisa dijangkau lewat keyboard. Kontras teks utama yang diperiksa mencapai 6,11:1 pada tombol, 6,79:1 pada status mint, 5,78:1 pada catatan, dan 9,56:1 pada pesan kesalahan.
+
+### Inventaris perubahan
+
+**File baru**
+
+- `app/Http/Controllers/Auth/GoogleCertificatePasswordController.php` dan `app/Http/Controllers/CertificateIdentityController.php`
+- `app/Models/CertificateIdentity.php`
+- `app/Services/CertificateIdentityService.php` dan `app/Services/CertificateTranscriptService.php`
+- `database/migrations/2026_11_24_000001_add_certificate_identity_and_transcript.php`
+- `resources/views/certification/partials/identity.blade.php`, `transcript-summary.blade.php`, dan `transcript-table.blade.php`
+- `tests/Feature/CertificateIdentityTest.php`
+
+**File yang diperbarui**
+
+- Controller `Auth/GoogleLoginController.php`, `CertificationController.php`, dan `MidtransPaymentController.php` di `app/Http/Controllers/`
+- Model `Certificate.php` dan `CertificatePaymentAttempt.php` di `app/Models/`
+- Service `CertificateEligibilityService.php`, `CertificateIssuanceService.php`, `MidtransGateway.php`, dan `MidtransPaymentService.php` di `app/Services/`
+- `bootstrap/app.php`, `routes/certification.php`, `routes/payments.php`, dan `routes/web.php`
+- View `index.blade.php`, `layout.blade.php`, `pdf.blade.php`, `partials/payment-form.blade.php`, dan `partials/preview.blade.php` di `resources/views/certification/`
+- `public/css/oopy/certification.css` dan `public/js/oopy-certification.js`
+- Feature test `Auth/GoogleLoginTest.php`, `CertificationTest.php`, dan `MidtransPaymentTest.php` di `tests/Feature/`
+- `tests/browser/midtrans.mjs`, `tests/browser/midtrans-sandbox.php`, dan `tests/browser/midtrans-pdf-check.py`
+- `README.md`, `docs/certification-system.md`, dan `docs/midtrans-sandbox-integration.md`
+
+## Riwayat implementasi simulasi sebelum upgrade
+
+Bagian berikut menyimpan konfigurasi dan hasil QA tahap simulasi awal. Pembayaran terkini memakai [Midtrans Snap Sandbox](midtrans-sandbox-integration.md), dan endpoint penerbitan simulasi lama mengembalikan HTTP 410.
 
 Tanggal implementasi dan QA: 20 November 2026, WITA. Snapshot awal lokal: `e17363d`. Fitur ini **hanya simulasi**, tanpa payment gateway atau perpindahan uang. Pembelajaran, kuis, Coding, dan Evaluasi Akhir tetap gratis. Sesuai revisi alur, seluruh ketentuan, konfirmasi simulasi, pratinjau, dan download berada pada satu halaman `/sertifikasi`.
 

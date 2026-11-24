@@ -1,6 +1,6 @@
 # Pembayaran sertifikat dengan Midtrans Snap Sandbox
 
-Implementasi lokal, 20 November 2026. Harga backend **24999 IDR**, satu sertifikat penyelesaian OOPy. Seluruh pembelajaran tetap gratis. Integrasi menolak mode Production dan key tanpa awalan Sandbox; endpoint API dan SDK selalu memakai host Sandbox yang ditetapkan dalam kode.
+Harga backend **24999 IDR** per sertifikat Sandbox. Seluruh pembelajaran tetap gratis. Integrasi menolak mode Production dan Server Key tanpa awalan Sandbox. Endpoint API dan SDK mengarah ke host Sandbox. Lihat [upgrade konfirmasi nama dan transkrip](certification-system.md#upgrade-24-november-2026) untuk skema, kompatibilitas, dan langkah penerapan.
 
 **Migration pembayaran sudah diterapkan pada database development lokal setelah persetujuan pengguna pada 20 November 2026.** Status migration adalah Ran, batch 7. Sebelum penerapan, target MySQL loopback, environment local, flag Production false dan [pratinjau SQL](midtrans-sandbox-migration.sql) diperiksa. Perbandingan jumlah dan SHA256 seluruh kolom lama pada 44 tabel data existing menunjukkan hasil identik sesudah migration; tabel migration/session/cache dan tabel runtime sementara dikecualikan. Tidak ada attempt pembayaran yang dibuat. Bukti digest tanpa isi data tersimpan lokal di `storage/logs/midtrans-approved-schema-audit.json`.
 
@@ -14,9 +14,9 @@ Koreksi setelah penerapan: pemeriksaan prefix Client Key terlalu ketat dan membl
 | Midtrans Sandbox | `oopy-python-oop-midtrans-sandbox-v1` | `mode=sandbox`, `provider=midtrans`, `paid` setelah GET Status terverifikasi | SANDBOX / DEMO |
 | Production | Belum tersedia | Seluruh permintaan ditolak bila flag Production aktif | Belum tersedia |
 
-Unique constraint pengguna/program dan order/sertifikat tetap dipakai. Order Sandbox merupakan pembelian logis pengguna; tabel baru `certificate_payment_attempts` menyimpan setiap referensi Midtrans, token terenkripsi, masa berlaku, merchant, transaction ID, metode, status dan waktu verifikasi. Referensi baru dibuat setelah status kedaluwarsa/cancel terkonfirmasi; riwayat sebelumnya tetap disimpan. Pembayaran gagal dapat dicoba kembali memakai Snap token yang sama selama masih berlaku. Sertifikat simulasi lama tidak diubah menjadi paid dan tetap dapat diunduh dari halaman utama.
+Unique constraint pengguna/program dan order/sertifikat mencegah penerbitan ganda. Tabel `certificate_payment_attempts` menyimpan referensi Midtrans, token terenkripsi, masa berlaku, merchant, transaction ID, metode, status, waktu verifikasi, dan nama yang terkunci. Referensi baru dapat dibuat ketika backend memastikan transaksi terminal atau Snap kedaluwarsa sebelum pemilihan metode. Timeout mempertahankan referensi yang sama untuk pemeriksaan. Sertifikat simulasi lama tetap tersedia melalui tautan unduh milik akun.
 
-`CertificateEligibilityService` existing memeriksa enam BAB, enam kuis, kedua Coding aktif, dan Evaluasi Akhir resmi. Tidak ada perubahan autentikasi, materi, soal, rubrik, atau grader. Kelayakan diperiksa lagi saat membuat atau membuka order. Tanggal penyelesaian disimpan sebagai snapshot kelayakan order; identitas peserta selalu berasal dari akun login.
+`CertificateEligibilityService` memeriksa enam BAB, enam kuis, kedua Coding aktif, dan Evaluasi Akhir resmi. Kelayakan dan konfirmasi nama diperiksa saat membuat referensi baru. Tanggal penyelesaian disimpan saat order dibuat. Nama yang telah dikonfirmasi tersimpan pada order dan referensi, lalu disalin ke sertifikat saat settlement terverifikasi.
 
 Pembuatan transaksi mengunci pengguna dan order, menyimpan referensi **sebelum** API dipanggil, lalu melepas transaksi database selama HTTP berjalan. Lease 30 detik mencegah klik ganda saat token belum diterima. Timeout tidak membuat referensi baru secara otomatis. Snap yang masih pending dibuka kembali dengan token existing. GET Status 404 sebelum pemilihan metode berarti belum diproses. Token yang melewati 24 jam dan tetap tidak memiliki transaksi Core dapat diganti dengan attempt baru, tanpa menghapus attempt lama.
 
@@ -57,11 +57,11 @@ Tidak perlu migrate:fresh, db:wipe, reseed, atau membuat nilai lulus pada databa
 
 1. Di Dashboard Midtrans, pilih environment **Sandbox**. Periksa aktivasi GoPay/QRIS dan **Settings → Snap Preferences / Payment Channels**; nama submenu dapat mengikuti versi Dashboard. Aktifkan kanal yang sesuai untuk merchant Sandbox.
 2. Masuk ke OOPy menggunakan akun yang memang telah memenuhi seluruh kelayakan resmi. Dashboard → **Ambil Sertifikat** → `/sertifikasi`.
-3. Pastikan banner **Mode Sandbox — Tidak ada pembayaran uang sungguhan**, nama akun dan harga Rp24.999 benar.
+3. Periksa nama sertifikat, harga Rp24.999 pada panel **Pembayaran Sandbox**, serta tab **Sertifikat** dan **Transkrip Nilai**. Centang persetujuan nama, lalu klik **Konfirmasi Nama**.
 4. Klik **Bayar dengan QRIS**, baca persetujuan, lalu **Lanjut ke Sandbox**. Snap.js memakai `uiMode: 'qr'`; `enabled_payments: ['gopay']` mengikuti dukungan QRIS pada Snap. String `qris` tidak diasumsikan sebagai kanal Snap universal. Merchant tetap harus mendukung kanal tersebut.
 5. Gunakan simulator pembayaran dari dokumentasi/Dashboard Sandbox. **Jangan scan dan membayar memakai aplikasi bank nyata.** OOPy tidak membuat gambar QRIS sendiri.
-6. Tutup Snap dan klik **Cek Status Pembayaran**. Pending tidak menyediakan sertifikat. Settlement terverifikasi mengubah panel menjadi **Pembayaran Berhasil (Sandbox)** dan menyediakan PDF **SANDBOX / DEMO** pada halaman yang sama.
-7. Unduh PDF, pindai QR verifikasi, dan coba unduh ulang. Nama, program dan label Sandbox harus benar; email dan transaksi privat tidak muncul di verifikasi publik.
+6. Tutup Snap dan klik **Cek Status Pembayaran**. Pending tidak menyediakan sertifikat. Settlement terverifikasi mengubah panel menjadi **Pembayaran Berhasil (Sandbox)** dan menyediakan PDF di halaman yang sama.
+7. Unduh kedua halaman PDF dalam satu file. Cocokkan nama, nomor, dan keterangan demo di bagian bawah kedua halaman, lalu pindai QR verifikasi. Verifikasi publik menampilkan status sertifikat dan identitas penerbitan.
 
 Jika SDK tidak tersedia, kode memakai redirect HTTPS hasil API yang sudah divalidasi hanya ke `app.sandbox.midtrans.com/snap/...`; setelah popup disiapkan tautan alternatif juga tersedia. Tombol **Coba Lagi** muncul pada kondisi gagal/kedaluwarsa; server menentukan reuse atau referensi baru. Tautan **Kembali ke Sertifikasi** tersedia pada halaman verifikasi; seluruh ketentuan, pembayaran dan download tetap di satu halaman utama.
 
@@ -87,7 +87,7 @@ Verifikasi sebelum mengirim transaksi: GET `/`, GET `/admin`, GET `/.env`, GET w
 
 | Metode / path | Nama | Proteksi dan fungsi |
 | --- | --- | --- |
-| POST `/sertifikasi/payments` | `midtrans.store` | Login, CSRF, throttle 6/menit, persetujuan Sandbox; membuat/membuka Snap milik akun |
+| POST `/sertifikasi/payments` | `midtrans.store` | Login, CSRF, throttle 6/menit, persetujuan Sandbox, kelayakan dan nama terkonfirmasi untuk referensi baru |
 | POST `/sertifikasi/payments/{publicId}/status` | `midtrans.status` | Login, CSRF, kepemilikan, throttle 12/menit; GET Status backend |
 | POST `/api/payments/midtrans/notification` | `midtrans.notification` | JSON <=64 KiB, signature, GET Status, throttle 60/menit; tanpa session/login/CSRF khusus endpoint ini |
 | GET `/sertifikasi` | existing | Halaman tunggal informasi/pembayaran/download; public informational, data akun hanya dari session |
@@ -135,7 +135,7 @@ Snap create tidak memakai retry buta. GET Status memakai paling banyak dua perco
 | `tests/browser/certification.mjs` | Entry QA sertifikasi diarahkan ke alur pembayaran terbaru |
 | `README.md`, `docs/README.md`, `docs/certification-system.md`, dokumen ini dan SQL preview | Panduan terbaru dan penandaan riwayat simulasi |
 
-## Pengujian aktual
+## Riwayat pengujian integrasi awal
 
 Koreksi respons Snap v4: API Sandbox merchant mengembalikan HTTP 201, token valid dan URL HTTPS pada host Sandbox dengan path `/snap/v4/redirection/`. Validator lama hanya menerima `vtweb`, sehingga menolak respons yang sah. Validator sekarang mendukung path versi `vtweb` dan `redirection`, tetap membatasi origin HTTPS Sandbox dan menolak userinfo, port tambahan, query, host palsu, Production serta path traversal. **85 tes lulus, 557 assertion**; kasus baru memeriksa respons v4 tersimpan, pending direuse tanpa transaksi kedua, dan URL berbahaya ditolak. Log: `storage/logs/midtrans-v4-fix.log`.
 

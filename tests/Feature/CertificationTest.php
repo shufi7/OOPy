@@ -190,7 +190,7 @@ class CertificationTest extends TestCase
     {
         $user = $this->student();
         $this->actingAs($user)->get('/dashboard')->assertOk()->assertSee('Ambil Sertifikat')->assertDontSee('Sertifikat Saya');
-        $this->get('/sertifikasi')->assertOk()->assertSee('Bayar dengan QRIS')->assertSee($user->email)->assertSee('Rp24.999');
+        $this->get('/sertifikasi')->assertOk()->assertSee('Bayar dengan QRIS')->assertSee($user->name)->assertSee('Rp24.999');
         $this->get('/sertifikasi/checkout')->assertRedirect('/sertifikasi#penerbitan');
         $this->post('/sertifikasi', $this->confirmation())->assertStatus(410);
         $this->assertDatabaseCount('certificates', 0);
@@ -321,7 +321,8 @@ class CertificationTest extends TestCase
         $html = view('certification.pdf', ['certificate' => $certificate, 'qr' => app(CertificatePdfService::class)->qrDataUri($certificate), 'logo' => ''])->render();
         $this->assertStringContainsString($user->name, $html);
         $this->assertStringContainsString($certificate->certificate_number, $html);
-        $this->assertStringContainsString('SIMULASI / DEMO', $html);
+        $this->assertStringContainsString('Sertifikat demo penyelesaian pembelajaran OOPy', $html);
+        $this->assertStringNotContainsString('SIMULASI / DEMO', $html);
         $this->get('/sertifikasi')->assertOk()->assertSee('QR Code menuju verifikasi');
         $this->get('/sertifikat-saya/'.$certificate->public_id)->assertRedirect('/sertifikasi#sertifikat');
     }

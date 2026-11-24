@@ -36,7 +36,7 @@ class MidtransGateway
             $response = $this->client()->post(self::SNAP_URL, [
                 'transaction_details' => ['order_id' => $attempt->order_number, 'gross_amount' => CertificateIssuanceService::AMOUNT],
                 'item_details' => [['id' => MidtransPaymentService::PROGRAM, 'name' => 'Sertifikat Penyelesaian OOPy', 'price' => CertificateIssuanceService::AMOUNT, 'quantity' => 1]],
-                'customer_details' => ['first_name' => mb_substr($user->name, 0, 255), 'email' => $user->email],
+                'customer_details' => ['first_name' => $attempt->participant_name ?? mb_substr($user->name, 0, 255), 'email' => $user->email],
                 // Snap presents QRIS through GoPay; forcing QR mode happens in Snap.js.
                 'enabled_payments' => ['gopay'],
                 'expiry' => ['start_time' => $attempt->created_at->timezone('Asia/Jakarta')->format('Y-m-d H:i:s O'), 'unit' => 'hours', 'duration' => 24],

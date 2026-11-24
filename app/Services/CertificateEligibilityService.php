@@ -23,6 +23,8 @@ class CertificateEligibilityService
             ->whereBetween('total_score', [0, 100])->whereBetween('passing_score', [0, 100])->get();
         // Each official attempt retains the passing threshold used by its server-side grading.
         $passedFinals = $finals->filter(fn ($attempt) => (float) $attempt->total_score >= (float) $attempt->passing_score);
+        $transcriptFinal = ($passedFinals->isNotEmpty() ? $passedFinals : $finals)
+            ->sortBy([['total_score', 'desc'], ['id', 'desc']])->first();
         $missing = [];
         foreach ($chapters as $chapter) {
             if ($chapter['status'] !== 'completed') {
@@ -51,6 +53,8 @@ class CertificateEligibilityService
             'passed_coding' => $dashboard['coding']['completed_exercises'],
             'total_coding' => $dashboard['coding']['total_exercises'],
             'best_final_score' => $finals->isEmpty() ? null : (float) $finals->max('total_score'),
+            'transcript_final_score' => $transcriptFinal ? (float) $transcriptFinal->total_score : null,
+            'transcript_final_threshold' => $transcriptFinal ? (float) $transcriptFinal->passing_score : null,
             'final_passed' => $passedFinals->isNotEmpty(),
             'final_status' => $passedFinals->isNotEmpty() ? 'Lulus' : ($finals->isNotEmpty() ? 'Belum Lulus'
                 : (FinalExamAttempt::where('user_id', $user->id)->exists() ? 'Dalam Proses' : 'Belum Dimulai')),

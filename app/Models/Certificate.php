@@ -5,10 +5,14 @@ namespace App\Models;
 use App\Services\MidtransPaymentService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Certificate extends Model
 {
     protected $guarded = ['id'];
+
+    protected $hidden = ['transcript_snapshot', 'latestNameRevision'];
 
     public function getRouteKeyName(): string
     {
@@ -17,7 +21,8 @@ class Certificate extends Model
 
     protected function casts(): array
     {
-        return ['user_id' => 'integer', 'order_id' => 'integer', 'completed_at' => 'datetime', 'issued_at' => 'datetime'];
+        return ['user_id' => 'integer', 'order_id' => 'integer', 'completed_at' => 'datetime', 'issued_at' => 'datetime',
+            'transcript_snapshot' => 'array'];
     }
 
     public function user(): BelongsTo
@@ -28,6 +33,30 @@ class Certificate extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(CertificateOrder::class, 'order_id');
+    }
+
+    public function nameRevisions(): HasMany
+    {
+        return $this->hasMany(CertificateNameRevision::class);
+    }
+
+    public function latestNameRevision(): HasOne
+    {
+        return $this->nameRevisions()->one()->latestOfMany();
+    }
+
+    public function currentNameRevision(): ?CertificateNameRevision
+    {
+        if (! $this->relationLoaded('latestNameRevision')) {
+            $this->setRelation('latestNameRevision', CertificateNameRevision::installed() ? $this->latestNameRevision()->first() : null);
+        }
+
+        return $this->getRelation('latestNameRevision');
+    }
+
+    public function currentParticipantName(): string
+    {
+        return $this->currentNameRevision()?->participant_name ?? $this->participant_name;
     }
 
     public function isDownloadable(): bool

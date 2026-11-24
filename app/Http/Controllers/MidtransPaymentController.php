@@ -11,11 +11,12 @@ class MidtransPaymentController extends Controller
 {
     public function store(Request $request, MidtransPaymentService $payments)
     {
-        $request->validate([
+        $data = $request->validate([
             'sandbox_confirmed' => ['required', 'accepted'],
+            'confirmed_name' => ['nullable', 'string', 'max:255'],
             ...$this->prohibitedFields(),
         ]);
-        $attempt = $payments->start($request->user());
+        $attempt = $payments->start($request->user(), $data['confirmed_name'] ?? null);
         $state = $payments->state($attempt);
 
         return response()->json(['payment' => $state, 'snap_token' => $state['ready'] ? null : $attempt->snap_token,
