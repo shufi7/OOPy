@@ -93,6 +93,12 @@
                 @include('materi.partials.quiz')
                 @endif
 
+                <nav class="material-pagination" data-material-pagination aria-label="Navigasi halaman materi" hidden>
+                    <button class="material-pagination-control" type="button" data-pagination-previous disabled>Sebelumnya</button>
+                    <ol class="material-pagination-pages" data-pagination-pages aria-label="Pilih halaman materi"></ol>
+                    <button class="material-pagination-control" type="button" data-pagination-next>Berikutnya</button>
+                </nav>
+
                 <nav class="material-navigation" aria-label="Navigasi antar BAB">
                     @if (!empty($previousChapter))
                     <a href="{{ route('materi.show', $previousChapter['slug']) }}"
