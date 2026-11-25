@@ -1,12 +1,11 @@
-Options -Indexes -MultiViews
+Options -Indexes
 DirectoryIndex index.php
 
 RewriteEngine On
 
-# Keep dotfiles private, while allowing certificate verification paths.
+# InfinityFree uses htdocs as the document root.
 RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L]
 
-# The application must only be served through public/.
 RewriteRule ^(?:app|bootstrap|config|database|node_modules|resources|routes|scripts|services|storage|tests|vendor)(?:/|$) - [F,L,NC]
 
 # public/.htaccess handles Laravel routes after this internal rewrite.
