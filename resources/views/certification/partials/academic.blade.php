@@ -43,9 +43,6 @@
             @endif
         </div>
         @if ($eligibility)
-            @unless ($certificate)
-                <p class="certification-section-note">Status di bawah berasal dari progres dan hasil penilaian resmi akun Anda.</p>
-            @endunless
             <dl class="certification-checklist">
                 @foreach ($groups as $group)
                     <div class="{{ $group['done'] ? 'is-complete' : '' }}">
@@ -81,8 +78,10 @@
             <h2 id="results-title">Ringkasan nilai pembelajaran</h2>
             @if ($archivedCaptureDate)
                 <p>Nilai resmi dicatat pada {{ $archivedCaptureDate }} setelah sertifikat diterbitkan.</p>
-            @else
-                <p>{{ ($transcript['captured_at_checkout'] ?? false) ? 'Nilai resmi saat pesanan dibuat.' : ($certificate ? 'Nilai yang tercatat saat sertifikat diterbitkan.' : 'Nilai resmi dari aktivitas belajar akun Anda.') }}</p>
+            @elseif ($transcript['captured_at_checkout'] ?? false)
+                <p>Nilai resmi saat pesanan dibuat.</p>
+            @elseif ($certificate)
+                <p>Nilai yang tercatat saat sertifikat diterbitkan.</p>
             @endif
             @include('certification.partials.transcript-summary')
             <a class="certification-next-step" href="#sertifikat" data-show-transcript>Lihat rincian nilai</a>

@@ -1,6 +1,6 @@
 <div class="certificate-preview" aria-label="{{ $certificate ? 'Pratinjau sertifikat terbit' : 'Pratinjau sebelum penerbitan' }}">
     <div class="certificate-preview-top">
-        <span><img src="{{ asset('images/oopy-logo.png') }}" width="36" height="36" alt=""> <strong>OOPy</strong></span>
+        <span class="certificate-preview-brand"><img src="{{ asset('images/oopy-logo.png') }}" width="36" height="36" alt=""> <strong>OOPy</strong></span>
         @unless ($certificate)
             <strong>PRATINJAU</strong>
         @endunless

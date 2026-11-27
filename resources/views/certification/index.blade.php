@@ -7,13 +7,10 @@
     $canIssue = $eligibility && ($eligibility['eligible'] || $identity['locked']) && ! $certificate;
     $archivedCaptureDate = \App\Services\CertificateTranscriptService::archivedCaptureDate($transcript);
 @endphp
-<header class="certification-header">
-    <a class="certification-back" href="{{ auth()->check() ? route('dashboard') : route('home') }}">{{ auth()->check() ? 'Kembali ke Dashboard' : 'Kembali ke Beranda' }}</a>
+<header class="certification-header certification-page-header">
+    <a class="certification-back" href="{{ auth()->check() ? route('dashboard') : route('home') }}"><span aria-hidden="true">←</span> {{ auth()->check() ? 'Kembali ke Dashboard' : 'Kembali ke Beranda' }}</a>
     <h1>Sertifikasi OOPy</h1>
-    <p>Sertifikat penyelesaian untuk pembelajaran <strong>Pemrograman Berorientasi Objek dengan Python.</strong></p>
-    @unless ($certificate)
-        <p class="certification-header-note">Periksa hasil belajar dan konfirmasi nama Anda sebelum melanjutkan ke pembayaran Sandbox.</p>
-    @endunless
+    <p>Pemrograman Berorientasi Objek dengan Python</p>
 </header>
 
 @if ($certificate)
@@ -52,11 +49,6 @@
             @include('certification.partials.issued-name')
         @endif
     </section>
-@else
-    @include('certification.partials.academic')
-    @if ($identity)
-        @include('certification.partials.identity')
-    @endif
 @endif
 
 <div class="certification-workspace {{ $certificate ? 'certification-workspace-issued' : 'certification-workspace-checkout' }}">
@@ -67,7 +59,7 @@
             @if ($certificate && ! $ready)
                 <p class="certification-section-note">{{ $certificate->status === 'revoked' ? 'Dibatalkan. Sertifikat ini tidak dapat diunduh.' : 'Sertifikat ini tidak aktif dan belum dapat diunduh.' }}</p>
             @elseif (! $certificate)
-                <p class="certification-section-note">Nomor sertifikat, tanggal terbit, dan QR verifikasi tersedia setelah pembayaran Sandbox terverifikasi.</p>
+                <p class="certification-section-note">Sertifikat dan transkrip tersedia dalam satu PDF A4 lanskap setelah pembayaran Sandbox terverifikasi.</p>
             @endif
             <div class="certification-tabs" data-preview-tabs>
                 <div class="certification-tab-links" aria-label="Pratinjau dokumen">
@@ -127,27 +119,33 @@
             @endif
         </section>
 
-    @if ($certificate)
-        @include('certification.partials.academic')
-    @else
-        <aside id="penerbitan" class="certification-issuance" aria-labelledby="issuance-title">
-            <h2 id="issuance-title">Pembayaran Sandbox</h2>
-            <p class="certification-price">Rp24.999 <span>/ sertifikat</span></p>
-            <ul class="certification-benefits"><li>Sertifikat dan transkrip dalam satu PDF A4 landscape</li><li>Nomor unik dan QR verifikasi</li><li>Unduh ulang dari halaman ini</li></ul>
-            @if ($canIssue && $paymentAvailable)
-                @include('certification.partials.payment-form')
-            @elseif ($canIssue)
-                <p class="certification-error" role="status">Pembayaran Sandbox belum tersedia. Hubungi pengelola OOPy untuk menyiapkan layanan.</p>
-            @elseif ($eligibility)
-                <button class="certification-press" type="button" disabled aria-describedby="checkout-reason">Ambil Sertifikat</button>
-                <p id="checkout-reason" class="certification-action-note">Penerbitan terbuka setelah seluruh persyaratan akademik terpenuhi.</p>
-                @if ($eligibility['missing'])<a class="certification-next-step" href="{{ $eligibility['missing'][0]['url'] }}">Lanjutkan pembelajaran</a>@endif
-            @else
-                <a class="certification-press" href="{{ route('login') }}">Masuk untuk Ambil Sertifikat</a>
+    @unless ($certificate)
+        <div class="certification-checkout-sidebar">
+            @if ($identity)
+                @include('certification.partials.identity')
             @endif
-            <p class="certification-issuer">Diterbitkan oleh <strong>OOPy Learning Platform</strong></p>
-        </aside>
-    @endif
+            <aside id="penerbitan" class="certification-issuance" aria-labelledby="issuance-title">
+                <h2 id="issuance-title">Pembayaran Sandbox</h2>
+                @if ($canIssue && $paymentAvailable)
+                    @include('certification.partials.payment-form')
+                @else
+                    <p class="certification-price">Rp24.999 <span>/ sertifikat</span></p>
+                    @if ($canIssue)
+                        <p class="certification-error" role="status">Pembayaran Sandbox belum tersedia. Hubungi pengelola OOPy untuk menyiapkan layanan.</p>
+                    @elseif ($eligibility)
+                        <button class="certification-press" type="button" disabled aria-describedby="checkout-reason">Ambil Sertifikat</button>
+                        <p id="checkout-reason" class="certification-action-note">Penerbitan terbuka setelah seluruh persyaratan akademik terpenuhi.</p>
+                        @if ($eligibility['missing'])
+                            <a class="certification-next-step" href="{{ $eligibility['missing'][0]['url'] }}">Lanjutkan pembelajaran</a>
+                        @endif
+                    @else
+                        <a class="certification-press" href="{{ route('login') }}">Masuk untuk Ambil Sertifikat</a>
+                    @endif
+                @endif
+            </aside>
+        </div>
+    @endunless
+    @include('certification.partials.academic')
 </div>
 
 <section id="panduan" class="certification-guide" aria-labelledby="guide-title">

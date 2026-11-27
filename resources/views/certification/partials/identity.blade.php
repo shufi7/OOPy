@@ -1,15 +1,14 @@
 <section class="certification-identity" id="nama-sertifikat" aria-labelledby="name-title" data-certificate-identity>
     <div>
         <h2 id="name-title">Konfirmasi Nama Sertifikat</h2>
-        <p>Pastikan nama lengkap Anda sudah benar. Nama ini akan dicantumkan pada sertifikat dan transkrip nilai OOPy.</p>
         @if (session('certificate_status'))
             <p class="certification-success" role="status">{{ session('certificate_status') }}</p>
         @endif
     </div>
     <div>
-        <div class="certification-participant"><span>Nama pada Sertifikat</span><strong data-participant-name>{{ $identity['name'] }}</strong></div>
+        <div class="certification-participant"><span>Nama peserta</span><strong data-participant-name>{{ $identity['name'] }}</strong></div>
         <p class="certification-action-note" data-name-locked @if (! $identity['locked']) hidden @endif>
-            {{ $identity['pre_upgrade_order'] ? 'Pembayaran dimulai sebelum fitur konfirmasi nama tersedia. Sistem memakai nama akun saat penerbitan.' : 'Nama terkunci untuk referensi pembayaran ini. Periksa status pembayaran untuk mengetahui hasilnya.' }}
+            {{ $identity['pre_upgrade_order'] ? 'Pembayaran dimulai sebelum fitur konfirmasi nama tersedia. Sistem memakai nama akun saat penerbitan.' : 'Nama terkunci selama pembayaran ini diproses.' }}
         </p>
         @if ($identity['available'])
             <div data-name-controls @if ($identity['locked']) hidden @endif>
