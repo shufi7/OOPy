@@ -173,6 +173,8 @@
 .certification-issuer { padding-top: 1.25rem; margin: 1.5rem 0 0; border-top: 1px solid #d2ebe6; font-size: .75rem; color: #526762; }
 .certification-issuer > strong { display: block; margin-top: .25rem; color: #40514e; font-weight: 600; }
 .certification .certification-press {
+    --certification-button-depth: 5px;
+    --certification-button-edge: var(--oopy-action-active);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -188,7 +190,6 @@
     line-height: 1.5;
     text-align: center;
     text-decoration: none;
-    transition: background-color 140ms ease;
 }
 .certification .certification-press:hover { background: var(--oopy-action-hover); color: var(--oopy-on-action); }
 .certification .certification-press:active { background: var(--oopy-action-active); }
@@ -213,9 +214,39 @@
 .certification-consent input { margin-top: .2rem; }
 .certification-actions { display: flex; flex-wrap: wrap; align-items: stretch; justify-content: flex-end; gap: .75rem; }
 .certification-actions .certification-press { width: auto; flex: 1 1 200px; }
-.certification-secondary { min-height: 44px; padding: .625rem .875rem; border: 1px solid #63827c; border-radius: 8px; background: #fff; color: #40514e; font-size: .875rem; font-weight: 600; }
+.certification-secondary {
+    --certification-button-depth: 3px;
+    --certification-button-edge: var(--oopy-control-border);
+    min-height: 44px;
+    padding: .625rem .875rem;
+    border: 1px solid var(--oopy-control-border);
+    border-radius: var(--oopy-radius-control);
+    background: var(--oopy-surface);
+    color: #40514e;
+    font-size: .875rem;
+    font-weight: 600;
+}
 .certification-secondary:hover { background: #e4f9f5; }
 .certification-secondary:disabled { background: #f0f4f2; color: #526762; cursor: not-allowed; }
+.certification :is(.certification-press, .certification-secondary) {
+    --certification-button-travel: calc(var(--certification-button-depth) - 1px);
+    position: relative;
+    margin-block-end: var(--certification-button-depth);
+    transition: transform 120ms ease-out, box-shadow 120ms ease-out, background-color 120ms ease-out;
+}
+.certification :is(.certification-press, .certification-secondary):not(:disabled) {
+    box-shadow: 0 var(--certification-button-depth) 0 var(--certification-button-edge);
+}
+.certification :is(.certification-press, .certification-secondary):not(:disabled):active {
+    transform: translateY(var(--certification-button-travel));
+    box-shadow: 0 1px 0 var(--certification-button-edge);
+}
+/* Keep the original hit area while the button moves down. */
+.certification :is(.certification-press, .certification-secondary):not(:disabled):active::before {
+    position: absolute;
+    inset: calc(0px - var(--certification-button-travel)) 0 0;
+    content: "";
+}
 .certification-receipt { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem 1rem; margin: .85rem 0; padding: .75rem 0; border-block: 1px solid #d2ebe6; }
 .certification-receipt > div { min-width: 0; }
 .certification-receipt dt { font-size: .75rem; font-weight: 400; color: #526762; }
@@ -299,4 +330,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
     .certification *, .certification *::before, .certification *::after { transition: none !important; scroll-behavior: auto !important; }
+    .certification :is(.certification-press, .certification-secondary) { --certification-button-travel: 0px; }
 }

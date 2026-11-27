@@ -10,7 +10,6 @@
     <p class="certification-action-note" id="payment-name-required" data-payment-name-required @if ($identity['confirmed'] || $identity['locked']) hidden @endif>Konfirmasi nama sertifikat untuk membuka pembayaran.</p>
     <button type="button" class="certification-secondary" data-payment-check @disabled(! $payment)>Cek Status Pembayaran</button>
     <a class="certification-next-step" data-payment-redirect hidden target="_blank" rel="noopener noreferrer">Buka halaman pembayaran Sandbox</a>
-    <p class="certification-action-note">Gunakan simulator Midtrans untuk pembayaran Sandbox. Ketersediaan QRIS mengikuti pengaturan merchant.</p>
     <noscript><p>Aktifkan JavaScript untuk membuka pembayaran Sandbox.</p></noscript>
     <dialog class="certification-dialog" data-payment-dialog aria-labelledby="payment-title" aria-describedby="payment-description">
         <h2 id="payment-title">Lanjut ke Midtrans Sandbox?</h2>
